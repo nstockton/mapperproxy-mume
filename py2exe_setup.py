@@ -1,5 +1,6 @@
 import glob
 from distutils.core import setup
+import os.path
 import shutil
 import sys
 
@@ -8,6 +9,7 @@ import py2exe
 APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
 APP_VERSION = "1.3"
+PYTHON_DLL = ""
 
 # Remove old build and dist directories
 shutil.rmtree("build", ignore_errors=True)
@@ -92,7 +94,8 @@ setup_options = {
 setup(options=setup_options, zipfile=None, console=[program], data_files=[("maps", glob.glob("maps\\*")), ("data", glob.glob("data\\*"))])
 
 # Copy our compressed version of python34.dll to destination folder
-shutil.copy("python34.dll", setup_options["py2exe"]["dist_dir"])
+if os.path.exists(PYTHON_DLL) and not os.path.isdir(PYTHON_DLL):
+	shutil.copy("python34.dll", setup_options["py2exe"]["dist_dir"])
 
 # Remove the build folder since we no longer need it.
 shutil.rmtree("build", ignore_errors=True)
