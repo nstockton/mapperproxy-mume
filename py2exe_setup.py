@@ -7,7 +7,7 @@ import py2exe
 
 APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
-APP_VERSION = "1.2"
+APP_VERSION = "1.3"
 
 # Remove old build and dist directories
 shutil.rmtree("build", ignore_errors=True)
@@ -28,7 +28,7 @@ class Target(object):
 		self.copyright = APP_AUTHOR
 		self.name = APP_NAME
 
-program = Target(description="%s V%s" % (APP_NAME, APP_VERSION), script="%s.py" % APP_NAME, dest_base=APP_NAME)
+program = Target(description="%s V%s" % (APP_NAME, APP_VERSION), script="startmapper.py", dest_base=APP_NAME)
 
 excludes = [
 	"_ssl",
@@ -71,7 +71,6 @@ dll_excludes = [
 
 # I need to fix this for Python 3
 packages = [
-	#"ujson",
 	#"encodings.ascii",
 	#"encodings.utf_8",
 	#"encodings.latin_1"
