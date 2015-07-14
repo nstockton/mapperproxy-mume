@@ -372,6 +372,8 @@ class Mapper(threading.Thread, World):
 			except AttributeError:
 				continue
 			# Room data was received
+			if "You quietly scout " in data or "You stop scouting." in data:
+				continue
 			if roomDict["movement"] and self.isSynced:
 				# The player has moved in an existing direction, and has entered an existing room in the database. Adjust the map accordingly.
 				if self.autoMapping and roomDict["movementDir"] and (roomDict["movementDir"] not in self.currentRoom.exits or self.currentRoom.exits[roomDict["movementDir"]].to not in self.rooms):
