@@ -116,6 +116,9 @@ class Mapper(threading.Thread, World):
 	def user_command_rridable(self, *args):
 		self.clientSend(self.rridable(*args))
 
+	def user_command_ravoid(self, *args):
+		self.clientSend(self.ravoid(*args))
+
 	def user_command_rterrain(self, *args):
 		self.clientSend(self.rterrain(*args))
 
