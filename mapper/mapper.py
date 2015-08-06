@@ -370,6 +370,8 @@ class Mapper(threading.Thread, World):
 						self.clientSend(self.rridable("notridable"))
 					elif "You are already riding." in data and self.currentRoom.ridable != "ridable":
 						self.clientSend(self.rridable("ridable"))
+			if "Wet, cold and filled with mud you drop down into a dark and moist cave, while you notice the mud above you moving to close the hole you left in the cave ceiling." in data:
+				self.sync(vnum="17189")
 			try:
 				roomDict = ROOM_TAGS_REGEX.search(data).groupdict()
 			except AttributeError:
