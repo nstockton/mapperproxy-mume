@@ -8,7 +8,6 @@ except ImportError:
 	from queue import Queue
 import re
 import socket
-import sys
 from telnetlib import IAC, DO, GA, TTYPE, NAWS
 import threading
 from timeit import default_timer
@@ -477,8 +476,7 @@ class Server(threading.Thread):
 				break
 			elif not encounteredInitialOutput and data.startswith(initialOutput):
 				# Identify for Mume Remote Editing.
-				if sys.platform != "win32":
-					self._server.sendall(b"~$#EI\n")
+				self._server.sendall(b"~$#EI\n")
 				# Turn on XML mode.
 				self._server.sendall(b"~$#EX1\n3\n")
 				# Tell the Mume server to put IAC-GA at end of prompts.
