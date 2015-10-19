@@ -465,7 +465,19 @@ class Server(threading.Thread):
 		self._mapperQueue = mapperQueue
 
 	def upperMatch(self, match):
-		return b"".join((match.group("tag").upper(), b":", match.group("text").replace(b"\r\n", b"\n").replace(b"\n", b" ").strip() if match.group("text") else b"", b":", match.group("tag").upper(), b"\r\n" if match.group("tag") not in (b"prompt", b"enemy") else b""))
+		tag = match.group("tag").upper()
+		text = match.group("text")
+		if text is None:
+			text = b""
+		else:
+			text = text.replace(b"\r\n", b"\n").replace(b"\n", b" ").strip()
+		if tag == b"PROMPT" or tag == b"ENEMY":
+			lineEnd = b""
+			if tag == b"PROMPT":
+				text = text.replace(b"<enemy>", b"").replace(b"</enemy>", b"")
+		else:
+			lineEnd = b"\r\n"
+		return b"".join((tag, b":", text, b":", tag, lineEnd))
 
 	def run(self):
 		initialOutput = b"".join((IAC, DO, TTYPE, IAC, DO, NAWS))
