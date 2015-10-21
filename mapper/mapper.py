@@ -371,52 +371,50 @@ class Mapper(threading.Thread, World):
 						self.clientSend(self.rridable("ridable"))
 			if "Wet, cold and filled with mud you drop down into a dark and moist cave, while you notice the mud above you moving to close the hole you left in the cave ceiling." in data:
 				self.sync(vnum="17189")
-			try:
-				roomDict = ROOM_TAGS_REGEX.search(data).groupdict()
-			except AttributeError:
-				continue
-			# Room data was received
-			if "You quietly scout " in data or "You stop scouting." in data:
-				continue
-			if roomDict["movement"] and self.isSynced:
-				# The player has moved in an existing direction, and has entered an existing room in the database. Adjust the map accordingly.
-				if self.autoMapping and roomDict["movementDir"] and (roomDict["movementDir"] not in self.currentRoom.exits or self.currentRoom.exits[roomDict["movementDir"]].to not in self.rooms):
-					if self.autoMerging:
-						foundRooms = self.searchRooms(exactMatch=True, name=roomDict["name"], desc=roomDict["description"]) if roomDict["name"] and roomDict["description"] else []
-					if self.autoMerging and len(foundRooms) == 1:
-						output = []
-						vnum, roomObj = foundRooms[0]
-						if self.autoLinking and REVERSE_DIRECTIONS[roomDict["movementDir"]] in roomObj.exits and roomObj.exits[REVERSE_DIRECTIONS[roomDict["movementDir"]]].to == "undefined":
-							output.append(self.rlink("add %s %s" % (vnum, roomDict["movementDir"])))
+			for match in ROOM_TAGS_REGEX.finditer(data):
+				roomDict = match.groupdict()
+				# Room data was received
+				if "You quietly scout " in data or "You stop scouting." in data:
+					continue
+				if roomDict["movement"] and self.isSynced:
+					# The player has moved in an existing direction, and has entered an existing room in the database. Adjust the map accordingly.
+					if self.autoMapping and roomDict["movementDir"] and (roomDict["movementDir"] not in self.currentRoom.exits or self.currentRoom.exits[roomDict["movementDir"]].to not in self.rooms):
+						if self.autoMerging:
+							foundRooms = self.searchRooms(exactMatch=True, name=roomDict["name"], desc=roomDict["description"]) if roomDict["name"] and roomDict["description"] else []
+						if self.autoMerging and len(foundRooms) == 1:
+							output = []
+							vnum, roomObj = foundRooms[0]
+							if self.autoLinking and REVERSE_DIRECTIONS[roomDict["movementDir"]] in roomObj.exits and roomObj.exits[REVERSE_DIRECTIONS[roomDict["movementDir"]]].to == "undefined":
+								output.append(self.rlink("add %s %s" % (vnum, roomDict["movementDir"])))
+							else:
+								output.append(self.rlink("add oneway %s %s" % (vnum, roomDict["movementDir"])))
+							output.append("Auto Merging '%s' with name '%s'." % (vnum, roomObj.name))
+							self.clientSend("\n".join(output))
 						else:
-							output.append(self.rlink("add oneway %s %s" % (vnum, roomDict["movementDir"])))
-						output.append("Auto Merging '%s' with name '%s'." % (vnum, roomObj.name))
-						self.clientSend("\n".join(output))
-					else:
-						vnum = self.getNewVnum()
-						newRoom = Room(vnum)
-						newRoom.name = roomDict["name"] if roomDict["name"] else ""
-						newRoom.desc = roomDict["description"] if roomDict["description"] else ""
-						newRoom.dynamicDesc = roomDict["dynamic"] if roomDict["dynamic"] else ""
-						newRoom.x, newRoom.y, newRoom.z = self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), roomDict["movementDir"])
-						if REVERSE_DIRECTIONS[roomDict["movementDir"]] in roomDict["exits"]:
-							newRoom.exits[REVERSE_DIRECTIONS[roomDict["movementDir"]]] = Exit()
-							newRoom.exits[REVERSE_DIRECTIONS[roomDict["movementDir"]]].to = self.currentRoom.vnum
-						self.clientSend("Adding room '%s' with vnum '%s'" % (newRoom.name, vnum))
-						self.rooms[vnum] = newRoom
-						self.currentRoom.exits[roomDict["movementDir"]].to = vnum
-				self.move(roomDict["movementDir"])
-				if self.autoWalkDirections:
-					# The player is auto-walking. Send the next direction to Mume.
-					self.walkNextDirection()
-			# If necessary, try to sync the map to the current room.
-			if roomDict["name"] in ("You just see a dense fog around you...", "It is pitch black...") or not self.isSynced and not self.sync(roomDict["name"]):
-				# The room is dark, foggy, or the mapper was unable to sync to the current room.
-				continue
-			# The map is now synced.
-			if self.autoMapping:
-				# If necessary, update the current room's information in the database with the information received from Mume.
-				self.updateCurrentRoom(roomDict)
+							vnum = self.getNewVnum()
+							newRoom = Room(vnum)
+							newRoom.name = roomDict["name"] if roomDict["name"] else ""
+							newRoom.desc = roomDict["description"] if roomDict["description"] else ""
+							newRoom.dynamicDesc = roomDict["dynamic"] if roomDict["dynamic"] else ""
+							newRoom.x, newRoom.y, newRoom.z = self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), roomDict["movementDir"])
+							if REVERSE_DIRECTIONS[roomDict["movementDir"]] in roomDict["exits"]:
+								newRoom.exits[REVERSE_DIRECTIONS[roomDict["movementDir"]]] = Exit()
+								newRoom.exits[REVERSE_DIRECTIONS[roomDict["movementDir"]]].to = self.currentRoom.vnum
+							self.clientSend("Adding room '%s' with vnum '%s'" % (newRoom.name, vnum))
+							self.rooms[vnum] = newRoom
+							self.currentRoom.exits[roomDict["movementDir"]].to = vnum
+					self.move(roomDict["movementDir"])
+					if self.autoWalkDirections:
+						# The player is auto-walking. Send the next direction to Mume.
+						self.walkNextDirection()
+				# If necessary, try to sync the map to the current room.
+				if roomDict["name"] in ("You just see a dense fog around you...", "It is pitch black...") or not self.isSynced and not self.sync(roomDict["name"]):
+					# The room is dark, foggy, or the mapper was unable to sync to the current room.
+					continue
+				# The map is now synced.
+				if self.autoMapping:
+					# If necessary, update the current room's information in the database with the information received from Mume.
+					self.updateCurrentRoom(roomDict)
 		# end while, mapper thread ending.
 		# Join the MPI threads (if any) before joining the Mapper thread.
 		for mpiThread in mpiThreads:
