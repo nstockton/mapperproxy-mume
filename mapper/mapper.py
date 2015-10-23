@@ -190,6 +190,21 @@ class Mapper(threading.Thread, World):
 	def user_command_stop(self, *args):
 		self.clientSend(self.stopRun())
 
+	def user_command_path(self, *args):
+		if not args or not args[0]:
+			return self.clientSend("Usage: run [label|vnum]")
+		argString = args[0].strip()
+		match = RUN_DESTINATION_REGEX.match(argString)
+		destination = match.group("destination")
+		flags = match.group("flags")
+		if flags:
+			flags = flags.split("|")
+		else:
+			flags = None
+		result = self.pathFind(destination=destination, flags=flags)
+		if result is not None:
+			self.clientSend(self.createSpeedWalk(result))
+
 	def user_command_sync(self, *args):
 		if not args or not args[0]:
 			self.clientSend("Map no longer synced. Auto sync on.")
