@@ -21,7 +21,7 @@ MPI_REGEX = re.compile(br"~\$#E(?P<command>[EV])(?P<length>\d+)\n((?P<session>M\
 
 RUN_DESTINATION_REGEX = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 
-USER_COMMANDS_REGEX = re.compile(br"^(?P<command>gettimer|gettimerms|secretaction|automap|autoupdate|automerge|autolink|run|stop|path|rinfo|savemap|sync|rdelete|rnote|ralign|rlight|rportable|rridable|ravoid|rterrain|rx|ry|rz|rmobflags|rloadflags|exitflags|doorflags|secret|rlink|rlabel)(?:\s+(?P<arguments>.*))?$")
+USER_COMMANDS_REGEX = re.compile(br"^(?P<command>gettimer|gettimerms|secretaction|automap|autoupdate|automerge|autolink|run|stop|path|vnum|tvnum|rinfo|savemap|sync|rdelete|rnote|ralign|rlight|rportable|rridable|ravoid|rterrain|rx|ry|rz|rmobflags|rloadflags|exitflags|doorflags|secret|rlink|rlabel)(?:\s+(?P<arguments>.*))?$")
 
 MAPPER_IGNORE_TAGS_REGEX = re.compile(br"<[/]?(?:xml|terrain|tell|say|narrate|pray|emote|magic|weather|header|status|song|shout|yell|social|hit|damage|avoid_damage|miss|enemy|familiar|snoop.*?|highlight.*?)>")
 

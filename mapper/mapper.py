@@ -151,6 +151,15 @@ class Mapper(threading.Thread, World):
 	def user_command_rinfo(self, *args):
 		self.clientSend("\n".join(self.rinfo(*args)))
 
+	def user_command_vnum(self, *args):
+		self.clientSend(self.currentRoom.vnum)
+
+	def user_command_tvnum(self, *args):
+		if not args or not args[0] or not args[0].strip():
+			self.clientSend("Tell VNum to who?")
+		else:
+			self.serverSend("tell %s %s" % (args[0].strip(), self.currentRoom.vnum))
+
 	def user_command_rlabel(self, *args):
 		result = self.rlabel(*args)
 		if result:
@@ -160,17 +169,26 @@ class Mapper(threading.Thread, World):
 		self.saveRooms()
 
 	def user_command_run(self, *args):
-		if not args or not args[0]:
+		if not args or not args[0] or not args[0].strip():
 			return self.clientSend("Usage: run [label|vnum]")
 		self.autoWalkDirections = []
 		argString = args[0].strip()
-		if argString == "c":
+		if argString.lower() == "c":
 			if self.lastPathFindQuery:
 				match = RUN_DESTINATION_REGEX.match(self.lastPathFindQuery)
 				destination = match.group("destination")
 				self.clientSend("Continuing walking to destination {0}.".format(destination))
 			else:
 				return self.clientSend("Error: no previous path to continue.")
+		elif argString.lower() == "t" or argString.lower().startswith("t "):
+			argString = argString[2:].strip()
+			if not argString:
+				if self.lastPathFindQuery:
+					return self.clientSend("Run target set to '%s'. Use 'run t [rlabel|vnum]' to change it." % self.lastPathFindQuery)
+				else:
+					return self.clientSend("Please specify a VNum or room label to target.")
+			self.lastPathFindQuery = argString
+			return self.clientSend("Setting run target to '%s'" % self.lastPathFindQuery)
 		else:
 			match = RUN_DESTINATION_REGEX.match(argString)
 			destination = match.group("destination")
