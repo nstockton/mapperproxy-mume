@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from builtins import bytes
 try:
 	from Queue import Queue
 except ImportError:
@@ -20,7 +19,7 @@ from .utils import iterItems, decodeBytes, multiReplace, regexFuzzy
 from .xmlparser import MumeXMLParser
 
 
-IAC_GA = bytes(IAC + GA)
+IAC_GA = IAC + GA
 
 class Mapper(threading.Thread, World):
 	def __init__(self, client, server, mapperQueue, isTinTin):
@@ -427,8 +426,8 @@ class Mapper(threading.Thread, World):
 			return self.clientSend("\n".join(output))
 
 	def run(self):
-		ignoreBytes = frozenset(list(bytes(theNULL + b"\x11")))
-		negotiationBytes = frozenset(list(bytes(DONT + DO + WONT + WILL)))
+		ignoreBytes = frozenset([ord(theNULL), 0x11])
+		negotiationBytes = frozenset(ord(byte) for byte in [DONT, DO, WONT, WILL])
 		ordIAC = ord(IAC)
 		ordSB = ord(SB)
 		ordSE = ord(SE)
@@ -450,7 +449,7 @@ class Mapper(threading.Thread, World):
 					getattr(self, "user_command_{0}".format(decodeBytes(matchedUserInput.group("command"))))(decodeBytes(matchedUserInput.group("arguments")))
 				continue
 			# The data was from the mud server.
-			for byte in bytes(data):
+			for byte in bytearray(data):
 				if not inIAC:
 					if byte == ordIAC:
 						inIAC = True
