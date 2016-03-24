@@ -368,6 +368,7 @@ class Mapper(threading.Thread, World):
 			# The map is now synced.
 			doors = []
 			deathTraps = []
+			oneWays = []
 			undefineds = []
 			for direction, exitObj in iterItems(self.currentRoom.exits):
 				if exitObj.door and exitObj.door != "exit":
@@ -376,12 +377,16 @@ class Mapper(threading.Thread, World):
 					deathTraps.append(direction)
 				if not exitObj.to or exitObj.to == "undefined":
 					undefineds.append(direction)
+				elif REVERSE_DIRECTIONS[direction] not in self.rooms[exitObj.to].exits or self.rooms[exitObj.to].exits[REVERSE_DIRECTIONS[direction]].to != self.currentRoom.vnum:
+					oneWays.append(direction)
 			if doors:
 				self.clientSend("Doors: %s" % ", ".join(doors))
 			if deathTraps:
 				self.clientSend("Death Traps: %s" % ", ".join(deathTraps))
+			if oneWays:
+				self.clientSend("One ways: %s" % ", ".join(oneWays))
 			if undefineds:
-				self.clientSend("Undefined exits: %s" % ", ".join(undefineds))
+				self.clientSend("Undefineds: %s" % ", ".join(undefineds))
 			if self.currentRoom.note:
 				self.clientSend("Note: %s" % self.currentRoom.note)
 			if self.autoMapping:
