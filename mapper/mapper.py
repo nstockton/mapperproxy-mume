@@ -373,10 +373,10 @@ class Mapper(threading.Thread, World):
 			for direction, exitObj in iterItems(self.currentRoom.exits):
 				if exitObj.door and exitObj.door != "exit":
 					doors.append("%s: %s" % (direction, exitObj.door))
-				if exitObj.to and exitObj.to == "death":
-					deathTraps.append(direction)
 				if not exitObj.to or exitObj.to == "undefined":
 					undefineds.append(direction)
+				elif exitObj.to == "death":
+					deathTraps.append(direction)
 				elif REVERSE_DIRECTIONS[direction] not in self.rooms[exitObj.to].exits or self.rooms[exitObj.to].exits[REVERSE_DIRECTIONS[direction]].to != self.currentRoom.vnum:
 					oneWays.append(direction)
 			if doors:
