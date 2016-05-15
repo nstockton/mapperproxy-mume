@@ -65,7 +65,6 @@ class World(object):
 		self.rooms = {}
 		self.labels = {}
 		self.currentRoom = None
-		self.prevRoom = None
 		self.loadRooms()
 		self.loadLabels()
 
@@ -134,7 +133,6 @@ class World(object):
 			roomDict.clear()
 			del roomDict
 		self.currentRoom = self.rooms["0"]
-		self.prevRoom = self.rooms["0"]
 		self.output("Map database loaded.")
 
 	def loadLabels(self):
