@@ -37,7 +37,7 @@ class Mapper(threading.Thread, World):
 		self.autoLinking = True
 		self.autoWalkDirections = []
 		self.lastPathFindQuery = ""
-		self.lastPrompt = ">"
+		self.prompt = ">"
 		self.xmlParser = MumeXMLParser()
 		World.__init__(self)
 
@@ -47,7 +47,7 @@ class Mapper(threading.Thread, World):
 
 	def clientSend(self, msg):
 		if self.outputFormat == "tintin":
-			self._client.sendall(("%s\r\nPROMPT:%s:PROMPT" % (msg, self.lastPrompt)).encode("utf-8").replace(IAC, IAC+IAC) + IAC_GA)
+			self._client.sendall(("%s\r\nPROMPT:%s:PROMPT" % (msg, self.prompt)).encode("utf-8").replace(IAC, IAC+IAC) + IAC_GA)
 		else:
 			self._client.sendall(("%s\r\n" % msg).encode("utf-8").replace(IAC, IAC+IAC) + IAC_GA)
 		return None
@@ -397,7 +397,7 @@ class Mapper(threading.Thread, World):
 			data = decodeBytes(data)
 			data = ANSI_COLOR_REGEX.sub("", data)
 			rooms = self.xmlParser.parse(data)
-			self.lastPrompt = self.xmlParser.lastPrompt
+			self.prompt = self.xmlParser.prompt
 			data = self.xmlParser.unescape(data)
 			if MOVEMENT_FORCED_REGEX.search(data) or MOVEMENT_PREVENTED_REGEX.search(data):
 				self.stopRun()
@@ -410,9 +410,7 @@ class Mapper(threading.Thread, World):
 				self.sync(vnum="17189")
 			for roomDict in rooms:
 				# Room data was received
-				if roomDict["ignore"]:
-					continue
-				elif "movement" in roomDict and self.isSynced:
+				if "movement" in roomDict and self.isSynced:
 					# The player has moved in a valid direction, and has entered an existing room in the database. Adjust the map accordingly.
 					if self.autoMapping and roomDict["movement"] in DIRECTIONS and (roomDict["movement"] not in self.currentRoom.exits or self.currentRoom.exits[roomDict["movement"]].to not in self.rooms):
 						if self.autoMerging:
