@@ -25,7 +25,7 @@ class MumeXMLParser(object):
 	def __init__(self):
 		self._xmlMode = XML_NONE
 		self.rooms = []
-		self._ignore = None
+		self._scouting = None
 		self._movement = None
 		self.prompt = ">"
 
@@ -72,7 +72,7 @@ class MumeXMLParser(object):
 				self._xmlMode = XML_ROOM
 			elif line.startswith("movement"):
 				self._movement = line[8:].replace(" dir=", "", 1).split("/", 1)[0]
-				self._ignore = None
+				self._scouting = None
 			elif line.startswith("status"):
 				self._xmlMode = XML_NONE
 		elif self._xmlMode == XML_ROOM:
@@ -97,11 +97,11 @@ class MumeXMLParser(object):
 			self._xmlMode = XML_NONE
 			if self.rooms:
 				match = PROMPT_REGEX.search(self.prompt)
-				if self._ignore:
+				if self._scouting:
 					del self.rooms[-1]
 				elif match is not None:
 					self.rooms[-1].update(match.groupdict())
-			self._ignore = None
+			self._scouting = None
 
 	def _text(self, data):
 		data = self.unescape(data)
@@ -109,7 +109,7 @@ class MumeXMLParser(object):
 			return
 		elif self._xmlMode == XML_NONE:
 			if "You quietly scout " in data:
-				self._ignore = True
+				self._scouting = True
 			return
 		elif not self.rooms:
 			return
