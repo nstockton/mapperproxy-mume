@@ -22,7 +22,7 @@ USER_DATA = 0
 MUD_DATA = 1
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat):
+	def __init__(self, client, server):
 		threading.Thread.__init__(self)
 		self.daemon = True
 		# Initialize the timer.
@@ -30,7 +30,6 @@ class Mapper(threading.Thread, World):
 		self._client = client
 		self._server = server
 		self.queue = Queue()
-		self.outputFormat = outputFormat
 		self.autoMapping = False
 		self.autoUpdating = False
 		self.autoMerging = True
@@ -46,10 +45,7 @@ class Mapper(threading.Thread, World):
 		return self.clientSend(text)
 
 	def clientSend(self, msg):
-		if self.outputFormat == "tintin":
-			self._client.sendall(("%s\r\nPROMPT:%s:PROMPT" % (msg, self.prompt)).encode("utf-8").replace(IAC, IAC+IAC) + IAC_GA)
-		else:
-			self._client.sendall(("%s\r\n" % msg).encode("utf-8").replace(IAC, IAC+IAC) + IAC_GA)
+		self._client.sendall(("%s\r\n" % msg).encode("utf-8").replace(IAC, IAC+IAC) + IAC_GA)
 		return None
 
 	def serverSend(self, msg):
