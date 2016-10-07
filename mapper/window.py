@@ -26,7 +26,7 @@ class Window(pyglet.window.Window):
 			except AttributeError:
 				self.say('Invalid key assignment for key {}. No such function {}.'.format(k, funcname))
 
-	def do_toggle_fullscreen(self, sym, mod, bs):
+	def do_toggle_fullscreen(self, sym, mod):
 		self.set_fullscreen(not self.fullscreen)
 
 w=Window()
