@@ -208,11 +208,15 @@ class World(object):
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
 		if not roomObj:
 			roomObj = self.currentRoom
+		try:
+			radiusX, radiusY, radiusZ = radius
+		except TypeError:
+			radiusX = radiusY = radiusZ = radius
 		x = roomObj.x
 		y = roomObj.y
 		z = roomObj.z
 		for vnum, obj in iterItems(self.rooms):
-			if abs(x - obj.x) <= radius and abs(y - obj.y) <= radius and abs(z - obj.z) <= radius and obj is not roomObj:
+			if abs(x - obj.x) <= radiusX and abs(y - obj.y) <= radiusY and abs(z - obj.z) <= radiusZ and obj is not roomObj:
 				yield(vnum, obj, obj.x - x, obj.y - y, obj.z - z)
 
 	def getVnum(self, roomObj=None):
