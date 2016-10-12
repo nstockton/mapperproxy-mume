@@ -209,8 +209,8 @@ VALID_DOOR_FLAGS = [
 ]
 
 DIRECTION_COORDINATES = {
-	"north": (0, -1, 0),
-	"south": (0, 1, 0),
+	"north": (0, 1, 0),
+	"south": (0, -1, 0),
 	"west": (-1, 0, 0),
 	"east": (1, 0, 0),
 	"up": (0, 0, 1),
