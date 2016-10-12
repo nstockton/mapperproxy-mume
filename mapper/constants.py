@@ -120,6 +120,26 @@ TERRAIN_COSTS = {
 	"death": 1000.0
 }
 
+TERRAIN_COLORS = {
+	"cavern": (153, 50, 204, 255),
+	"city": (190, 190, 190, 255),
+	"indoors": (186, 85, 211, 255),
+	"tunnel": (153, 50, 204, 255),
+	"road": (255, 255, 255, 255),
+	"field": (124, 252, 0, 255),
+	"brush": (127, 255, 0, 255),
+	"forest": (8, 128, 0, 255),
+	"hills": (139, 69, 19 ,255),
+	"shallowwater": (218, 120, 245, 255),
+	"mountains": (165, 42, 42, 255),
+	#"random": 30.0,
+	#"undefined": 30.0,
+	"water": (32, 64, 192, 255),
+	"rapids": (32, 64, 192, 255),
+	"underwater": (48, 8, 120, 255)
+	#"death": 1000.0
+}
+
 TERRAIN_SYMBOLS = {
 	":": "brush",
 	"O": "cavern",

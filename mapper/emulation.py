@@ -5,8 +5,10 @@
 import codecs
 import json
 import os.path
+import pyglet
 import re
 import subprocess
+import threading
 import textwrap
 
 from .world import World
@@ -219,30 +221,45 @@ class EmulatedWorld(World):
 			self.output("Arglebargle, glop-glyf!?!")
 
 
+
+class Emulator(threading.Thread):
+	def __init__(self, wld):
+		threading.Thread.__init__(self)
+		self.world = wld
+
+	def run(self):
+		while True:
+			wld=self.world
+			prompt = "> "
+			# Indicate the current room's terrain in the prompt.
+			if not wld.config.get("use_terrain_symbols"):
+				prompt = wld.currentRoom.terrain + prompt
+			else:
+				for symbol, terrain in iterItems(TERRAIN_SYMBOLS):
+					if terrain == wld.currentRoom.terrain:
+						prompt = symbol + prompt
+						break
+			# For Python 2/3 compatibility:
+			try:
+				userInput = raw_input(prompt).strip().lower()
+			except NameError:
+				userInput = input(prompt).strip().lower()
+			if not userInput:
+				continue
+			elif "quit".startswith(userInput):
+				break
+			else:
+				wld.parseInput(userInput)
+		# The user has typed 'q[uit]'. Save the config file and exit.
+		wld.saveConfig()
+		print("Good bye.")
+		with wld._gui_queue_lock:
+			wld._gui_queue.put(None)
+
 def main():
 	print("Welcome to Mume Map Emulation!")
 	wld = EmulatedWorld()
-	while True:
-		prompt = "> "
-		# Indicate the current room's terrain in the prompt.
-		if not wld.config.get("use_terrain_symbols"):
-			prompt = wld.currentRoom.terrain + prompt
-		else:
-			for symbol, terrain in iterItems(TERRAIN_SYMBOLS):
-				if terrain == wld.currentRoom.terrain:
-					prompt = symbol + prompt
-					break
-		# For Python 2/3 compatibility:
-		try:
-			userInput = raw_input(prompt).strip().lower()
-		except NameError:
-			userInput = input(prompt).strip().lower()
-		if not userInput:
-			continue
-		elif "quit".startswith(userInput):
-			break
-		else:
-			wld.parseInput(userInput)
-	# The user has typed 'q[uit]'. Save the config file and exit.
-	wld.saveConfig()
-	print("Good bye.")
+	emulator_thread=Emulator(wld)
+	emulator_thread.start()
+	pyglet.app.run()
+	emulator_thread.join()

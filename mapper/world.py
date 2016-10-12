@@ -7,7 +7,9 @@ import heapq
 import itertools
 import json
 import os.path
+import Queue
 import re
+import threading
 
 from .constants import IS_PYTHON_2, DIRECTIONS, MAP_FILE, SAMPLE_MAP_FILE, LABELS_FILE, SAMPLE_LABELS_FILE, AVOID_DYNAMIC_DESC_REGEX, LEAD_BEFORE_ENTERING_VNUMS, TERRAIN_COSTS, TERRAIN_SYMBOLS, LIGHT_SYMBOLS, VALID_MOB_FLAGS, VALID_LOAD_FLAGS, VALID_EXIT_FLAGS, VALID_DOOR_FLAGS, DIRECTION_COORDINATES, REVERSE_DIRECTIONS
 from .utils import iterItems, getDirectoryPath, regexFuzzy
@@ -62,13 +64,34 @@ class Exit(object):
 
 
 class World(object):
-	def __init__(self):
+	def __init__(self, use_gui=True):
 		self.isSynced = False
 		self.rooms = {}
 		self.labels = {}
-		self.currentRoom = None
+		self._use_gui = use_gui
+		if use_gui:
+			self._gui_queue = Queue.Queue()
+			self._gui_queue_lock = threading.Lock()
+			from .window import Window
+			self.window=Window(self)
+		self._currentRoom = None
 		self.loadRooms()
 		self.loadLabels()
+
+	@property
+	def currentRoom(self):
+		return self._currentRoom
+
+	@currentRoom.setter
+	def currentRoom(self, value):
+		self._currentRoom = value
+		if self._use_gui:
+			with self._gui_queue_lock:
+				self._gui_queue.put(('on_map_sync', value))
+
+	@currentRoom.deleter
+	def currentRoom(self):
+		del self._currentRoom
 
 	def output(self, text):
 		print(text)
