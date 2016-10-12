@@ -193,10 +193,9 @@ class Window(pyglet.window.Window):
 
 	def draw_rooms(self, currentRoom):
 		self.draw_room(currentRoom, self.cp, outline_color=Color(255,222,0,255))
-		for r in self.world.getVisibleNeighbors(roomObj=currentRoom, radius=self.num_rooms_to_draw()):
-			if r[4] is 0:
-				room=r[1]
-				d=Vec2d(r[2],r[3])*(self.size*2)
-				self.draw_room(room,self.cp+d)
+		for vnum, room, x, y, z in self.world.getVisibleNeighbors(roomObj=currentRoom, radius=self.num_rooms_to_draw()):
+			if z == 0:
+				d = Vec2d(x, y) * (self.size)
+				self.draw_room(room, self.cp + d)
 
 Window.register_event_type('on_map_sync')
