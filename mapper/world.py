@@ -7,7 +7,10 @@ import heapq
 import itertools
 import json
 import os.path
-import Queue
+try:
+	from Queue import Queue
+except ImportError:
+	from queue import Queue
 import re
 import threading
 
@@ -70,7 +73,7 @@ class World(object):
 		self.labels = {}
 		self._use_gui = use_gui
 		if use_gui:
-			self._gui_queue = Queue.Queue()
+			self._gui_queue = Queue()
 			self._gui_queue_lock = threading.Lock()
 			from .window import Window
 			self.window=Window(self)

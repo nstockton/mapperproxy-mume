@@ -3,12 +3,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 ###Some code borrowed from pymunk's debug drawing functions###
+
 import pyglet
 from pyglet.window import key
 from speechlight import Speech
 import math
 from collections import namedtuple
-import Queue
+try:
+	from Queue import Empty as QueueEmpty
+except ImportError:
+	from queue import Empty as QueueEmpty
 
 from .constants import TERRAIN_COLORS
 from .vec2d import Vec2d
@@ -52,7 +56,7 @@ class Window(pyglet.window.Window):
 						self.close()
 						break
 					self.dispatch_event(e[0], *e[1:])
-				except Queue.Empty:
+				except QueueEmpty:
 					break
 
 	def on_draw(self):
