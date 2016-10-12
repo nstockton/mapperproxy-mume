@@ -1,6 +1,6 @@
 import pyglet
 from pyglet.window import key
-import Tolk
+from speechlight import Speech
 
 keys={
 (key.F11,0):'toggle_fullscreen'
@@ -10,8 +10,8 @@ class Window(pyglet.window.Window):
 	def __init__(self):
 		caption='MPM'
 		super(Window, self).__init__(caption=caption, resizable=True)
-		Tolk.load()
-		self.say=Tolk.output
+		self.speech=Speech()
+		self.say=self.speech.say
 
 	def on_key_press(self, sym, mod):
 		k=(sym, mod)
