@@ -68,7 +68,7 @@ class Window(pyglet.window.Window):
 		self.current_room_border_color=Color(255,255,255,255)
 		self.current_room_border_vl = None
 		groups=[]
-		for i in xrange(4):
+		for i in xrange(5):
 			groups.append(pyglet.graphics.OrderedGroup(i))
 		self.groups=tuple(groups)
 
@@ -280,6 +280,9 @@ class Window(pyglet.window.Window):
 			vl1.vertices = self.corners_2_vertices(vs1)
 			vl2.vertices = self.corners_2_vertices(vs2)
 
+	def square_from_cp(self, cp, d):
+		return [cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
+
 	def draw_room(self, room, cp, group=None):
 		try:
 			color=Color(*TERRAIN_COLORS[room.terrain])
@@ -287,7 +290,7 @@ class Window(pyglet.window.Window):
 			self.world.output("Unknown terrain type '{}' @{}!".format(e.args[0], room.vnum))
 			color=Color(0,0,0,0)
 		d=self.size/2.0
-		vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
+		vs=self.square_from_cp(cp, d)
 		if group is None:
 			group=self.groups[0]
 		if room.vnum not in self.visible_rooms:
