@@ -18,6 +18,13 @@ except ImportError:
 from .constants import TERRAIN_COLORS
 from .vec2d import Vec2d
 
+# Monkey patch range with xrange in Python2.
+_range = range
+try:
+	range = xrange
+except NameError:
+	pass
+
 FPS=1.0/60
 KEYS={
 (key.F11,0):'toggle_fullscreen'
