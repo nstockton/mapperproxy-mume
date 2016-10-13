@@ -27,7 +27,12 @@ except NameError:
 
 FPS=1.0/60
 KEYS={
-(key.F11,0):'toggle_fullscreen'
+(key.ESCAPE, 0): 'reset_zoom',
+(key.LEFT, 0): 'adjust_size',
+(key.RIGHT, 0): 'adjust_size',
+(key.UP,0): 'adjust_spacer',
+(key.DOWN, 0): 'adjust_spacer',
+(key.F11, 0):'toggle_fullscreen'
 }
 
 class Color(namedtuple("Color", ["r","g","b","a"])):
@@ -55,12 +60,41 @@ class Window(pyglet.window.Window):
 		self.batch=pyglet.graphics.Batch()
 		self.visible_rooms={}
 		pyglet.clock.schedule_interval(self.queue_observer, FPS)
-		self.size=100.0
-		self.spacer=0.7
+		self.current_room=None
+		self._size=100.0
+		self._spacer=0.7
 		self.current_room_border1=0.1
 		self.current_room_border2=0.5
 		self.current_room_border_color=Color(255,255,255,255)
-		self.current_room_border_vl = self._draw_current_room_border()
+		self.current_room_border_vl = None
+		groups=[]
+		for i in xrange(4):
+			groups.append(pyglet.graphics.OrderedGroup(i))
+		self.groups=tuple(groups)
+
+	@property
+	def size(self):
+		return self._size
+	@size.setter
+	def size(self, value):
+		size=float(value)
+		if value < 50.1:
+			value=50.0
+		elif value > 250.0:
+			value=250.0
+		self._size=value
+
+	@property
+	def spacer(self):
+		return self._spacer
+	@spacer.setter
+	def spacer(self,value):
+		value = float(value)
+		if value < 0.1:
+			value = 0.0
+		elif value > 2:
+			value = 2.0
+		self._spacer=value
 
 	@property
 	def cx(self):
@@ -92,7 +126,13 @@ class Window(pyglet.window.Window):
 		self.batch.draw()
 
 	def on_map_sync(self, currentRoom):
+		self.current_room=currentRoom
 		self.draw_rooms(currentRoom)
+
+	def on_resize(self, width, height):
+		super(Window, self).on_resize(width, height)
+		if self.current_room is not None:
+			self.draw_rooms()
 
 	def on_key_press(self, sym, mod):
 		k=(sym, mod)
@@ -110,6 +150,26 @@ class Window(pyglet.window.Window):
 	def do_toggle_fullscreen(self, sym, mod):
 		self.set_fullscreen(not self.fullscreen)
 
+	def do_adjust_spacer(self, sym, mod):
+		if sym== key.DOWN:
+			self.spacer-=0.1
+		elif sym == key.UP:
+			self.spacer += 0.1
+		self.say(str(self.spacer))
+		self.draw_rooms(self.current_room)
+
+	def do_adjust_size(self, sym, mod):
+		if sym == key.LEFT:
+			self.size -= 10.0
+		elif sym == key.RIGHT:
+			self.size += 10.0
+		self.say(str(self.size))
+		self.draw_rooms(self.current_room)
+
+	def do_reset_zoom(self, sym, mod):
+		self.size=100.0
+		self.spacer=1.0
+		self.draw_rooms(self.current_room)
 	def draw_circle(self, cp, radius, color, line_color=None, angle=0.0):
 		cp = Vec2d(cp)
 		#http://slabode.exofire.net/circle_draw.shtml
@@ -136,8 +196,8 @@ class Window(pyglet.window.Window):
 				vs += [p.x, p.y]
 		c = cp + Vec2d(radius, 0).rotated(angle)
 		cvs = [cp.x, cp.y, c.x, c.y]
-		bg = pyglet.graphics.OrderedGroup(0)
-		fg = pyglet.graphics.OrderedGroup(1)
+		bg = self.groups[0]
+		fg = self.groups[1]
 		l = len(vs)//2
 		if line_color is None:
 			line_color=color
@@ -206,16 +266,21 @@ class Window(pyglet.window.Window):
 		return (int(rooms_w),int(rooms_h),1)
 
 	def _draw_current_room_border(self):
-		d = (self.size/2.0) * (1.0+self.current_room_border1)
 		cp=self.cp
-		vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
-		vl1 = self.draw_polygon(vs, Color(0,0,0,255), group=pyglet.graphics.OrderedGroup(1))
-		d *= 1.0+self.current_room_border2
-		vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
-		vl2 = self.draw_polygon(vs, self.current_room_border_color, group=pyglet.graphics.OrderedGroup(0))
-		return (vl1, vl2)
+		d1 = (self.size/2.0) * (1.0+self.current_room_border1)
+		vs1=[cp-d1, cp-(d1,d1*-1), cp+d1, cp+(d1,d1*-1)]
+		d2 = d1*(1.0+self.current_room_border2)
+		vs2=[cp-d2, cp-(d2,d2*-1), cp+d2, cp+(d2,d2*-1)]
+		if self.current_room_border_vl is None:
+			vl1 = self.draw_polygon(vs1, Color(0,0,0,255), group=self.groups[2])
+			vl2 = self.draw_polygon(vs2, self.current_room_border_color, group=self.groups[1])
+			self.current_room_border_vl = (vl1, vl2)
+		else:
+			vl1, vl2 = self.current_room_border_vl
+			vl1.vertices = self.corners_2_vertices(vs1)
+			vl2.vertices = self.corners_2_vertices(vs2)
 
-	def draw_room(self, room, cp):
+	def draw_room(self, room, cp, group=None):
 		try:
 			color=Color(*TERRAIN_COLORS[room.terrain])
 		except KeyError as e:
@@ -223,15 +288,21 @@ class Window(pyglet.window.Window):
 			color=Color(0,0,0,0)
 		d=self.size/2.0
 		vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
+		if group is None:
+			group=self.groups[0]
 		if room.vnum not in self.visible_rooms:
-			vl = self.draw_polygon(vs, color, group=pyglet.graphics.OrderedGroup(2))
+			vl = self.draw_polygon(vs, color, group=group)
 			self.visible_rooms[room.vnum] = vl
 		else:
 			vl=self.visible_rooms[room.vnum]
 			vl.vertices=self.corners_2_vertices(vs)
+			self.batch.migrate(vl, pyglet.gl.GL_TRIANGLE_STRIP, group, self.batch)
 
-	def draw_rooms(self, currentRoom):
-		self.draw_room(currentRoom, self.cp)
+	def draw_rooms(self, currentRoom=None):
+		if currentRoom is None:
+			currentRoom=self.current_room
+		self._draw_current_room_border()
+		self.draw_room(currentRoom, self.cp, group=self.groups[3])
 		newrooms=set([currentRoom.vnum])
 		for vnum, room, x, y, z in self.world.getVisibleNeighbors(roomObj=currentRoom, radius=self.num_rooms_to_draw()):
 			if z == 0:
