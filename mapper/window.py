@@ -5,6 +5,7 @@
 ###Some code borrowed from pymunk's debug drawing functions###
 
 import pyglet
+pyglet.options['debug_gl'] = False
 from pyglet.window import key
 from speechlight import Speech
 import math
@@ -17,6 +18,7 @@ except ImportError:
 from .constants import TERRAIN_COLORS
 from .vec2d import Vec2d
 
+FPS=1.0/60
 KEYS={
 (key.F11,0):'toggle_fullscreen'
 }
@@ -44,8 +46,24 @@ class Window(pyglet.window.Window):
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock
 		self.batch=pyglet.graphics.Batch()
-		pyglet.clock.schedule_interval(self.queue_observer, 0.005)
+		pyglet.clock.schedule_interval(self.queue_observer, FPS)
 		self.size=100.0
+		self.spacer=0.7
+		self.current_room_border1=0.1
+		self.current_room_border2=0.5
+		self.current_room_border_color=Color(255,255,255,255)
+
+	@property
+	def cx(self):
+		return self.width/2.0
+
+	@property
+	def cy(self):
+		return self.height/2.0
+
+	@property
+	def cp(self):
+		return Vec2d(self.cx,self.cy)
 
 	def queue_observer(self, dt):
 		with self._gui_queue_lock:
@@ -170,29 +188,33 @@ class Window(pyglet.window.Window):
 	def cp(self):
 		return Vec2d(self.cx,self.cy)
 
+	def num_rooms_to_draw(self):
+		rooms_w=(self.width//self.size)//2
+		rooms_h=(self.height//self.size)//2
+		return (int(rooms_w),int(rooms_h),1)
+
 	def draw_room(self, room, cp, outline_color=None):
-		color=Color(*TERRAIN_COLORS[room.terrain])
+		try:
+			color=Color(*TERRAIN_COLORS[room.terrain])
+		except KeyError as e:
+			print 'Unknown terrain type "{}"!'.format(e.message)
+			color=Color(0,0,0,0)
 		d=self.size/2.0
 		vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
 		vl=self.draw_polygon(vs,color, group=pyglet.graphics.OrderedGroup(2))
 		if outline_color is not None:
 			vl=[vl]
 			#vl=[vl, self.draw_circle(cp, self.size*.85, outline_color)]
-			d *= 1.1
+			d *= 1.0+self.current_room_border1
 			vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
 			vl.append(self.draw_polygon(vs,Color(0,0,0,255), group=pyglet.graphics.OrderedGroup(1)))
-			d *= 1.6
+			d *= 1.0+self.current_room_border2
 			vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
 			vl.append(self.draw_polygon(vs,outline_color, group=pyglet.graphics.OrderedGroup(0)))
 		return vl
 
-	def num_rooms_to_draw(self):
-		rooms_w=(self.width//self.size)//2
-		rooms_h=(self.height//self.size)//2
-		return (int(rooms_w),int(rooms_h),1)
-
 	def draw_rooms(self, currentRoom):
-		self.draw_room(currentRoom, self.cp, outline_color=Color(255,222,0,255))
+		self.draw_room(currentRoom, self.cp, outline_color=self.current_room_border_color)
 		for vnum, room, x, y, z in self.world.getVisibleNeighbors(roomObj=currentRoom, radius=self.num_rooms_to_draw()):
 			if z == 0:
 				d = Vec2d(x, y) * (self.size)
