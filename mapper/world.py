@@ -209,16 +209,12 @@ class World(object):
 
 	def isExitLogical(self,exit):
 		dest = self.rooms[exit.to]
-		revdir=REVERSE_DIRECTIONS[exit.direction]
-		if revdir in dest.exits:
-			e = dest.exits[revdir]
-			if e.to == exit.vnum:
-				return True
-			else:
-				return False
+		revdir = REVERSE_DIRECTIONS[exit.direction]
+		if revdir in dest.exits and dest.exits[revdir].to == exit.vnum:
+			return True
 		else:
 			return False
-		
+
 	def getVisibleNeighbors(self, roomObj=None, radius=1):
 		"""A generator which yields all rooms in the vicinity of a given room by X-Y-Z coordinates.
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
