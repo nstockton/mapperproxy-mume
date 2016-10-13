@@ -53,6 +53,8 @@ class Room(object):
 
 class Exit(object):
 	def __init__(self):
+		self.direction = None
+		self.vnum = None
 		self.to = "undefined"
 		self.exitFlags = set(["exit"])
 		self.door = ""
@@ -128,6 +130,8 @@ class World(object):
 				newExit.doorFlags = set(exitDict["doorFlags"])
 				newExit.door = exitDict["door"]
 				newExit.to = exitDict["to"]
+				newExit.vnum = vnum
+				newExit.direction = direction
 				newRoom.exits[direction] = newExit
 			self.rooms[vnum] = newRoom
 			roomDict.clear()
@@ -203,6 +207,18 @@ class World(object):
 	def sortExits(self, exitsDict):
 		return sorted(iterItems(exitsDict), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
 
+	def isExitLogical(self,exit):
+		dest = self.rooms[exit.to]
+		revdir=REVERSE_DIRECTIONS[exit.direction]
+		if revdir in dest.exits:
+			e = dest.exits[revdir]
+			if e.to == exit.vnum:
+				return True
+			else:
+				return False
+		else:
+			return False
+		
 	def getVisibleNeighbors(self, roomObj=None, radius=1):
 		"""A generator which yields all rooms in the vicinity of a given room by X-Y-Z coordinates.
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
