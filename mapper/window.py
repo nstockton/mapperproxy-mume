@@ -284,7 +284,7 @@ class Window(pyglet.window.Window):
 		try:
 			color=Color(*TERRAIN_COLORS[room.terrain])
 		except KeyError as e:
-			print 'Unknown terrain type "{}" @{}!'.format(e.message, room.vnum)
+			self.world.output("Unknown terrain type '{}' @{}!".format(e.args[0], room.vnum))
 			color=Color(0,0,0,0)
 		d=self.size/2.0
 		vs=[cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
