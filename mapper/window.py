@@ -1,7 +1,6 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 ###Some code borrowed from pymunk's debug drawing functions###
 
 import pyglet
@@ -310,7 +309,6 @@ class Window(pyglet.window.Window):
 		w=v.rotated_degrees(120)
 		y=w.rotated_degrees(120)
 		return [v+cp, w+cp, y+cp]
-
 
 	def square_from_cp(self, cp, d):
 		return [cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]

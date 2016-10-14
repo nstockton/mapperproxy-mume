@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import pyglet
 import socket
 from telnetlib import IAC, DONT, DO, WONT, WILL, theNULL, SB, SE, GA, TTYPE, NAWS
 import threading
@@ -197,6 +198,9 @@ class Server(threading.Thread):
 				data = multiReplace(data, XML_UNESCAPE_PATTERNS).replace(b"\r", b"").replace(b"\n\n", b"\n")
 			self._client.sendall(data)
 			del clientBuffer[:]
+		#Shutdown the gui
+		with self._mapper._gui_queue_lock:
+			self._mapper._gui_queue.put(None)
 		# Join the MPI threads (if any) before joining the Mapper thread.
 		for mpiThread in mpiThreads:
 			mpiThread.join()
@@ -229,6 +233,7 @@ def main(outputFormat="normal"):
 	serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
+	pyglet.app.run()
 	serverThread.join()
 	try:
 		serverConnection.shutdown(socket.SHUT_RDWR)
