@@ -61,12 +61,15 @@ class Window(pyglet.window.Window):
 		self.visible_rooms = {}
 		self.visible_exits = {}
 		pyglet.clock.schedule_interval(self.queue_observer, FPS)
+		pyglet.clock.schedule_interval(self.border_blinker, 1.0/3)
 		self.current_room=None
 		self._size=100.0
 		self._spacer=0.7
 		self.current_room_border1=0.1
 		self.current_room_border2=0.4
 		self.current_room_border_color=Color(220, 120, 160, 255)
+		self.border_blink_on=self.current_room_border_color
+		self.border_blink_off=Color(0,0,0,255)
 		self.current_room_border_vl = None
 		self.exit_radius1=10.0
 		self.exit_radius2=0.05
@@ -124,6 +127,14 @@ class Window(pyglet.window.Window):
 					self.dispatch_event(e[0], *e[1:])
 				except QueueEmpty:
 					break
+
+	def border_blinker(self, dt):
+		on, off, color = self.border_blink_on, self.border_blink_off, self.current_room_border_color
+		if color == on:
+			self.current_room_border_color = off
+		else:
+			self.current_room_border_color = on
+		self._draw_current_room_border()
 
 	def on_draw(self):
 		pyglet.gl.glClearColor(0,0,0,0)
@@ -288,7 +299,9 @@ class Window(pyglet.window.Window):
 		else:
 			vl1, vl2 = self.current_room_border_vl
 			vl1.vertices = self.corners_2_vertices(vs1)
-			vl2.vertices = self.corners_2_vertices(vs2)
+			vs=self.corners_2_vertices(vs2)
+			vl2.vertices = vs
+			vl2.colors=self.current_room_border_color.as_int()*(len(vs)//2)
 
 	def square_from_cp(self, cp, d):
 		return [cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
