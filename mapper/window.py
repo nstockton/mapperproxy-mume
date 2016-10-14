@@ -354,7 +354,7 @@ class Window(pyglet.window.Window):
 						vl.vertices=vs
 					else:
 						self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.exit_radius2, self.exit_color2, group=self.groups[4])
-						newexits.add(name)
+					newexits.add(name)
 		else:
 			for vnum in self.visible_rooms:
 				vl, room, cp= self.visible_rooms[vnum]
@@ -384,7 +384,7 @@ class Window(pyglet.window.Window):
 						vl.vertices=vs
 					else:
 						self.visible_exits[n1] = self.draw_fat_segment(a, b, self.exit_radius1, self.exit_color1, group=self.groups[4])
-					self.visible_exits[n2] = self.visible_exits[n1]
+						self.visible_exits[n2] = self.visible_exits[n1]
 					newexits.add(n1)
 					newexits.add(n2)
 		for dead in newexits^set(self.visible_exits):
