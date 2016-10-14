@@ -72,7 +72,6 @@ class Window(pyglet.window.Window):
 		self.blink = True
 		self.blink_rate = 2 #times per second
 		if self.blink: pyglet.clock.schedule_interval(self.border_blinker, 1.0/self.blink_rate)
-		
 		self.exit_radius1=10.0
 		self.exit_radius2=0.05
 		self.exit_color1=Color(255, 228, 225, 225)
@@ -304,6 +303,14 @@ class Window(pyglet.window.Window):
 			vs=self.corners_2_vertices(vs2)
 			vl2.vertices = vs
 			vl2.colors=self.current_room_border_color.as_int()*(len(vs)//2)
+
+	def equilateral_triangle(self, cp, radius, angle_degrees):
+		v=Vec2d(radius, 0)
+		v.rotate_degrees(angle_degrees)
+		w=v.rotated_degrees(120)
+		y=w.rotated_degrees(120)
+		return [v+cp, w+cp, y+cp]
+
 
 	def square_from_cp(self, cp, d):
 		return [cp-d, cp-(d,d*-1), cp+d, cp+(d,d*-1)]
