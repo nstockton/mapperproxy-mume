@@ -208,7 +208,10 @@ class World(object):
 		return sorted(iterItems(exitsDict), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
 
 	def isExitLogical(self,exit):
-		dest = self.rooms[exit.to]
+		try:
+			dest = self.rooms[exit.to]
+		except KeyError:
+			return False
 		revdir = REVERSE_DIRECTIONS[exit.direction]
 		if revdir in dest.exits and dest.exits[revdir].to == exit.vnum:
 			return True
