@@ -15,7 +15,7 @@ try:
 except ImportError:
 	from queue import Empty as QueueEmpty
 
-from .constants import TERRAIN_COLORS
+from .constants import DIRECTIONS, TERRAIN_COLORS
 from .vec2d import Vec2d
 
 # Monkey patch range with xrange in Python2.
@@ -58,7 +58,8 @@ class Window(pyglet.window.Window):
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock
 		self.batch=pyglet.graphics.Batch()
-		self.visible_rooms={}
+		self.visible_rooms = {}
+		self.visible_exits = {}
 		pyglet.clock.schedule_interval(self.queue_observer, FPS)
 		self.current_room=None
 		self._size=100.0
@@ -67,6 +68,10 @@ class Window(pyglet.window.Window):
 		self.current_room_border2=0.5
 		self.current_room_border_color=Color(255,255,255,255)
 		self.current_room_border_vl = None
+		self.exit_radius1=10.0
+		self.exit_radius2=10.0
+		self.exit_color1=Color(255, 228, 225, 225)
+		self.exit_color2=Color(0, 0, 0, 255)
 		groups=[]
 		for i in xrange(5):
 			groups.append(pyglet.graphics.OrderedGroup(i))
@@ -127,12 +132,12 @@ class Window(pyglet.window.Window):
 
 	def on_map_sync(self, currentRoom):
 		self.current_room=currentRoom
-		self.draw_rooms(currentRoom)
+		self.redraw()
 
 	def on_resize(self, width, height):
 		super(Window, self).on_resize(width, height)
 		if self.current_room is not None:
-			self.draw_rooms()
+			self.redraw()
 
 	def on_key_press(self, sym, mod):
 		k=(sym, mod)
@@ -156,7 +161,7 @@ class Window(pyglet.window.Window):
 		elif sym == key.UP:
 			self.spacer += 0.1
 		self.say(str(self.spacer))
-		self.draw_rooms(self.current_room)
+		self.redraw()
 
 	def do_adjust_size(self, sym, mod):
 		if sym == key.LEFT:
@@ -164,12 +169,12 @@ class Window(pyglet.window.Window):
 		elif sym == key.RIGHT:
 			self.size += 10.0
 		self.say(str(self.size))
-		self.draw_rooms(self.current_room)
+		self.redraw()
 
 	def do_reset_zoom(self, sym, mod):
 		self.size=100.0
 		self.spacer=1.0
-		self.draw_rooms(self.current_room)
+		self.redraw()
 	def draw_circle(self, cp, radius, color, line_color=None, angle=0.0):
 		cp = Vec2d(cp)
 		#http://slabode.exofire.net/circle_draw.shtml
@@ -216,7 +221,7 @@ class Window(pyglet.window.Window):
 					('v2i', line),
 					('c4B', color.as_int() * 2))
 
-	def draw_fat_segment(self, a, b, radius, color, group=None):
+	def fat_segment_vertices(self, a, b, radius): 
 		pv1 = Vec2d(a)
 		pv2 = Vec2d(b)
 		d = pv2 - pv1
@@ -229,6 +234,10 @@ class Window(pyglet.window.Window):
 		p3 = pv2 + Vec2d(dx,dy)
 		p4 = pv2 - Vec2d(dx,dy)
 		vs = [i for xy in [p1,p2,p3]+[p2,p3,p4] for i in xy]
+		return vs
+
+	def draw_fat_segment(self, a, b, radius, color, group=None):
+		vs=self.fat_segment_vertices(a, b, radius)
 		l = len(vs)//2
 		return self.batch.add(l,pyglet.gl.GL_TRIANGLES, group,
 					('v2f', vs),
@@ -295,11 +304,12 @@ class Window(pyglet.window.Window):
 			group=self.groups[0]
 		if room.vnum not in self.visible_rooms:
 			vl = self.draw_polygon(vs, color, group=group)
-			self.visible_rooms[room.vnum] = vl
+			self.visible_rooms[room.vnum] = [vl, room, cp]
 		else:
-			vl=self.visible_rooms[room.vnum]
+			vl=self.visible_rooms[room.vnum][0]
 			vl.vertices=self.corners_2_vertices(vs)
 			self.batch.migrate(vl, pyglet.gl.GL_TRIANGLE_STRIP, group, self.batch)
+			self.visible_rooms[room.vnum][2]=cp
 
 	def draw_rooms(self, currentRoom=None):
 		if currentRoom is None:
@@ -315,7 +325,79 @@ class Window(pyglet.window.Window):
 		s=set(self.visible_rooms.keys())
 		if not s: return
 		for dead in s^newrooms:
-			self.visible_rooms[dead].delete()
+			self.visible_rooms[dead][0].delete()
 			del self.visible_rooms[dead]
+
+	def draw_exits(self):
+		_d = self.size/2.0
+		newexits=set()
+		if self.spacer <= 0.1:
+			for vnum in self.visible_rooms:
+				vl, room, cp= self.visible_rooms[vnum]
+				s=set(room.exits)
+				nonexits = (s^set(DIRECTIONS))-set(DIRECTIONS[-2:])
+				if not nonexits: continue
+				a, b, c, d = self.square_from_cp(cp, _d)
+				for e in nonexits:
+					if e == 'west':
+						s = (a, b)
+					elif e == 'north':
+						s = (b, c)
+					elif e == 'east':
+						s = (c, d)
+					elif e == 'south':
+						s = (d, a)
+					name = vnum+e[0]
+					if name in self.visible_exits:
+						vl=self.visible_exits[name]
+						vs=self.fat_segment_vertices(s[0], s[1], self.exit_radius2)
+						vl.vertices=vs
+					else:
+						self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.exit_radius2, self.exit_color2, group=self.groups[4])
+						newexits.add(name)
+		else:
+			for vnum in self.visible_rooms:
+				vl, room, cp= self.visible_rooms[vnum]
+				for e in room.exits:
+					if e == 'up' or e == 'down': continue
+					exit = room.exits[e]
+					if not self.world.isExitLogical(exit): continue
+					l = (self.size*self.spacer)
+					if not exit.to in self.world.rooms: l /= 2.0
+					if e == 'west':
+						a = Vec2d(cp.x-_d, cp.y)
+						b = a - (l, 0)
+					elif e == 'north':
+						a = Vec2d(cp.x, cp.y+_d)
+						b= a + (0, l)
+					elif e == 'east':
+						a = Vec2d(cp.x+_d, cp.y)
+						b = a + (l, 0)
+					elif e == 'south':
+						a = Vec2d(cp.x, cp.y-_d)
+						b = a - (0, l)
+					n1=vnum+exit.to
+					n2=exit.to+vnum
+					if n1 in self.visible_exits or n2 in self.visible_exits:
+						vl=self.visible_exits[n1]
+						vs=self.fat_segment_vertices(a, b, self.exit_radius1)
+						vl.vertices=vs
+					else:
+						self.visible_exits[n1] = self.draw_fat_segment(a, b, self.exit_radius1, self.exit_color1, group=self.groups[4])
+					self.visible_exits[n2] = self.visible_exits[n1]
+					newexits.add(n1)
+					newexits.add(n2)
+		for dead in newexits^set(self.visible_exits):
+			try:
+				self.visible_exits[dead].delete()
+			except AssertionError:
+				pass
+			del self.visible_exits[dead]
+
+
+	def redraw(self):
+		self.draw_rooms()
+		self.draw_exits()
+
 
 Window.register_event_type('on_map_sync')
