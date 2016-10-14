@@ -65,11 +65,11 @@ class Window(pyglet.window.Window):
 		self._size=100.0
 		self._spacer=0.7
 		self.current_room_border1=0.1
-		self.current_room_border2=0.5
-		self.current_room_border_color=Color(255,255,255,255)
+		self.current_room_border2=0.4
+		self.current_room_border_color=Color(220, 120, 160, 255)
 		self.current_room_border_vl = None
 		self.exit_radius1=10.0
-		self.exit_radius2=10.0
+		self.exit_radius2=0.05
 		self.exit_color1=Color(255, 228, 225, 225)
 		self.exit_color2=Color(0, 0, 0, 255)
 		groups=[]
@@ -175,6 +175,7 @@ class Window(pyglet.window.Window):
 		self.size=100.0
 		self.spacer=1.0
 		self.redraw()
+
 	def draw_circle(self, cp, radius, color, line_color=None, angle=0.0):
 		cp = Vec2d(cp)
 		#http://slabode.exofire.net/circle_draw.shtml
@@ -350,10 +351,10 @@ class Window(pyglet.window.Window):
 					name = vnum+e[0]
 					if name in self.visible_exits:
 						vl=self.visible_exits[name]
-						vs=self.fat_segment_vertices(s[0], s[1], self.exit_radius2)
+						vs=self.fat_segment_vertices(s[0], s[1], self.size*self.exit_radius2)
 						vl.vertices=vs
 					else:
-						self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.exit_radius2, self.exit_color2, group=self.groups[4])
+						self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size*self.exit_radius2, self.exit_color2, group=self.groups[4])
 					newexits.add(name)
 		else:
 			for vnum in self.visible_rooms:
@@ -380,10 +381,10 @@ class Window(pyglet.window.Window):
 					n2=exit.to+vnum
 					if n1 in self.visible_exits or n2 in self.visible_exits:
 						vl=self.visible_exits[n1]
-						vs=self.fat_segment_vertices(a, b, self.exit_radius1)
+						vs=self.fat_segment_vertices(a, b, self.size/self.exit_radius1)
 						vl.vertices=vs
 					else:
-						self.visible_exits[n1] = self.draw_fat_segment(a, b, self.exit_radius1, self.exit_color1, group=self.groups[4])
+						self.visible_exits[n1] = self.draw_fat_segment(a, b, self.size/self.exit_radius1, self.exit_color1, group=self.groups[4])
 						self.visible_exits[n2] = self.visible_exits[n1]
 					newexits.add(n1)
 					newexits.add(n2)
@@ -393,7 +394,6 @@ class Window(pyglet.window.Window):
 			except AssertionError:
 				pass
 			del self.visible_exits[dead]
-
 
 	def redraw(self):
 		self.draw_rooms()
