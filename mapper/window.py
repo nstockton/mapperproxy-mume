@@ -61,22 +61,24 @@ class Window(pyglet.window.Window):
 		self.visible_rooms = {}
 		self.visible_exits = {}
 		pyglet.clock.schedule_interval(self.queue_observer, FPS)
-		pyglet.clock.schedule_interval(self.border_blinker, 1.0/3)
 		self.current_room=None
 		self._size=100.0
-		self._spacer=0.7
-		self.current_room_border1=0.1
-		self.current_room_border2=0.4
-		self.current_room_border_color=Color(220, 120, 160, 255)
-		self.border_blink_on=self.current_room_border_color
-		self.border_blink_off=Color(0,0,0,255)
+		self._spacer=1.0
+		self.current_room_border1=0.05
+		self.current_room_border2=0.5
+		self.current_room_border=self.current_room_border2
+		self.current_room_border_color=Color(255, 255, 255, 255)
 		self.current_room_border_vl = None
+		self.blink = True
+		self.blink_rate = 2 #times per second
+		if self.blink: pyglet.clock.schedule_interval(self.border_blinker, 1.0/self.blink_rate)
+		
 		self.exit_radius1=10.0
 		self.exit_radius2=0.05
 		self.exit_color1=Color(255, 228, 225, 225)
 		self.exit_color2=Color(0, 0, 0, 255)
 		groups=[]
-		for i in xrange(5):
+		for i in range(5):
 			groups.append(pyglet.graphics.OrderedGroup(i))
 		self.groups=tuple(groups)
 
@@ -129,11 +131,11 @@ class Window(pyglet.window.Window):
 					break
 
 	def border_blinker(self, dt):
-		on, off, color = self.border_blink_on, self.border_blink_off, self.current_room_border_color
-		if color == on:
-			self.current_room_border_color = off
+		b, b1, b2 = self.current_room_border, self.current_room_border1, self.current_room_border2
+		if b == b1:
+			self.current_room_border=b2
 		else:
-			self.current_room_border_color = on
+			self.current_room_border=b1
 		self._draw_current_room_border()
 
 	def on_draw(self):
@@ -290,7 +292,7 @@ class Window(pyglet.window.Window):
 		cp=self.cp
 		d1 = (self.size/2.0) * (1.0+self.current_room_border1)
 		vs1=[cp-d1, cp-(d1,d1*-1), cp+d1, cp+(d1,d1*-1)]
-		d2 = d1*(1.0+self.current_room_border2)
+		d2 = d1*(1.0+self.current_room_border)
 		vs2=[cp-d2, cp-(d2,d2*-1), cp+d2, cp+(d2,d2*-1)]
 		if self.current_room_border_vl is None:
 			vl1 = self.draw_polygon(vs1, Color(0,0,0,255), group=self.groups[2])
