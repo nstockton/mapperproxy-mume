@@ -49,7 +49,7 @@ class Color(namedtuple("Color", ["r","g","b","a"])):
 class Window(pyglet.window.Window):
 	def __init__(self, world):
 		caption='MPM'
-		super(Window, self).__init__(caption=caption, resizable=True, fullscreen=True)
+		super(Window, self).__init__(caption=caption, resizable=True, fullscreen=True, vsync=False)
 		self.speech=Speech()
 		self.say=self.speech.say
 		self.maximize()
@@ -59,7 +59,7 @@ class Window(pyglet.window.Window):
 		self.batch=pyglet.graphics.Batch()
 		self.visible_rooms = {}
 		self.visible_exits = {}
-		pyglet.clock.schedule_interval(self.queue_observer, FPS)
+		pyglet.clock.schedule_interval_soft(self.queue_observer, FPS)
 		self.current_room=None
 		self._size=100.0
 		self._spacer=1.0
@@ -70,7 +70,7 @@ class Window(pyglet.window.Window):
 		self.current_room_border_vl = None
 		self.blink = True
 		self.blink_rate = 2 #times per second
-		if self.blink: pyglet.clock.schedule_interval(self.border_blinker, 1.0/self.blink_rate)
+		if self.blink: pyglet.clock.schedule_interval_soft(self.border_blinker, 1.0/self.blink_rate)
 		self.exit_radius1=10.0
 		self.exit_radius2=0.05
 		self.exit_color1=Color(255, 228, 225, 225)
