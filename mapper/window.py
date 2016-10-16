@@ -25,7 +25,7 @@ try:
 except NameError:
 	pass
 
-FPS=1.0/60
+FPS = 60
 KEYS={
 (key.ESCAPE, 0): 'reset_zoom',
 (key.LEFT, 0): 'adjust_size',
@@ -60,7 +60,7 @@ class Window(pyglet.window.Window):
 		self.batch=pyglet.graphics.Batch()
 		self.visible_rooms = {}
 		self.visible_exits = {}
-		pyglet.clock.schedule_interval_soft(self.queue_observer, FPS)
+		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 		self.current_room=None
 		self._size=100.0
 		self._spacer=1.0
