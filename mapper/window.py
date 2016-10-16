@@ -348,6 +348,24 @@ class Window(pyglet.window.Window):
 			self.visible_rooms[dead][0].delete()
 			del self.visible_rooms[dead]
 
+	def draw_up_down_exits(self, name, cp, up_or_down):
+		if up_or_down.lower() == 'up':
+			new_cp = cp+(0, self.size/4.0)
+			angle=90
+		elif up_or_down.lower() == 'down':
+			new_cp = cp-(0, self.size/4.0)
+			angle=-90
+		vs1=self.equilateral_triangle(new_cp, (self.size/4.0)+14, angle)
+		vs2=self.equilateral_triangle(new_cp, self.size/4.0, angle)
+		if name in self.visible_exits:
+			vl1, vl2=self.visible_exits[name]
+			vl1.vertices=self.corners_2_vertices(vs1)
+			vl2.vertices=self.corners_2_vertices(vs2)
+		else:
+			vl1=self.draw_polygon(vs1, self.exit_color2, group=self.groups[4])
+			vl2=self.draw_polygon(vs2, self.exit_color1, group=self.groups[4])
+			self.visible_exits[name]=(vl1, vl2)
+
 	def draw_exits(self):
 		_d = self.size/2.0
 		directions_2d = frozenset(DIRECTIONS[:-2])
@@ -360,6 +378,8 @@ class Window(pyglet.window.Window):
 					continue
 				a, b, c, d = self.square_from_cp(cp, _d)
 				for e in nonexits:
+					name = vnum+e[0]
+					newexits.add(name)
 					if e == 'west':
 						s = (a, b)
 					elif e == 'north':
@@ -368,24 +388,23 @@ class Window(pyglet.window.Window):
 						s = (c, d)
 					elif e == 'south':
 						s = (d, a)
-					name = vnum+e[0]
+					elif e == 'up' or e == 'down':
+						self.draw_up_down_exits(name, cp, e)
+						continue
 					if name in self.visible_exits:
 						vl=self.visible_exits[name]
 						vs=self.fat_segment_vertices(s[0], s[1], self.size*self.exit_radius2)
-						vl.vertices=vs
 					else:
 						self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size*self.exit_radius2, self.exit_color2, group=self.groups[4])
-					newexits.add(name)
 		else:
 			for vnum, item in iterItems(self.visible_rooms):
 				vl, room, cp= item
 				for e in room.exits:
-					if e in {"up", "down"}:
-						continue
 					exit = room.exits[e]
 					if not self.world.isExitLogical(exit): continue
-					l = (self.size*self.spacer)
-					if not exit.to in self.world.rooms: l /= 2.0
+					l = (self.size*self.spacer)/2
+					name=vnum+e[0]
+					newexits.add(name)
 					if e == 'west':
 						a = Vec2d(cp.x-_d, cp.y)
 						b = a - (l, 0)
@@ -398,20 +417,22 @@ class Window(pyglet.window.Window):
 					elif e == 'south':
 						a = Vec2d(cp.x, cp.y-_d)
 						b = a - (0, l)
-					n1=vnum+exit.to
-					n2=exit.to+vnum
-					if n1 in self.visible_exits or n2 in self.visible_exits:
-						vl=self.visible_exits[n1]
+					elif e == 'up' or e == 'down':
+						self.draw_up_down_exits(name, cp, e)
+						continue
+					if name in self.visible_exits:
+						vl=self.visible_exits[name]
 						vs=self.fat_segment_vertices(a, b, self.size/self.exit_radius1)
 						vl.vertices=vs
 					else:
-						self.visible_exits[n1] = self.draw_fat_segment(a, b, self.size/self.exit_radius1, self.exit_color1, group=self.groups[4])
-						self.visible_exits[n2] = self.visible_exits[n1]
-					newexits.add(n1)
-					newexits.add(n2)
+						self.visible_exits[name] = self.draw_fat_segment(a, b, self.size/self.exit_radius1, self.exit_color1, group=self.groups[4])
 		for dead in newexits^set(self.visible_exits):
 			try:
-				self.visible_exits[dead].delete()
+				try:
+					self.visible_exits[dead].delete()
+				except AttributeError:
+					for d in self.visible_exits[dead]:
+						d.delete()
 			except AssertionError:
 				pass
 			del self.visible_exits[dead]
