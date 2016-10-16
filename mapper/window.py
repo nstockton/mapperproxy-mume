@@ -15,6 +15,7 @@ except ImportError:
 	from queue import Empty as QueueEmpty
 
 from .constants import DIRECTIONS, TERRAIN_COLORS
+from .utils import iterItems
 from .vec2d import Vec2d
 
 # Monkey patch range with xrange in Python2.
@@ -70,15 +71,13 @@ class Window(pyglet.window.Window):
 		self.current_room_border_vl = None
 		self.blink = True
 		self.blink_rate = 2 #times per second
-		if self.blink: pyglet.clock.schedule_interval_soft(self.border_blinker, 1.0/self.blink_rate)
+		if self.blink:
+			pyglet.clock.schedule_interval_soft(self.border_blinker, 1.0/self.blink_rate)
 		self.exit_radius1=10.0
 		self.exit_radius2=0.05
 		self.exit_color1=Color(255, 228, 225, 225)
 		self.exit_color2=Color(0, 0, 0, 255)
-		groups=[]
-		for i in range(5):
-			groups.append(pyglet.graphics.OrderedGroup(i))
-		self.groups=tuple(groups)
+		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in range(5))
 
 	@property
 	def size(self):
@@ -284,7 +283,7 @@ class Window(pyglet.window.Window):
 	def num_rooms_to_draw(self):
 		rooms_w=(self.width//self.size)//2
 		rooms_h=(self.height//self.size)//2
-		return (int(rooms_w),int(rooms_h),1)
+		return (rooms_w,rooms_h,1)
 
 	def _draw_current_room_border(self):
 		cp=self.cp
@@ -337,27 +336,28 @@ class Window(pyglet.window.Window):
 			currentRoom=self.current_room
 		self._draw_current_room_border()
 		self.draw_room(currentRoom, self.cp, group=self.groups[3])
-		newrooms=set([currentRoom.vnum])
+		newrooms = {currentRoom.vnum}
 		for vnum, room, x, y, z in self.world.getVisibleNeighbors(roomObj=currentRoom, radius=self.num_rooms_to_draw()):
 			if z == 0:
 				newrooms.add(vnum)
 				d=Vec2d(x, y)*(self.size*(self.spacer+1.0))
 				self.draw_room(room, self.cp + d)
-		s=set(self.visible_rooms.keys())
-		if not s: return
-		for dead in s^newrooms:
+		if not self.visible_rooms:
+			return
+		for dead in set(self.visible_rooms) ^ newrooms:
 			self.visible_rooms[dead][0].delete()
 			del self.visible_rooms[dead]
 
 	def draw_exits(self):
 		_d = self.size/2.0
+		directions_2d = frozenset(DIRECTIONS[:-2])
 		newexits=set()
 		if self.spacer <= 0.1:
-			for vnum in self.visible_rooms:
-				vl, room, cp= self.visible_rooms[vnum]
-				s=set(room.exits)
-				nonexits = (s^set(DIRECTIONS))-set(DIRECTIONS[-2:])
-				if not nonexits: continue
+			for vnum, item in iterItems(self.visible_rooms):
+				vl, room, cp= item
+				nonexits = set(room.exits) ^ directions_2d
+				if not nonexits:
+					continue
 				a, b, c, d = self.square_from_cp(cp, _d)
 				for e in nonexits:
 					if e == 'west':
@@ -377,10 +377,11 @@ class Window(pyglet.window.Window):
 						self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size*self.exit_radius2, self.exit_color2, group=self.groups[4])
 					newexits.add(name)
 		else:
-			for vnum in self.visible_rooms:
-				vl, room, cp= self.visible_rooms[vnum]
+			for vnum, item in iterItems(self.visible_rooms):
+				vl, room, cp= item
 				for e in room.exits:
-					if e == 'up' or e == 'down': continue
+					if e in {"up", "down"}:
+						continue
 					exit = room.exits[e]
 					if not self.world.isExitLogical(exit): continue
 					l = (self.size*self.spacer)
