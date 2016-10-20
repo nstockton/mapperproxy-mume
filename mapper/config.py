@@ -7,6 +7,7 @@ import codecs
 import collections
 import json
 import os.path
+import threading
 
 # Local Modules:
 from .utils import getDirectoryPath
@@ -71,3 +72,5 @@ class Config(collections.MutableMapping):
 
 	def __len__(self):
 		return len(self._config)
+
+config_lock = threading.Lock()
