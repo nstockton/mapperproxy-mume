@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import codecs
+import collections
 import heapq
 import itertools
 import json
@@ -218,21 +219,25 @@ class World(object):
 		else:
 			return False
 
-	def getVisibleNeighbors(self, roomObj=None, radius=1):
+	def getVisibleNeighbors(self, start=None, radius=1):
 		"""A generator which yields all rooms in the vicinity of a given room by X-Y-Z coordinates.
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
-		if not roomObj:
-			roomObj = self.currentRoom
-		try:
-			radiusX, radiusY, radiusZ = radius
-		except TypeError:
-			radiusX = radiusY = radiusZ = radius
-		x = roomObj.x
-		y = roomObj.y
-		z = roomObj.z
+		if start is None:
+			startX = self.currentRoom.x
+			startY = self.currentRoom.y
+			startZ = self.currentRoom.z
+		elif isinstance(start, Room):
+			startX = start.x
+			startY = start.y
+			startZ = start.z
+		elif isinstance(start, collections.Iterable):
+			startX, startY, startZ = start
+		if not isinstance(radius, collections.Iterable):
+			radius = (int(radius), int(radius), int(radius))
 		for vnum, obj in iterItems(self.rooms):
-			if abs(x - obj.x) <= radiusX and abs(y - obj.y) <= radiusY and abs(z - obj.z) <= radiusZ and obj is not roomObj:
-				yield(vnum, obj, obj.x - x, obj.y - y, obj.z - z)
+			difference = (obj.x - startX, obj.y - startY, obj.z - startZ)
+			if any(difference) and all(abs(coord) <= rad for coord, rad in zip(difference, radius)):
+				yield(vnum, obj) + difference
 
 	def getVnum(self, roomObj=None):
 		result = None
