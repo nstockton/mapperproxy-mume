@@ -45,6 +45,7 @@ DIRECTIONS_VEC2D = {
 	'west': Vec2d(-1, 0)
 	}
 
+
 class Color(namedtuple("Color", ["r","g","b","a"])):
 	"""Color tuple used by the debug drawing API.
 	"""
@@ -55,6 +56,32 @@ class Color(namedtuple("Color", ["r","g","b","a"])):
 
 	def as_float(self):
 		return self[0]/255., self[1]/255., self[2]/255., self[3]/255.
+
+class Blinker(object):
+	def __init__(self, blink_rate, draw_func, args_func):
+		self.blink_rate = blink_rate
+		self.draw_func = draw_func
+		self.args_func = args_func
+		self.since = 0
+		self.vl = None
+
+	def blink(self, dt):
+		self.since+=dt
+		if self.since >= 1.0/self.blink_rate:
+			if self.vl is None:
+				args, kwargs = self.args_func()
+				self.vl = self.draw_func(*args, **kwargs)
+			else:
+				self.vl.delete()
+				self.vl=None
+			self.since = 0
+
+	def delete(self):
+		if self.vl is not None: self.vl.delete()
+		self.vl = None
+
+	def __del__(self):
+		self.delete()
 
 
 class Window(pyglet.window.Window):
@@ -82,16 +109,13 @@ class Window(pyglet.window.Window):
 		self.batch=pyglet.graphics.Batch()
 		self.visible_rooms = {}
 		self.visible_exits = {}
+		self.blinkers={}
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 		self.current_room=None
-		self.current_room_border1=0.05
-		self.current_room_border2=0.3
-		self.current_room_border=self.current_room_border2
-		self.current_room_border_color=Color(255, 255, 255, 255)
-		self.current_room_border_vl = None
 		if self.blink:
-			pyglet.clock.schedule_interval_soft(self.border_blinker, 1.0/self.blink_rate)
-		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in range(5))
+			pyglet.clock.schedule_interval_soft(self.blinker, 1.0/20)
+			self.enable_current_room_markers()
+		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in range(6))
 
 	@property
 	def size(self):
@@ -165,6 +189,13 @@ class Window(pyglet.window.Window):
 	def blink(self, value):
 		value = bool(value)
 		self._cfg['blink'] = value
+		if value:
+			self.enable_current_room_markers()
+		else:
+			markers = self.blinkers['current_room_markers']
+			del blinkers['current_room_markers']
+			for m in markers:
+				m.delete()
 
 	@property
 	def blink_rate(self):
@@ -183,6 +214,27 @@ class Window(pyglet.window.Window):
 		if value < 0: value = 0
 		elif value > 15: value = 15
 		self._cfg['blink_rate'] = value
+
+	@property
+	def current_room_mark_radius(self):
+		try:
+			value = int(self._cfg['current_room_mark_radius'])
+			if value < 1: value = 1
+			elif value > 100: value = 100
+		except KeyError:
+			self._cfg['current_room_mark_radius'] = value = 10
+		except ValueError:
+			self.message('Invalid value for current_room_mark_radius: {}'.format(value))
+			self._cfg['current_room_mark_radius'] = value = 10
+		return value
+
+	@property
+	def current_room_mark_color(self):
+		try:
+			color = self._cfg['current_room_mark_color']
+		except KeyError:
+			self._cfg['current_room_mark_color'] = color = (255, 255, 255, 255)
+		return Color(*color)
 
 	@property
 	def terrain_colors(self):
@@ -219,13 +271,13 @@ class Window(pyglet.window.Window):
 				except QueueEmpty:
 					break
 
-	def border_blinker(self, dt):
-		b, b1, b2 = self.current_room_border, self.current_room_border1, self.current_room_border2
-		if b == b1:
-			self.current_room_border=b2
-		else:
-			self.current_room_border=b1
-		self._draw_current_room_border()
+	def blinker(self, dt):
+		for k, v in self.blinkers.items():
+			try:
+				v.blink(dt)
+			except AttributeError:
+				for v1 in v:
+					v1.blink(dt)
 
 	def on_close(self):
 		with config_lock:
@@ -451,7 +503,6 @@ class Window(pyglet.window.Window):
 	def draw_rooms(self, currentRoom=None):
 		if currentRoom is None:
 			currentRoom=self.current_room
-		if self.blink: self._draw_current_room_border()
 		self.draw_room(currentRoom, self.cp, group=self.groups[3])
 		newrooms = {currentRoom.vnum}
 		for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=currentRoom, radius=self.num_rooms_to_draw()):
@@ -569,7 +620,7 @@ class Window(pyglet.window.Window):
 						if name in self.visible_exits:
 							vl = self.visible_exits[name]
 							vl.vertices = self.fat_segment_vertices(s[0], s[1], self.size/radius/2.0)
-							vl.colors = color*(len(vl.colors)/4)
+							vl.colors = color*(len(vl.colors)//4)
 						else:
 							self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size/radius, color, group=self.groups[4])
 					else:
@@ -626,6 +677,15 @@ class Window(pyglet.window.Window):
 			except AssertionError:
 				pass
 			del self.visible_exits[dead]
+
+	def enable_current_room_markers(self):
+		if 'current_room_markers' in self.blinkers: return
+		current_room_markers=[]
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp-(self.size/2.0), (self.size/100.0)*self.current_room_mark_radius, self.current_room_mark_color), {'group':self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp-(self.size/2.0, -self.size/2.0), (self.size/100.0)*self.current_room_mark_radius, self.current_room_mark_color), {'group':self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp+(self.size/2.0), (self.size/100.0)*self.current_room_mark_radius, self.current_room_mark_color), {'group':self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp+(self.size/2.0, -self.size/2.0), (self.size/100.0)*self.current_room_mark_radius, self.current_room_mark_color), {'group':self.groups[5]})))
+		self.blinkers['current_room_markers']=tuple(current_room_markers)
 
 	def redraw(self):
 		self.draw_rooms()
