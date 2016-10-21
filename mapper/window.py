@@ -14,6 +14,7 @@ try:
 except ImportError:
 	from queue import Empty as QueueEmpty
 
+from .config import Config, config_lock
 from .constants import DIRECTIONS, TERRAIN_COLORS
 from .utils import iterItems
 from .vec2d import Vec2d
@@ -58,8 +59,21 @@ class Color(namedtuple("Color", ["r","g","b","a"])):
 
 class Window(pyglet.window.Window):
 	def __init__(self, world):
+		with config_lock:
+			c=Config()
+			try:
+				cfg = c['gui']
+			except KeyError:
+				c['gui'] = cfg = {}
+				c.save()
+			del c
+		self._cfg=cfg
 		caption='MPM'
-		super(Window, self).__init__(caption=caption, resizable=True, fullscreen=True, vsync=False)
+		try:
+			fs = cfg['fullscreen']
+		except KeyError:
+			cfg['fullscreen'] = fs = False
+		super(Window, self).__init__(caption=caption, resizable=True, vsync=False, fullscreen=fs)
 		self.speech=Speech()
 		self.say=self.speech.say
 		self.maximize()
@@ -71,37 +85,63 @@ class Window(pyglet.window.Window):
 		self.visible_exits = {}
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 		self.current_room=None
-		self._size=100.0
-		self._spacer=10
 		self.current_room_border1=0.05
 		self.current_room_border2=0.3
 		self.current_room_border=self.current_room_border2
 		self.current_room_border_color=Color(255, 255, 255, 255)
 		self.current_room_border_vl = None
-		self.blink = True
-		self.blink_rate = 2 #times per second
 		if self.blink:
 			pyglet.clock.schedule_interval_soft(self.border_blinker, 1.0/self.blink_rate)
-		self.exit_radius=10
-		self.exit_color1=Color(255, 228, 225, 225)
-		self.exit_color2=Color(0, 0, 0, 255)
 		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in range(5))
 
 	@property
 	def size(self):
-		return self._size
+		try:
+			value = int(self._cfg['room_size'])
+			if not 0 <= value <= 250: raise ValueError
+			return value
+		except KeyError:
+			self.size = 100
+			return 100
+		except ValueError:
+			self.message('Invalid value for room_size in config.json: {}'.format(self._cfg['room_size']))
+			self.size = 100
+			return 100
 	@size.setter
 	def size(self, value):
-		size=int(value)
+		value = int(value)
 		if value < 50:
 			value=50
 		elif value > 250:
 			value=250
-		self._size=value
+		self._cfg['room_size'] = value
 
 	@property
 	def spacer(self):
-		return self._spacer
+		try:
+			value = self._cfg['spacer']
+			if isinstance(value, int):
+				if 0<=value<=20:
+					return value
+				else:
+					raise ValueError
+			elif isinstance(value, float):
+				if 0.0<=value<=2.0:
+					v=int(value*10)
+					self._cfg['spacer'] = v
+					return v
+				else:
+					raise ValueError
+			else:
+				raise ValueError
+		except KeyError:
+			v = 10
+			self.spacer = v
+			return v
+		except ValueError:
+			self.message('Invalid value for spacer in config.json: {}'.format(value))
+			self.spacer = 10
+			return 10
 	@spacer.setter
 	def spacer(self,value):
 		value = int(value)
@@ -109,11 +149,42 @@ class Window(pyglet.window.Window):
 			value = 0
 		elif value > 20:
 			value = 20
-		self._spacer=value
+		self._cfg['spacer'] = value
 
 	@property
 	def spacer_as_float(self):
 		return self.spacer/10.0
+
+	@property
+	def blink(self):
+		try:
+			value = bool(self._cfg['blink'])
+		except KeyError:
+			self._cfg['blink'] = value = True
+		return value
+	@blink.setter
+	def blink(self, value):
+		value = bool(value)
+		self._cfg['blink'] = value
+
+	@property
+	def blink_rate(self):
+		try:
+			value = int(self._cfg['blink_rate'])
+			if not 0 <= value <= 15: raise ValueError
+		except KeyError:
+			self._cfg['blink_rate'] = value = 2
+		except ValueError:
+			self.message('Invalid value for blink_rate in config.json: {}'.format(value))
+			self._cfg['blink_rate'] = value = 2
+		return value
+	@blink_rate.setter
+	def blink_rate(self, value):
+		value = int(value)
+		if value < 0: value = 0
+		elif value > 15: value = 15
+		self._cfg['blink_rate'] = value
+
 
 	@property
 	def cx(self):
@@ -127,14 +198,17 @@ class Window(pyglet.window.Window):
 	def cp(self):
 		return Vec2d(self.cx,self.cy)
 
+	def message(self, text):
+		self.say(text)
+		self.world.output(text)
+
 	def queue_observer(self, dt):
 		with self._gui_queue_lock:
 			while not self._gui_queue.empty():
 				try:
 					e = self._gui_queue.get_nowait()
 					if e is None:
-						self.close()
-						break
+						e = ('on_close',)
 					self.dispatch_event(e[0], *e[1:])
 				except QueueEmpty:
 					break
@@ -146,6 +220,14 @@ class Window(pyglet.window.Window):
 		else:
 			self.current_room_border=b1
 		self._draw_current_room_border()
+
+	def on_close(self):
+		with config_lock:
+			c=Config()
+			c['gui'].update(self._cfg)
+			c.save()
+			del c
+		super(Window, self).on_close()
 
 	def on_draw(self):
 		pyglet.gl.glClearColor(0,0,0,0)
@@ -170,12 +252,14 @@ class Window(pyglet.window.Window):
 				try:
 					func(sym, mod)
 				except Exception as e:
-					self.say(e.message)
+					self.message(e.message)
 			except AttributeError:
-				self.say('Invalid key assignment for key {}. No such function {}.'.format(k, funcname))
+				self.message('Invalid key assignment for key {}. No such function {}.'.format(k, funcname))
 
 	def do_toggle_fullscreen(self, sym, mod):
-		self.set_fullscreen(not self.fullscreen)
+		fs = not self.fullscreen
+		self.set_fullscreen(fs)
+		self._cfg['fullscreen'] = fs
 
 	def do_adjust_spacer(self, sym, mod):
 		if sym== key.DOWN:
@@ -382,6 +466,26 @@ class Window(pyglet.window.Window):
 			del self.visible_rooms[dead]
 
 	def draw_exits(self):
+		try:
+			exit_color1 = self._cfg['exit_color1']
+		except KeyError:
+			self._cfg['exit_color1'] = exit_color1 = (255, 228, 225, 255)
+		try:
+			exit_color2 = self._cfg['exit_color2']
+		except KeyError:
+			self._cfg['exit_color2'] = exit_color2 = (0, 0, 0, 255)
+		exit_color1 = Color(*exit_color1)
+		exit_color2 = Color(*exit_color2)
+		try:
+			radius = self._cfg['exit_radius']
+			if not isinstance(radius, int): raise ValueError
+		except KeyError:
+			radius = 10
+			self._cfg['exit_radius'] = radius
+		except ValueError:
+			self.message('Invalid value for exit_radius in config.json: {}'.format(radius))
+			radius = 10
+			self._cfg['exit_radius'] = radius
 		_d = self.size/2
 		newexits=set()
 		for vnum, item in iterItems(self.visible_rooms):
@@ -410,8 +514,8 @@ class Window(pyglet.window.Window):
 							vl1.vertices=self.corners_2_vertices(vs1)
 							vl2.vertices=self.corners_2_vertices(vs2)
 						else:
-							vl1=self.draw_polygon(vs1, self.exit_color2, group=self.groups[4])
-							vl2=self.draw_polygon(vs2, self.exit_color1, group=self.groups[4])
+							vl1=self.draw_polygon(vs1, exit_color2, group=self.groups[4])
+							vl2=self.draw_polygon(vs2, exit_color1, group=self.groups[4])
 							self.visible_exits[name]=(vl1, vl2)
 					elif exit.to in {'undefined', 'death'}:
 						if exit.to == 'undefined':
@@ -419,7 +523,7 @@ class Window(pyglet.window.Window):
 								vl = self.visible_exits[name]
 								vl.x, vl.y = new_cp
 							else:
-								vl = pyglet.text.Label('?', font_name='Times New Roman', font_size=(self.size/100.0)*72, x=new_cp.x, y=new_cp.y, anchor_x='center', anchor_y='center', color=self.exit_color2, batch=self.batch, group=self.groups[4])
+								vl = pyglet.text.Label('?', font_name='Times New Roman', font_size=(self.size/100.0)*72, x=new_cp.x, y=new_cp.y, anchor_x='center', anchor_y='center', color=exit_color2, batch=self.batch, group=self.groups[4])
 								self.visible_exits[name] = vl
 						else: #death
 							if name in self.visible_exits:
@@ -433,20 +537,20 @@ class Window(pyglet.window.Window):
 						l.length /=2
 						a=new_cp - l
 						d = new_cp +l
-						r=(self.size/self.exit_radius)/2.0
+						r=(self.size/radius)/2.0
 						if name in self.visible_exits:
 							vl1, vl2 = self.visible_exits[name]
 							vs1, vs2 = self.arrow_vertices(a, d, r)
 							vl1.vertices = vs1
 							vl2.vertices = vs2
 						else:
-							vl1, vl2 = self.draw_arrow(a, d, r, self.exit_color2, group=self.groups[4])
+							vl1, vl2 = self.draw_arrow(a, d, r, exit_color2, group=self.groups[4])
 							self.visible_exits[name] = (vl1, vl2)
 				else:
 					if self.spacer == 0:
 						name += '-'
 						if exit is None:
-							color = self.exit_color2
+							color = exit_color2
 						elif exit.to == 'undefined':
 							color = Color(0, 0, 255, 255)
 						elif exit.to == 'death':
@@ -464,10 +568,10 @@ class Window(pyglet.window.Window):
 							s = (d, a)
 						if name in self.visible_exits:
 							vl = self.visible_exits[name]
-							vl.vertices = self.fat_segment_vertices(s[0], s[1], self.size/self.exit_radius/2.0)
+							vl.vertices = self.fat_segment_vertices(s[0], s[1], self.size/radius/2.0)
 							vl.colors = color*(len(vl.colors)/4)
 						else:
-							self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size/self.exit_radius, color, group=self.groups[4])
+							self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size/radius, color, group=self.groups[4])
 					else:
 						if self.world.isExitLogical(exit):
 							l = (self.size*self.spacer_as_float)/2
@@ -475,10 +579,10 @@ class Window(pyglet.window.Window):
 							b=a+(dv*l)
 							if name in self.visible_exits:
 								vl=self.visible_exits[name]
-								vs=self.fat_segment_vertices(a, b, self.size/self.exit_radius)
+								vs=self.fat_segment_vertices(a, b, self.size/radius)
 								vl.vertices=vs
 							else:
-								self.visible_exits[name] = self.draw_fat_segment(a, b, self.size/self.exit_radius, self.exit_color1, group=self.groups[4])
+								self.visible_exits[name] = self.draw_fat_segment(a, b, self.size/radius, exit_color1, group=self.groups[4])
 						elif exit.to in {'undefined', 'death'}:
 							l = (self.size*0.75)
 							new_cp = cp + dv*l
@@ -487,7 +591,7 @@ class Window(pyglet.window.Window):
 									vl = self.visible_exits[name]
 									vl.x, vl.y = new_cp
 								else:
-									vl = pyglet.text.Label('?', font_name='Times New Roman', font_size=(self.size/100.0)*72, x=new_cp.x, y=new_cp.y, anchor_x='center', anchor_y='center', color=self.exit_color1, batch=self.batch, group=self.groups[4])
+									vl = pyglet.text.Label('?', font_name='Times New Roman', font_size=(self.size/100.0)*72, x=new_cp.x, y=new_cp.y, anchor_x='center', anchor_y='center', color=exit_color1, batch=self.batch, group=self.groups[4])
 									self.visible_exits[name] = vl
 							else: #death
 								if name in self.visible_exits:
@@ -497,11 +601,11 @@ class Window(pyglet.window.Window):
 									vl = pyglet.text.Label('X', font_name='Times New Roman', font_size=(self.size/100.0)*72, x=new_cp.x, y=new_cp.y, anchor_x='center', anchor_y='center', color=Color(255,0,0,255), batch=self.batch, group=self.groups[4])
 									self.visible_exits[name] = vl
 						else: #one-way, random, etc.
-							color = self.exit_color1
+							color = exit_color1
 							l = (self.size*self.spacer_as_float)/2
 							a=cp+(dv*_d)
 							d=a+(dv*l)
-							r = ((self.size/self.exit_radius)/2.0)*self.spacer_as_float
+							r = ((self.size/radius)/2.0)*self.spacer_as_float
 							if name in self.visible_exits:
 								vl1, vl2=self.visible_exits[name]
 								vs1, vs2=self.arrow_vertices(a, d, r)
