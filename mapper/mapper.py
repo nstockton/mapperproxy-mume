@@ -11,11 +11,20 @@ from telnetlib import IAC, GA
 import threading
 from timeit import default_timer
 
+from .config import Config, config_lock
 from .constants import DIRECTIONS, REVERSE_DIRECTIONS, RUN_DESTINATION_REGEX, USER_COMMANDS_REGEX, EXIT_TAGS_REGEX, ANSI_COLOR_REGEX, MOVEMENT_FORCED_REGEX, MOVEMENT_PREVENTED_REGEX, TERRAIN_COSTS, TERRAIN_SYMBOLS, LIGHT_SYMBOLS
 from .world import Room, Exit, World
 from .utils import iterItems, decodeBytes, regexFuzzy
 from .xmlparser import MumeXMLParser
 
+with config_lock:
+	c=Config()
+	try:
+		USE_GUI=bool(c['use_gui'])
+	except KeyError:
+		c['use_gui'] = USE_GUI = True
+		c.save()
+	del c
 
 IAC_GA = IAC + GA
 USER_DATA = 0
@@ -38,7 +47,7 @@ class Mapper(threading.Thread, World):
 		self.lastPathFindQuery = ""
 		self.prompt = ">"
 		self.xmlParser = MumeXMLParser()
-		World.__init__(self)
+		World.__init__(self, use_gui=USE_GUI)
 
 	def output(self, text):
 		# Override World.output.

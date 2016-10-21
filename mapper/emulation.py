@@ -5,16 +5,32 @@
 import codecs
 import json
 import os.path
-import pyglet
 import re
 import subprocess
 import threading
 import textwrap
 
 from .world import World
+from .config import Config, config_lock
 from .constants import DIRECTIONS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS
 from .terminalsize import get_terminal_size
 from .utils import iterItems, getDirectoryPath
+
+with config_lock:
+	c=Config()
+	try:
+		USE_GUI=bool(c['use_gui'])
+	except KeyError:
+		c['use_gui'] = USE_GUI = True
+		c.save()
+	del c
+
+if USE_GUI:
+	try:
+		import pyglet
+	except ImportError:
+		print('Unable to find pyglet. Disabling gui')
+		USE_GUI=False
 
 
 class EmulatedWorld(World):
@@ -23,7 +39,7 @@ class EmulatedWorld(World):
 
 	def __init__(self, **kwargs):
 		print("Loading the world database.")
-		World.__init__(self)
+		World.__init__(self, use_gui=USE_GUI)
 		print("Loaded {0} rooms.".format(len(self.rooms)))
 		self.config = {}
 		dataDirectory = getDirectoryPath("data")
@@ -253,6 +269,7 @@ class Emulator(threading.Thread):
 		# The user has typed 'q[uit]'. Save the config file and exit.
 		wld.saveConfig()
 		print("Good bye.")
+		if not USE_GUI: return
 		with wld._gui_queue_lock:
 			wld._gui_queue.put(None)
 
@@ -261,5 +278,5 @@ def main():
 	wld = EmulatedWorld()
 	emulator_thread=Emulator(wld)
 	emulator_thread.start()
-	pyglet.app.run()
+	if USE_GUI: pyglet.app.run()
 	emulator_thread.join()
