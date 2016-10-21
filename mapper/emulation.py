@@ -16,30 +16,12 @@ from .constants import DIRECTIONS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS
 from .terminalsize import get_terminal_size
 from .utils import iterItems, getDirectoryPath
 
-with config_lock:
-	c=Config()
-	try:
-		USE_GUI=bool(c['use_gui'])
-	except KeyError:
-		c['use_gui'] = USE_GUI = True
-		c.save()
-	del c
-
-if USE_GUI:
-	try:
-		import pyglet
-	except ImportError:
-		print('Unable to find pyglet. Disabling gui')
-		USE_GUI=False
-
-
 class EmulatedWorld(World):
 	"""The main emulated world class"""
-	width, height = get_terminal_size()
-
-	def __init__(self, **kwargs):
+	def __init__(self, use_gui):
+		self.width, self.height = get_terminal_size()
 		print("Loading the world database.")
-		World.__init__(self, use_gui=USE_GUI)
+		World.__init__(self, use_gui=use_gui)
 		print("Loaded {0} rooms.".format(len(self.rooms)))
 		self.config = {}
 		dataDirectory = getDirectoryPath("data")
@@ -237,15 +219,15 @@ class EmulatedWorld(World):
 			self.output("Arglebargle, glop-glyf!?!")
 
 
-
 class Emulator(threading.Thread):
-	def __init__(self, wld):
+	def __init__(self, use_gui):
 		threading.Thread.__init__(self)
-		self.world = wld
+		self.world = EmulatedWorld(use_gui)
+		self._use_gui = use_gui
 
 	def run(self):
+		wld = self.world
 		while True:
-			wld=self.world
 			prompt = "> "
 			# Indicate the current room's terrain in the prompt.
 			if not wld.config.get("use_terrain_symbols"):
@@ -269,14 +251,31 @@ class Emulator(threading.Thread):
 		# The user has typed 'q[uit]'. Save the config file and exit.
 		wld.saveConfig()
 		print("Good bye.")
-		if not USE_GUI: return
+		if not self._use_gui:
+			return
 		with wld._gui_queue_lock:
 			wld._gui_queue.put(None)
 
-def main():
+
+def main(use_gui=None):
+	if use_gui is None:
+		with config_lock:
+			cfg = Config()
+			try:
+				use_gui = cfg["use_gui"]
+			except KeyError:
+				cfg["use_gui"] = use_gui = True
+				cfg.save()
+			del cfg
+	if use_gui:
+		try:
+			import pyglet
+		except ImportError:
+			print("Unable to find pyglet. Disabling gui")
+			use_gui = False
 	print("Welcome to Mume Map Emulation!")
-	wld = EmulatedWorld()
-	emulator_thread=Emulator(wld)
+	emulator_thread=Emulator(use_gui)
 	emulator_thread.start()
-	if USE_GUI: pyglet.app.run()
+	if use_gui:
+		pyglet.app.run()
 	emulator_thread.join()

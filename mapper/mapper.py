@@ -17,21 +17,12 @@ from .world import Room, Exit, World
 from .utils import iterItems, decodeBytes, regexFuzzy
 from .xmlparser import MumeXMLParser
 
-with config_lock:
-	c=Config()
-	try:
-		USE_GUI=bool(c['use_gui'])
-	except KeyError:
-		c['use_gui'] = USE_GUI = True
-		c.save()
-	del c
-
 IAC_GA = IAC + GA
 USER_DATA = 0
 MUD_DATA = 1
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server):
+	def __init__(self, client, server, use_gui):
 		threading.Thread.__init__(self)
 		self.daemon = True
 		# Initialize the timer.
@@ -47,7 +38,7 @@ class Mapper(threading.Thread, World):
 		self.lastPathFindQuery = ""
 		self.prompt = ">"
 		self.xmlParser = MumeXMLParser()
-		World.__init__(self, use_gui=USE_GUI)
+		World.__init__(self, use_gui=use_gui)
 
 	def output(self, text):
 		# Override World.output.

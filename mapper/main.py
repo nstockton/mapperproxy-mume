@@ -12,22 +12,6 @@ from .mapper import USER_DATA, MUD_DATA, Mapper
 from .mpi import MPI
 from .utils import multiReplace
 
-with config_lock:
-	c=Config()
-	try:
-		USE_GUI=c['use_gui']
-	except KeyError:
-		c['use_gui'] = USE_GUI = True
-		c.save()
-	del c
-
-if USE_GUI:
-	try:
-		import pyglet
-	except ImportError:
-		print('Unable to find pyglet. Disabling gui')
-		USE_GUI=False
-
 
 class Proxy(threading.Thread):
 	def __init__(self, client, server, mapper):
@@ -60,13 +44,14 @@ class Proxy(threading.Thread):
 
 
 class Server(threading.Thread):
-	def __init__(self, client, server, mapper, outputFormat):
+	def __init__(self, client, server, mapper, outputFormat, use_gui):
 		threading.Thread.__init__(self)
 		self.daemon = True
 		self._client = client
 		self._server = server
 		self._mapper = mapper
 		self._outputFormat = outputFormat
+		self._use_gui = use_gui
 
 	def run(self):
 		normalFormat = self._outputFormat == "normal"
@@ -214,7 +199,7 @@ class Server(threading.Thread):
 				data = multiReplace(data, XML_UNESCAPE_PATTERNS).replace(b"\r", b"").replace(b"\n\n", b"\n")
 			self._client.sendall(data)
 			del clientBuffer[:]
-		if USE_GUI:
+		if self._use_gui:
 			#Shutdown the gui
 			with self._mapper._gui_queue_lock:
 				self._mapper._gui_queue.put(None)
@@ -223,8 +208,23 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-def main(outputFormat="normal"):
+def main(outputFormat="normal", use_gui=None):
 	outputFormat = outputFormat.strip().lower()
+	if use_gui is None:
+		with config_lock:
+			cfg = Config()
+			try:
+				use_gui = cfg["use_gui"]
+			except KeyError:
+				cfg["use_gui"] = use_gui = True
+				cfg.save()
+			del cfg
+	if use_gui:
+		try:
+			import pyglet
+		except ImportError:
+			print("Unable to find pyglet. Disabling gui")
+			use_gui = False
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	proxySocket.bind(("", 4000))
@@ -244,13 +244,14 @@ def main(outputFormat="normal"):
 			pass
 		clientConnection.close()
 		return
-	mapperThread = Mapper(client=clientConnection, server=serverConnection)
+	mapperThread = Mapper(client=clientConnection, server=serverConnection, use_gui=use_gui)
 	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread)
-	serverThread = Server(client=clientConnection, server=serverConnection, mapper=mapperThread, outputFormat=outputFormat)
+	serverThread = Server(client=clientConnection, server=serverConnection, mapper=mapperThread, outputFormat=outputFormat, use_gui=use_gui)
 	serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
-	if USE_GUI: pyglet.app.run()
+	if use_gui:
+		pyglet.app.run()
 	serverThread.join()
 	try:
 		serverConnection.shutdown(socket.SHUT_RDWR)
