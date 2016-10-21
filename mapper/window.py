@@ -34,7 +34,9 @@ KEYS={
 (key.RIGHT, 0): 'adjust_size',
 (key.UP,0): 'adjust_spacer',
 (key.DOWN, 0): 'adjust_spacer',
-(key.F11, 0):'toggle_fullscreen'
+(key.F11, 0):'toggle_fullscreen',
+(key.F12, 0): 'toggle_blink',
+(key.SPACE, 0): 'toggle_continuous_view'
 }
 
 
@@ -110,6 +112,7 @@ class Window(pyglet.window.Window):
 		self.visible_rooms = {}
 		self.visible_exits = {}
 		self.blinkers={}
+		self.oldspacer = None
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 		self.current_room=None
 		if self.blink:
@@ -193,7 +196,7 @@ class Window(pyglet.window.Window):
 			self.enable_current_room_markers()
 		else:
 			markers = self.blinkers['current_room_markers']
-			del blinkers['current_room_markers']
+			del self.blinkers['current_room_markers']
 			for m in markers:
 				m.delete()
 
@@ -314,12 +317,28 @@ class Window(pyglet.window.Window):
 			except AttributeError:
 				self.message('Invalid key assignment for key {}. No such function {}.'.format(k, funcname))
 
+	def do_toggle_blink(self, sym, mod):
+		self.blink = not self.blink
+		self.say('Blinking {}'.format({True: 'enabled', False: 'disabled'}[self.blink]))
+	def do_toggle_continuous_view(self, sym, mod):
+		if self.oldspacer is None and self.spacer:
+			self.oldspacer, self.spacer = self.spacer, 0
+			self.say('continuous view')
+		elif self.oldspacer is not None:
+			self.spacer, self.oldspacer = self.oldspacer, None
+			self.say('Tiled view')
+		else:
+			return
+		self.redraw()
+
 	def do_toggle_fullscreen(self, sym, mod):
 		fs = not self.fullscreen
 		self.set_fullscreen(fs)
 		self._cfg['fullscreen'] = fs
+		self.say('fullscreen {}'.format({True:'enabled', False:'disabled'}[fs]))
 
 	def do_adjust_spacer(self, sym, mod):
+		if self.oldspacer is not None: self.oldspacer = None
 		if sym== key.DOWN:
 			self.spacer-=1
 		elif sym == key.UP:
@@ -339,6 +358,7 @@ class Window(pyglet.window.Window):
 		self.size=100
 		self.spacer=10
 		self.redraw()
+		self.say('Reset zoom')
 
 	def circle_vertices(self, cp, radius):
 		cp = Vec2d(cp)
