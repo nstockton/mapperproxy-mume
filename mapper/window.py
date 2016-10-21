@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###Some code borrowed from pymunk's debug drawing functions###
 
+from __future__ import division
 import pyglet
 pyglet.options['debug_gl'] = False
 from pyglet.window import key
@@ -193,8 +194,10 @@ class Window(pyglet.window.Window):
 		value = bool(value)
 		self._cfg['blink'] = value
 		if value:
+			pyglet.clock.schedule_interval_soft(self.blinker, 1.0/20)
 			self.enable_current_room_markers()
 		else:
+			pyglet.clock.unschedule(self.blinker)
 			markers = self.blinkers['current_room_markers']
 			del self.blinkers['current_room_markers']
 			for m in markers:
@@ -357,6 +360,7 @@ class Window(pyglet.window.Window):
 	def do_reset_zoom(self, sym, mod):
 		self.size=100
 		self.spacer=10
+		self.oldspacer = None
 		self.redraw()
 		self.say('Reset zoom')
 
@@ -376,7 +380,7 @@ class Window(pyglet.window.Window):
 			x = c * x - s * y
 			y = s * t + c * y
 		ps2 = [ps[0]]
-		for i in range(1, int(len(ps)+1/2)):
+		for i in range(1, int((len(ps)+1)//2)):
 			ps2.append(ps[i])
 			ps2.append(ps[-i])
 		ps = ps2
