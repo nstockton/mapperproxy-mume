@@ -185,6 +185,13 @@ class Window(pyglet.window.Window):
 		elif value > 15: value = 15
 		self._cfg['blink_rate'] = value
 
+	@property
+	def terrain_colors(self):
+		try:
+			return self._cfg['terrain_colors']
+		except KeyError:
+			self._cfg['terrain_colors'] = TERRAIN_COLORS
+			return self._cfg['terrain_colors']
 
 	@property
 	def cx(self):
@@ -431,10 +438,10 @@ class Window(pyglet.window.Window):
 
 	def draw_room(self, room, cp, group=None):
 		try:
-			color=Color(*TERRAIN_COLORS[room.terrain])
+			color=Color(*self.terrain_colors[room.terrain])
 		except KeyError as e:
 			self.world.output("Unknown terrain type '{}' @{}!".format(e.args[0], room.vnum))
-			color=Color(0,0,0,0)
+			color=Color(32,32,32,32)
 		d=self.size/2.0
 		vs=self.square_from_cp(cp, d)
 		if group is None:
