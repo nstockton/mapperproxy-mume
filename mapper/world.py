@@ -3,7 +3,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import codecs
-import collections
 import heapq
 import itertools
 import json
@@ -219,25 +218,42 @@ class World(object):
 		else:
 			return False
 
-	def getVisibleNeighbors(self, start=None, radius=1):
-		"""A generator which yields all rooms in the vicinity of a given room by X-Y-Z coordinates.
+	def getNeighborsFromCoordinates(self, start=None, radius=1):
+		"""A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.
+		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
+		try:
+			iter(start)
+		except TypeError:
+			x, y, z = 0, 0, 0
+		else:
+			x, y, z = start
+		try:
+			iter(radius)
+		except TypeError:
+			radiusX = radiusY = radiusZ = int(radius)
+		else:
+			radiusX, radiusY, radiusZ = radius
+		for vnum, obj in iterItems(self.rooms):
+			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
+			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ and any(difference):
+				yield(vnum, obj, differenceX, differenceY, differenceZ)
+
+	def getNeighborsFromRoom(self, start=None, radius=1):
+		"""A generator which yields all rooms in the vicinity of a room object.
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
 		if start is None:
-			startX = self.currentRoom.x
-			startY = self.currentRoom.y
-			startZ = self.currentRoom.z
-		elif isinstance(start, Room):
-			startX = start.x
-			startY = start.y
-			startZ = start.z
-		elif isinstance(start, collections.Iterable):
-			startX, startY, startZ = start
-		if not isinstance(radius, collections.Iterable):
-			radius = (int(radius), int(radius), int(radius))
+			start = self.currentRoom
+		x, y, z = start.x, start.y, start.z
+		try:
+			iter(radius)
+		except TypeError:
+			radiusX = radiusY = radiusZ = int(radius)
+		else:
+			radiusX, radiusY, radiusZ = radius
 		for vnum, obj in iterItems(self.rooms):
-			difference = (obj.x - startX, obj.y - startY, obj.z - startZ)
-			if any(difference) and all(abs(coord) <= rad for coord, rad in zip(difference, radius)):
-				yield(vnum, obj) + difference
+			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
+			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ and obj is not start:
+				yield(vnum, obj, differenceX, differenceY, differenceZ)
 
 	def getVnum(self, roomObj=None):
 		result = None
