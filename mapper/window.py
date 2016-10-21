@@ -370,7 +370,7 @@ class Window(pyglet.window.Window):
 		if self.blink: self._draw_current_room_border()
 		self.draw_room(currentRoom, self.cp, group=self.groups[3])
 		newrooms = {currentRoom.vnum}
-		for vnum, room, x, y, z in self.world.getVisibleNeighbors(roomObj=currentRoom, radius=self.num_rooms_to_draw()):
+		for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=currentRoom, radius=self.num_rooms_to_draw()):
 			if z == 0:
 				newrooms.add(vnum)
 				d=Vec2d(x, y)*(self.size*(self.spacer_as_float+1.0))
