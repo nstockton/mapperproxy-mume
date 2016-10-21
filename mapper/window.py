@@ -76,7 +76,6 @@ class Window(pyglet.window.Window):
 		super(Window, self).__init__(caption=caption, resizable=True, vsync=False, fullscreen=fs)
 		self.speech=Speech()
 		self.say=self.speech.say
-		self.maximize()
 		self.world=world
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock
@@ -289,7 +288,7 @@ class Window(pyglet.window.Window):
 		self.spacer=10
 		self.redraw()
 
-	def draw_circle(self, cp, radius, color, line_color=None, angle=0.0):
+	def circle_vertices(self, cp, radius):
 		cp = Vec2d(cp)
 		#http://slabode.exofire.net/circle_draw.shtml
 		num_segments = int(4 * math.sqrt(radius))
@@ -304,7 +303,6 @@ class Window(pyglet.window.Window):
 			t = x
 			x = c * x - s * y
 			y = s * t + c * y
-		mode = pyglet.gl.GL_TRIANGLE_STRIP
 		ps2 = [ps[0]]
 		for i in range(1, int(len(ps)+1/2)):
 			ps2.append(ps[i])
@@ -312,20 +310,15 @@ class Window(pyglet.window.Window):
 		ps = ps2
 		vs = []
 		for p in [ps[0]] + ps + [ps[-1]]:
-				vs += [p.x, p.y]
-		c = cp + Vec2d(radius, 0).rotated(angle)
-		cvs = [cp.x, cp.y, c.x, c.y]
-		bg = self.groups[0]
-		fg = self.groups[1]
+			vs += [p.x, p.y]
+		return vs
+
+	def draw_circle(self, cp, radius, color, group=None):
+		vs = self.circle_vertices(cp, radius)
 		l = len(vs)//2
-		if line_color is None:
-			line_color=color
-		return (self.batch.add(len(vs)//2, mode, bg,
+		return self.batch.add(l, pyglet.gl.GL_TRIANGLE_STRIP, group,
 				('v2f', vs),
-				('c4B', color.as_int()*l)), \
-		self.batch.add(2, pyglet.gl.GL_LINES, fg,
-				('v2f', cvs),
-				('c4B', line_color.as_int()*2)))
+				('c4B', color.as_int()*l))
 
 	def draw_segment(self, a, b, color, group=None):
 		pv1 = Vec2d(a)
