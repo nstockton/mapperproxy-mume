@@ -132,12 +132,10 @@ TERRAIN_COLORS = {
 	"hills": (139, 69, 19 ,255),
 	"shallowwater": (218, 120, 245, 255),
 	"mountains": (165, 42, 42, 255),
-	#"random": 30.0,
-	#"undefined": 30.0,
 	"water": (32, 64, 192, 255),
 	"rapids": (32, 64, 192, 255),
-	"underwater": (48, 8, 120, 255)
-	#"death": 1000.0
+	"underwater": (48, 8, 120, 255),
+	"unknown": (24, 16, 32, 255)
 }
 
 TERRAIN_SYMBOLS = {
