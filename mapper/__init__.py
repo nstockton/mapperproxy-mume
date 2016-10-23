@@ -21,7 +21,7 @@ with config_lock:
 				debug_level = debug_level.upper()
 		if not isinstance(debug_level, int):
 			debug_level = logging._levelNames[debug_level]
-	except KeyError:
+	except (KeyError, AttributeError):
 		debug_level = None
 	finally:
 		if 'debug_level' not in c or debug_level != c['debug_level']:

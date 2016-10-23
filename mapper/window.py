@@ -8,7 +8,10 @@ import logging
 import pyglet
 pyglet.options['debug_gl'] = False
 from pyglet.window import key
-from speechlight import Speech
+try:
+	from speechlight import Speech
+except ImportError:
+	Speech = None
 import math
 from collections import namedtuple
 try:
@@ -104,15 +107,21 @@ class Window(pyglet.window.Window):
 			del c
 		self._cfg=cfg
 		caption='MPM'
+		self.world=world
 		try:
 			fs = cfg['fullscreen']
 		except KeyError:
 			cfg['fullscreen'] = fs = False
 		super(Window, self).__init__(caption=caption, resizable=True, vsync=False, fullscreen=fs)
 		logger.info('Creating window {}'.format(self))
-		self.speech=Speech()
-		self.say=self.speech.say
-		self.world=world
+		if Speech is not None:
+			self.speech=Speech()
+			self.say=self.speech.say
+		else:
+			self.say = lambda text, interrupt=None: None
+			msg='Speech disabled. Unable to import speechlight. Please download from:\nhttps://github.com/nstockton/speechlight.git'
+			self.message(msg)
+			logger.warning(msg)
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock
 		self.batch=pyglet.graphics.Batch()
