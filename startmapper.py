@@ -1,5 +1,6 @@
 ﻿#!/usr/bin/env python
 
+import logging
 import sys
 
 import mapper.main
@@ -11,4 +12,12 @@ if __name__ == "__main__":
 			outputFormat = "normal"
 	else:
 		outputFormat = "normal"
-	mapper.main.main(outputFormat)
+	try:
+		mapper.main.main(outputFormat)
+	except:
+		import sys, traceback
+		traceback.print_exception(*sys.exc_info())
+		logging.exception('OOPSE!')
+	finally:
+		logging.info('Shutting down.')
+		logging.shutdown()

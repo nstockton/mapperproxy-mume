@@ -211,14 +211,7 @@ class Server(threading.Thread):
 def main(outputFormat="normal", use_gui=None):
 	outputFormat = outputFormat.strip().lower()
 	if use_gui is None:
-		with config_lock:
-			cfg = Config()
-			try:
-				use_gui = cfg["use_gui"]
-			except KeyError:
-				cfg["use_gui"] = use_gui = True
-				cfg.save()
-			del cfg
+		from . import use_gui
 	if use_gui:
 		try:
 			import pyglet

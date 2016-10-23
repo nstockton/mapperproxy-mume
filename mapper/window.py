@@ -4,6 +4,7 @@
 ###Some code borrowed from pymunk's debug drawing functions###
 
 from __future__ import division
+import logging
 import pyglet
 pyglet.options['debug_gl'] = False
 from pyglet.window import key
@@ -27,6 +28,7 @@ try:
 except NameError:
 	pass
 
+logger=logging.getLogger(__name__)
 DIRECTIONS_2D = frozenset(DIRECTIONS[:-2])
 FPS = 60
 KEYS={
@@ -62,6 +64,7 @@ class Color(namedtuple("Color", ["r","g","b","a"])):
 
 class Blinker(object):
 	def __init__(self, blink_rate, draw_func, args_func):
+		logger.debug('Creating blinker with blink rate {}, calling function {}, with {} for arguments.'.format(blink_rate, draw_func, args_func))
 		self.blink_rate = blink_rate
 		self.draw_func = draw_func
 		self.args_func = args_func
@@ -72,9 +75,11 @@ class Blinker(object):
 		self.since+=dt
 		if self.since >= 1.0/self.blink_rate:
 			if self.vl is None:
+				logger.debug('{} blink on. Drawing.'.format(self))
 				args, kwargs = self.args_func()
 				self.vl = self.draw_func(*args, **kwargs)
 			else:
+				logger.debug('{} blink off. Cleaning upp'.format(self))
 				self.vl.delete()
 				self.vl=None
 			self.since = 0
@@ -104,6 +109,7 @@ class Window(pyglet.window.Window):
 		except KeyError:
 			cfg['fullscreen'] = fs = False
 		super(Window, self).__init__(caption=caption, resizable=True, vsync=False, fullscreen=fs)
+		logger.info('Creating window {}'.format(self))
 		self.speech=Speech()
 		self.say=self.speech.say
 		self.world=world
@@ -131,7 +137,7 @@ class Window(pyglet.window.Window):
 			self.size = 100
 			return 100
 		except ValueError:
-			self.message('Invalid value for room_size in config.json: {}'.format(self._cfg['room_size']))
+			logger.warn('Invalid value for room_size in config.json: {}'.format(self._cfg['room_size']))
 			self.size = 100
 			return 100
 	@size.setter
@@ -166,7 +172,7 @@ class Window(pyglet.window.Window):
 			self.spacer = v
 			return v
 		except ValueError:
-			self.message('Invalid value for spacer in config.json: {}'.format(value))
+			logger.warning('Invalid value for spacer in config.json: {}'.format(value))
 			self.spacer = 10
 			return 10
 	@spacer.setter
@@ -211,7 +217,7 @@ class Window(pyglet.window.Window):
 		except KeyError:
 			self._cfg['blink_rate'] = value = 2
 		except ValueError:
-			self.message('Invalid value for blink_rate in config.json: {}'.format(value))
+			logger.warning('Invalid value for blink_rate in config.json: {}'.format(value))
 			self._cfg['blink_rate'] = value = 2
 		return value
 	@blink_rate.setter
@@ -230,7 +236,7 @@ class Window(pyglet.window.Window):
 		except KeyError:
 			self._cfg['current_room_mark_radius'] = value = 10
 		except ValueError:
-			self.message('Invalid value for current_room_mark_radius: {}'.format(value))
+			logger.warning('Invalid value for current_room_mark_radius: {}'.format(value))
 			self._cfg['current_room_mark_radius'] = value = 10
 		return value
 
@@ -286,6 +292,7 @@ class Window(pyglet.window.Window):
 					v1.blink(dt)
 
 	def on_close(self):
+		logger.debug('Closing window {}'.format(self))
 		with config_lock:
 			c=Config()
 			c['gui'].update(self._cfg)
@@ -299,15 +306,18 @@ class Window(pyglet.window.Window):
 		self.batch.draw()
 
 	def on_map_sync(self, currentRoom):
+		logger.debug('Map synced to {}'.format(currentRoom))
 		self.current_room=currentRoom
 		self.redraw()
 
 	def on_resize(self, width, height):
 		super(Window, self).on_resize(width, height)
+		logger.debug('resizing window to ({}, {})'.format(width, height))
 		if self.current_room is not None:
 			self.redraw()
 
 	def on_key_press(self, sym, mod):
+		logger.debug('Key press: sym: {}, mod: {}'.format(sym, mod))
 		k=(sym, mod)
 		if k in KEYS:
 			funcname='do_'+KEYS[k]
@@ -316,9 +326,9 @@ class Window(pyglet.window.Window):
 				try:
 					func(sym, mod)
 				except Exception as e:
-					self.message(e.message)
+					logger.exception(e.message)
 			except AttributeError:
-				self.message('Invalid key assignment for key {}. No such function {}.'.format(k, funcname))
+				logger.error('Invalid key assignment for key {}. No such function {}.'.format(k, funcname))
 
 	def do_toggle_blink(self, sym, mod):
 		self.blink = not self.blink
@@ -527,6 +537,7 @@ class Window(pyglet.window.Window):
 	def draw_rooms(self, currentRoom=None):
 		if currentRoom is None:
 			currentRoom=self.current_room
+			logger.debug('Drawing rooms near {}'.format(currentRoom))
 		self.draw_room(currentRoom, self.cp, group=self.groups[3])
 		newrooms = {currentRoom.vnum}
 		for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=currentRoom, radius=self.num_rooms_to_draw()):
@@ -541,6 +552,7 @@ class Window(pyglet.window.Window):
 			del self.visible_rooms[dead]
 
 	def draw_exits(self):
+		logger.debug('Drawing exits')
 		try:
 			exit_color1 = self._cfg['exit_color1']
 		except KeyError:
@@ -558,7 +570,7 @@ class Window(pyglet.window.Window):
 			radius = 10
 			self._cfg['exit_radius'] = radius
 		except ValueError:
-			self.message('Invalid value for exit_radius in config.json: {}'.format(radius))
+			logger.warning('Invalid value for exit_radius in config.json: {}'.format(radius))
 			radius = 10
 			self._cfg['exit_radius'] = radius
 		_d = self.size/2
@@ -712,6 +724,7 @@ class Window(pyglet.window.Window):
 		self.blinkers['current_room_markers']=tuple(current_room_markers)
 
 	def redraw(self):
+		logger.debug('Redrawing...')
 		self.draw_rooms()
 		self.draw_exits()
 
