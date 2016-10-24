@@ -24,7 +24,7 @@ MUD_DATA = 1
 class Mapper(threading.Thread, World):
 	def __init__(self, client, server, use_gui):
 		threading.Thread.__init__(self)
-		self.daemon = True
+		self.name = "Mapper"
 		# Initialize the timer.
 		self.initTimer = default_timer()
 		self._client = client

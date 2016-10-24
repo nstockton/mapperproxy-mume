@@ -222,6 +222,7 @@ class EmulatedWorld(World):
 class Emulator(threading.Thread):
 	def __init__(self, use_gui):
 		threading.Thread.__init__(self)
+		self.name = "Emulator"
 		self.world = EmulatedWorld(use_gui)
 		self._use_gui = use_gui
 

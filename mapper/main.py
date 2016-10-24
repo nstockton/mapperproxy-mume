@@ -16,7 +16,7 @@ from .utils import multiReplace
 class Proxy(threading.Thread):
 	def __init__(self, client, server, mapper):
 		threading.Thread.__init__(self)
-		self.daemon = True
+		self.name = "Proxy"
 		self._client = client
 		self._server = server
 		self._mapper = mapper
@@ -46,7 +46,7 @@ class Proxy(threading.Thread):
 class Server(threading.Thread):
 	def __init__(self, client, server, mapper, outputFormat, use_gui):
 		threading.Thread.__init__(self)
-		self.daemon = True
+		self.name = "Server"
 		self._client = client
 		self._server = server
 		self._mapper = mapper
