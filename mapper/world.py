@@ -586,7 +586,7 @@ class World(object):
 		if not args or not args[0]:
 			match = None
 		else:
-			match = re.match(r"^(?P<action>add|delete|info)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$", args[0].strip())
+			match = re.match(r"^(?P<action>add|delete|info)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$", args[0].strip().lower())
 		if not match:
 			self.output("Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. Leave it blank to use the current room's vnum. Use '_label info all' to get a list of all labels.")
 			return None
@@ -627,7 +627,7 @@ class World(object):
 		if not args or not args[0]:
 			vnum = self.currentRoom.vnum
 		else:
-			vnum = args[0].strip()
+			vnum = args[0].strip().lower()
 		if vnum in self.labels:
 			vnum = self.labels[vnum]
 		if vnum in self.rooms:
@@ -690,7 +690,7 @@ class World(object):
 		# Process any remaining items in the directions buffer.
 		if directionsBuffer:
 			result.extend(compressDirections(directionsBuffer))
-		return "; ".join(result)
+		return ", ".join(result)
 
 	def pathFind(self, origin=None, destination=None, flags=[]):
 		"""Find the path"""
