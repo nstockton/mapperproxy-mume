@@ -32,7 +32,7 @@ class Proxy(threading.Thread):
 				data = self._client.recv(4096)
 			except socket.timeout:
 				continue
-			except IOError:
+			except EnvironmentError:
 				self.close()
 				continue
 			if not data:
@@ -40,7 +40,11 @@ class Proxy(threading.Thread):
 			elif USER_COMMANDS_REGEX.match(data):
 				self._mapper.queue.put((USER_DATA, data))
 			else:
-				self._server.sendall(data)
+				try:
+					self._server.sendall(data)
+				except EnvironmentError:
+					self.close()
+					continue
 
 
 class Server(threading.Thread):
@@ -52,8 +56,13 @@ class Server(threading.Thread):
 		self._mapper = mapper
 		self._outputFormat = outputFormat
 		self._use_gui = use_gui
+		self.alive = threading.Event()
+
+	def close(self):
+		self.alive.clear()
 
 	def run(self):
+		self.alive.set()
 		normalFormat = self._outputFormat == "normal"
 		tinTinFormat = self._outputFormat == "tintin"
 		rawFormat = self._outputFormat == "raw"
@@ -94,18 +103,23 @@ class Server(threading.Thread):
 		}
 		initialOutput = b"".join((IAC, DO, TTYPE, IAC, DO, NAWS))
 		encounteredInitialOutput = False
-		while True:
-			data = self._server.recv(4096)
-			if not data:
-				break
-			elif not encounteredInitialOutput and data.startswith(initialOutput):
-				# Identify for Mume Remote Editing.
-				self._server.sendall(b"~$#EI\n")
-				# Turn on XML mode.
-				self._server.sendall(b"~$#EX1\n3\n")
-				# Tell the Mume server to put IAC-GA at end of prompts.
-				self._server.sendall(b"~$#EP2\nG\n")
-				encounteredInitialOutput = True
+		while self.alive.isSet():
+			try:
+				data = self._server.recv(4096)
+				if not data:
+					self.close()
+					continue
+				elif not encounteredInitialOutput and data.startswith(initialOutput):
+					# Identify for Mume Remote Editing.
+					self._server.sendall(b"~$#EI\n")
+					# Turn on XML mode.
+					self._server.sendall(b"~$#EX1\n3\n")
+					# Tell the Mume server to put IAC-GA at end of prompts.
+					self._server.sendall(b"~$#EP2\nG\n")
+					encounteredInitialOutput = True
+			except EnvironmentError:
+				self.close()
+				continue
 			for byte in bytearray(data):
 				if not inIAC:
 					if byte == ordIAC:
@@ -197,7 +211,11 @@ class Server(threading.Thread):
 			data = bytes(clientBuffer)
 			if not rawFormat:
 				data = multiReplace(data, XML_UNESCAPE_PATTERNS).replace(b"\r", b"").replace(b"\n\n", b"\n")
-			self._client.sendall(data)
+			try:
+				self._client.sendall(data)
+			except EnvironmentError:
+				self.close()
+				continue
 			del clientBuffer[:]
 		if self._use_gui:
 			#Shutdown the gui
@@ -229,11 +247,11 @@ def main(outputFormat="normal", use_gui=None):
 	try:
 		serverConnection.connect(("193.134.218.99", 443))
 	except TimeoutError:
-		clientConnection.sendall(b"\r\nError: server connection timed out!\r\n")
 		try:
+			clientConnection.sendall(b"\r\nError: server connection timed out!\r\n")
 			clientConnection.sendall(b"\r\n")
 			clientConnection.shutdown(socket.SHUT_RDWR)
-		except:
+		except EnvironmentError:
 			pass
 		clientConnection.close()
 		return
@@ -248,7 +266,7 @@ def main(outputFormat="normal", use_gui=None):
 	serverThread.join()
 	try:
 		serverConnection.shutdown(socket.SHUT_RDWR)
-	except:
+	except EnvironmentError:
 		pass
 	mapperThread.queue.put((None, None))
 	mapperThread.join()
@@ -256,7 +274,7 @@ def main(outputFormat="normal", use_gui=None):
 		clientConnection.sendall(b"\r\n")
 		proxyThread.close()
 		clientConnection.shutdown(socket.SHUT_RDWR)
-	except:
+	except EnvironmentError:
 		pass
 	proxyThread.join()
 	serverConnection.close()
