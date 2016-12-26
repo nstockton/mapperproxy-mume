@@ -46,10 +46,11 @@ class MPI(threading.Thread):
 				pagerProcess = subprocess.Popen(self.pager.split() + [fileName])
 				pagerProcess.wait()
 		elif self.command == "E":
-			session, description, body = self.data.split("\n", 2)
+			session, description, body = self.data[1:].split("\n", 2)
 			fileName = os.path.join(TMP_DIR, "M%d.txt" % random.randint(1000, 9999))
 			with open(fileName, "wb") as fileObj:
 				fileObj.write(body.replace("\n", "\r\n").encode("utf-8"))
+			lastModified = os.path.getmtime(fileName)
 			if self.isTinTin:
 				print("MPICOMMAND:{0} {1}:MPICOMMAND".format(self.editor, fileName))
 				try:
@@ -59,6 +60,11 @@ class MPI(threading.Thread):
 			else:
 				editorProcess = subprocess.Popen(self.editor.split() + [fileName])
 				editorProcess.wait()
-			with open(fileName, "rb") as fileObj:
-				response = b"\n".join((session.replace("M", "E").encode("utf-8"), fileObj.read().strip().replace(b"\r", b"").replace(IAC, IAC + IAC)))
-			self._server.sendall(b"".join((b"~$#EE", str(len(response)).encode("utf-8"), b"\n", response, b"\n")))
+			if os.path.getmtime(fileName) == lastModified:
+				# The user closed the text editor without saving. Cancel the editing session.
+				response = b"C" + session.encode("utf-8")
+			else:
+				with open(fileName, "rb") as fileObj:
+					response = b"E" + session.encode("utf-8") + b"\n" + fileObj.read()
+			response = response.replace(b"\r", b"").replace(IAC, IAC + IAC).strip() + b"\n"
+			self._server.sendall(b"".join((b"~$#EE", str(len(response)).encode("utf-8"), b"\n", response)))
