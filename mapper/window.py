@@ -33,7 +33,7 @@ except NameError:
 
 logger=logging.getLogger(__name__)
 DIRECTIONS_2D = frozenset(DIRECTIONS[:-2])
-FPS = 60
+FPS = 30
 KEYS={
 (key.ESCAPE, 0): 'reset_zoom',
 (key.LEFT, 0): 'adjust_size',
