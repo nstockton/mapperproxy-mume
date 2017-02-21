@@ -5,7 +5,7 @@
 from __future__ import print_function
 
 import socket
-from telnetlib import IAC, DONT, DO, WONT, WILL, theNULL, SB, SE, GA, TTYPE, NAWS
+from telnetlib import IAC, DONT, DO, WONT, WILL, theNULL, SB, SE, TTYPE, NAWS
 import threading
 
 from .config import Config, config_lock
@@ -73,7 +73,6 @@ class Server(threading.Thread):
 		ordIAC = ord(IAC)
 		ordSB = ord(SB)
 		ordSE = ord(SE)
-		ordGA = ord(GA)
 		ordLF = ord("\n")
 		inIAC = False
 		inSubOption = False
@@ -84,9 +83,17 @@ class Server(threading.Thread):
 		mpiLen = None
 		mpiBuffer = bytearray()
 		clientBuffer = bytearray()
-		mapperBuffer = bytearray()
 		tagBuffer = bytearray()
+		textBuffer = bytearray()
 		readingTag = False
+		modeNone = 0
+		modeRoom = 2
+		modeName = 4
+		modeDescription = 8
+		modeExits = 16
+		modePrompt = 32
+		modeTerrain = 64
+		xmlMode = modeNone
 		tagReplacements = {
 			b"prompt": b"PROMPT:",
 			b"/prompt": b":PROMPT",
@@ -112,6 +119,7 @@ class Server(threading.Thread):
 					self.close()
 					continue
 				elif not encounteredInitialOutput and data.startswith(initialOutput):
+					# The connection to Mume has been established, and the game has just responded with the login screen.
 					# Identify for Mume Remote Editing.
 					self._server.sendall(b"~$#EI\n")
 					# Turn on XML mode.
@@ -123,63 +131,7 @@ class Server(threading.Thread):
 				self.close()
 				continue
 			for byte in bytearray(data):
-				if not inIAC:
-					if byte == ordIAC:
-						clientBuffer.append(byte)
-						inIAC = True
-					elif inSubOption or byte in ignoreBytes:
-						clientBuffer.append(byte)
-					elif inMPI:
-						if byte == ordLF and mpiCommand is None and mpiLen is None:
-							# The first line of MPI data was recieved.
-							# The first byte is the MPI command, E for edit, V for view.
-							# The remaining byte sequence is the length of the MPI data to be received.
-							if mpiBuffer[0:1] in (b"E", b"V") and mpiBuffer[1:].isdigit():
-								mpiCommand = mpiBuffer[0:1]
-								mpiLen = int(mpiBuffer[1:])
-							else:
-								# Invalid MPI command or length.
-								inMPI = False
-							del mpiBuffer[:]
-						else:
-							mpiBuffer.append(byte)
-							if mpiLen is not None and len(mpiBuffer) >= mpiLen:
-								# The last byte in the MPI data has been reached.
-								mpiThreads.append(MPI(client=self._client, server=self._server, isTinTin=tinTinFormat, command=mpiCommand, data=bytes(mpiBuffer)))
-								mpiThreads[-1].start()
-								del mpiBuffer[:]
-								mpiCommand = None
-								mpiLen = None
-								inMPI = False
-					elif byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n") or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2:
-						# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E).
-						mpiCounter = mpiCounter + 1
-					elif byte == 69 and mpiCounter == 3:
-						# Byte is the final byte in the 4-byte MPI sequence (~$#E).
-						inMPI = True
-						mpiCounter = 0
-					elif rawFormat:
-						mpiCounter = 0
-						clientBuffer.append(byte)
-						mapperBuffer.append(byte)
-					elif readingTag:
-						mpiCounter = 0
-						mapperBuffer.append(byte)
-						if byte == 62: # >
-							if tinTinFormat:
-								clientBuffer.extend(tagReplacements.get(bytes(tagBuffer), b""))
-							del tagBuffer[:]
-							readingTag = False
-						else:
-							tagBuffer.append(byte)
-					else:
-						mpiCounter = 0
-						mapperBuffer.append(byte)
-						if byte == 60: # <
-							readingTag = True
-						else:
-							clientBuffer.append(byte)
-				else:
+				if inIAC:
 					clientBuffer.append(byte)
 					if byte in negotiationBytes:
 						# This is the second byte in a 3-byte telnet option sequence.
@@ -205,11 +157,110 @@ class Server(threading.Thread):
 							# It must be removed as MPI data should not be sent to the mud client.
 							del clientBuffer[-2:]
 						else:
-							mapperBuffer.append(byte)
-					elif byte == ordGA:
-						# Mume will send an IAC-GA sequence after every prompt.
-						self._mapper.queue.put((MUD_DATA, bytes(mapperBuffer)))
-						del mapperBuffer[:]
+							textBuffer.append(byte)
+				elif byte == ordIAC:
+					clientBuffer.append(byte)
+					inIAC = True
+				elif inSubOption or byte in ignoreBytes:
+					clientBuffer.append(byte)
+				elif inMPI:
+					if byte == ordLF and mpiCommand is None and mpiLen is None:
+						# The first line of MPI data was recieved.
+						# The first byte is the MPI command, E for edit, V for view.
+						# The remaining byte sequence is the length of the MPI data to be received.
+						if mpiBuffer[0:1] in (b"E", b"V") and mpiBuffer[1:].isdigit():
+							mpiCommand = mpiBuffer[0:1]
+							mpiLen = int(mpiBuffer[1:])
+						else:
+							# Invalid MPI command or length.
+							inMPI = False
+						del mpiBuffer[:]
+					else:
+						mpiBuffer.append(byte)
+						if mpiLen is not None and len(mpiBuffer) >= mpiLen:
+							# The last byte in the MPI data has been reached.
+							mpiThreads.append(MPI(client=self._client, server=self._server, isTinTin=tinTinFormat, command=mpiCommand, data=bytes(mpiBuffer)))
+							mpiThreads[-1].start()
+							del mpiBuffer[:]
+							mpiCommand = None
+							mpiLen = None
+							inMPI = False
+				elif byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n") or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2:
+					# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E).
+					mpiCounter += 1
+				elif byte == 69 and mpiCounter == 3:
+					# Byte is the final byte in the 4-byte MPI sequence (~$#E).
+					inMPI = True
+					mpiCounter = 0
+				elif readingTag:
+					mpiCounter = 0
+					if byte == 62: # >
+						# End of XML tag reached.
+						if xmlMode == modeNone:
+							if textBuffer:
+								self._mapper.queue.put((MUD_DATA, ("misc", bytes(textBuffer))))
+								del textBuffer[:]
+							if tagBuffer.startswith(b"/xml"):
+								pass
+							elif tagBuffer.startswith(b"prompt"):
+								xmlMode = modePrompt
+							elif tagBuffer.startswith(b"exits"):
+								xmlMode = modeExits
+							elif tagBuffer.startswith(b"room"):
+								xmlMode = modeRoom
+							elif tagBuffer.startswith(b"movement"):
+								self._mapper.queue.put((MUD_DATA, ("movement", bytes(tagBuffer)[8:].replace(b" dir=", b"", 1).split(b"/", 1)[0])))
+							elif tagBuffer.startswith(b"status"):
+								xmlMode = modeNone
+						elif xmlMode == modeRoom:
+							if tagBuffer.startswith(b"name"):
+								xmlMode = modeName
+							elif tagBuffer.startswith(b"description"):
+								xmlMode = modeDescription
+							elif tagBuffer.startswith(b"terrain"):
+								# Terrain tag only comes up in blindness or fog
+								xmlMode = modeTerrain
+							elif tagBuffer.startswith(b"/room"):
+								self._mapper.queue.put((MUD_DATA, ("dynamic", bytes(textBuffer))))
+								del textBuffer[:]
+								xmlMode = modeNone
+						elif xmlMode == modeName and tagBuffer.startswith(b"/name"):
+							self._mapper.queue.put((MUD_DATA, ("name", bytes(textBuffer))))
+							del textBuffer[:]
+							xmlMode = modeRoom
+						elif xmlMode == modeDescription and tagBuffer.startswith(b"/description"):
+							self._mapper.queue.put((MUD_DATA, ("description", bytes(textBuffer))))
+							del textBuffer[:]
+							xmlMode = modeRoom
+						elif xmlMode == modeTerrain and tagBuffer.startswith(b"/terrain"):
+							xmlMode = modeRoom
+						elif xmlMode == modeExits and tagBuffer.startswith(b"/exits"):
+							self._mapper.queue.put((MUD_DATA, ("exits", bytes(textBuffer))))
+							del textBuffer[:]
+							xmlMode = modeNone
+						elif xmlMode == modePrompt and tagBuffer.startswith(b"/prompt"):
+							self._mapper.queue.put((MUD_DATA, ("prompt", bytes(textBuffer))))
+							del textBuffer[:]
+							xmlMode = modeNone
+						if tinTinFormat:
+							clientBuffer.extend(tagReplacements.get(bytes(tagBuffer), b""))
+						del tagBuffer[:]
+						readingTag = False
+					else:
+						tagBuffer.append(byte)
+					if rawFormat:
+						clientBuffer.append(byte)
+				elif byte == 60: # <
+					# Start of new XML tag.
+					mpiCounter = 0
+					readingTag = True
+					if rawFormat:
+						clientBuffer.append(byte)
+				else:
+					# Byte is not part of a Telnet negotiation, MPI negotiation, or XML tag name.
+					mpiCounter = 0
+					textBuffer.append(byte)
+					clientBuffer.append(byte)
 			data = bytes(clientBuffer)
 			if not rawFormat:
 				data = multiReplace(data, XML_UNESCAPE_PATTERNS).replace(b"\r", b"").replace(b"\n\n", b"\n")
@@ -220,7 +271,7 @@ class Server(threading.Thread):
 				continue
 			del clientBuffer[:]
 		if self._use_gui:
-			#Shutdown the gui
+			# Shutdown the gui
 			with self._mapper._gui_queue_lock:
 				self._mapper._gui_queue.put(None)
 		# Join the MPI threads (if any) before joining the Mapper thread.
@@ -236,7 +287,7 @@ def main(outputFormat="normal", use_gui=None):
 		try:
 			import pyglet
 		except ImportError:
-			print("Unable to find pyglet. Disabling gui")
+			print("Unable to find pyglet. Disabling the GUI")
 			use_gui = False
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

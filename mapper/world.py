@@ -153,13 +153,10 @@ class World(object):
 			newRoom.z = roomDict["z"]
 			newRoom.calculateCost()
 			for direction, exitDict in iterItems(roomDict["exits"]):
-				newExit = Exit()
+				newExit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.exitFlags = set(exitDict["exitFlags"])
 				newExit.doorFlags = set(exitDict["doorFlags"])
 				newExit.door = exitDict["door"]
-				newExit.to = exitDict["to"]
-				newExit.vnum = vnum
-				newExit.direction = direction
 				newRoom.exits[direction] = newExit
 			self.rooms[vnum] = newRoom
 			roomDict.clear()
@@ -231,6 +228,13 @@ class World(object):
 		labelsFile = os.path.join(dataDirectory, LABELS_FILE)
 		with codecs.open(labelsFile, "wb", encoding="utf-8") as fileObj:
 			json.dump(self.labels, fileObj, sort_keys=True, indent=2, separators=(",", ": "))
+
+	def getNewExit(self, direction, to="undefined", parent=None):
+		newExit = Exit()
+		newExit.direction = direction
+		newExit.to = to
+		newExit.vnum = self.currentRoom.vnum if parent is None else parent
+		return newExit
 
 	def sortExits(self, exitsDict):
 		return sorted(iterItems(exitsDict), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
@@ -530,7 +534,7 @@ class World(object):
 			if not matchDict["name"]:
 				return "Error: 'add' expects a name for the secret."
 			elif direction not in self.currentRoom.exits:
-				self.currentRoom.exits[direction] = Exit()
+				self.currentRoom.exits[direction] = self.getNewExit(direction)
 			self.currentRoom.exits[direction].exitFlags.add("door")
 			self.currentRoom.exits[direction].doorFlags.add("hidden")
 			self.currentRoom.exits[direction].door = matchDict["name"]
@@ -563,14 +567,13 @@ class World(object):
 			elif matchDict["vnum"] != "undefined" and matchDict["vnum"] not in self.rooms:
 				return "Error: vnum %s not in database." % matchDict["vnum"]
 			elif direction not in self.currentRoom.exits:
-				self.currentRoom.exits[direction] = Exit()
+				self.currentRoom.exits[direction] = self.getNewExit(direction)
 			self.currentRoom.exits[direction].to = matchDict["vnum"]
 			if matchDict["vnum"] == "undefined":
 				return "Direction %s now undefined." % direction
 			elif not matchDict["oneway"]:
 				if reversedDirection not in self.rooms[matchDict["vnum"]].exits or self.rooms[matchDict["vnum"]].exits[reversedDirection].to == "undefined":
-					self.rooms[matchDict["vnum"]].exits[reversedDirection] = Exit()
-					self.rooms[matchDict["vnum"]].exits[reversedDirection].to = self.currentRoom.vnum
+					self.rooms[matchDict["vnum"]].exits[reversedDirection] = self.getNewExit(reversedDirection, self.currentRoom.vnum)
 					return "Linking direction %s to %s with name '%s'.\nLinked exit %s in second room with this room." % (direction, matchDict["vnum"], self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "", reversedDirection)
 				else:
 					return "Linking direction %s to %s with name '%s'.\nUnable to link exit %s in second room with this room: exit already defined." % (direction, matchDict["vnum"], self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "", reversedDirection)

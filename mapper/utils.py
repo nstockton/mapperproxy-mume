@@ -12,14 +12,11 @@ import textwrap
 
 from . import terminalsize
 
-WHITE_SPACE_CHARACTERS = frozenset(["\t", "\n", "\v", "\f", "\r", " "])
-
 
 def simplified(text):
-	whitespace = WHITE_SPACE_CHARACTERS
 	result = []
 	for character in text:
-		if result and character in whitespace:
+		if result and character in ("\t", "\n", "\v", "\f", "\r", " "):
 			if result[-1] != " ":
 				result.append(" ")
 		else:
