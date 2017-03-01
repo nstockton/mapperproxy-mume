@@ -397,7 +397,7 @@ class Mapper(threading.Thread, World):
 				continue
 			# The data was from the mud server.
 			event, data = data
-			data = ANSI_COLOR_REGEX.sub("", simplified(decodeBytes(multiReplace(data, XML_UNESCAPE_PATTERNS))))
+			data = ANSI_COLOR_REGEX.sub("", decodeBytes(multiReplace(data, XML_UNESCAPE_PATTERNS)))
 			if event == "movement":
 				movement = data
 				scouting = False
@@ -418,9 +418,9 @@ class Mapper(threading.Thread, World):
 					elif "You are already riding." in data and self.currentRoom.ridable != "ridable":
 						self.clientSend(self.rridable("ridable"))
 			elif event == "name":
-				name = data if data not in ("You just see a dense fog around you...", "It is pitch black...") else ""
+				name = simplified(data) if data not in ("You just see a dense fog around you...", "It is pitch black...") else ""
 			elif event == "description":
-				description = data
+				description = simplified(data)
 			elif event == "dynamic":
 				dynamic = data
 				if not self.isSynced or movement is None:
