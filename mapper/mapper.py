@@ -378,6 +378,7 @@ class Mapper(threading.Thread, World):
 		addedNewRoomFrom = None
 		scouting = False
 		movement = None
+		moved = None
 		prompt = ""
 		name = ""
 		description = ""
@@ -458,7 +459,16 @@ class Mapper(threading.Thread, World):
 					self.clientSend("Error: vnum ({0}) in direction ({1}) is not in the database. Map no longer synced!".format(self.currentRoom.exits[movement].to, movement))
 				else:
 					self.currentRoom = self.rooms[self.currentRoom.exits[movement].to]
-					if self.autoMapping and self.autoUpdating:
+					if moved is None:
+						moved = movement
+					else:
+						# Multiple name / description / dynamic events have been received after the movement event and before the prompt.
+						moved = None
+					movement = None
+					exits = ""
+					if moved is None:
+						continue
+					elif self.autoMapping and self.autoUpdating:
 						if name and self.currentRoom.name != name:
 							self.currentRoom.name = name
 							self.clientSend("Updating room name.")
@@ -473,20 +483,20 @@ class Mapper(threading.Thread, World):
 					self.walkNextDirection()
 			elif event == "exits":
 				exits = data
-				if self.autoMapping and self.isSynced and movement is not None:
-					if addedNewRoomFrom and REVERSE_DIRECTIONS[movement] in exits:
-						self.currentRoom.exits[REVERSE_DIRECTIONS[movement]] = self.getNewExit(REVERSE_DIRECTIONS[movement], addedNewRoomFrom)
-					self.updateExitFlags(exits)
-				addedNewRoomFrom = None
 			elif event == "prompt":
 				prompt = data
-				if self.autoMapping and self.isSynced and movement is not None:
+				if self.autoMapping and self.isSynced and moved is not None:
+					if exits:
+						if addedNewRoomFrom and REVERSE_DIRECTIONS[moved] in exits:
+							self.currentRoom.exits[REVERSE_DIRECTIONS[moved]] = self.getNewExit(REVERSE_DIRECTIONS[moved], addedNewRoomFrom)
+						self.updateExitFlags(exits)
 					self.updateRoomFlags(prompt)
 				if name and (self.isSynced or self.sync(name)):
 					self.roomDetails()
 				addedNewRoomFrom = None
 				scouting = False
 				movement = None
+				moved = None
 				prompt = ""
 				name = ""
 				description = ""
