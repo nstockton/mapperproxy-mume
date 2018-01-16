@@ -310,6 +310,7 @@ def main(outputFormat="normal", use_gui=None):
 	serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	try:
 		serverConnection.connect(("193.134.218.98", 443))
+
 	except TimeoutError:
 		try:
 			clientConnection.sendall(b"\r\nError: server connection timed out!\r\n")
