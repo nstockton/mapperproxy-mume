@@ -30,7 +30,7 @@ with config_lock:
 	try:
 		use_gui = c['use_gui']
 	except KeyError:
-		c['use_gui'] = use_gui = True
+		c['use_gui'] = use_gui = "default"
 		c.save()
 	del c
 

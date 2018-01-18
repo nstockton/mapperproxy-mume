@@ -242,7 +242,7 @@ class Emulator(threading.Thread):
 		# The user has typed 'q[uit]'. Save the config file and exit.
 		wld.saveConfig()
 		wld.output("Good bye.")
-		if not self._use_gui:
+		if self._use_gui is None:
 			return
 		with wld._gui_queue_lock:
 			wld._gui_queue.put(None)
@@ -251,14 +251,14 @@ class Emulator(threading.Thread):
 def main(use_gui=None):
 	if use_gui is None:
 		from . import use_gui
-	if use_gui:
+	if use_gui is not None:
 		try:
 			import pyglet
 		except ImportError:
 			print("Unable to find pyglet. Disabling gui")
-			use_gui = False
+			use_gui = None
 	emulator_thread=Emulator(use_gui)
 	emulator_thread.start()
-	if use_gui:
+	if use_gui is not None:
 		pyglet.app.run()
 	emulator_thread.join()
