@@ -72,15 +72,18 @@ class Exit(object):
 
 
 class World(object):
-	def __init__(self, use_gui=True):
+	def __init__(self, use_gui=None):
 		self.isSynced = False
 		self.rooms = {}
 		self.labels = {}
 		self._use_gui = use_gui
-		if use_gui:
+		if use_gui is not None:
 			self._gui_queue = Queue()
 			self._gui_queue_lock = threading.Lock()
-			from .window import Window
+			if use_gui == "sighted":
+				from .sighted import Window
+			else:
+				from .window import Window
 			self.window=Window(self)
 		self._currentRoom = None
 		self.loadRooms()
@@ -93,7 +96,7 @@ class World(object):
 	@currentRoom.setter
 	def currentRoom(self, value):
 		self._currentRoom = value
-		if self._use_gui:
+		if self._use_gui is not None:
 			with self._gui_queue_lock:
 				self._gui_queue.put(('on_map_sync', value))
 
