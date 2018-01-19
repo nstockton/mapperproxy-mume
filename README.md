@@ -19,7 +19,7 @@ If you only need the mapperproxy, install the [Python interpreter](https://pytho
 
 ## Mapper Proxy usage
 ### Manual start up
-To start the mapper, run `python mume-mapperproxy start.py`. It accepts the following arguments:
+To start the mapper, run `python start.py` from the _mume-mapperproxy/_ directory. It accepts the following arguments:
 
 - `-e` Start in emulation mode. The mapper does not connect to MUME.
 - `-g [default|sighted]` Use a GUI. The default GUI is a high contrast one for visually impaired players. The sighted GUI uses png tiles.
@@ -29,15 +29,14 @@ To start the mapper, run `python mume-mapperproxy start.py`. It accepts the foll
 Once done, connect your client to `127.0.0.1`, port `4000`.
 
 ### Starting up from a client
-It is possible to start the mapper directly from the client. Here is, for example, how to start it from a tintin+++ script:
+It is possible to start the mapper directly from the client. Here is, for example, how to start it from a tintin+++ script, from the _mume-mapperproxy/_ directory:
 
 ```
 #run {mapper} {python -B}
-from mapperproxy.mapper.main import main
+from mapper.main import main
 #action {^MPICOMMAND:%1:MPICOMMAND$} {#mume {#system %1;#mapper continue}}
 #gts
 #mapper main(outputFormat="tintin", use_gui="sighted")
-### Proxy mode
 ```
 
 ## Mapper Proxy commands
