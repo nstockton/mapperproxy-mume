@@ -4,9 +4,12 @@ A mapper proxy for playing [MUME](http://mume.org "MUME Official Site") targeted
 ![screenshot of the sighted GUI](tiles/screenshot.png?raw=true "screenshot of the sighted GUI")
 
 ## License And Credits
-The mapperproxy is copyrighted by Nick Gammon, and published under the [Mozilla Public License, version 2.0](https://www.mozilla.org/en-US/MPL/2.0/ "MPL2 official Site").
+Mapper Proxy is licensed under the terms of the [Mozilla Public License, version 2.0.](https://www.mozilla.org/en-US/MPL/2.0/ "MPL2 official Site")
+Mapper Proxy was originally created and is actively maintained by Nick Stockton.
+Visually Impaired GUI contributed by Katalina Durden.
+Sighted GUI and various additions contributed by Lindisse.
 
-The tiles of the GUI for sighted players are distributed under the [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/legalcode "CC-BY-SA 3.0 official site") license. They are a modified version of [fantasy-tileset.png](https://opengameart.org/content/32x32-fantasy-tileset "fantasy-tileset page on OpenGameArt") originaly created by [Jerome](http://jerom-bd.blogspot.fr/ "Jerome old site").
+The tiles of the GUI for sighted players are distributed under the [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/legalcode "CC-BY-SA 3.0 official site") license. They are a modified version of [fantasy-tileset.png](https://opengameart.org/content/32x32-fantasy-tileset "fantasy-tileset page on OpenGameArt") originally created by [Jerome.](http://jerom-bd.blogspot.fr/ "Jerome old site")
 
 
 ## Installation
@@ -15,7 +18,7 @@ Mume-mapperproxy is distributed as part of
 [MUSHclient-MUME](https://github.com/nstockton/mushclient-mume/blob/master/README.md), and [tintin-MUME](https://github.com/nstockton/tintin-mume), which also provide scripts to play Mume more easily. Refer to these projects for an installation guide.
 
 ### Standalone installation
-If you only need the mapperproxy, install the [Python interpreter](https://python.org "Python Home Page"), and make sure it's in your path before running this package.
+If you only need the mapperproxy, install the [Python interpreter,](https://python.org "Python Home Page") and make sure it's in your path before running this package.
 
 ## Mapper Proxy usage
 ### Manual start up
