@@ -281,7 +281,7 @@ class Server(threading.Thread):
 				self.close()
 				continue
 			del clientBuffer[:]
-		if self._use_gui is not None:
+		if self._use_gui:
 			# Shutdown the gui
 			with self._mapper._gui_queue_lock:
 				self._mapper._gui_queue.put(None)
@@ -290,16 +290,18 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-def main(outputFormat="normal", use_gui=None):
+def main(outputFormat="normal", use_gui=True):
 	outputFormat = outputFormat.strip().lower()
-	if use_gui is None:
+	if use_gui is True:
+		# The user wants to use a GUI, but didn't specify which one. Grab the preferred GUI option from the configuration.
 		from . import use_gui
-	if use_gui is not None:
+	if use_gui:
+		use_gui = use_gui.strip().lower()
 		try:
 			import pyglet
 		except ImportError:
 			print("Unable to find pyglet. Disabling the GUI")
-			use_gui = None
+			use_gui = False
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	proxySocket.bind(("", 4000))
@@ -326,7 +328,7 @@ def main(outputFormat="normal", use_gui=None):
 	serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
-	if use_gui is not None:
+	if use_gui:
 		pyglet.app.run()
 	serverThread.join()
 	try:
