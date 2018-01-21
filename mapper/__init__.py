@@ -29,6 +29,10 @@ with config_lock:
 			c.save()
 	try:
 		use_gui = cfg["use_gui"]
+		if use_gui not in ("hc", "sighted"):
+			# Old versions of the configuration might not contain one of these current values for the use_gui setting.
+			cfg["use_gui"] = use_gui = "hc"
+			cfg.save()
 	except KeyError:
 		cfg["use_gui"] = use_gui = "hc"
 		cfg.save()
