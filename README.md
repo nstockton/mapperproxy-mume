@@ -20,6 +20,11 @@ Mume-mapperproxy is distributed as part of
 ### Standalone installation
 If you only need the mapperproxy, install the [Python interpreter,](https://python.org "Python Home Page") and make sure it's in your path before running this package.
 
+After Python is installed, execute the following command from the top level directory of this repository to install the module dependencies.
+```
+pip install -U -r requirements.txt
+```
+
 ## Mapper Proxy usage
 ### Manual start up
 To start the mapper, run `python start.py` from the _mume-mapperproxy/_ directory. It accepts the following arguments:
