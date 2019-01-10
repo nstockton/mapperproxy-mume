@@ -4,9 +4,9 @@ This directory contains the tileset for the sighted GUI. By default,
 a 32 color tileset is used (tiles-multi.xcf), but a 5 color tileset, which has
 its own kind of look and feel is also available (tiles-mono.xcf).
 
-![screenshot](screenshot-multi.png?raw=true "screenshot of the 32 colors sighted gui)
+![screenshot-multi](screenshot-multi.png?raw=true "screenshot of the 32 colors sighted gui")
 
-![screenshot](screenshot-mono.png?raw=true "screenshot of the 5 colors sighted gui")
+![screenshot-mono](screenshot-mono.png?raw=true "screenshot of the 5 colors sighted gui")
 
 # License
 
