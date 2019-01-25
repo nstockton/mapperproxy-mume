@@ -274,9 +274,9 @@ class EmulatedWorld(World):
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(command))
 		if direction:
 			self.move(direction)
-		elif [method for method in userCommandsPartial if method.startswith(command)]:
-			completed = [method for method in userCommandsPartial if method.startswith(command)][0]
-			getattr(self, "user_command_partial_{}".format(completed))(arguments)
+		elif [method for method in userCommandsPartial if method.startswith(bytes(command, "us-ascii"))]:
+			completed = [method for method in userCommandsPartial if method.startswith(bytes(command, "us-ascii"))][0]
+			getattr(self, "user_command_partial_{}".format(completed.decode("us-ascii")))(arguments)
 		elif command in userCommands:
 			getattr(self, "user_command_{}".format(command))(arguments)
 		elif command.isdigit() or command in self.labels:
