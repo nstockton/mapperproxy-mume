@@ -143,13 +143,18 @@ class World(object):
 			self.rooms = {}
 			return self.output("Corrupted map database file.")
 		self.output("Creating room objects.")
+		terrainReplacements = {
+			"random": "undefined",
+			"death": "deathtrap",
+			"shallowwater": "shallow"
+		}
 		for vnum, roomDict in iterItems(db):
 			newRoom = Room(vnum)
 			newRoom.name = roomDict["name"]
 			newRoom.desc = roomDict["desc"]
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
 			newRoom.note = roomDict["note"]
-			newRoom.terrain = roomDict["terrain"]
+			newRoom.terrain = terrainReplacements.get(roomDict["terrain"], roomDict["terrain"])
 			newRoom.light = roomDict["light"]
 			newRoom.align = roomDict["align"]
 			newRoom.portable = roomDict["portable"]
@@ -158,8 +163,8 @@ class World(object):
 				newRoom.avoid = roomDict["avoid"]
 			except KeyError:
 				pass
-			newRoom.mobFlags = set(roomDict["mobFlags"])
-			newRoom.loadFlags = set(roomDict["loadFlags"])
+			newRoom.mobFlags = {"aggressive_mob" if flag == "smob" else "quest_mob" if flag == "quest" else "passive_mob" if flag == "any" else flag.replace("shop", "_shop") if flag in ("weaponshop", "armourshop", "foodshop", "petshop") else flag.replace("guild", "_guild") if flag in ("scoutguild", "mageguild", "clericguild", "warriorguild", "rangerguild") else flag for flag in roomDict["mobFlags"]}
+			newRoom.loadFlags = {flag.replace("horse", "_horse") if flag in ("packhorse", "trainedhorse") else flag for flag in roomDict["loadFlags"]}
 			newRoom.x = roomDict["x"]
 			newRoom.y = roomDict["y"]
 			newRoom.z = roomDict["z"]
@@ -167,7 +172,7 @@ class World(object):
 			for direction, exitDict in iterItems(roomDict["exits"]):
 				newExit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.exitFlags = set(exitDict["exitFlags"])
-				newExit.doorFlags = set(exitDict["doorFlags"])
+				newExit.doorFlags = {flag.replace("no", "no_") if flag in ("noblock", "nobreak", "nopick") else flag.replace("needkey", "need_key") for flag in exitDict["doorFlags"]}
 				newExit.door = exitDict["door"]
 				newRoom.exits[direction] = newExit
 			self.rooms[vnum] = newRoom
@@ -501,7 +506,7 @@ class World(object):
 
 	def rterrain(self, *args):
 		if not args or not args[0] or args[0].strip() not in TERRAIN_SYMBOLS and args[0].strip().lower() not in TERRAIN_SYMBOLS.values():
-			return "Room terrain set to '%s'. Use 'rterrain [%s | undefined]' to change it." % (self.currentRoom.terrain, " | ".join(TERRAIN_SYMBOLS.values()))
+			return "Room terrain set to '%s'. Use 'rterrain [%s]' to change it." % (self.currentRoom.terrain, " | ".join(sorted(TERRAIN_SYMBOLS.values())))
 		try:
 			self.currentRoom.terrain = TERRAIN_SYMBOLS[args[0].strip()]
 		except KeyError:

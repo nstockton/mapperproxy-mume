@@ -372,7 +372,7 @@ class Mapper(threading.Thread, World):
 			pass
 		try:
 			terrain = TERRAIN_SYMBOLS[promptDict["terrain"]]
-			if self.currentRoom.terrain not in (terrain, "random", "death"):
+			if self.currentRoom.terrain not in (terrain, "deathtrap"):
 				output.append(self.rterrain(terrain))
 		except KeyError:
 			pass

@@ -33,7 +33,7 @@ TILES = {
 	"forest": pyglet.image.load(os.path.join(TILESDIR, "forest.png")),
 	"hills": pyglet.image.load(os.path.join(TILESDIR, "hill.png")),
 	"mountains": pyglet.image.load(os.path.join(TILESDIR, "mountain.png")),
-	"shallowwater": pyglet.image.load(os.path.join(TILESDIR, "swamp.png")),
+	"shallow": pyglet.image.load(os.path.join(TILESDIR, "swamp.png")),
 	"water": pyglet.image.load(os.path.join(TILESDIR, "water.png")),
 	"rapids": pyglet.image.load(os.path.join(TILESDIR, "rapid.png")),
 	"underwater": pyglet.image.load(os.path.join(TILESDIR, "underwater.png")),
@@ -44,7 +44,7 @@ TILES = {
 	"indoors": pyglet.image.load(os.path.join(TILESDIR, "indoor.png")),
 	"random": pyglet.image.load(os.path.join(TILESDIR, "random.png")),
 	"undefined": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
-	"death": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
+	"deathtrap": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
 	# exits
 	"wallnorth": pyglet.image.load(os.path.join(TILESDIR, "wallnorth.png")),
 	"walleast": pyglet.image.load(os.path.join(TILESDIR, "walleast.png")),
@@ -61,10 +61,10 @@ TILES = {
 	"weapon": pyglet.image.load(os.path.join(TILESDIR, "weapon.png")),
 	# mob flags
 	"guild": pyglet.image.load(os.path.join(TILESDIR, "guild.png")),
-	"quest": pyglet.image.load(os.path.join(TILESDIR, "quest.png")),
+	"quest_mob": pyglet.image.load(os.path.join(TILESDIR, "quest.png")),
 	"rent": pyglet.image.load(os.path.join(TILESDIR, "rent.png")),
 	"shop": pyglet.image.load(os.path.join(TILESDIR, "shop.png")),
-	"smob": pyglet.image.load(os.path.join(TILESDIR, "smob.png")),
+	"aggressive_mob": pyglet.image.load(os.path.join(TILESDIR, "smob.png")),
 	# player
 	"player": pyglet.image.load(os.path.join(TILESDIR, "player.png"))
 }
@@ -200,7 +200,7 @@ class Window(pyglet.window.Window):
 				break
 		# draw a single mob flag on layer 2
 		for flag in room.mobFlags:
-			if flag in ('smob', 'rent', 'quest'):
+			if flag in ('aggressive_mob', 'rent', 'quest_mob'):
 				self.draw_tile(x, y, 2, flag)
 				break
 			if search('shop', flag):

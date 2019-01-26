@@ -106,14 +106,13 @@ TERRAIN_COSTS = {
 	"brush": 1.8,
 	"forest": 2.15,
 	"hills": 2.45,
-	"shallowwater": 2.45,
+	"shallow": 2.45,
 	"mountains": 2.8,
-	"random": 30.0,
 	"undefined": 30.0,
 	"water": 50.0,
 	"rapids": 60.0,
 	"underwater": 100.0,
-	"death": 1000.0
+	"deathtrap": 1000.0
 }
 
 TERRAIN_COLORS = {
@@ -126,7 +125,7 @@ TERRAIN_COLORS = {
 	"brush": (127, 255, 0, 255),
 	"forest": (8, 128, 0, 255),
 	"hills": (139, 69, 19 ,255),
-	"shallowwater": (218, 120, 245, 255),
+	"shallow": (218, 120, 245, 255),
 	"mountains": (165, 42, 42, 255),
 	"water": (32, 64, 192, 255),
 	"rapids": (32, 64, 192, 255),
@@ -138,16 +137,15 @@ TERRAIN_SYMBOLS = {
 	":": "brush",
 	"O": "cavern",
 	"#": "city",
-	"!": "death",
+	"!": "deathtrap",
 	".": "field",
 	"f": "forest",
 	"(": "hills",
 	"[": "indoors",
 	"<": "mountains",
-	"|": "random",
 	"W": "rapids",
 	"+": "road",
-	"%": "shallowwater",
+	"%": "shallow",
 	"=": "tunnel",
 	"?": "undefined",
 	"U": "underwater",
@@ -165,20 +163,21 @@ LIGHT_SYMBOLS = {
 VALID_MOB_FLAGS = [
 	"rent",
 	"shop",
-	"weaponshop",
-	"armourshop",
-	"foodshop",
-	"petshop",
+	"weapon_shop",
+	"armour_shop",
+	"food_shop",
+	"pet_shop",
 	"guild",
-	"scoutguild",
-	"mageguild",
-	"clericguild",
-	"warriorguild",
-	"rangerguild",
-	"smob",
-	"quest",
-	"any",
-	"reserved2"
+	"scout_guild",
+	"mage_guild",
+	"cleric_guild",
+	"warrior_guild",
+	"ranger_guild",
+	"aggressive_mob",
+	"quest_mob",
+	"passive_mob",
+	"elite_mob",
+	"super_mob"
 ]
 
 VALID_LOAD_FLAGS = [
@@ -191,16 +190,19 @@ VALID_LOAD_FLAGS = [
 	"key",
 	"mule",
 	"horse",
-	"packhorse",
-	"trainedhorse",
+	"pack_horse",
+	"trained_horse",
 	"rohirrim",
 	"warg",
 	"boat",
 	"attention",
-	"tower",
+	"tower", # Player can 'watch' surrounding rooms from this one.
 	"clock",
 	"mail",
-	"stable"
+	"stable",
+	"white_word",
+	"dark_word",
+	"equipment"
 ]
 
 VALID_EXIT_FLAGS = [
@@ -221,15 +223,16 @@ VALID_EXIT_FLAGS = [
 
 VALID_DOOR_FLAGS = [
 	"hidden",
-	"needkey",
-	"noblock",
-	"nobreak",
-	"nopick",
+	"need_key",
+	"no_block",
+	"no_break",
+	"no_pick",
 	"delayed",
 	"callable",
 	"knockable",
 	"magic",
-	"action"
+	"action", # Action controlled
+	"no_bash"
 ]
 
 DIRECTION_COORDINATES = {
