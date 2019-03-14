@@ -11,9 +11,10 @@ from telnetlib import IAC, GA
 import threading
 from timeit import default_timer
 
+from . import roomdata
 from .config import Config, config_lock
 from .constants import DIRECTIONS, REVERSE_DIRECTIONS, RUN_DESTINATION_REGEX, EXIT_TAGS_REGEX, MOVEMENT_FORCED_REGEX, MOVEMENT_PREVENTED_REGEX, TERRAIN_COSTS, TERRAIN_SYMBOLS, LIGHT_SYMBOLS, PROMPT_REGEX
-from .world import Room, Exit, World
+from .world import World
 from .utils import stripAnsi, iterItems, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
 
 USER_DATA = 0
@@ -426,7 +427,7 @@ class Mapper(threading.Thread, World):
 
 	def addNewRoom(self, movement, name, description, dynamic):
 		vnum = self.getNewVnum()
-		newRoom = Room(vnum)
+		newRoom = roomdata.objects.Room(vnum)
 		newRoom.name = name
 		newRoom.desc = description
 		newRoom.dynamicDesc = dynamic

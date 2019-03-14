@@ -4,11 +4,8 @@
 
 from __future__ import print_function
 
-import codecs
 import heapq
 import itertools
-import json
-import os.path
 try:
 	from Queue import Queue
 except ImportError:
@@ -16,59 +13,9 @@ except ImportError:
 import re
 import threading
 
-from .constants import IS_PYTHON_2, DIRECTIONS, MAP_FILE, SAMPLE_MAP_FILE, LABELS_FILE, SAMPLE_LABELS_FILE, AVOID_DYNAMIC_DESC_REGEX, LEAD_BEFORE_ENTERING_VNUMS, TERRAIN_COSTS, TERRAIN_SYMBOLS, LIGHT_SYMBOLS, VALID_MOB_FLAGS, VALID_LOAD_FLAGS, VALID_EXIT_FLAGS, VALID_DOOR_FLAGS, DIRECTION_COORDINATES, REVERSE_DIRECTIONS
-from .utils import iterItems, getDirectoryPath, regexFuzzy
-
-
-class Room(object):
-	def __init__(self, vnum):
-		self.vnum = vnum
-		self.name = ""
-		self.desc = ""
-		self.dynamicDesc = ""
-		self.note = ""
-		self.terrain = "undefined"
-		self.cost = TERRAIN_COSTS["undefined"]
-		self.light = "undefined"
-		self.align = "undefined"
-		self.portable = "undefined"
-		self.ridable = "undefined"
-		self.avoid = False
-		self.mobFlags = set()
-		self.loadFlags = set()
-		self.x = 0
-		self.y = 0
-		self.z = 0
-		self.exits = {}
-
-	def __lt__(self, other):
-		# Unlike in Python 2 where most objects are sortable by default, our Room class isn't automatically sortable in Python 3.
-		# If we don't override this method, the path finder will throw an exception in Python 3 because heapq.heappush requires that any object passed to it be sortable.
-		# We'll return False because we want heapq.heappush to sort the tuples of movement cost and room object by the first item in the tuple (room cost), and the order of rooms with the same movement cost is irrelevant.
-		return False
-
-	def calculateCost(self):
-		try:
-			self.cost = TERRAIN_COSTS[self.terrain]
-		except KeyError:
-			self.cost = TERRAIN_COSTS["undefined"]
-		if self.avoid or AVOID_DYNAMIC_DESC_REGEX.search(self.dynamicDesc):
-			self.cost += 1000.0
-		if self.ridable == "notridable":
-			self.cost += 5.0
-
-	def manhattanDistance(self, destination):
-		return abs(destination.x - self.x) + abs(destination.y - self.y) + abs(destination.z - self.z)
-
-
-class Exit(object):
-	def __init__(self):
-		self.direction = None
-		self.vnum = None
-		self.to = "undefined"
-		self.exitFlags = set(["exit"])
-		self.door = ""
-		self.doorFlags = set()
+from . import roomdata
+from .constants import IS_PYTHON_2, DIRECTIONS, LEAD_BEFORE_ENTERING_VNUMS, TERRAIN_COSTS, TERRAIN_SYMBOLS, LIGHT_SYMBOLS, VALID_MOB_FLAGS, VALID_LOAD_FLAGS, VALID_EXIT_FLAGS, VALID_DOOR_FLAGS, DIRECTION_COORDINATES, REVERSE_DIRECTIONS
+from .utils import iterItems, regexFuzzy
 
 
 class World(object):
@@ -115,33 +62,10 @@ class World(object):
 		return None
 
 	def loadRooms(self):
-		self.output("Loading the JSon database file.")
-		mapDirectory = getDirectoryPath("maps")
-		mapFile = os.path.join(mapDirectory, MAP_FILE)
-		sampleMapFile = os.path.join(mapDirectory, SAMPLE_MAP_FILE)
-		if os.path.exists(mapFile):
-			if not os.path.isdir(mapFile):
-				path = mapFile
-			else:
-				path = None
-				self.output("Error: '{0}' is a directory, not a file.".format(mapFile))
-		elif os.path.exists(sampleMapFile):
-			if not os.path.isdir(sampleMapFile):
-				path = sampleMapFile
-			else:
-				path = None
-				self.output("Error: '{0}' is a directory, not a file.".format(sampleMapFile))
-		else:
-			return self.output("Error: neither '{0}' nor '{1}' can be found.".format(mapFile, sampleMapFile))
-		try:
-			with codecs.open(path, "rb", encoding="utf-8") as fileObj:
-				db = json.load(fileObj)
-		except IOError as e:
-			self.rooms = {}
-			return self.output("{0}: '{1}'".format(e.strerror, e.filename))
-		except ValueError as e:
-			self.rooms = {}
-			return self.output("Corrupted map database file.")
+		self.output("Loading the database file.")
+		errors, db = roomdata.database.loadRooms()
+		if db is None:
+			return self.output(errors)
 		self.output("Creating room objects.")
 		terrainReplacements = {
 			"random": "undefined",
@@ -149,7 +73,7 @@ class World(object):
 			"shallowwater": "shallow"
 		}
 		for vnum, roomDict in iterItems(db):
-			newRoom = Room(vnum)
+			newRoom = roomdata.objects.Room(vnum)
 			newRoom.name = roomDict["name"]
 			newRoom.desc = roomDict["desc"]
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
@@ -181,32 +105,6 @@ class World(object):
 		self.currentRoom = self.rooms["0"]
 		self.output("Map database loaded.")
 
-	def loadLabels(self):
-		def getLabels(fileName):
-			dataDirectory = getDirectoryPath("data")
-			fileName = os.path.join(dataDirectory, fileName)
-			if os.path.exists(fileName):
-				if not os.path.isdir(fileName):
-					try:
-						with codecs.open(fileName, "rb", encoding="utf-8") as fileObj:
-							return json.load(fileObj)
-					except IOError as e:
-						self.output("{0}: '{1}'".format(e.strerror, e.filename))
-						return {}
-					except ValueError as e:
-						self.output("Corrupted labels database file: {0}".format(fileName))
-						return {}
-				else:
-					self.output("Error: '{0}' is a directory, not a file.".format(fileName))
-					return {}
-			else:
-				return {}
-		self.labels.update(getLabels(SAMPLE_LABELS_FILE))
-		self.labels.update(getLabels(LABELS_FILE))
-		orphans = [label for label, vnum in iterItems(self.labels) if vnum not in self.rooms]
-		for label in orphans:
-			del self.labels[label]
-
 	def saveRooms(self):
 		self.output("Creating dict from room objects.")
 		db = {}
@@ -236,21 +134,24 @@ class World(object):
 				newExit["to"] = exitObj.to
 				newRoom["exits"][direction] = newExit
 			db[vnum] = newRoom
-		self.output("Saving the database in JSon format.")
-		mapDirectory = getDirectoryPath("maps")
-		mapFile = os.path.join(mapDirectory, MAP_FILE)
-		with codecs.open(mapFile, "wb", encoding="utf-8") as fileObj:
-			fileObj.write(json.dumps(db, sort_keys=True, indent=2, separators=(",", ": ")))
+		self.output("Saving the database.")
+		roomdata.database.dumpRooms(db)
 		self.output("Map Database saved.")
 
+	def loadLabels(self):
+		errors, labels = roomdata.database.loadLabels()
+		if labels is None:
+			return self.output(errors)
+		self.labels.update(labels)
+		orphans = [label for label, vnum in iterItems(self.labels) if vnum not in self.rooms]
+		for label in orphans:
+			del self.labels[label]
+
 	def saveLabels(self):
-		dataDirectory = getDirectoryPath("data")
-		labelsFile = os.path.join(dataDirectory, LABELS_FILE)
-		with codecs.open(labelsFile, "wb", encoding="utf-8") as fileObj:
-			json.dump(self.labels, fileObj, sort_keys=True, indent=2, separators=(",", ": "))
+		roomdata.database.dumpLabels(self.labels)
 
 	def getNewExit(self, direction, to="undefined", parent=None):
-		newExit = Exit()
+		newExit = roomdata.objects.Exit()
 		newExit.direction = direction
 		newExit.to = to
 		newExit.vnum = self.currentRoom.vnum if parent is None else parent

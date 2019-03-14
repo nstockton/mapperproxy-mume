@@ -7,14 +7,6 @@ import sys
 
 IS_PYTHON_2 = sys.version_info[0] == 2
 
-MAP_FILE = "arda.json"
-
-SAMPLE_MAP_FILE = "arda.json.sample"
-
-LABELS_FILE = "room_labels.json"
-
-SAMPLE_LABELS_FILE = "room_labels.json.sample"
-
 DIRECTIONS = ["north", "east", "south", "west", "up", "down"]
 
 RUN_DESTINATION_REGEX = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
