@@ -266,8 +266,8 @@ class EmulatedWorld(World):
 
 	def parseInput(self, userInput):
 		"""Parse the user input"""
-		userCommands = [func[len("user_command_"):].encode("us-ascii", "ignore") for func in dir(self) if not func.startswith("user_command_partial_") and func.startswith("user_command_")]
-		userCommandsPartial = [func[len("user_command_partial_"):].encode("us-ascii", "ignore") for func in dir(self) if func.startswith("user_command_partial_")]
+		userCommands = [func[len("user_command_"):] for func in dir(self) if not func.startswith("user_command_partial_") and func.startswith("user_command_")]
+		userCommandsPartial = [func[len("user_command_partial_"):] for func in dir(self) if func.startswith("user_command_partial_")]
 		match = re.match(r"^(?P<command>\S+)(?:\s+(?P<arguments>.*))?", userInput)
 		command = match.group("command")
 		arguments = match.group("arguments")
