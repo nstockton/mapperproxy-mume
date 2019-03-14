@@ -202,7 +202,8 @@ VALID_LOAD_FLAGS = [
 	"stable",
 	"white_word",
 	"dark_word",
-	"equipment"
+	"equipment",
+	"coach"
 ]
 
 VALID_EXIT_FLAGS = [
