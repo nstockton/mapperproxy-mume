@@ -64,9 +64,9 @@ Auto mapping mode must be on for these commands to have any effect.
 * rlabel [add|delete|info|search] [label] [vnum]  --  Manage room labels. Vnum is only used when adding a room. Leave it blank to use the current room's vnum. Use rlabel info all to get a list of all labels.
 * rlight [lit|dark|undefined]  --  Modify the light flag of the current room.
 * rlink [add|remove] [oneway] [vnum] [north|east|south|west|up|down]  --  Manually manage links from the current room to room with vnum. If oneway is given, treat the link as unidirectional.
-* rloadflags [add|remove] [treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment]  --  Modify the load flags of the current room.
+* rloadflags [add|remove] [treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach]  --  Modify the load flags of the current room.
 * rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob]  --  Modify the mob flags of the current room.
-* rnote [text]  --  Modify the note for the current room.
+* rnote [-a|-r] [text]  --  Modify the note for the current room. If '-a' is given, append text to the current note. If '-r' is given, remove the note.
 * rportable [portable|notportable|undefined]  --  Modify the portable flag of the current room.
 * rridable [ridable|notridable|undefined]  --  Modify the ridable flag of the current room.
 * rterrain [death|city|shallowwater|forest|hills|road|cavern|field|water|underwater|rapids|indoors|brush|tunnel|mountains|random|undefined]  --  Modify the terrain of the current room.

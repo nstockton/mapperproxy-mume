@@ -461,8 +461,19 @@ class World(object):
 
 	def rnote(self, *args):
 		if not args or args[0] is None or not args[0].strip():
-			return "Room note set to '%s'. Use 'rnote [text]' to change it." % self.currentRoom.note
-		self.currentRoom.note = args[0].strip()
+			return "Room note set to '%s'. Use 'rnote [text]' to change it, 'rnote -a [text]' to append to it, or 'rnote -r' to remove it." % self.currentRoom.note
+		note = args[0].strip()
+		if note.lower().startswith("-r"):
+			if len(note) > 2:
+				return "Error: '-r' requires no extra arguments. Change aborted."
+			self.currentRoom.note = ""
+			return "Note removed."
+		elif note.lower().startswith("-a"):
+			if len(note) == 2:
+				return "Error: '-a' requires text to be appended. Change aborted."
+			self.currentRoom.note = "{} {}".format(self.currentRoom.note.strip(), note[2:].strip())
+		else:
+			self.currentRoom.note = note
 		return "Room note now set to '%s'." % self.currentRoom.note
 
 	def ralign(self, *args):
