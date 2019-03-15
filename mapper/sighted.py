@@ -14,7 +14,6 @@ except ImportError:
 	from queue import Empty as QueueEmpty
 
 from .config import Config, config_lock
-from .constants import DIRECTIONS, TERRAIN_COLORS
 from .utils import iterItems, getDirectoryPath
 
 

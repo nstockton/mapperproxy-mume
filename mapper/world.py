@@ -14,8 +14,59 @@ import re
 import threading
 
 from . import roomdata
-from .constants import IS_PYTHON_2, DIRECTIONS, LEAD_BEFORE_ENTERING_VNUMS, TERRAIN_COSTS, TERRAIN_SYMBOLS, LIGHT_SYMBOLS, VALID_MOB_FLAGS, VALID_LOAD_FLAGS, VALID_EXIT_FLAGS, VALID_DOOR_FLAGS, DIRECTION_COORDINATES, REVERSE_DIRECTIONS
 from .utils import iterItems, regexFuzzy
+
+
+DIRECTIONS = ["north", "east", "south", "west", "up", "down"]
+DIRECTION_COORDINATES = {
+	"north": (0, 1, 0),
+	"south": (0, -1, 0),
+	"west": (-1, 0, 0),
+	"east": (1, 0, 0),
+	"up": (0, 0, 1),
+	"down": (0, 0, -1)
+}
+LEAD_BEFORE_ENTERING_VNUMS = [
+	"196",
+	"3473",
+	"3474",
+	"12138",
+	"12637"
+]
+LIGHT_SYMBOLS = {
+	"@": "lit",
+	"*": "lit",
+	"!": "undefined",
+	")": "lit",
+	"o": "dark"
+}
+REVERSE_DIRECTIONS = {
+	"north": "south",
+	"south": "north",
+	"east": "west",
+	"west": "east",
+	"up": "down",
+	"down": "up"
+}
+RUN_DESTINATION_REGEX = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
+TERRAIN_SYMBOLS = {
+	":": "brush",
+	"O": "cavern",
+	"#": "city",
+	"!": "deathtrap",
+	".": "field",
+	"f": "forest",
+	"(": "hills",
+	"[": "indoors",
+	"<": "mountains",
+	"W": "rapids",
+	"+": "road",
+	"%": "shallow",
+	"=": "tunnel",
+	"?": "undefined",
+	"U": "underwater",
+	"~": "water"
+}
 
 
 class World(object):
@@ -458,11 +509,11 @@ class World(object):
 		return "Room coordinate Z set to '%s'. Use 'rz [digit]' to change it." % self.currentRoom.z
 
 	def rmobflags(self, *args):
-		regex = re.compile(r"^(?P<mode>%s|%s)\s+(?P<flag>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(VALID_MOB_FLAGS)))
+		regex = re.compile(r"^(?P<mode>%s|%s)\s+(?P<flag>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_MOB_FLAGS)))
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Mob flags set to '%s'. Use 'rmobflags [add | remove] [%s]' to change them." % (", ".join(self.currentRoom.mobFlags), " | ".join(VALID_MOB_FLAGS))
+			return "Mob flags set to '%s'. Use 'rmobflags [add | remove] [%s]' to change them." % (", ".join(self.currentRoom.mobFlags), " | ".join(roomdata.objects.VALID_MOB_FLAGS))
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.mobFlags:
 				self.currentRoom.mobFlags.remove(matchDict["flag"])
@@ -477,11 +528,11 @@ class World(object):
 				return "Mob flag '%s' added." % matchDict["flag"]
 
 	def rloadflags(self, *args):
-		regex = re.compile(r"^(?P<mode>%s|%s)\s+(?P<flag>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(VALID_LOAD_FLAGS)))
+		regex = re.compile(r"^(?P<mode>%s|%s)\s+(?P<flag>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_LOAD_FLAGS)))
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Load flags set to '%s'. Use 'rloadflags [add | remove] [%s]' to change them." % (", ".join(self.currentRoom.loadFlags), " | ".join(VALID_LOAD_FLAGS))
+			return "Load flags set to '%s'. Use 'rloadflags [add | remove] [%s]' to change them." % (", ".join(self.currentRoom.loadFlags), " | ".join(roomdata.objects.VALID_LOAD_FLAGS))
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.loadFlags:
 				self.currentRoom.loadFlags.remove(matchDict["flag"])
@@ -496,11 +547,11 @@ class World(object):
 				return "Load flag '%s' added." % matchDict["flag"]
 
 	def exitflags(self, *args):
-		regex = re.compile(r"^((?P<mode>%s|%s)\s+)?((?P<flag>%s)\s+)?(?P<direction>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(VALID_EXIT_FLAGS), regexFuzzy(DIRECTIONS)))
+		regex = re.compile(r"^((?P<mode>%s|%s)\s+)?((?P<flag>%s)\s+)?(?P<direction>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_EXIT_FLAGS), regexFuzzy(DIRECTIONS)))
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Syntax: 'exitflags [add | remove] [%s] [%s]'." % (" | ".join(VALID_EXIT_FLAGS), " | ".join(DIRECTIONS))
+			return "Syntax: 'exitflags [add | remove] [%s] [%s]'." % (" | ".join(roomdata.objects.VALID_EXIT_FLAGS), " | ".join(DIRECTIONS))
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if direction not in self.currentRoom.exits:
 			return "Exit %s does not exist." % direction
@@ -520,11 +571,11 @@ class World(object):
 				return "Exit flag '%s' in direction '%s' added." % (matchDict["flag"], direction)
 
 	def doorflags(self, *args):
-		regex = re.compile(r"^((?P<mode>%s|%s)\s+)?((?P<flag>%s)\s+)?(?P<direction>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(VALID_DOOR_FLAGS), regexFuzzy(DIRECTIONS)))
+		regex = re.compile(r"^((?P<mode>%s|%s)\s+)?((?P<flag>%s)\s+)?(?P<direction>%s)" % (regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_DOOR_FLAGS), regexFuzzy(DIRECTIONS)))
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Syntax: 'doorflags [add | remove] [%s] [%s]'." % (" | ".join(VALID_DOOR_FLAGS), " | ".join(DIRECTIONS))
+			return "Syntax: 'doorflags [add | remove] [%s] [%s]'." % (" | ".join(roomdata.objects.VALID_DOOR_FLAGS), " | ".join(DIRECTIONS))
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if direction not in self.currentRoom.exits:
 			return "Exit %s does not exist." % direction
@@ -741,7 +792,21 @@ class World(object):
 			result.extend(compressDirections(directionsBuffer))
 		return ", ".join(result)
 
-	def pathFind(self, origin=None, destination=None, flags=[]):
+	def path(self, *args):
+		if not args or not args[0]:
+			return "Usage: path [label|vnum]"
+		match = RUN_DESTINATION_REGEX.match(args[0].strip())
+		destination = match.group("destination")
+		flags = match.group("flags")
+		if flags:
+			flags = flags.split("|")
+		else:
+			flags = None
+		result = self.pathFind(destination=destination, flags=flags)
+		if result is not None:
+			return self.createSpeedWalk(result)
+
+	def pathFind(self, origin=None, destination=None, flags=None):
 		"""Find the path"""
 		if not origin:
 			origin = self.currentRoom
@@ -756,7 +821,7 @@ class World(object):
 			self.output("You are already there!")
 			return []
 		if flags:
-			avoidTerrains = frozenset(terrain for terrain in TERRAIN_COSTS if "no{0}".format(terrain) in flags)
+			avoidTerrains = frozenset(terrain for terrain in roomdata.objects.TERRAIN_COSTS if "no{0}".format(terrain) in flags)
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
