@@ -19,9 +19,9 @@ try:
 except ImportError:
 	from queue import Empty as QueueEmpty
 
-from .config import Config, config_lock
-from .world import DIRECTIONS
-from .utils import iterItems, iterRange
+from ..config import Config, config_lock
+from ..world import DIRECTIONS
+from ..utils import iterItems, iterRange
 from .vec2d import Vec2d
 
 logger = logging.getLogger(__name__)

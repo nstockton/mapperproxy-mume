@@ -79,9 +79,9 @@ class World(object):
 			self._gui_queue = Queue()
 			self._gui_queue_lock = threading.Lock()
 			if interface == "hc":
-				from .hc import Window
+				from .gui.hc import Window
 			elif interface == "sighted":
-				from .sighted import Window
+				from .gui.sighted import Window
 			self.window=Window(self)
 		self._currentRoom = None
 		self.loadRooms()

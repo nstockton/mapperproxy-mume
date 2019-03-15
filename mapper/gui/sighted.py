@@ -13,8 +13,8 @@ try:
 except ImportError:
 	from queue import Empty as QueueEmpty
 
-from .config import Config, config_lock
-from .utils import iterItems, getDirectoryPath
+from ..config import Config, config_lock
+from ..utils import iterItems, getDirectoryPath
 
 
 logger = logging.getLogger(__name__)
