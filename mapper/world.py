@@ -123,13 +123,38 @@ class World(object):
 			"death": "deathtrap",
 			"shallowwater": "shallow"
 		}
+		mobFlagReplacements = {
+			"any": "passive_mob",
+			"smob": "aggressive_mob",
+			"quest": "quest_mob",
+			"scoutguild": "scout_guild",
+			"mageguild": "mage_guild",
+			"clericguild": "cleric_guild",
+			"warriorguild": "warrior_guild",
+			"rangerguild": "ranger_guild",
+			"armourshop": "armour_shop",
+			"foodshop": "food_shop",
+			"petshop": "pet_shop",
+			"weaponshop": "weapon_shop"
+		}
+		loadFlagReplacements = {
+			"packhorse": "pack_horse",
+			"trainedhorse": "trained_horse"
+		}
+		doorFlagReplacements = {
+			"noblock": "no_block",
+			"nobreak": "no_break",
+			"nopick": "no_pick",
+			"needkey": "need_key"
+		}
 		for vnum, roomDict in iterItems(db):
 			newRoom = roomdata.objects.Room(vnum)
 			newRoom.name = roomDict["name"]
 			newRoom.desc = roomDict["desc"]
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
 			newRoom.note = roomDict["note"]
-			newRoom.terrain = terrainReplacements.get(roomDict["terrain"], roomDict["terrain"])
+			terrain = roomDict["terrain"]
+			newRoom.terrain = terrain if terrain not in terrainReplacements else terrainReplacements[terrain]
 			newRoom.light = roomDict["light"]
 			newRoom.align = roomDict["align"]
 			newRoom.portable = roomDict["portable"]
@@ -138,8 +163,8 @@ class World(object):
 				newRoom.avoid = roomDict["avoid"]
 			except KeyError:
 				pass
-			newRoom.mobFlags = {"aggressive_mob" if flag == "smob" else "quest_mob" if flag == "quest" else "passive_mob" if flag == "any" else flag.replace("shop", "_shop") if flag in ("weaponshop", "armourshop", "foodshop", "petshop") else flag.replace("guild", "_guild") if flag in ("scoutguild", "mageguild", "clericguild", "warriorguild", "rangerguild") else flag for flag in roomDict["mobFlags"]}
-			newRoom.loadFlags = {flag.replace("horse", "_horse") if flag in ("packhorse", "trainedhorse") else flag for flag in roomDict["loadFlags"]}
+			newRoom.mobFlags = {flag if flag not in mobFlagReplacements else mobFlagReplacements[flag] for flag in roomDict["mobFlags"]}
+			newRoom.loadFlags = {flag if flag not in loadFlagReplacements else loadFlagReplacements[flag] for flag in roomDict["loadFlags"]}
 			newRoom.x = roomDict["x"]
 			newRoom.y = roomDict["y"]
 			newRoom.z = roomDict["z"]
@@ -147,7 +172,7 @@ class World(object):
 			for direction, exitDict in iterItems(roomDict["exits"]):
 				newExit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.exitFlags = set(exitDict["exitFlags"])
-				newExit.doorFlags = {flag.replace("no", "no_") if flag in ("noblock", "nobreak", "nopick") else flag.replace("needkey", "need_key") for flag in exitDict["doorFlags"]}
+				newExit.doorFlags = {flag if flag not in doorFlagReplacements else doorFlagReplacements[flag] for flag in exitDict["doorFlags"]}
 				newExit.door = exitDict["door"]
 				newRoom.exits[direction] = newExit
 			self.rooms[vnum] = newRoom
