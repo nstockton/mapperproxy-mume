@@ -1,1 +1,5 @@
-git+https://github.com/nstockton/speechlight.git
+pyglet
+# Note, if using py2exe and Python 2.7 to create a windows executable, an older version of Pyglet must be used.
+#pyglet==1.2.4
+#git+https://github.com/nstockton/speechlight.git
+https://github.com/nstockton/speechlight/archive/master.zip
