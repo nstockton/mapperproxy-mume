@@ -1,3 +1,4 @@
+# This script should be considered deprecated. Don't use unless you know what you are doing.
 import glob
 from distutils.core import setup
 import os.path
@@ -11,8 +12,6 @@ import speechlight
 APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
 APP_VERSION = "2.2"
-USE_CUSTOM_PYTHON_DLL = False
-PYTHON_DLL = "python34.dll"
 
 # Remove old build and dist directories
 shutil.rmtree("build", ignore_errors=True)
@@ -73,17 +72,16 @@ dll_excludes = [
 	"w9xpopen.exe"
 ]
 
-# I need to fix this for Python 3
 packages = [
-	#"encodings.ascii",
-	#"encodings.utf_8",
-	#"encodings.latin_1"
+	"encodings.ascii",
+	"encodings.utf_8",
+	"encodings.latin_1"
 ]
 
 setup_options = {
 	"py2exe": {
 		"dist_dir": "%s V%s" % (APP_NAME, APP_VERSION),
-		"bundle_files": 2,
+		"bundle_files": 1,
 		"ascii": False,
 		"compressed": True,
 		"optimize": 2,
@@ -93,11 +91,7 @@ setup_options = {
 	}
 }
 
-setup(options=setup_options, zipfile=None, console=[program], data_files=[(".", ["./cacert.pem"]), ("speech_libs", glob.glob(os.path.join(speechlight.where(), "*.dll"))), ("maps", glob.glob("maps\\*")), ("data", glob.glob("data\\*"))])
-
-# Copy our compressed version of python34.dll to destination folder
-if USE_CUSTOM_PYTHON_DLL and os.path.exists(PYTHON_DLL) and not os.path.isdir(PYTHON_DLL):
-	shutil.copy(PYTHON_DLL, setup_options["py2exe"]["dist_dir"])
+setup(options=setup_options, zipfile=None, console=[program], data_files=[(".", ["./cacert.pem"]), ("speech_libs", glob.glob(os.path.join(speechlight.where(), "*.dll"))), ("maps", glob.glob("maps\\*.sample")), ("data", glob.glob("data\\*.sample"))])
 
 # Remove the build folder since we no longer need it.
 shutil.rmtree("build", ignore_errors=True)
