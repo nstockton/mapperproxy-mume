@@ -16,7 +16,7 @@ APP_AUTHOR = "Nick Stockton"
 # For example, "17, 4, 5, 0" if the version is 17.45.
 APP_VERSION_CSV = "{}, {}".format(int(float(APP_VERSION)), ", ".join(i for i in str(int((float(APP_VERSION) - int(float(APP_VERSION))) * 1000))))
 ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))
-APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{} V{}".format(APP_NAME, APP_VERSION)))
+APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}".format(APP_NAME, APP_VERSION).replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
