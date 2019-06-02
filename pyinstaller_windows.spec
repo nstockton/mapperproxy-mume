@@ -185,7 +185,6 @@ shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True
 os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir)))
 
 include_files = [
-	([os.path.normpath(os.path.join(APP_DEST, os.pardir, "cacert.pem"))], "."),
 	(glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")), "speech_libs"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),

@@ -7,6 +7,7 @@ import sys
 
 import py2exe
 
+import certifi
 import speechlight
 
 APP_NAME = "Mapper Proxy"
@@ -91,7 +92,7 @@ setup_options = {
 	}
 }
 
-setup(options=setup_options, zipfile=None, console=[program], data_files=[(".", ["./cacert.pem"]), ("speech_libs", glob.glob(os.path.join(speechlight.where(), "*.dll"))), ("maps", glob.glob("maps\\*.sample")), ("data", glob.glob("data\\*.sample"))])
+setup(options=setup_options, zipfile=None, console=[program], data_files=[(".", [certifi.where()]), ("speech_libs", glob.glob(os.path.join(speechlight.where(), "*.dll"))), ("maps", glob.glob("maps\\*.sample")), ("data", glob.glob("data\\*.sample"))])
 
 # Remove the build folder since we no longer need it.
 shutil.rmtree("build", ignore_errors=True)

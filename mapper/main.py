@@ -6,6 +6,7 @@ from __future__ import print_function
 
 import socket
 try:
+	import certifi
 	import ssl
 except ImportError:
 	ssl = None
@@ -355,7 +356,7 @@ def main(outputFormat, interface):
 	serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 	if ssl is not None:
-		serverConnection = ssl.wrap_socket(serverConnection, cert_reqs=ssl.CERT_REQUIRED, ca_certs="cacert.pem", ssl_version=ssl.PROTOCOL_TLS)
+		serverConnection = ssl.wrap_socket(serverConnection, cert_reqs=ssl.CERT_REQUIRED, ca_certs=certifi.where(), ssl_version=ssl.PROTOCOL_TLS)
 	try:
 		serverConnection.connect(("193.134.218.98", 4242))
 
