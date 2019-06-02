@@ -137,6 +137,8 @@ VSVersionInfo(
 # Remove old dist directory and old version file.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(APP_DEST, ignore_errors=True)
+if os.path.exists(APP_DEST + ".zip") and not os.path.isdir(APP_DEST + ".zip"):
+	os.remove(APP_DEST + ".zip")
 shutil.rmtree(VERSION_FILE, ignore_errors=True)
 
 with codecs.open(VERSION_FILE, "wb", encoding="utf-8") as f:
@@ -198,3 +200,6 @@ for files, destination in include_files:
 	for src in files:
 		if os.path.exists(src) and not os.path.isdir(src):
 			shutil.copy(src, dest_dir)
+
+shutil.make_archive(base_name=APP_DEST, format="zip", root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)), base_dir=os.path.basename(APP_DEST), owner=None, group=None)
+shutil.rmtree(APP_DEST, ignore_errors=True)
