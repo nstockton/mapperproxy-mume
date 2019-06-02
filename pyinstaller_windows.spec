@@ -17,17 +17,19 @@ ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))
 if os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
 	with codecs.open(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "rb", encoding="utf-8") as f:
 		APP_VERSION = "".join(char for char in f.read(30) if char in string.ascii_letters + string.digits + "-.")
-		APP_VERSION = APP_VERSION[8:] if len(APP_VERSION) > 8 and APP_VERSION.startswith("release-") and APP_VERSION[8:].replace(".", "").isdigit() else APP_VERSION if APP_VERSION.replace(".", "").isdigit() else "1.0"
+		APP_VERSION = APP_VERSION[8:] if len(APP_VERSION) > 8 and APP_VERSION.startswith("release-") and APP_VERSION[8:].replace(".", "").isdigit() else APP_VERSION if APP_VERSION.replace(".", "").isdigit() else "0.0"
 elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
 	try:
 		APP_VERSION = subprocess.check_output("git describe --abbrev=0", shell=True).decode("utf-8").strip()
-		APP_VERSION = APP_VERSION[8:] if len(APP_VERSION) > 8 and APP_VERSION.startswith("release-") and APP_VERSION[8:].replace(".", "").isdigit() else "1.0"
+		APP_VERSION = APP_VERSION[8:] if len(APP_VERSION) > 8 and APP_VERSION.startswith("release-") and APP_VERSION[8:].replace(".", "").isdigit() else "0.0"
 	except subprocess.CalledProcessError:
-		APP_VERSION = "1.0"
+		APP_VERSION = "0.0"
 APP_AUTHOR = "Nick Stockton"
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.45.
-APP_VERSION_CSV = "{}, {}".format(int(float(APP_VERSION)), ", ".join(i for i in str(int((float(APP_VERSION) - int(float(APP_VERSION))) * 1000))))
+_whole, _remainder = APP_VERSION.split(".", 1)
+_remainder = "0, 0, 0" if _remainder == "0" else ", ".join(i for i in str(int(float(_remainder) * 1000)))
+APP_VERSION_CSV = "{}, {}".format(_whole, _remainder)
 APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}".format(APP_NAME, APP_VERSION).replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
