@@ -59,6 +59,7 @@ docs/_build/
 target/
 
 # Misc
+mpm_version.py
 *.ignore
 Mapper Proxy V*/
 Mapper Proxy V*.zip

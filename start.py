@@ -12,8 +12,14 @@ import traceback
 import mapper.main
 import mapper.emulation
 
+try:
+	from mpm_version import version
+except ImportError:
+	version = "%(prog)s: No version information available. This is normal when running from source."
+
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="The accessible Mume mapper.")
+	parser.add_argument("-v", "--version", action="version", version=version)
 	parser.add_argument("-e", "--emulation", help="Start in emulation mode.", action="store_true")
 	parser.add_argument("-i", "--interface", help="Select a user interface.", choices=["text", "hc", "sighted"], default="text")
 	parser.add_argument("-f", "--format", help="Select how data from the server is transformed before  being sent to the client.", choices=["normal", "tintin", "raw"], default="normal")

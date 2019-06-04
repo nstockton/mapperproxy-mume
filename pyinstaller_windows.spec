@@ -14,6 +14,7 @@ import PyInstaller.config
 import speechlight
 
 APP_NAME = "Mapper Proxy"
+APP_AUTHOR = "Nick Stockton"
 VERSION_REGEX = re.compile(r"^v([\d.]+)-(stable|beta)-?(\d*)$", re.IGNORECASE)
 ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))
 found_version = None
@@ -21,7 +22,7 @@ for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
 	if match is not None:
 		APP_VERSION = match.groups()[0]
-		APP_VERSION_TYPE = match.groups()[1:]
+		APP_VERSION_TYPE = "".join(match.groups()[1:])
 		found_version = "command line"
 		break
 else:
@@ -30,14 +31,14 @@ else:
 			match = VERSION_REGEX.search(f.read(30).strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = match.groups()[1:]
+				APP_VERSION_TYPE = "".join(match.groups()[1:])
 				found_version = "version file"
 	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
 		try:
 			match = VERSION_REGEX.search(subprocess.check_output("git describe --abbrev=0", shell=True).decode("utf-8").strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = match.groups()[1:]
+				APP_VERSION_TYPE = "".join(match.groups()[1:])
 				found_version = "latest Git tag"
 		except subprocess.CalledProcessError:
 			pass
@@ -47,12 +48,11 @@ else:
 	APP_VERSION = "0.0"
 	APP_VERSION_TYPE = "beta"
 	print("No version information found. Using default. ({}-{})".format(APP_VERSION, APP_VERSION_TYPE))
-APP_AUTHOR = "Nick Stockton"
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 fixed_width = lambda lst, padding, count: (lst + count * [padding])[:count]
 APP_VERSION_CSV = ", ".join(fixed_width(APP_VERSION.split(".")[:4], padding="0", count=4))
-APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}".format(APP_NAME, APP_VERSION).replace(" ", "_")))
+APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}-{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
@@ -158,7 +158,7 @@ VSVersionInfo(
       StringTable(
         u'040904B0',
         [StringStruct(u'CompanyName', u'LFileDescript'),
-        StringStruct(u'', u'{name} V{version}'),
+        StringStruct(u'', u'{name} V{version}-{version_type}'),
         StringStruct(u'FileVersion', u'{version}'),
         StringStruct(u'LegalCopyright', u'{author}'),
         StringStruct(u'OriginalFilename', u'{name}.exe'),
@@ -168,17 +168,22 @@ VSVersionInfo(
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
 )
-""".format(name=APP_NAME, version=APP_VERSION, version_csv=APP_VERSION_CSV, author=APP_AUTHOR)
+""".format(name=APP_NAME, version=APP_VERSION, version_type=APP_VERSION_TYPE, version_csv=APP_VERSION_CSV, author=APP_AUTHOR)
 
 # Remove old dist directory and old version file.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(APP_DEST, ignore_errors=True)
 if os.path.exists(APP_DEST + ".zip") and not os.path.isdir(APP_DEST + ".zip"):
 	os.remove(APP_DEST + ".zip")
+if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
+	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(VERSION_FILE, ignore_errors=True)
 
 with codecs.open(VERSION_FILE, "wb", encoding="utf-8") as f:
 	f.write(version_data)
+
+with codecs.open(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "wb", encoding="utf-8") as f:
+	f.write("version = \"{} V{}-{}\"".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE))
 
 a = Analysis(
 	["start.py"],
@@ -221,8 +226,11 @@ shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True
 #the directory above workpath should now be empty.
 # Using os.rmdir to remove it instead of shutil.rmtree for safety.
 os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir)))
+if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
+	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 
 include_files = [
+	([os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")), os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md"))], "."),
 	(glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")), "speech_libs"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),
