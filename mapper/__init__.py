@@ -26,7 +26,7 @@ with config_lock:
 	finally:
 		if "debug_level" not in cfg or debug_level != cfg["debug_level"]:
 			cfg["debug_level"] = debug_level
-			c.save()
+			cfg.save()
 	del cfg
 
 if debug_level is not None or debug_level != 0:
