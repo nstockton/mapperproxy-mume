@@ -4,32 +4,54 @@ from __future__ import print_function
 import codecs
 import glob
 import os
+import re
 import shutil
-import string
 import subprocess
+import sys
 import tempfile
 
 import PyInstaller.config
 import speechlight
 
 APP_NAME = "Mapper Proxy"
+VERSION_REGEX = re.compile(r"^v([\d.]+)-(stable|beta)-?(\d*)$", re.IGNORECASE)
 ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))
-if os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
-	with codecs.open(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "rb", encoding="utf-8") as f:
-		APP_VERSION = "".join(char for char in f.read(30) if char in string.ascii_letters + string.digits + "-.")
-		APP_VERSION = APP_VERSION[8:] if len(APP_VERSION) > 8 and APP_VERSION.startswith("release-") and APP_VERSION[8:].replace(".", "").isdigit() else APP_VERSION if APP_VERSION.replace(".", "").isdigit() else "0.0"
-elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
-	try:
-		APP_VERSION = subprocess.check_output("git describe --abbrev=0", shell=True).decode("utf-8").strip()
-		APP_VERSION = APP_VERSION[8:] if len(APP_VERSION) > 8 and APP_VERSION.startswith("release-") and APP_VERSION[8:].replace(".", "").isdigit() else "0.0"
-	except subprocess.CalledProcessError:
-		APP_VERSION = "0.0"
+found_version = None
+for arg in sys.argv[1:]:
+	match = VERSION_REGEX.search(arg.strip().lower())
+	if match is not None:
+		APP_VERSION = match.groups()[0]
+		APP_VERSION_TYPE = match.groups()[1:]
+		found_version = "command line"
+		break
+else:
+	if os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
+		with codecs.open(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "rb", encoding="utf-8") as f:
+			match = VERSION_REGEX.search(f.read(30).strip().lower())
+			if match is not None:
+				APP_VERSION = match.groups()[0]
+				APP_VERSION_TYPE = match.groups()[1:]
+				found_version = "version file"
+	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
+		try:
+			match = VERSION_REGEX.search(subprocess.check_output("git describe --abbrev=0", shell=True).decode("utf-8").strip().lower())
+			if match is not None:
+				APP_VERSION = match.groups()[0]
+				APP_VERSION_TYPE = match.groups()[1:]
+				found_version = "latest Git tag"
+		except subprocess.CalledProcessError:
+			pass
+if found_version:
+	print("Using version info from {}. ({}-{})".format(found_version, APP_VERSION, APP_VERSION_TYPE))
+else:
+	APP_VERSION = "0.0"
+	APP_VERSION_TYPE = "beta"
+	print("No version information found. Using default. ({}-{})".format(APP_VERSION, APP_VERSION_TYPE))
 APP_AUTHOR = "Nick Stockton"
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
-# For example, "17, 4, 5, 0" if the version is 17.45.
-_whole, _remainder = APP_VERSION.split(".", 1)
-_remainder = "0, 0, 0" if _remainder == "0" else ", ".join(i for i in str(int(float(_remainder) * 1000)))
-APP_VERSION_CSV = "{}, {}".format(_whole, _remainder)
+# For example, "17, 4, 5, 0" if the version is 17.4.5.
+fixed_width = lambda lst, padding, count: (lst + count * [padding])[:count]
+APP_VERSION_CSV = ", ".join(fixed_width(APP_VERSION.split(".")[:4], padding="0", count=4))
 APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}".format(APP_NAME, APP_VERSION).replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
@@ -215,7 +237,7 @@ for files, destination in include_files:
 		if os.path.exists(src) and not os.path.isdir(src):
 			shutil.copy(src, dest_dir)
 
-print("Compressing the distribution to {}".format(APP_DEST))
+print("Compressing the distribution to {}.zip".format(APP_DEST))
 shutil.make_archive(base_name=APP_DEST, format="zip", root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)), base_dir=os.path.basename(APP_DEST), owner=None, group=None)
 print("Done.")
 shutil.rmtree(APP_DEST, ignore_errors=True)
