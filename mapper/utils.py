@@ -4,6 +4,7 @@
 
 from __future__ import print_function
 
+import math
 import os.path
 import re
 import subprocess
@@ -32,6 +33,11 @@ def stripAnsi(data):
 
 def simplified(data):
 	return WHITE_SPACE_REGEX.sub(" ", data).strip()
+
+def round_half_away_from_zero(n, decimals=0):
+	# https://realpython.com/python-rounding
+	multiplier = 10 ** decimals
+	return math.copysign(math.floor(abs(n) * multiplier + 0.5) / multiplier, n)
 
 def humanSort(listToSort):
 	return sorted(listToSort, key=lambda item: [int(text) if text.isdigit() else text for text in re.split(r"(\d+)", item, re.UNICODE)])
