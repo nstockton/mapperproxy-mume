@@ -5,7 +5,7 @@
 from __future__ import print_function
 
 import math
-import os.path
+import os
 import re
 import subprocess
 import sys
@@ -33,6 +33,11 @@ def stripAnsi(data):
 
 def simplified(data):
 	return WHITE_SPACE_REGEX.sub(" ", data).strip()
+
+def touch(name, times=None):
+	"""Touches a file (I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does."""
+	with open(name, "a"):
+		os.utime(name, times)
 
 def round_half_away_from_zero(n, decimals=0):
 	# https://realpython.com/python-rounding

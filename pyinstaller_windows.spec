@@ -52,7 +52,7 @@ else:
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 fixed_width = lambda lst, padding, count: (lst + count * [padding])[:count]
 APP_VERSION_CSV = ", ".join(fixed_width(APP_VERSION.split(".")[:4], padding="0", count=4))
-APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}-{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace(" ", "_")))
+APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
@@ -66,7 +66,13 @@ excludes = [
 	"pywin.dialogs",
 	"tcl",
 	"Tkconstants",
+	"tkinter.constants",
 	"Tkinter",
+	"tkinter",
+	"multiprocessing",
+	"bz2",
+	"lzma",
+	"_testcapi",
 	"pdbunittest",
 	"difflib",
 	"pyreadline",
@@ -119,7 +125,6 @@ dll_excludes = TOC([
 	("tcl86t.dll", None, None),
 	("tk86t.dll", None, None),
 	("ucrtbase.dll", None, None),
-	("VCRUNTIME140.dll", None, None),
 	("mfc140u.dll", None, None)
 ])
 
@@ -192,7 +197,7 @@ a = Analysis(
 	datas=[],
 	hiddenimports=[],
 	hookspath=[],
-	runtime_hooks=[],
+	runtime_hooks=[os.path.normpath(os.path.join(APP_DEST, os.pardir, "_pyinstaller_hooks", "runtime_hooks", "use_lib.py"))],
 	excludes=excludes,
 	win_no_prefer_redirects=False,
 	win_private_assemblies=False,
@@ -205,10 +210,8 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
 	pyz,
 	a.scripts,
-	a.binaries - dll_excludes,
-	a.zipfiles,
-	a.datas,
 	[],
+	exclude_binaries=True,
 	name=APP_NAME,
 	debug=False,
 	bootloader_ignore_signals=False,
@@ -217,6 +220,16 @@ exe = EXE(
 	runtime_tmpdir=None,
 	console=True,
 	version=VERSION_FILE
+)
+
+coll = COLLECT(
+	exe,
+	a.binaries - dll_excludes,
+	a.zipfiles,
+	a.datas,
+	strip=False,
+	upx=False,
+	name=""
 )
 
 # Remove junk.
@@ -228,6 +241,20 @@ shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True
 os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir)))
 if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
+shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
+
+lib_files = [
+	([path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.dll"))) if os.path.basename(path).lower() not in ("python37.dll", "vcruntime140.dll")], "lib"),
+	(glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.pyd"))), "lib")
+]
+
+for files, destination in lib_files:
+	dest_dir = os.path.join(APP_DEST, destination)
+	if not os.path.exists(dest_dir):
+		os.makedirs(dest_dir)
+	for src in files:
+		if os.path.exists(src) and not os.path.isdir(src):
+			shutil.move(src, dest_dir)
 
 include_files = [
 	([os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")), os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md"))], "."),

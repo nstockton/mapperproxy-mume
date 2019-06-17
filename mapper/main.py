@@ -4,6 +4,7 @@
 
 from __future__ import print_function
 
+import os
 import socket
 try:
 	import certifi
@@ -16,9 +17,10 @@ import threading
 from .config import Config, config_lock
 from .mapper import USER_DATA, MUD_DATA, Mapper
 from .mpi import MPI
-from .utils import iterRange, unescapeXML
+from .utils import getDirectoryPath, iterRange, touch, unescapeXML
 
 
+LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
 CHARSET = chr(42).encode("us-ascii")
 SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (chr(i).encode("us-ascii") for i in iterRange(1, 8))
 
@@ -350,6 +352,7 @@ def main(outputFormat, interface):
 	proxySocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 	proxySocket.bind(("", 4000))
 	proxySocket.listen(1)
+	touch(LISTENING_STATUS_FILE)
 	clientConnection, proxyAddress = proxySocket.accept()
 	clientConnection.settimeout(1.0)
 	serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -368,6 +371,10 @@ def main(outputFormat, interface):
 		except EnvironmentError:
 			pass
 		clientConnection.close()
+		try:
+			os.remove(LISTENING_STATUS_FILE)
+		except:
+			pass
 		return
 	if ssl is not None:
 		# Validating server identity with ssl module
@@ -401,3 +408,7 @@ def main(outputFormat, interface):
 	proxyThread.join()
 	serverConnection.close()
 	clientConnection.close()
+	try:
+		os.remove(LISTENING_STATUS_FILE)
+	except:
+		pass

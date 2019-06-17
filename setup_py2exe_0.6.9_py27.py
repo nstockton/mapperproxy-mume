@@ -12,7 +12,7 @@ import speechlight
 
 APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
-APP_VERSION = "2.2"
+APP_VERSION = "2.3"
 
 # Remove old build and dist directories
 shutil.rmtree("build", ignore_errors=True)
