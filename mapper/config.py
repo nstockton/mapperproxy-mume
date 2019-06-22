@@ -73,4 +73,4 @@ class Config(collections.MutableMapping):
 	def __len__(self):
 		return len(self._config)
 
-config_lock = threading.Lock()
+config_lock = threading.RLock()

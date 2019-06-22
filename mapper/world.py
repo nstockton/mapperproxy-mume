@@ -4,6 +4,7 @@
 
 from __future__ import print_function
 
+import gc
 import heapq
 import itertools
 try:
@@ -77,7 +78,7 @@ class World(object):
 		self._interface = interface
 		if interface != "text":
 			self._gui_queue = Queue()
-			self._gui_queue_lock = threading.Lock()
+			self._gui_queue_lock = threading.RLock()
 			if interface == "hc":
 				from .gui.hc import Window
 			elif interface == "sighted":
@@ -113,6 +114,8 @@ class World(object):
 		return None
 
 	def loadRooms(self):
+		if gc.isenabled():
+			gc.disable()
 		self.output("Loading the database file.")
 		errors, db = roomdata.database.loadRooms()
 		if db is None:
@@ -179,9 +182,14 @@ class World(object):
 			roomDict.clear()
 			del roomDict
 		self.currentRoom = self.rooms["0"]
+		if not gc.isenabled():
+			gc.enable()
+			gc.collect()
 		self.output("Map database loaded.")
 
 	def saveRooms(self):
+		if gc.isenabled():
+			gc.disable()
 		self.output("Creating dict from room objects.")
 		db = {}
 		for vnum, roomObj in iterItems(self.rooms):
@@ -212,6 +220,9 @@ class World(object):
 			db[vnum] = newRoom
 		self.output("Saving the database.")
 		roomdata.database.dumpRooms(db)
+		if not gc.isenabled():
+			gc.enable()
+			gc.collect()
 		self.output("Map Database saved.")
 
 	def loadLabels(self):
