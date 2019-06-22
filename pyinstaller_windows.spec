@@ -195,7 +195,7 @@ a = Analysis(
 	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
 	binaries=[],
 	datas=[],
-	hiddenimports=[],
+	hiddenimports=["uuid"],
 	hookspath=[],
 	runtime_hooks=[os.path.normpath(os.path.join(APP_DEST, os.pardir, "_pyinstaller_hooks", "runtime_hooks", "use_lib.py"))],
 	excludes=excludes,
@@ -242,6 +242,7 @@ os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workp
 if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
+shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 
 lib_files = [
 	([path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.dll"))) if os.path.basename(path).lower() not in ("python37.dll", "vcruntime140.dll")], "lib"),
