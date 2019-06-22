@@ -6,6 +6,11 @@ import codecs
 import json
 import os.path
 
+try:
+	import rapidjson
+except ImportError:
+	rapidjson = None
+
 from ..utils import getDirectoryPath
 
 
@@ -78,4 +83,7 @@ def loadRooms():
 
 def dumpRooms(rooms):
 	with codecs.open(MAP_FILE_PATH, "wb", encoding="utf-8") as fileObj:
-		fileObj.write(json.dumps(rooms, sort_keys=True, indent=2, separators=(",", ": ")))
+		if rapidjson is not None:
+			rapidjson.dump(rooms, fileObj, sort_keys=True, indent=2, chunk_size=2**16)
+		else:
+			fileObj.write(json.dumps(rooms, sort_keys=True, indent=2))
