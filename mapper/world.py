@@ -247,7 +247,9 @@ class World(object):
 	def sortExits(self, exitsDict):
 		return sorted(iterItems(exitsDict), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
 
-	def isExitLogical(self,exit):
+	def isBidirectional(self,exit):
+		"""Returns True if an exit is bidirectional, False if unidirectional.
+		I.E. True if moving in a given direction then moving back in the direction you just came from would put you back where you started, False otherwise."""
 		try:
 			dest = self.rooms[exit.to]
 		except KeyError:
