@@ -3,6 +3,7 @@
 from __future__ import print_function
 import codecs
 import glob
+import hashlib
 import os
 import re
 import shutil
@@ -275,5 +276,21 @@ for files, destination in include_files:
 
 print("Compressing the distribution to {}.zip".format(APP_DEST))
 shutil.make_archive(base_name=APP_DEST, format="zip", root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)), base_dir=os.path.basename(APP_DEST), owner=None, group=None)
-print("Done.")
 shutil.rmtree(APP_DEST, ignore_errors=True)
+
+print("Generating checksums.")
+hashes = {
+	"sha256": hashlib.sha256(),
+	"sha512": hashlib.sha512()
+}
+file_name = APP_DEST + ".zip"
+block_size = 2 ** 16
+with open(file_name, "rb") as f:
+	for block in iter(lambda: f.read(block_size), b""):
+		for _, hash in hashes.items():
+			hash.update(block)
+for hashtype, hash in hashes.items():
+	with codecs.open("{}.{}".format(file_name, hashtype), "wb", encoding="utf-8") as f:
+		f.write("{} *{}\n".format(hash.hexdigest().lower(), os.path.basename(file_name)))
+
+print("Done.")
