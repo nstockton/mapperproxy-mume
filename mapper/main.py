@@ -337,7 +337,7 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-def main(outputFormat, interface):
+def main(outputFormat, interface, localHost, localPort, remoteHost, remotePort, noSsl):
 	outputFormat = outputFormat.strip().lower()
 	interface = interface.strip().lower()
 	if interface != "text":
@@ -350,7 +350,7 @@ def main(outputFormat, interface):
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	proxySocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-	proxySocket.bind(("", 4000))
+	proxySocket.bind((localHost, localPort))
 	proxySocket.listen(1)
 	touch(LISTENING_STATUS_FILE)
 	clientConnection, proxyAddress = proxySocket.accept()
@@ -358,10 +358,10 @@ def main(outputFormat, interface):
 	serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-	if ssl is not None:
+	if not noSsl and ssl is not None:
 		serverConnection = ssl.wrap_socket(serverConnection, cert_reqs=ssl.CERT_REQUIRED, ca_certs=certifi.where(), ssl_version=ssl.PROTOCOL_TLS)
 	try:
-		serverConnection.connect(("193.134.218.98", 4242))
+		serverConnection.connect((remoteHost, remotePort))
 
 	except TimeoutError:
 		try:
@@ -376,7 +376,7 @@ def main(outputFormat, interface):
 		except:
 			pass
 		return
-	if ssl is not None:
+	if not noSsl and ssl is not None:
 		# Validating server identity with ssl module
 		# See https://wiki.python.org/moin/SSL
 		for field in serverConnection.getpeercert()["subject"]:

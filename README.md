@@ -29,9 +29,16 @@ pip install -U -r requirements.txt
 ### Manual start up
 To start the mapper, run `python start.py` from the _mume-mapperproxy/_ directory. It accepts the following arguments:
 
-- `-e` Start in emulation mode. The mapper does not connect to MUME.
-- `-i [text|hc|sighted]` Select an interface. Text-only mode, high contrast GUI, or sighted GUI. The high contrast GUI is a high contrast one for visually impaired players. The sighted GUI uses png tiles. Default is text-only mode (no GUI).
-- `-f [normal|tintin|raw]` Select how the data from the server is transformed before being sent to the client. Normal mode filters out XML tags from the data received by the mud before sending it to the user's mud client, TinTin sends certain tags to the client in a special format for the mud client to trigger on, and raw sends the data from the mud to the mud client unmodified. Default is "_normal_".
+- `-h`, `--help` Show program's help and exit.
+- `-v`, `--version` Show program's version number and exit.
+- `-e`, `--emulation` Start in emulation mode. The mapper will not connect to MUME.
+- `-i [text|hc|sighted]`, `--interface [text|hc|sighted]` Select an interface. Text-only mode, high contrast GUI, or sighted GUI. The high contrast GUI is a high contrast one for visually impaired players. The sighted GUI uses png tiles. Default is "_text_" mode (no GUI).
+- `-f [normal|tintin|raw]`, `--format [normal|tintin|raw]` Select how the data from the server is transformed before being sent to the client. Normal mode filters out XML tags from the data received by the mud before sending it to the user's mud client, TinTin sends certain tags to the client in a special format for the mud client to trigger on, and raw sends the data from the mud to the mud client unmodified. Default is "_normal_".
+- `-lh address`, `--local-host address` The local host address to bind to. Default is "_127.0.0.1_".
+- `-lp port`, `--local-port port` The local port to bind to. Default is "_4000_".
+- `-rh address`, `--remote-host address` The remote host address to connect to. Default is "_mume.org_".
+- `-rp port`, `--remote-port port` The remote port to connect to. Default is "_4242_".
+- `-nssl`, `--no-ssl` Disable encrypted communication between the local and remote hosts. Don't do this unless you know what you're doing.
 
 Once done, connect your client to `127.0.0.1`, port `4000`.
 
