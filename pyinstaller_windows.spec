@@ -16,14 +16,14 @@ import speechlight
 
 APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
-VERSION_REGEX = re.compile(r"^v([\d.]+)-(stable|beta)-?(\d*)$", re.IGNORECASE)
+VERSION_REGEX = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
 ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))
 found_version = None
 for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
 	if match is not None:
 		APP_VERSION = match.groups()[0]
-		APP_VERSION_TYPE = "".join(match.groups()[1:])
+		APP_VERSION_TYPE = "_".join(match.groups()[1:])
 		found_version = "command line"
 		break
 else:
@@ -32,14 +32,14 @@ else:
 			match = VERSION_REGEX.search(f.read(30).strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = "".join(match.groups()[1:])
+				APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "version file"
 	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
 		try:
-			match = VERSION_REGEX.search(subprocess.check_output("git describe --abbrev=0", shell=True).decode("utf-8").strip().lower())
+			match = VERSION_REGEX.search(subprocess.check_output("git describe --tags", shell=True).decode("utf-8").strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = "".join(match.groups()[1:])
+				APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "latest Git tag"
 		except subprocess.CalledProcessError:
 			pass
@@ -53,7 +53,7 @@ else:
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 fixed_width = lambda lst, padding, count: (lst + count * [padding])[:count]
 APP_VERSION_CSV = ", ".join(fixed_width(APP_VERSION.split(".")[:4], padding="0", count=4))
-APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace(" ", "_")))
+APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace("-", "_").replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
