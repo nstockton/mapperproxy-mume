@@ -61,5 +61,5 @@ target/
 # Misc
 mpm_version.py
 *.ignore
-Mapper Proxy V*/
-Mapper Proxy V*.zip
+Mapper_Proxy_V*/
+Mapper_Proxy_V*.zip*
