@@ -23,7 +23,7 @@ for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
 	if match is not None:
 		APP_VERSION = match.groups()[0]
-		APP_VERSION_TYPE = "_".join(match.groups()[1:])
+		APP_VERSION_TYPE = match.groups()[1] if match.groups()[2].startswith("0-g") else "_".join(match.groups()[1:])
 		found_version = "command line"
 		break
 else:
@@ -32,14 +32,14 @@ else:
 			match = VERSION_REGEX.search(f.read(30).strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = "_".join(match.groups()[1:])
+				APP_VERSION_TYPE = match.groups()[1] if match.groups()[2].startswith("0-g") else "_".join(match.groups()[1:])
 				found_version = "version file"
 	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
 		try:
-			match = VERSION_REGEX.search(subprocess.check_output("git describe --tags", shell=True).decode("utf-8").strip().lower())
+			match = VERSION_REGEX.search(subprocess.check_output("git describe --tags --always --long", shell=True).decode("utf-8").strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = "_".join(match.groups()[1:])
+				APP_VERSION_TYPE = match.groups()[1] if match.groups()[2].startswith("0-g") else "_".join(match.groups()[1:])
 				found_version = "latest Git tag"
 		except subprocess.CalledProcessError:
 			pass
