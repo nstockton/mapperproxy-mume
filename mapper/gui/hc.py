@@ -613,11 +613,9 @@ class Window(pyglet.window.Window):
 			radius = self._cfg["exit_radius"]
 			if not isinstance(radius, int):
 				raise ValueError
-		except KeyError:
-			radius = 10
-			self._cfg["exit_radius"] = radius
-		except ValueError:
-			logger.warning("Invalid value for exit_radius in config.json: {}".format(radius))
+		except (KeyError, ValueError) as error:
+			if isinstance(error, ValueError):
+				logger.warning("Invalid value for exit_radius in config.json: {}".format(radius))
 			radius = 10
 			self._cfg["exit_radius"] = radius
 		newexits = set()
@@ -630,7 +628,6 @@ class Window(pyglet.window.Window):
 						exits.add(direction) # add any existing NESW exits that are unidirectional back to the exits set for processing later.
 			else:
 				exits = set(room.exits) # normal exits list
-
 			for direction in exits:
 				name = vnum + direction
 				exit = room.exits.get(direction, None)
@@ -744,7 +741,6 @@ class Window(pyglet.window.Window):
 									self.visible_exits[name].delete()
 								self.visible_exits[name] = self.draw_arrow(a, d, r, color, group=self.groups[2])
 				newexits.add(name)
-
 		for dead in set(self.visible_exits) - newexits:
 			try:
 				try:
