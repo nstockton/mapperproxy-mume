@@ -324,10 +324,8 @@ class Server(threading.Thread):
 					if rawFormat or not inGratuitous:
 						clientBuffer.append(byte)
 			data = bytes(clientBuffer)
-			if not rawFormat:
-				data = unescapeXML(data, isbytes=True).replace(b"\r", b"").replace(b"\n\n", b"\n")
 			try:
-				self._client.sendall(data)
+				self._client.sendall(data if rawFormat else unescapeXML(data, isbytes=True))
 			except EnvironmentError:
 				self.close()
 				continue
