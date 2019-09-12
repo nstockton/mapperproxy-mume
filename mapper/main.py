@@ -60,7 +60,7 @@ class Proxy(threading.Thread):
 
 
 class Server(threading.Thread):
-	def __init__(self, client, server, mapper, outputFormat, interface):
+	def __init__(self, client, server, mapper, outputFormat, interface, promptTerminator):
 		threading.Thread.__init__(self)
 		self.name = "Server"
 		self._client = client
@@ -68,6 +68,7 @@ class Server(threading.Thread):
 		self._mapper = mapper
 		self._outputFormat = outputFormat
 		self._interface = interface
+		self._promptTerminator = promptTerminator
 		self.alive = threading.Event()
 
 	def close(self):
@@ -200,6 +201,9 @@ class Server(threading.Thread):
 						# It must be removed as character set negotiation data should not be sent to the mud client.
 						del clientBuffer[-3:]
 					elif byte == ordGA:
+						# Replace the IAC-GA sequence (used by the game to terminate a prompt) with the user specified prompt terminator.
+						del clientBuffer[-2:]
+						clientBuffer.extend(self._promptTerminator)
 						self._mapper.queue.put((MUD_DATA, ("iac_ga", b"")))
 						if xmlMode == modeNone:
 							lineBuffer.extend(b"\r\n")
@@ -337,9 +341,11 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-def main(outputFormat, interface, localHost, localPort, remoteHost, remotePort, noSsl):
+def main(outputFormat, interface, promptTerminator, localHost, localPort, remoteHost, remotePort, noSsl):
 	outputFormat = outputFormat.strip().lower()
 	interface = interface.strip().lower()
+	if not promptTerminator:
+		promptTerminator = IAC + GA
 	if interface != "text":
 		try:
 			import pyglet
@@ -384,9 +390,9 @@ def main(outputFormat, interface, localHost, localPort, remoteHost, remotePort, 
 				certhost = field[0][1]
 				if certhost != "mume.org":
 					raise ssl.SSLError("Host name 'mume.org' doesn't match certificate host '{}'".format(certhost))
-	mapperThread = Mapper(client=clientConnection, server=serverConnection, outputFormat=outputFormat, interface=interface)
+	mapperThread = Mapper(client=clientConnection, server=serverConnection, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator)
 	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread)
-	serverThread = Server(client=clientConnection, server=serverConnection, mapper=mapperThread, outputFormat=outputFormat, interface=interface)
+	serverThread = Server(client=clientConnection, server=serverConnection, mapper=mapperThread, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator)
 	serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
