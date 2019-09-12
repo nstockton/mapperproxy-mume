@@ -21,7 +21,6 @@ ESCAPE_XML_STR_ENTITIES = (
 	("<", "&lt;"),
 	(">", "&gt;"),
 	("\"", "&quot;"),
-	("'", "&#39;"),
 	("'", "&apos;")
 )
 UNESCAPE_XML_STR_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_STR_ENTITIES)
