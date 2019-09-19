@@ -118,17 +118,17 @@ class Mapper(threading.Thread, World):
 			if showPrompt and self.lastPrompt:
 				self._client.sendall("{}\r\n<prompt>{}</prompt>".format(escapeXML(msg), escapeXML(self.lastPrompt)).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
 			else:
-				self._client.sendall(escapeXML(msg).encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
+				self._client.sendall("\r\n{}\r\n".format(escapeXML(msg)).encode("utf-8").replace(IAC, IAC + IAC))
 		elif self._outputFormat == "tintin":
 			if showPrompt and self.lastPrompt:
 				self._client.sendall("{}\r\nPROMPT:{}:PROMPT".format(msg, self.lastPrompt).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
 			else:
-				self._client.sendall(b"\r\n" + msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
+				self._client.sendall("\r\n{}\r\n".format(msg).encode("utf-8").replace(IAC, IAC + IAC))
 		else:
 			if showPrompt and self.lastPrompt:
 				self._client.sendall("{}\r\n{}".format(msg, self.lastPrompt).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
 			else:
-				self._client.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
+				self._client.sendall("\r\n{}\r\n".format(msg).encode("utf-8").replace(IAC, IAC + IAC))
 		return None
 
 	def serverSend(self, msg):
