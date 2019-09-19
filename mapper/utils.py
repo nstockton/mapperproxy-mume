@@ -19,9 +19,7 @@ WHITE_SPACE_REGEX = re.compile(r"\s+", flags=re.UNICODE)
 ESCAPE_XML_STR_ENTITIES = (
 	("&", "&amp;"),
 	("<", "&lt;"),
-	(">", "&gt;"),
-	("\"", "&quot;"),
-	("'", "&apos;")
+	(">", "&gt;")
 )
 UNESCAPE_XML_STR_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_STR_ENTITIES)
 ESCAPE_XML_BYTES_ENTITIES = tuple((first.encode("us-ascii"), second.encode("us-ascii")) for first, second in ESCAPE_XML_STR_ENTITIES)
