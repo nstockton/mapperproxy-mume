@@ -447,6 +447,9 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
+		for i in range(len(results)):
+			results[i].direction = currentRoom.directionTo(results[i])
+			results[i].distance = currentRoom.manhattanDistance(results[i])
 		return "\n".join(output_format.format(**vars(roomObj)) for roomObj in results[:6])
 
 	def rnote(self, *args):
