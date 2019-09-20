@@ -29,7 +29,7 @@ if __name__ == "__main__":
 	parser.add_argument("-rp", "--remote-port", metavar="port", type=int, help="The remote port to connect to.", default=4242)
 	parser.add_argument("-nssl", "--no-ssl", help="Disable encrypted communication between the local and remote hosts.", action="store_true")
 	parser.add_argument("-ptlf", "--prompt-terminator-lf", help="Terminate game prompts with new line characters (IAC + GA is default).", action="store_true")
-	parser.add_argument("-gp", "--gag-prompts", help="gag the last prompt after mapper output.", action="store_true")
+	parser.add_argument("-gp", "--gag-prompts", help="gag emulated prompts.", action="store_true")
 	args = parser.parse_args()
 	try:
 		if args.emulation:

@@ -39,6 +39,8 @@ To start the mapper, run `python start.py` from the _mume-mapperproxy/_ director
 - `-rh address`, `--remote-host address` The remote host address to connect to. Default is "_mume.org_".
 - `-rp port`, `--remote-port port` The remote port to connect to. Default is "_4242_".
 - `-nssl`, `--no-ssl` Disable encrypted communication between the local and remote hosts. Don't do this unless you know what you're doing.
+- `-ptlf`, `--prompt-terminator-lf` Terminate game prompts with new line characters (IAC + GA is default).
+- `-gp`, `--gag-prompts` gag emulated prompts.
 
 Once done, connect your client to `127.0.0.1`, port `4000`.
 
