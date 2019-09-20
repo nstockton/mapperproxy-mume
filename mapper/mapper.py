@@ -89,7 +89,7 @@ USER_DATA = 0
 MUD_DATA = 1
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat, interface, promptTerminator):
+	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
 		# Initialize the timer.
@@ -98,6 +98,7 @@ class Mapper(threading.Thread, World):
 		self._server = server
 		self._outputFormat = outputFormat
 		self._promptTerminator = promptTerminator
+		self.gagPrompts = gagPrompts
 		self.queue = Queue()
 		self.autoMapping = False
 		self.autoUpdating = False
@@ -115,17 +116,17 @@ class Mapper(threading.Thread, World):
 
 	def clientSend(self, msg, showPrompt=True):
 		if self._outputFormat == "raw":
-			if showPrompt and self.lastPrompt:
+			if showPrompt and self.lastPrompt and not self.gagPrompts:
 				self._client.sendall("{}\r\n<prompt>{}</prompt>".format(escapeXML(msg), escapeXML(self.lastPrompt)).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
 			else:
 				self._client.sendall("\r\n{}\r\n".format(escapeXML(msg)).encode("utf-8").replace(IAC, IAC + IAC))
 		elif self._outputFormat == "tintin":
-			if showPrompt and self.lastPrompt:
+			if showPrompt and self.lastPrompt and not self.gagPrompts:
 				self._client.sendall("{}\r\nPROMPT:{}:PROMPT".format(msg, self.lastPrompt).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
 			else:
 				self._client.sendall("\r\n{}\r\n".format(msg).encode("utf-8").replace(IAC, IAC + IAC))
 		else:
-			if showPrompt and self.lastPrompt:
+			if showPrompt and self.lastPrompt and not self.gagPrompts:
 				self._client.sendall("{}\r\n{}".format(msg, self.lastPrompt).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
 			else:
 				self._client.sendall("\r\n{}\r\n".format(msg).encode("utf-8").replace(IAC, IAC + IAC))
