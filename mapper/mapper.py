@@ -13,6 +13,8 @@ from timeit import default_timer
 
 from . import roomdata
 from .config import Config, config_lock
+from .clock import CLOCK_REGEX, TIME_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, NIGHT_REGEX, MONTHS, timeToEpoch, Clock
+from .timers import Timer
 from .world import DIRECTIONS, LIGHT_SYMBOLS, REVERSE_DIRECTIONS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 from .utils import stripAnsi, iterItems, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
 
@@ -108,6 +110,7 @@ class Mapper(threading.Thread, World):
 		self.autoWalkDirections = []
 		self.lastPathFindQuery = ""
 		self.lastPrompt = ""
+		self.clock = Clock()
 		World.__init__(self, interface=interface)
 
 	def output(self, *args, **kwargs):
@@ -141,6 +144,12 @@ class Mapper(threading.Thread, World):
 
 	def user_command_gettimerms(self, *args):
 		self.clientSend("TIMERMS:{:d}:TIMERMS".format(int((default_timer() - self.initTimer) * 1000)))
+
+	def user_command_clock(self, *args):
+		if not args or not args[0] or not args[0].strip():
+			self.clientSend(self.clock.time())
+		else:
+			self.serverSend(self.clock.time(args[0].strip().lower()))
 
 	def user_command_secretaction(self, *args):
 		regex = re.compile(r"^\s*(?P<action>.+?)(?:\s+(?P<direction>{}))?$".format(regexFuzzy(DIRECTIONS)))
@@ -508,6 +517,11 @@ class Mapper(threading.Thread, World):
 		description = None
 		dynamic = None
 		exits = None
+		timeEvent = None
+		timeEventOffset = 0
+		parsedHour = 0
+		parsedMinutes = 0
+		timeSynchronized = False
 		queue = self.queue
 		while True:
 			dataType, data = queue.get()
@@ -559,6 +573,51 @@ class Mapper(threading.Thread, World):
 					self.sync(vnum="17189")
 				elif data == "The gravel below your feet loosens, shifting slightly.. Suddenly, you lose your balance and crash to the cave floor below.":
 					self.sync(vnum="15324")
+				elif not timeSynchronized:
+					if timeEvent is None:
+						if CLOCK_REGEX.match(data):
+							hour, minutes, amPm = CLOCK_REGEX.match(data).groups()
+							# parsedHour should be 0 - 23.
+							parsedHour = int(hour) % 12 + (12 if amPm == "pm" else 0)
+							parsedMinutes = int(minutes)
+							if parsedHour == 23 and parsedMinutes == 59:
+								Timer(1.0, self.serverSend, "look at clock").start()
+							else:
+								timeEvent = "clock"
+								self.serverSend("time")
+						elif DAWN_REGEX.match(data):
+							timeEvent = "dawn"
+							timeEventOffset = 0
+							self.serverSend("time")
+						elif DAY_REGEX.match(data):
+							timeEvent = "dawn"
+							timeEventOffset = 1
+							self.serverSend("time")
+						elif DUSK_REGEX.match(data):
+							timeEvent = "dusk"
+							timeEventOffset = 0
+							self.serverSend("time")
+						elif NIGHT_REGEX.match(data):
+							timeEvent = "dusk"
+							timeEventOffset = 1
+							self.serverSend("time")
+					elif TIME_REGEX.match(data):
+						match = TIME_REGEX.match(data)
+						day = int(match.group("day"))
+						year = int(match.group("year"))
+						month = 0
+						for i, m in enumerate(MONTHS):
+							if m["westron"] == match.group("month") or m["sindarin"] == match.group("month"):
+								month = i
+								break
+						if timeEvent == "dawn" or timeEvent == "dusk":
+							parsedHour = MONTHS[month][timeEvent] + timeEventOffset
+							parsedMinutes = 0
+						self.clock.epoch = timeToEpoch(year, month, day, parsedHour, parsedMinutes)
+						timeEvent = None
+						timeEventOffset = 0
+						timeSynchronized = True
+						self.clientSend("Synchronized with epoch {}.".format(self.clock.epoch), showPrompt=False)
 				if MOVEMENT_FORCED_REGEX.search(data) or MOVEMENT_PREVENTED_REGEX.search(data):
 					self.stopRun()
 				if self.isSynced and self.autoMapping:
@@ -575,6 +634,8 @@ class Mapper(threading.Thread, World):
 				moved = None
 				addedNewRoomFrom = None
 				exits = None
+				if not timeSynchronized and timeEvent is None and "A huge clock is standing here." in data:
+					self.serverSend("look at clock")
 				if not self.isSynced or movement is None:
 					continue
 				elif not movement:

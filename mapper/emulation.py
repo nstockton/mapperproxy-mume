@@ -12,6 +12,7 @@ import threading
 
 from .world import DIRECTIONS, TERRAIN_SYMBOLS, World
 from .config import Config, config_lock
+from .clock import Clock
 from .utils import page, iterItems, getDirectoryPath
 
 class EmulatedWorld(World):
@@ -100,6 +101,10 @@ class EmulatedWorld(World):
 			else:
 				exitLine.append("undefined")
 			self.output(" ".join(exitLine))
+
+	def user_command_clock(self, *args):
+		"""The time command"""
+		self.output(Clock().time())
 
 	def user_command_brief(self, *args):
 		status = self.toggleSetting("brief")
