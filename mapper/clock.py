@@ -24,6 +24,8 @@ DAYS_PER_YEAR = DAYS_PER_MONTH * MONTHS_PER_YEAR
 MINUTES_PER_DAY = MINUTES_PER_HOUR * HOURS_PER_DAY
 MINUTES_PER_MONTH = MINUTES_PER_DAY * DAYS_PER_MONTH
 MINUTES_PER_YEAR = MINUTES_PER_DAY * DAYS_PER_YEAR
+DAYS_PER_MOON_CYCLE = 24
+HOURS_PER_MOON_CYCLE = HOURS_PER_DAY * DAYS_PER_MOON_CYCLE
 
 MONTHS = [
 	{"name": "January", "sindarin": "Ninui", "westron": "Solmath", "dawn": 9, "dusk": 17, "season": "Winter"},
@@ -69,6 +71,7 @@ class Clock(object):
 			epoch = cfg.get("mume_epoch", 1517486489)
 			del cfg
 		return epoch
+
 	@epoch.setter
 	def epoch(self, value):
 		self._epoch = value
@@ -87,7 +90,7 @@ class Clock(object):
 		minutes %= MINUTES_PER_MONTH
 		day = minutes // MINUTES_PER_DAY + 1
 		minutes %= MINUTES_PER_DAY
-		day_of_year = month * DAYS_PER_MONTH + day
+		dayOfYear = month * DAYS_PER_MONTH + day
 		hour = minutes // MINUTES_PER_HOUR
 		minutes %= MINUTES_PER_HOUR
 		ap = "am" if hour < 12 else "pm"
@@ -96,61 +99,73 @@ class Clock(object):
 			return "pull lever {}\npull lever {}".format(day, MONTHS[month]["westron"])
 		elif action is not None:
 			return "{} {}".format(action, output[0])
-		weekday = WEEKDAYS[(day_of_year + (year - FIRST_YEAR) * DAYS_PER_YEAR) % 7]["name"]
+		weekday = WEEKDAYS[(dayOfYear + (year - FIRST_YEAR) * DAYS_PER_YEAR) % 7]["name"]
 		if hour < MONTHS[month]["dawn"]:
 			state = "NIGHT"
-			next_state = "DAY"
-			till_next_state = MONTHS[month]["dawn"] - hour + 1
+			nextState = "DAY"
+			untilNextState = MONTHS[month]["dawn"] - hour + 1
 		elif hour >= MONTHS[month]["dusk"]:
 			state = "NIGHT"
-			next_state = "DAY"
-			till_next_state = 25 + MONTHS[month]["dawn"] - hour
+			nextState = "DAY"
+			untilNextState = 25 + MONTHS[month]["dawn"] - hour
 		elif hour > MONTHS[month]["dawn"] and hour < MONTHS[month]["dusk"]:
 			state = "DAY"
-			next_state = "NIGHT"
-			till_next_state = MONTHS[month]["dusk"] - hour
+			nextState = "NIGHT"
+			untilNextState = MONTHS[month]["dusk"] - hour
 		elif hour == MONTHS[month]["dawn"]:
 			state = "DAWN"
-			next_state = "DAY"
-			till_next_state = 1
+			nextState = "DAY"
+			untilNextState = 1
 		output.append("It is currently {}, on {}, {} {} ({} / {}), ({}), year {} of the third age.".format(state, weekday, MONTHS[month]["name"], day, MONTHS[month]["westron"], MONTHS[month]["sindarin"], MONTHS[month]["season"], year))
-		output.append("Time left until {} is less than {} tick{}".format(next_state, till_next_state, "s" if till_next_state != 1 else "!"))
-		next_season_in_mume_days = ((((month + 1) // 3 * 3 + 3) - (month + 1) - 1) * DAYS_PER_MONTH) + (DAYS_PER_MONTH - day) + (1 - (hour // HOURS_PER_DAY))
-		next_season_in_rl_hours = (next_season_in_mume_days * HOURS_PER_DAY // MINUTES_PER_HOUR)
-		output.append("{} ends in {} mume day{} or {} real-life hour{}.".format(MONTHS[month]["season"][-6:], next_season_in_mume_days, "s" if next_season_in_mume_days != 1 else "", next_season_in_rl_hours, "s" if next_season_in_rl_hours != 1 else ""))
-		next_winter_in_mume_days = ((MONTHS_PER_YEAR - (month + 1) % 12 - 1) * DAYS_PER_MONTH) + (DAYS_PER_MONTH - day) + (1 - hour // HOURS_PER_DAY)
-		next_winter_in_rl_days = next_winter_in_mume_days * HOURS_PER_DAY // MINUTES_PER_HOUR // HOURS_PER_DAY
-		next_winter_in_rl_hours = (next_winter_in_mume_days * HOURS_PER_DAY // MINUTES_PER_HOUR) % HOURS_PER_DAY
-		output.append("Next winter starts in {} real-life day{} and {} hour{}.".format(next_winter_in_rl_days, "s" if next_winter_in_rl_days != 1 else "", next_winter_in_rl_hours, "s" if next_winter_in_rl_hours != 1 else ""))
-		moon_rise = (day_of_year + 11) % 24
-		if hour == moon_rise:
+		output.append("Time left until {} is less than {} tick{}".format(nextState, untilNextState, "s" if untilNextState != 1 else "!"))
+		nextSeasonInGameDays = ((((month + 1) // 3 * 3 + 3) - (month + 1) - 1) * DAYS_PER_MONTH) + (DAYS_PER_MONTH - day) + (1 - (hour // HOURS_PER_DAY))
+		nextSeasonInRlHours = (nextSeasonInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR)
+		output.append("{} ends in {} mume day{} or {} real-life hour{}.".format(MONTHS[month]["season"][-6:], nextSeasonInGameDays, "s" if nextSeasonInGameDays != 1 else "", nextSeasonInRlHours, "s" if nextSeasonInRlHours != 1 else ""))
+		nextWinterInGameDays = ((MONTHS_PER_YEAR - (month + 1) % 12 - 1) * DAYS_PER_MONTH) + (DAYS_PER_MONTH - day) + (1 - hour // HOURS_PER_DAY)
+		nextWinterInRlDays = nextWinterInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR // HOURS_PER_DAY
+		nextWinterInRlHours = (nextWinterInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR) % HOURS_PER_DAY
+		output.append("Next winter starts in {} real-life day{} and {} hour{}.".format(nextWinterInRlDays, "s" if nextWinterInRlDays != 1 else "", nextWinterInRlHours, "s" if nextWinterInRlHours != 1 else ""))
+		moonRiseOffset = 11
+		moonRiseHour = (dayOfYear + moonRiseOffset) % DAYS_PER_MOON_CYCLE
+		if hour == moonRiseHour:
 			output.append("Moon is up now!")
 		else:
-			if hour > moon_rise:
-				moon_rise = (day_of_year + 12) % 24
-				moon_rise_day = "tomorrow"
+			if hour > moonRiseHour:
+				moonRiseHour = (dayOfYear + moonRiseOffset + 1) % DAYS_PER_MOON_CYCLE
+				moonRiseDay = "tomorrow"
 			else:
-				moon_rise_day = "today"
-			moon_rise_ap = "am" if moon_rise < 12 else "pm"
-			output.append("Next moon rise {} at {}:00 {} (game time).".format(moon_rise_day, moon_rise % 12 if moon_rise % 12 else 12, moon_rise_ap))
-		full_moon_cycle = HOURS_PER_DAY * 24 # Every 24 days
-		moon_day = (day_of_year + DAYS_PER_MONTH + 12) % 24
-		moon_hour = moon_day * 24 + hour % HOURS_PER_DAY
-		next_dk_day = 1
-		if moon_hour < 20:
-			ticks_until_dk = 17 - moon_hour if moon_hour <= 17 else 0
-		elif moon_hour < HOURS_PER_DAY + 21:
-			ticks_until_dk = HOURS_PER_DAY + 18 - moon_hour if moon_hour <= HOURS_PER_DAY + 18 else 0
-			next_dk_day = 2
-		elif moon_hour < HOURS_PER_DAY * 2 + 22:
-			ticks_until_dk = HOURS_PER_DAY * 2 + 19 - moon_hour if moon_hour <= HOURS_PER_DAY * 2 + 19 else 0
-			next_dk_day = 3
+				moonRiseDay = "today"
+			moonRiseHourAp = "am" if moonRiseHour < 12 else "pm"
+			output.append("Next moon rise {} at {}:00 {} (game time).".format(moonRiseDay, moonRiseHour % 12 if moonRiseHour % 12 else 12, moonRiseHourAp))
+		fullMoonOffset = DAYS_PER_MOON_CYCLE - 7 # First full moon rises on the 7th day of the year.
+		fullMoonHour = (dayOfYear + fullMoonOffset) % DAYS_PER_MOON_CYCLE * HOURS_PER_DAY + hour
+		if fullMoonHour < 31:
+			ticksUntilFullMoon = 18 - fullMoonHour if fullMoonHour <= 18 else 0
 		else:
-			ticks_until_dk = full_moon_cycle - moon_hour + 17
-		next_dk_in_rl_hours = ticks_until_dk // MINUTES_PER_HOUR
-		next_dk_in_rl_minutes = ticks_until_dk % MINUTES_PER_HOUR
-		if not ticks_until_dk:
+			ticksUntilFullMoon = HOURS_PER_MOON_CYCLE - fullMoonHour + 18
+		nextFullMoonInRlHours = ticksUntilFullMoon // MINUTES_PER_HOUR
+		nextFullMoonInRlMinutes = ticksUntilFullMoon % MINUTES_PER_HOUR
+		if not ticksUntilFullMoon:
+			output.append("Full moon is up now!")
+		else:
+			output.append("Next full moon rises in {} real-life hour{} and {} minute{}.".format(nextFullMoonInRlHours, "s" if nextFullMoonInRlHours != 1 else "", nextFullMoonInRlMinutes, "s" if nextFullMoonInRlMinutes != 1 else ""))
+		dkMoonOffset = DAYS_PER_MOON_CYCLE - 6 # First DK moon rises on the 6th day of the year.
+		dkHour = (dayOfYear + dkMoonOffset) % DAYS_PER_MOON_CYCLE * HOURS_PER_DAY + hour
+		nextDkDay = 1
+		if dkHour < 20:
+			ticksUntilDk = 17 - dkHour if dkHour <= 17 else 0
+		elif dkHour < HOURS_PER_DAY + 21:
+			ticksUntilDk = HOURS_PER_DAY + 18 - dkHour if dkHour <= HOURS_PER_DAY + 18 else 0
+			nextDkDay = 2
+		elif dkHour < HOURS_PER_DAY * 2 + 22:
+			ticksUntilDk = HOURS_PER_DAY * 2 + 19 - dkHour if dkHour <= HOURS_PER_DAY * 2 + 19 else 0
+			nextDkDay = 3
+		else:
+			ticksUntilDk = HOURS_PER_MOON_CYCLE - dkHour + 17
+		nextDkInRlHours = ticksUntilDk // MINUTES_PER_HOUR
+		nextDkInRlMinutes = ticksUntilDk % MINUTES_PER_HOUR
+		if not ticksUntilDk:
 			output.append("DK is open now!")
 		else:
-			output.append("DK opens in {} real-life hour{} and {} minute{} (day {} of 3).".format(next_dk_in_rl_hours, "s" if next_dk_in_rl_hours != 1 else "", next_dk_in_rl_minutes, "s" if next_dk_in_rl_minutes != 1 else "", next_dk_day))
+			output.append("DK opens in {} real-life hour{} and {} minute{} (day {} of 3).".format(nextDkInRlHours, "s" if nextDkInRlHours != 1 else "", nextDkInRlMinutes, "s" if nextDkInRlMinutes != 1 else "", nextDkDay))
 		return "\n".join(output)
