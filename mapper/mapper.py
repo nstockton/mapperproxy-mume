@@ -194,16 +194,16 @@ class Mapper(threading.Thread, World):
 		self.clientSend(self.rdelete(*args))
 
 	def user_command_fdoor(self, *args):
-		self.clientSend(self.fdoor(*args))
+		self.clientSend(self.fdoor(self.find_format, *args))
 
 	def user_command_fdynamic(self, *args):
-		self.clientSend(self.fdynamic(*args))
+		self.clientSend(self.fdynamic(self.find_format, *args))
 
 	def user_command_flabel(self, *args):
-		self.clientSend(self.flabel(*args))
+		self.clientSend(self.flabel(self.find_format, *args))
 
 	def user_command_fname(self, *args):
-		self.clientSend(self.fname(*args))
+		self.clientSend(self.fname(self.find_format, *args))
 
 	def user_command_fnote(self, *args):
 		self.clientSend(self.fnote(self.find_format, *args))

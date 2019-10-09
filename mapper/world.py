@@ -396,7 +396,7 @@ class World(object):
 				results.append(roomObj)
 		return results
 
-	def fdoor(self, *args):
+	def fdoor(self, output_format, *args):
 		if not args or args[0] is None or not args[0].strip():
 			return "Usage: 'fdoor [text]'."
 		results = self.searchRooms(door=args[0])
@@ -404,9 +404,13 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join("{vnum}, {name}".format(**vars(roomObj)) for roomObj in reversed(results[:20]))
+		for i in range(len(results)):
+			results[i].attribute = ", ".join([exit.door for exit in results[i].exits.values()])
+			results[i].direction = currentRoom.directionTo(results[i])
+			results[i].distance = currentRoom.manhattanDistance(results[i])
+		return "\n".join(output_format.format(**vars(roomObj)) for roomObj in results[:6])
 
-	def fdynamic(self, *args):
+	def fdynamic(self, output_format, *args):
 		if not args or args[0] is None or not args[0].strip():
 			return "Usage: 'fdynamic [text]'."
 		results = self.searchRooms(dynamicDesc=args[0])
@@ -414,9 +418,13 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join("{vnum}, {name}:\n{dynamicDesc}".format(**vars(roomObj)) for roomObj in reversed(results[:20]))
+		for i in range(len(results)):
+			results[i].attribute = results[i].dynamicDesc
+			results[i].direction = currentRoom.directionTo(results[i])
+			results[i].distance = currentRoom.manhattanDistance(results[i])
+		return "\n".join(output_format.format(**vars(roomObj)) for roomObj in results[:6])
 
-	def flabel(self, *args):
+	def flabel(self, output_format, *args):
 		if not self.labels:
 			return "No labels defined."
 		if not args or args[0] is None or not args[0].strip():
@@ -427,9 +435,14 @@ class World(object):
 		if not results:
 			return "Nothing found."
 		currentRoom = self.currentRoom
-		return "\n".join("{vnum}, {name}, {labels}".format(labels=self.getlabel(roomObj.vnum), **vars(roomObj)) for roomObj in reversed(sorted(results, key=lambda r: r.manhattanDistance(currentRoom))[:20]))
+		results = list(results)
+		for i in range(len(results)):
+			results[i].attribute = self.getlabel(results[i].vnum)
+			results[i].direction = currentRoom.directionTo(results[i])
+			results[i].distance = currentRoom.manhattanDistance(results[i])
+		return "\n".join(output_format.format(**vars(roomObj)) for roomObj in results[:6])
 
-	def fname(self, *args):
+	def fname(self, output_format, *args):
 		if not args or args[0] is None or not args[0].strip():
 			return "Usage: 'fname [text]'."
 		results = self.searchRooms(name=args[0])
@@ -437,7 +450,14 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join("{vnum}, {name}".format(**vars(roomObj)) for roomObj in reversed(results[:20]))
+		for i in range(len(results)):
+			if "{name}" in output_format and "{attribute}" in output_format:
+				results[i].attribute = ""
+			else:
+				results[i].attribute = results[i].name
+			results[i].direction = currentRoom.directionTo(results[i])
+			results[i].distance = currentRoom.manhattanDistance(results[i])
+		return "\n".join(output_format.format(**vars(roomObj)) for roomObj in results[:6])
 
 	def fnote(self, output_format, *args):
 		if not args or args[0] is None or not args[0].strip():

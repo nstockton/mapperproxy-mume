@@ -30,7 +30,7 @@ if __name__ == "__main__":
 	parser.add_argument("-nssl", "--no-ssl", help="Disable encrypted communication between the local and remote hosts.", action="store_true")
 	parser.add_argument("-ptlf", "--prompt-terminator-lf", help="Terminate game prompts with new line characters (IAC + GA is default).", action="store_true")
 	parser.add_argument("-gp", "--gag-prompts", help="gag emulated prompts.", action="store_true")
-	parser.add_argument("-ff", "--find-format", help="the format string for output from the find commands. Accepts the following placeholders in braces: attribute, direction, distance, name, note, vnum. Where {attribute} represents the attribute on which the search is performed.", default="{vnum}, {name}, {attribute}")
+	parser.add_argument("-ff", "--find-format", help="the format string for output from the find commands. Accepts the following placeholders in braces: attribute, direction, distance, name, vnum. Where {attribute} represents the attribute on which the search is performed.", default="{vnum}, {name}, {attribute}")
 	args = parser.parse_args()
 	try:
 		if args.emulation:
