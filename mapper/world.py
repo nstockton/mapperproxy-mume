@@ -439,7 +439,7 @@ class World(object):
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
 		return "\n".join("{vnum}, {name}".format(**vars(roomObj)) for roomObj in reversed(results[:20]))
 
-	def fnote(self, *args):
+	def fnote(self, output_format, *args):
 		if not args or args[0] is None or not args[0].strip():
 			return "Usage: 'fnote [text]'."
 		results = self.searchRooms(note=args[0])
@@ -447,7 +447,7 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join("{vnum}, {name}, {note}".format(**vars(roomObj)) for roomObj in reversed(results[:20]))
+		return "\n".join(output_format.format(**vars(roomObj)) for roomObj in results[:6])
 
 	def rnote(self, *args):
 		if not args or args[0] is None or not args[0].strip():
