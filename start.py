@@ -34,9 +34,9 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	try:
 		if args.emulation:
-			mapper.emulation.main(interface=args.interface)
+			mapper.emulation.main(interface=args.interface, findFormat=args.find_format)
 		else:
-			mapper.main.main(outputFormat=args.format, interface=args.interface, promptTerminator=b"\r\n" if args.prompt_terminator_lf else None, gagPrompts=args.gag_prompts, find_format=args.find_format, localHost=args.local_host, localPort=args.local_port, remoteHost=args.remote_host, remotePort=args.remote_port, noSsl=args.no_ssl)
+			mapper.main.main(outputFormat=args.format, interface=args.interface, promptTerminator=b"\r\n" if args.prompt_terminator_lf else None, gagPrompts=args.gag_prompts, findFormat=args.find_format, localHost=args.local_host, localPort=args.local_port, remoteHost=args.remote_host, remotePort=args.remote_port, noSsl=args.no_ssl)
 	except:
 		traceback.print_exception(*sys.exc_info())
 		logging.exception("OOPS!")

@@ -7,7 +7,7 @@ import re
 from math import atan, pi
 
 
-compass_directions = ["east", "northeast", "north", "northwest", "west", "southwest", "south", "southeast"]
+COMPASS_DIRECTIONS = ["east", "northeast", "north", "northwest", "west", "southwest", "south", "southeast"]
 AVOID_DYNAMIC_DESC_REGEX = re.compile(r"Some roots lie here waiting to ensnare weary travellers\.|The remains of a clump of roots lie here in a heap of rotting compost\.|A clump of roots is here, fighting|Some withered twisted roots writhe towards you\.|Black roots shift uneasily all around you\.|black tangle of roots|Massive roots shift uneasily all around you\.|rattlesnake")
 TERRAIN_COSTS = {
 	"cavern": 0.75,
@@ -148,7 +148,7 @@ class Room(object):
 		angle = 180 * atan(y/float(x)) / pi
 		if x < 0:
 			angle += 180
-		return compass_directions[int((angle+22.5) / 45)]
+		return COMPASS_DIRECTIONS[int((angle+22.5) / 45)]
 
 
 class Exit(object):
