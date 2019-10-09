@@ -339,7 +339,7 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-def main(outputFormat, interface, promptTerminator, gagPrompts, localHost, localPort, remoteHost, remotePort, noSsl):
+def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, localHost, localPort, remoteHost, remotePort, noSsl):
 	outputFormat = outputFormat.strip().lower()
 	interface = interface.strip().lower()
 	if not promptTerminator:
@@ -390,7 +390,7 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, localHost, local
 				certhost = field[0][1]
 				if certhost != "mume.org":
 					raise ssl.SSLError("Host name 'mume.org' doesn't match certificate host '{}'".format(certhost))
-	mapperThread = Mapper(client=clientConnection, server=serverConnection, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator, gagPrompts=gagPrompts)
+	mapperThread = Mapper(client=clientConnection, server=serverConnection, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator, gagPrompts=gagPrompts, findFormat=findFormat)
 	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread)
 	serverThread = Server(client=clientConnection, server=serverConnection, mapper=mapperThread, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator)
 	serverThread.start()

@@ -17,11 +17,12 @@ from .utils import page, iterItems, getDirectoryPath
 
 class EmulatedWorld(World):
 	"""The main emulated world class"""
-	def __init__(self, interface):
+	def __init__(self, interface, findFormat):
 		self.output("Welcome to Mume Map Emulation!")
 		self.output("Loading the world database.")
 		World.__init__(self, interface=interface)
 		self.output("Loaded {0} rooms.".format(len(self.rooms)))
+		self.findFormat = findFormat
 		self.config = {}
 		dataDirectory = getDirectoryPath("data")
 		self.configFile = os.path.join(dataDirectory, "emulation_config.json")
@@ -117,19 +118,19 @@ class EmulatedWorld(World):
 		self.output(self.exitflags(*args))
 
 	def user_command_fdoor(self, *args):
-		self.output(self.fdoor(*args))
+		self.output(self.fdoor(self.findFormat, *args))
 
 	def user_command_fdynamic(self, *args):
-		self.output(self.fdynamic(*args))
+		self.output(self.fdynamic(self.findFormat, *args))
 
 	def user_command_flabel(self, *args):
-		self.output(self.flabel(*args))
+		self.output(self.flabel(self.findFormat, *args))
 
 	def user_command_fname(self, *args):
-		self.output(self.fname(*args))
+		self.output(self.fname(self.findFormat, *args))
 
 	def user_command_fnote(self, *args):
-		self.output(self.fnote(*args))
+		self.output(self.fnote(self.findFormat, *args))
 
 	def user_command_getlabel(self, *args):
 		self.output(self.getlabel(*args))
@@ -280,10 +281,10 @@ class EmulatedWorld(World):
 
 
 class Emulator(threading.Thread):
-	def __init__(self, interface):
+	def __init__(self, interface, findFormat):
 		threading.Thread.__init__(self)
 		self.name = "Emulator"
-		self.world = EmulatedWorld(interface)
+		self.world = EmulatedWorld(interface, findFormat)
 		self._interface = interface
 
 	def run(self):
@@ -317,7 +318,7 @@ class Emulator(threading.Thread):
 				wld._gui_queue.put(None)
 
 
-def main(interface):
+def main(interface, findFormat):
 	interface = interface.strip().lower()
 	if interface != "text":
 		try:
@@ -325,7 +326,7 @@ def main(interface):
 		except ImportError:
 			print("Unable to find pyglet. Disabling gui")
 			interface = "text"
-	emulator_thread=Emulator(interface)
+	emulator_thread=Emulator(interface, findFormat)
 	emulator_thread.start()
 	if interface != "text":
 		pyglet.app.run()

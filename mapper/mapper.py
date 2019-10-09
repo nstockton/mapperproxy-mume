@@ -91,7 +91,7 @@ USER_DATA = 0
 MUD_DATA = 1
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts):
+	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
 		# Initialize the timer.
@@ -101,6 +101,7 @@ class Mapper(threading.Thread, World):
 		self._outputFormat = outputFormat
 		self._promptTerminator = promptTerminator
 		self.gagPrompts = gagPrompts
+		self.findFormat=findFormat
 		self.queue = Queue()
 		self.autoMapping = False
 		self.autoUpdating = False
@@ -193,19 +194,19 @@ class Mapper(threading.Thread, World):
 		self.clientSend(self.rdelete(*args))
 
 	def user_command_fdoor(self, *args):
-		self.clientSend(self.fdoor(*args))
+		self.clientSend(self.fdoor(self.findFormat, *args))
 
 	def user_command_fdynamic(self, *args):
-		self.clientSend(self.fdynamic(*args))
+		self.clientSend(self.fdynamic(self.findFormat, *args))
 
 	def user_command_flabel(self, *args):
-		self.clientSend(self.flabel(*args))
+		self.clientSend(self.flabel(self.findFormat, *args))
 
 	def user_command_fname(self, *args):
-		self.clientSend(self.fname(*args))
+		self.clientSend(self.fname(self.findFormat, *args))
 
 	def user_command_fnote(self, *args):
-		self.clientSend(self.fnote(*args))
+		self.clientSend(self.fnote(self.findFormat, *args))
 
 	def user_command_rnote(self, *args):
 		self.clientSend(self.rnote(*args))
