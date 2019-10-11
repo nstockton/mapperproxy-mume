@@ -4,10 +4,11 @@
 
 
 import re
-from math import atan, pi
+
+from ..gui.vec2d import Vec2d
 
 
-COMPASS_DIRECTIONS = ["east", "northeast", "north", "northwest", "west", "southwest", "south", "southeast"]
+COMPASS_DIRECTIONS = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"]
 AVOID_DYNAMIC_DESC_REGEX = re.compile(r"Some roots lie here waiting to ensnare weary travellers\.|The remains of a clump of roots lie here in a heap of rotting compost\.|A clump of roots is here, fighting|Some withered twisted roots writhe towards you\.|Black roots shift uneasily all around you\.|black tangle of roots|Massive roots shift uneasily all around you\.|rattlesnake")
 TERRAIN_COSTS = {
 	"cavern": 0.75,
@@ -142,13 +143,14 @@ class Room(object):
 	def manhattanDistance(self, destination):
 		return abs(destination.x - self.x) + abs(destination.y - self.y) + abs(destination.z - self.z)
 
+	def clockPositionTo(self, destination):
+		# https://en.wikipedia.org/wiki/Clock_position
+		delta = Vec2d(destination.x, destination.y) - (self.x, self.y)
+		return "here" if self.vnum == destination.vnum else "same X-Y" if delta.get_length_sqrd() == 0 else "{:d} o'clock".format(round((90 - delta.get_angle_degrees() + 360) % 360 / 30) or 12)
+
 	def directionTo(self, destination):
-		x = destination.x - self.x or 0.000001
-		y = destination.y - self.y
-		angle = 180 * atan(y/float(x)) / pi
-		if x < 0:
-			angle += 180
-		return COMPASS_DIRECTIONS[int((angle+22.5) / 45)]
+		delta = Vec2d(destination.x, destination.y) - (self.x, self.y)
+		return "here" if self.vnum == destination.vnum else "same X-Y" if delta.get_length_sqrd() == 0 else COMPASS_DIRECTIONS[round((90 - delta.get_angle_degrees() + 360) % 360 / 45) % 8]
 
 
 class Exit(object):

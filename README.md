@@ -41,6 +41,7 @@ To start the mapper, run `python start.py` from the _mume-mapperproxy/_ director
 - `-nssl`, `--no-ssl` Disable encrypted communication between the local and remote hosts. Don't do this unless you know what you're doing.
 - `-ptlf`, `--prompt-terminator-lf` Terminate game prompts with new line characters (IAC + GA is default).
 - `-gp`, `--gag-prompts` gag emulated prompts.
+- `-ff FormatString`, `--find-format FormatString` The format string for controlling output of the find commands. Accepts the following placeholders in braces: `{attribute}`, `{direction}`, `{clockPosition}`, `{distance}`, `{name}`, `{vnum}`. Where `{attribute}` represents the attribute on which the search is performed. The default is `"{vnum}, {name}, {attribute}"`.
 
 Once done, connect your client to `127.0.0.1`, port `4000`.
 
