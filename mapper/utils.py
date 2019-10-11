@@ -60,21 +60,9 @@ def getDirectoryPath(directory):
 	except AttributeError:
 		return os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", directory)
 
-def iterItems(dictionary, **kw):
-	try:
-		return iter(dictionary.iteritems(**kw))
-	except AttributeError:
-		return iter(dictionary.items(**kw))
-
-def iterRange(*args):
-	try:
-		return iter(xrange(*args))
-	except NameError:
-		return iter(range(*args))
-
 def multiReplace(data, replacements):
 	try:
-		replacements = iterItems(replacements)
+		replacements = replacements.items()
 	except AttributeError:
 		# replacements is a list of tuples.
 		pass

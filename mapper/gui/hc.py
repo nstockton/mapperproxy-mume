@@ -20,7 +20,6 @@ except ImportError:
 	Speech = None
 
 from ..config import Config, config_lock
-from ..utils import iterItems, iterRange
 from ..world import DIRECTIONS
 
 from .vec2d import Vec2d
@@ -144,7 +143,7 @@ class Window(pyglet.window.Window):
 		self._cfg["terrain_colors"] = terrain_colors
 		self.continuous_view = True
 		self.batch = pyglet.graphics.Batch()
-		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in iterRange(6))
+		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in range(6))
 		self.visible_rooms = {}
 		self.visible_exits = {}
 		self.blinkers = {}
@@ -304,7 +303,7 @@ class Window(pyglet.window.Window):
 					break
 
 	def blinker(self, dt):
-		for key, marker in iterItems(self.blinkers):
+		for key, marker in self.blinkers.items():
 			try:
 				marker.blink(dt)
 			except AttributeError:
@@ -377,7 +376,7 @@ class Window(pyglet.window.Window):
 				logger.error("Invalid key assignment for key {}. No such function {}.".format(key, funcname))
 
 	def on_mouse_motion(self, x, y, dx, dy):
-		for vnum, item in iterItems(self.visible_rooms):
+		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
 			if math.floor((cp.x - self.cx + self.size / 2) / self.size) == math.floor((x - self.cx + self.size / 2) / self.size) and math.floor((cp.y - self.cy + self.size / 2) / self.size) == math.floor((y - self.cy + self.size / 2) / self.size):
 				if vnum is None or vnum not in self.world.rooms:
@@ -398,7 +397,7 @@ class Window(pyglet.window.Window):
 			self.do_reset_zoom(key.ESCAPE, 0)
 			return
 		# check if the player clicked on a room
-		for vnum, item in iterItems(self.visible_rooms):
+		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
 			if math.floor((cp.x - self.cx + self.size / 2) / self.size) == math.floor((x - self.cx + self.size / 2) / self.size) and math.floor((cp.y - self.cy + self.size / 2) / self.size) == math.floor((y - self.cy + self.size / 2) / self.size):
 				# Action depends on which button the player clicked
@@ -474,13 +473,13 @@ class Window(pyglet.window.Window):
 		x = radius # we start at angle 0
 		y = 0
 		ps = []
-		for i in iterRange(num_segments):
+		for i in range(num_segments):
 			ps += [Vec2d(cp.x + x, cp.y + y)]
 			t = x
 			x = c * x - s * y
 			y = s * t + c * y
 		ps2 = [ps[0]]
-		for i in iterRange(1, int((len(ps) + 1) // 2)):
+		for i in range(1, int((len(ps) + 1) // 2)):
 			ps2.append(ps[i])
 			ps2.append(ps[-i])
 		ps = ps2
@@ -619,7 +618,7 @@ class Window(pyglet.window.Window):
 			radius = 10
 			self._cfg["exit_radius"] = radius
 		newexits = set()
-		for vnum, item in iterItems(self.visible_rooms):
+		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
 			if self.continuous_view:
 				exits = DIRECTIONS_2D.symmetric_difference(room.exits) # swap NESW exits with directions you can't go. Leave up/down in place if present.

@@ -11,9 +11,8 @@ import re
 import threading
 
 from .world import DIRECTIONS, TERRAIN_SYMBOLS, World
-from .config import Config, config_lock
 from .clock import Clock
-from .utils import page, iterItems, getDirectoryPath
+from .utils import page, getDirectoryPath
 
 class EmulatedWorld(World):
 	"""The main emulated world class"""
@@ -295,7 +294,7 @@ class Emulator(threading.Thread):
 			if not wld.config.get("use_terrain_symbols"):
 				prompt = wld.currentRoom.terrain + prompt
 			else:
-				for symbol, terrain in iterItems(TERRAIN_SYMBOLS):
+				for symbol, terrain in TERRAIN_SYMBOLS.items():
 					if terrain == wld.currentRoom.terrain:
 						prompt = symbol + prompt
 						break

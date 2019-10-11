@@ -15,7 +15,7 @@ import re
 import threading
 
 from . import roomdata
-from .utils import iterItems, regexFuzzy
+from .utils import regexFuzzy
 
 
 DIRECTIONS = ["north", "east", "south", "west", "up", "down"]
@@ -150,7 +150,7 @@ class World(object):
 			"nopick": "no_pick",
 			"needkey": "need_key"
 		}
-		for vnum, roomDict in iterItems(db):
+		for vnum, roomDict in db.items():
 			newRoom = roomdata.objects.Room(vnum)
 			newRoom.name = roomDict["name"]
 			newRoom.desc = roomDict["desc"]
@@ -172,7 +172,7 @@ class World(object):
 			newRoom.y = roomDict["y"]
 			newRoom.z = roomDict["z"]
 			newRoom.calculateCost()
-			for direction, exitDict in iterItems(roomDict["exits"]):
+			for direction, exitDict in roomDict["exits"].items():
 				newExit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.exitFlags = set(exitDict["exitFlags"])
 				newExit.doorFlags = {flag if flag not in doorFlagReplacements else doorFlagReplacements[flag] for flag in exitDict["doorFlags"]}
@@ -192,7 +192,7 @@ class World(object):
 			gc.disable()
 		self.output("Creating dict from room objects.")
 		db = {}
-		for vnum, roomObj in iterItems(self.rooms):
+		for vnum, roomObj in self.rooms.items():
 			newRoom = {}
 			newRoom["name"] = roomObj.name
 			newRoom["desc"] = roomObj.desc
@@ -210,7 +210,7 @@ class World(object):
 			newRoom["y"] = roomObj.y
 			newRoom["z"] = roomObj.z
 			newRoom["exits"] = {}
-			for direction, exitObj in iterItems(roomObj.exits):
+			for direction, exitObj in roomObj.exits.items():
 				newExit = {}
 				newExit["exitFlags"] = sorted(exitObj.exitFlags)
 				newExit["doorFlags"] = sorted(exitObj.doorFlags)
@@ -230,7 +230,7 @@ class World(object):
 		if labels is None:
 			return self.output(errors)
 		self.labels.update(labels)
-		orphans = [label for label, vnum in iterItems(self.labels) if vnum not in self.rooms]
+		orphans = [label for label, vnum in self.labels.items() if vnum not in self.rooms]
 		for label in orphans:
 			del self.labels[label]
 
@@ -245,7 +245,7 @@ class World(object):
 		return newExit
 
 	def sortExits(self, exitsDict):
-		return sorted(iterItems(exitsDict), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
+		return sorted(exitsDict.items(), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
 
 	def isBidirectional(self,exit):
 		"""Returns True if an exit is bidirectional, False if unidirectional.
@@ -275,7 +275,7 @@ class World(object):
 			radiusX = radiusY = radiusZ = int(radius)
 		else:
 			radiusX, radiusY, radiusZ = radius
-		for vnum, obj in iterItems(self.rooms):
+		for vnum, obj in self.rooms.items():
 			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
 			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ and any(difference):
 				yield(vnum, obj, differenceX, differenceY, differenceZ)
@@ -292,7 +292,7 @@ class World(object):
 			radiusX = radiusY = radiusZ = int(radius)
 		else:
 			radiusX, radiusY, radiusZ = radius
-		for vnum, obj in iterItems(self.rooms):
+		for vnum, obj in self.rooms.items():
 			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
 			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ and obj is not start:
 				yield(vnum, obj, differenceX, differenceY, differenceZ)
@@ -301,7 +301,7 @@ class World(object):
 		result = None
 		if roomObj is None:
 			roomObj = self.currentRoom
-		for vnum, obj in iterItems(self.rooms):
+		for vnum, obj in self.rooms.items():
 			if obj is roomObj:
 				result = vnum
 				break
@@ -337,8 +337,8 @@ class World(object):
 		else:
 			origin = matchDict["origin"]
 			self.output("Changing the Vnum '{}' to '{}'.".format(origin, destination))
-		for roomVnum, roomObj in iterItems(self.rooms):
-			for direction, exitObj in iterItems(roomObj.exits):
+		for roomVnum, roomObj in self.rooms.items():
+			for direction, exitObj in roomObj.exits.items():
 				if roomVnum == origin:
 					exitObj.vnum = destination
 				if exitObj.to == origin:
@@ -360,8 +360,8 @@ class World(object):
 		else:
 			return "Syntax: rdelete [vnum]"
 		output = "Deleting room '{}' with name '{}'.".format(vnum, self.rooms[vnum].name)
-		for roomVnum, roomObj in iterItems(self.rooms):
-			for direction, exitObj in iterItems(roomObj.exits):
+		for roomVnum, roomObj in self.rooms.items():
+			for direction, exitObj in roomObj.exits.items():
 				if exitObj.to == vnum:
 					self.rooms[roomVnum].exits[direction].to = "undefined"
 		del self.rooms[vnum]
@@ -371,13 +371,13 @@ class World(object):
 	def searchRooms(self, *args, **kwArgs):
 		exactMatch = bool(kwArgs.get("exactMatch"))
 		validArgs = ("name", "desc", "dynamicDesc", "note", "terrain", "light", "align", "portable", "ridable", "x", "y", "z", "mobFlags", "loadFlags", "exitFlags", "doorFlags", "to", "door")
-		kwArgs = dict((key, value.strip().lower()) for key, value in iterItems(kwArgs) if key.strip() in validArgs and value.strip())
+		kwArgs = dict((key, value.strip().lower()) for key, value in kwArgs.items() if key.strip() in validArgs and value.strip())
 		results = []
 		if not kwArgs:
 			return results
-		for vnum, roomObj in iterItems(self.rooms):
+		for vnum, roomObj in self.rooms.items():
 			keysMatched = 0
-			for key, value in iterItems(kwArgs):
+			for key, value in kwArgs.items():
 				if key in ("name", "desc", "dynamicDesc", "note"):
 					roomData = getattr(roomObj, key, "").strip().lower()
 					if exactMatch and roomData == value or value in roomData:
@@ -386,8 +386,8 @@ class World(object):
 					keysMatched += 1
 				elif key in ("mobFlags", "loadFlags") and getattr(roomObj, key, set()).intersection(value):
 					keysMatched += 1
-			for direction, exitObj in iterItems(roomObj.exits):
-				for key, value in iterItems(kwArgs):
+			for direction, exitObj in roomObj.exits.items():
+				for key, value in kwArgs.items():
 					if key in ("exitFlags", "doorFlags") and getattr(exitObj, key, set()).intersection(value):
 						keysMatched += 1
 					elif key in ("to", "door") and getattr(exitObj, key, "").strip().lower() == value:
@@ -404,7 +404,7 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join(findFormat.format(attribute=", ".join(exitDir + ": " + exitObj.door for exitDir, exitObj in iterItems(roomObj.exits) if args[0].strip() in exitObj.door), direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(results[:20]))
+		return "\n".join(findFormat.format(attribute=", ".join(exitDir + ": " + exitObj.door for exitDir, exitObj in roomObj.exits.items() if args[0].strip() in exitObj.door), direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(results[:20]))
 
 	def fdynamic(self, findFormat, *args):
 		if not args or args[0] is None or not args[0].strip():
@@ -423,7 +423,7 @@ class World(object):
 			text = ""
 		else:
 			text = args[0].strip().lower()
-		results = {self.rooms[vnum] for label, vnum in iterItems(self.labels) if text and text in label.strip().lower() or not text}
+		results = {self.rooms[vnum] for label, vnum in self.labels.items() if text and text in label.strip().lower() or not text}
 		if not results:
 			return "Nothing found."
 		currentRoom = self.currentRoom
@@ -708,7 +708,7 @@ class World(object):
 			findVnum = self.currentRoom.vnum
 		else:
 			findVnum = args[0].strip()
-		result = ", ".join(sorted(label for label, vnum in iterItems(self.labels) if vnum == findVnum))
+		result = ", ".join(sorted(label for label, vnum in self.labels.items() if vnum == findVnum))
 		if result:
 			return "Room labels: {}".format(result)
 		else:
@@ -747,7 +747,7 @@ class World(object):
 		elif matchDict["action"] == "info":
 			if "all".startswith(label):
 				if self.labels:
-					return ["{0} - {1}".format(labelString, vnum) for labelString, vnum in sorted(iterItems(self.labels))]
+					return ["{0} - {1}".format(labelString, vnum) for labelString, vnum in sorted(self.labels.items())]
 				else:
 					self.output("There aren't any labels in the database yet.")
 			elif label not in self.labels:
@@ -755,7 +755,7 @@ class World(object):
 			else:
 				self.output("Label '{0}' points to room '{1}'.".format(label, self.labels[label]))
 		elif matchDict["action"] == "search":
-			results = sorted("{} - {} - {}".format(name, self.rooms[vnum].name if vnum in self.rooms else "VNum not in map", vnum) for name, vnum in iterItems(self.labels) if label in name)
+			results = sorted("{} - {} - {}".format(name, self.rooms[vnum].name if vnum in self.rooms else "VNum not in map", vnum) for name, vnum in self.labels.items() if label in name)
 			if not results:
 				self.output("Nothing found.")
 			else:
@@ -891,7 +891,7 @@ class World(object):
 				# We successfully found a path from the origin to the destination.
 				break
 			# Loop through the exits, and process each room linked to the current room.
-			for exitDirection, exitObj in iterItems(currentRoomObj.exits):
+			for exitDirection, exitObj in currentRoomObj.exits.items():
 				if exitIgnoreFunc and exitIgnoreFunc(exitObj):
 					continue
 				# Get a reference to the room object that the exit leads to using the room's vnum.

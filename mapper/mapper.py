@@ -16,7 +16,7 @@ from .config import Config, config_lock
 from .clock import CLOCK_REGEX, TIME_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, NIGHT_REGEX, MONTHS, timeToEpoch, Clock
 from .timers import Timer
 from .world import DIRECTIONS, LIGHT_SYMBOLS, REVERSE_DIRECTIONS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
-from .utils import stripAnsi, iterItems, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
+from .utils import stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
 
 EXIT_TAGS_REGEX = re.compile(r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)(?P<direction>{})".format("|".join(DIRECTIONS)))
 MOVEMENT_FORCED_REGEX = re.compile(
@@ -385,7 +385,7 @@ class Mapper(threading.Thread, World):
 		else:
 			nameVnums = []
 			descVnums = []
-			for vnum, roomObj in iterItems(self.rooms):
+			for vnum, roomObj in self.rooms.items():
 				if roomObj.name == name:
 					nameVnums.append(vnum)
 				if desc and roomObj.desc == desc:
@@ -409,7 +409,7 @@ class Mapper(threading.Thread, World):
 		deathTraps = []
 		oneWays = []
 		undefineds = []
-		for direction, exitObj in iterItems(self.currentRoom.exits):
+		for direction, exitObj in self.currentRoom.exits.items():
 			if exitObj.door and exitObj.door != "exit":
 				doors.append("{}: {}".format(direction, exitObj.door))
 			if not exitObj.to or exitObj.to == "undefined":
@@ -469,7 +469,7 @@ class Mapper(threading.Thread, World):
 				output.append("Adding exit '{}' to current room.".format(direction))
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
 				if self.autoLinking:
-					vnums = [vnum for vnum, roomObj in iterItems(self.rooms) if self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction) == (roomObj.x, roomObj.y, roomObj.z)]
+					vnums = [vnum for vnum, roomObj in self.rooms.items() if self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction) == (roomObj.x, roomObj.y, roomObj.z)]
 					if len(vnums) == 1 and REVERSE_DIRECTIONS[direction] in self.rooms[vnums[0]].exits and self.rooms[vnums[0]].exits[REVERSE_DIRECTIONS[direction]].to == "undefined":
 						output.append(self.rlink("add {} {}".format(vnums[0], direction)))
 			roomExit = self.currentRoom.exits[direction]

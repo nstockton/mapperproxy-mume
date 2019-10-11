@@ -17,12 +17,12 @@ import threading
 from .config import Config, config_lock
 from .mapper import USER_DATA, MUD_DATA, Mapper
 from .mpi import MPI
-from .utils import getDirectoryPath, iterRange, touch, unescapeXML
+from .utils import getDirectoryPath, touch, unescapeXML
 
 
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
 CHARSET = chr(42).encode("us-ascii")
-SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (chr(i).encode("us-ascii") for i in iterRange(1, 8))
+SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (chr(i).encode("us-ascii") for i in range(1, 8))
 
 class Proxy(threading.Thread):
 	def __init__(self, client, server, mapper):
