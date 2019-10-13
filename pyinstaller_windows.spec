@@ -1,6 +1,10 @@
 # -*- mode: python -*-
 
-from __future__ import print_function
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
 import codecs
 import glob
 import hashlib
@@ -14,10 +18,13 @@ import tempfile
 import PyInstaller.config
 import speechlight
 
+from mapper.utils import padList
+
+
 APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
 VERSION_REGEX = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
-ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))
+ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))  # NOQA: F821
 found_version = None
 for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
@@ -51,8 +58,7 @@ else:
 	print("No version information found. Using default. ({}-{})".format(APP_VERSION, APP_VERSION_TYPE))
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
-fixed_width = lambda lst, padding, count: (lst + count * [padding])[:count]
-APP_VERSION_CSV = ", ".join(fixed_width(APP_VERSION.split(".")[:4], padding="0", count=4))
+APP_VERSION_CSV = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
 APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace("-", "_").replace(" ", "_")))
 VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
 PyInstaller.config.CONF["distpath"] = APP_DEST
@@ -83,7 +89,7 @@ excludes = [
 	"xml"
 ]
 
-dll_excludes = TOC([
+dll_excludes = TOC([  # NOQA: F821
 	("api-ms-win-core-console-l1-1-0.dll", None, None),
 	("api-ms-win-core-datetime-l1-1-0.dll", None, None),
 	("api-ms-win-core-debug-l1-1-0.dll", None, None),
@@ -170,7 +176,7 @@ VSVersionInfo(
         StringStruct(u'OriginalFilename', u'{name}.exe'),
         StringStruct(u'ProductName', u'{name}'),
         StringStruct(u'ProductVersion', u'{version}')])
-      ]), 
+      ]),
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
 )
@@ -191,7 +197,7 @@ with codecs.open(VERSION_FILE, "wb", encoding="utf-8") as f:
 with codecs.open(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "wb", encoding="utf-8") as f:
 	f.write("version = \"{} V{}-{}\"".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE))
 
-a = Analysis(
+a = Analysis(  # NOQA: F821
 	["start.py"],
 	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
 	binaries=[],
@@ -206,9 +212,9 @@ a = Analysis(
 	noarchive=False
 )
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)  # NOQA: F821
 
-exe = EXE(
+exe = EXE(  # NOQA: F821
 	pyz,
 	a.scripts,
 	[],
@@ -217,13 +223,13 @@ exe = EXE(
 	debug=False,
 	bootloader_ignore_signals=False,
 	strip=False,
-	upx=False, # Not using UPX for the moment, as it can raise false positives in some antivirus software.
+	upx=False,  # Not using UPX for the moment, as it can raise false positives in some antivirus software.
 	runtime_tmpdir=None,
 	console=True,
 	version=VERSION_FILE
 )
 
-coll = COLLECT(
+coll = COLLECT(  # NOQA: F821
 	exe,
 	a.binaries - dll_excludes,
 	a.zipfiles,
@@ -236,10 +242,10 @@ coll = COLLECT(
 # Remove junk.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(os.path.normpath(os.path.join(APP_DEST, os.pardir, "__pycache__")), ignore_errors=True)
-shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True)
-#the directory above workpath should now be empty.
+shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True)  # NOQA: F821
+# The directory above workpath should now be empty.
 # Using os.rmdir to remove it instead of shutil.rmtree for safety.
-os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir)))
+os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir)))  # NOQA: F821
 if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)

@@ -63,7 +63,7 @@ VALID_LOAD_FLAGS = [
 	"warg",
 	"boat",
 	"attention",
-	"tower", # Player can 'watch' surrounding rooms from this one.
+	"tower",  # Player can 'watch' surrounding rooms from this one.
 	"clock",
 	"mail",
 	"stable",
@@ -98,7 +98,7 @@ VALID_DOOR_FLAGS = [
 	"callable",
 	"knockable",
 	"magic",
-	"action", # Action controlled
+	"action",  # Action controlled
 	"no_bash"
 ]
 

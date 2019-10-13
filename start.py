@@ -4,6 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 import argparse
 import logging
 import sys
@@ -16,6 +17,7 @@ try:
 	from mpm_version import version
 except ImportError:
 	version = "%(prog)s: No version information available. This is normal when running from source."
+
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="The accessible Mume mapper.")
@@ -37,7 +39,7 @@ if __name__ == "__main__":
 			mapper.emulation.main(interface=args.interface, findFormat=args.find_format)
 		else:
 			mapper.main.main(outputFormat=args.format, interface=args.interface, promptTerminator=b"\r\n" if args.prompt_terminator_lf else None, gagPrompts=args.gag_prompts, findFormat=args.find_format, localHost=args.local_host, localPort=args.local_port, remoteHost=args.remote_host, remotePort=args.remote_port, noSsl=args.no_ssl)
-	except:
+	except:  # NOQA: E722
 		traceback.print_exception(*sys.exc_info())
 		logging.exception("OOPS!")
 	finally:

@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import print_function
 
 import os
 import subprocess
@@ -12,6 +11,7 @@ import tempfile
 import threading
 
 from .utils import decodeBytes
+
 
 def removeFile(fileObj):
 	if not fileObj.closed:

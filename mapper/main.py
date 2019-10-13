@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import print_function
 
 import os
 import socket
@@ -14,7 +13,6 @@ except ImportError:
 from telnetlib import IAC, GA, DONT, DO, WONT, WILL, theNULL, SB, SE, TTYPE, NAWS
 import threading
 
-from .config import Config, config_lock
 from .mapper import USER_DATA, MUD_DATA, Mapper
 from .mpi import MPI
 from .utils import getDirectoryPath, touch, unescapeXML
@@ -23,6 +21,7 @@ from .utils import getDirectoryPath, touch, unescapeXML
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
 CHARSET = chr(42).encode("us-ascii")
 SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (chr(i).encode("us-ascii") for i in range(1, 8))
+
 
 class Proxy(threading.Thread):
 	def __init__(self, client, server, mapper):
@@ -76,7 +75,7 @@ class Server(threading.Thread):
 
 	def run(self):
 		self.alive.set()
-		normalFormat = self._outputFormat == "normal"
+		normalFormat = self._outputFormat == "normal"  # NOQA: F841
 		tinTinFormat = self._outputFormat == "tintin"
 		rawFormat = self._outputFormat == "raw"
 		ignoreBytes = frozenset([ord(theNULL), 0x11])
@@ -253,7 +252,7 @@ class Server(threading.Thread):
 					mpiCounter = 0
 				elif readingTag:
 					mpiCounter = 0
-					if byte == 62: # >
+					if byte == 62:  # >
 						# End of XML tag reached.
 						if xmlMode == modeNone:
 							if tagBuffer.startswith(b"exits"):
@@ -302,7 +301,7 @@ class Server(threading.Thread):
 						tagBuffer.append(byte)
 					if rawFormat:
 						clientBuffer.append(byte)
-				elif byte == 60: # <
+				elif byte == 60:  # <
 					# Start of new XML tag.
 					mpiCounter = 0
 					readingTag = True
@@ -379,7 +378,7 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, loca
 		clientConnection.close()
 		try:
 			os.remove(LISTENING_STATUS_FILE)
-		except:
+		except:  # NOQA: E722
 			pass
 		return
 	if not noSsl and ssl is not None:
@@ -416,5 +415,5 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, loca
 	clientConnection.close()
 	try:
 		os.remove(LISTENING_STATUS_FILE)
-	except:
+	except:  # NOQA: E722
 		pass

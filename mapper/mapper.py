@@ -2,21 +2,22 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 try:
 	from Queue import Queue
 except ImportError:
 	from queue import Queue
 import re
-from telnetlib import IAC, GA
+from telnetlib import IAC
 import threading
 from timeit import default_timer
 
 from . import roomdata
-from .config import Config, config_lock
 from .clock import CLOCK_REGEX, TIME_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, NIGHT_REGEX, MONTHS, timeToEpoch, Clock
 from .timers import Timer
 from .world import DIRECTIONS, LIGHT_SYMBOLS, REVERSE_DIRECTIONS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 from .utils import stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
+
 
 EXIT_TAGS_REGEX = re.compile(r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)(?P<direction>{})".format("|".join(DIRECTIONS)))
 MOVEMENT_FORCED_REGEX = re.compile(
@@ -90,6 +91,7 @@ PROMPT_REGEX = re.compile(r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=
 USER_DATA = 0
 MUD_DATA = 1
 
+
 class Mapper(threading.Thread, World):
 	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat):
 		threading.Thread.__init__(self)
@@ -101,7 +103,7 @@ class Mapper(threading.Thread, World):
 		self._outputFormat = outputFormat
 		self._promptTerminator = promptTerminator
 		self.gagPrompts = gagPrompts
-		self.findFormat=findFormat
+		self.findFormat = findFormat
 		self.queue = Queue()
 		self.autoMapping = False
 		self.autoUpdating = False

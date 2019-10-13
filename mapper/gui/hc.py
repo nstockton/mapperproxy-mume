@@ -1,12 +1,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-###Some code borrowed from pymunk's debug drawing functions###
 
-from __future__ import absolute_import, division, print_function
+# Some code borrowed from pymunk's debug drawing functions.
+
+
+from collections import namedtuple
 import logging
 import math
-from collections import namedtuple
 try:
 	from Queue import Empty as QueueEmpty
 except ImportError:
@@ -19,10 +20,10 @@ try:
 except ImportError:
 	Speech = None
 
+from .vec2d import Vec2d
 from ..config import Config, config_lock
 from ..world import DIRECTIONS
 
-from .vec2d import Vec2d
 
 FPS = 30
 DIRECTIONS_2D = set(DIRECTIONS[:-2])
@@ -169,6 +170,7 @@ class Window(pyglet.window.Window):
 			logger.warn("Invalid value for room_size in config.json: {}".format(self._cfg["room_size"]))
 			self._cfg["room_size"] = 100
 		return int(self._cfg["room_size"])
+
 	@size.setter
 	def size(self, value):
 		value = int(value)
@@ -194,6 +196,7 @@ class Window(pyglet.window.Window):
 			logger.warning("Invalid value for gap in config.json: {}".format(self._cfg["gap"]))
 			self._cfg["gap"] = 100
 		return int(self._cfg["gap"])
+
 	@gap.setter
 	def gap(self, value):
 		value = int(value)
@@ -210,6 +213,7 @@ class Window(pyglet.window.Window):
 	@property
 	def blink(self):
 		return bool(self._cfg.get("blink", True))
+
 	@blink.setter
 	def blink(self, value):
 		value = bool(value)
@@ -234,6 +238,7 @@ class Window(pyglet.window.Window):
 			logger.warning("Invalid value for blink_rate in config.json: {}".format(self._cfg["blink_rate"]))
 			self._cfg["blink_rate"] = 2
 		return int(self._cfg["blink_rate"])
+
 	@blink_rate.setter
 	def blink_rate(self, value):
 		value = int(value)
@@ -303,7 +308,7 @@ class Window(pyglet.window.Window):
 					break
 
 	def blinker(self, dt):
-		for key, marker in self.blinkers.items():
+		for _, marker in self.blinkers.items():
 			try:
 				marker.blink(dt)
 			except AttributeError:
@@ -367,7 +372,7 @@ class Window(pyglet.window.Window):
 		if key in KEYS:
 			funcname = "do_" + KEYS[key]
 			try:
-				func=getattr(self, funcname)
+				func = getattr(self, funcname)
 				try:
 					func(sym, mod)
 				except Exception as e:
@@ -470,7 +475,7 @@ class Window(pyglet.window.Window):
 		theta = 2 * math.pi / num_segments
 		c = math.cos(theta)
 		s = math.sin(theta)
-		x = radius # we start at angle 0
+		x = radius  # We start at angle 0.
 		y = 0
 		ps = []
 		for i in range(num_segments):
@@ -499,7 +504,7 @@ class Window(pyglet.window.Window):
 		line = (int(pv1.x), int(pv1.y), int(pv2.x), int(pv2.y))
 		return self.batch.add(2, pyglet.gl.GL_LINES, group, ("v2i", line), ("c4B", color.as_int() * 2))
 
-	def fat_segment_vertices(self, a, b, radius): 
+	def fat_segment_vertices(self, a, b, radius):
 		pv1 = Vec2d(a)
 		pv2 = Vec2d(b)
 		d = pv2 - pv1
@@ -572,7 +577,7 @@ class Window(pyglet.window.Window):
 			vl = self.draw_polygon(vs, color, group=group)
 			self.visible_rooms[room.vnum] = [vl, room, cp]
 		else:
-			vl=self.visible_rooms[room.vnum][0]
+			vl = self.visible_rooms[room.vnum][0]
 			vl.vertices = self.corners_2_vertices(vs)
 			self.batch.migrate(vl, pyglet.gl.GL_TRIANGLE_STRIP, group, self.batch)
 			self.visible_rooms[room.vnum][2] = cp
@@ -621,12 +626,12 @@ class Window(pyglet.window.Window):
 		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
 			if self.continuous_view:
-				exits = DIRECTIONS_2D.symmetric_difference(room.exits) # swap NESW exits with directions you can't go. Leave up/down in place if present.
+				exits = DIRECTIONS_2D.symmetric_difference(room.exits)  # Swap NESW exits with directions you can't go. Leave up/down in place if present.
 				for direction in room.exits:
 					if not self.world.isBidirectional(room.exits[direction]):
-						exits.add(direction) # add any existing NESW exits that are unidirectional back to the exits set for processing later.
+						exits.add(direction)  # Add any existing NESW exits that are unidirectional back to the exits set for processing later.
 			else:
-				exits = set(room.exits) # normal exits list
+				exits = set(room.exits)  # Normal exits list
 			for direction in exits:
 				name = vnum + direction
 				exit = room.exits.get(direction, None)
@@ -657,9 +662,9 @@ class Window(pyglet.window.Window):
 							vl.x, vl.y = new_cp
 						elif exit.to == "undefined":
 							self.visible_exits[name] = pyglet.text.Label("?", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=exit_color2, batch=self.batch, group=self.groups[2])
-						else: # Death
+						else:  # Death
 							self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255, 0, 0, 255), batch=self.batch, group=self.groups[2])
-					else: # one-way, random, etc
+					else:  # one-way, random, etc
 						l = new_cp - cp
 						l.length /= 2
 						a = new_cp - l
@@ -683,9 +688,9 @@ class Window(pyglet.window.Window):
 						elif exit.to == "undefined":
 							color = Color(0, 0, 255, 255)
 						elif exit.to == "death":
-							color = Color (255, 0, 0, 255)
+							color = Color(255, 0, 0, 255)
 						else:
-							color = Color (0, 255, 0, 255)
+							color = Color(0, 255, 0, 255)
 						a, b, c, d = self.square_from_cp(cp, self.size / 2.0)
 						if direction == "west":
 							s = (a, b)
@@ -720,9 +725,9 @@ class Window(pyglet.window.Window):
 								vl.x, vl.y = new_cp
 							elif exit.to == "undefined":
 								self.visible_exits[name] = pyglet.text.Label("?", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=exit_color1, batch=self.batch, group=self.groups[2])
-							else: # Death
-								self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255,0,0,255), batch=self.batch, group=self.groups[2])
-						else: # one-way, random, etc.
+							else:  # Death
+								self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255, 0, 0, 255), batch=self.batch, group=self.groups[2])
+						else:  # One-way, random, etc.
 							color = exit_color1
 							l = (self.size * self.gap_as_float) / 2
 							a = cp + (dv * (self.size / 2.0))
@@ -755,10 +760,10 @@ class Window(pyglet.window.Window):
 		if "current_room_markers" in self.blinkers:
 			return
 		current_room_markers = []
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp - (self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp - (self.size / 2.0, -self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp + (self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda :((self.cp + (self.size / 2.0, -self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp - (self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp - (self.size / 2.0, -self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp + (self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
+		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp + (self.size / 2.0, -self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
 		self.blinkers["current_room_markers"] = tuple(current_room_markers)
 
 	def redraw(self):

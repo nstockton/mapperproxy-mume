@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 import re
 import time
 
@@ -137,7 +138,7 @@ class Clock(object):
 				moonRiseDay = "today"
 			moonRiseHourAp = "am" if moonRiseHour < 12 else "pm"
 			output.append("Next moon rise {} at {}:00 {} (game time).".format(moonRiseDay, moonRiseHour % 12 if moonRiseHour % 12 else 12, moonRiseHourAp))
-		fullMoonOffset = DAYS_PER_MOON_CYCLE - 7 # First full moon rises on the 7th day of the year.
+		fullMoonOffset = DAYS_PER_MOON_CYCLE - 7  # First full moon rises on the 7th day of the year.
 		fullMoonHour = (dayOfYear + fullMoonOffset) % DAYS_PER_MOON_CYCLE * HOURS_PER_DAY + hour
 		if fullMoonHour < 31:
 			ticksUntilFullMoon = 18 - fullMoonHour if fullMoonHour <= 18 else 0
@@ -149,7 +150,7 @@ class Clock(object):
 			output.append("Full moon is up now!")
 		else:
 			output.append("Next full moon rises in {} real-life hour{} and {} minute{}.".format(nextFullMoonInRlHours, "s" if nextFullMoonInRlHours != 1 else "", nextFullMoonInRlMinutes, "s" if nextFullMoonInRlMinutes != 1 else ""))
-		dkMoonOffset = DAYS_PER_MOON_CYCLE - 6 # First DK moon rises on the 6th day of the year.
+		dkMoonOffset = DAYS_PER_MOON_CYCLE - 6  # First DK moon rises on the 6th day of the year.
 		dkHour = (dayOfYear + dkMoonOffset) % DAYS_PER_MOON_CYCLE * HOURS_PER_DAY + hour
 		nextDkDay = 1
 		if dkHour < 20:

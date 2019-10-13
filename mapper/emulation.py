@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import print_function
 
 import codecs
 import json
@@ -13,6 +12,7 @@ import threading
 from .world import DIRECTIONS, TERRAIN_SYMBOLS, World
 from .clock import Clock
 from .utils import page, getDirectoryPath
+
 
 class EmulatedWorld(World):
 	"""The main emulated world class"""
@@ -44,7 +44,7 @@ class EmulatedWorld(World):
 		if not self.config.get("brief", True):
 			self.output(" ".join(line.strip() for line in self.currentRoom.desc.splitlines() if line.strip()))
 		self.output(self.currentRoom.dynamicDesc)
-		#loop through the list of exits in the current room, and build the doors/exits lines.
+		# Loop through the list of exits in the current room, and build the doors/exits lines.
 		doorList = []
 		exitList = []
 		for direction, exitObj in self.sortExits(self.currentRoom.exits):
@@ -242,7 +242,7 @@ class EmulatedWorld(World):
 					except IOError as e:
 						self.output("{0}: '{1}'".format(e.strerror, e.filename))
 						return {}
-					except ValueError as e:
+					except ValueError:
 						self.output("Corrupted configuration file: {0}".format(fileName))
 						return {}
 				else:
@@ -325,7 +325,7 @@ def main(interface, findFormat):
 		except ImportError:
 			print("Unable to find pyglet. Disabling gui")
 			interface = "text"
-	emulator_thread=Emulator(interface, findFormat)
+	emulator_thread = Emulator(interface, findFormat)
 	emulator_thread.start()
 	if interface != "text":
 		pyglet.app.run()

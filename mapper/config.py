@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 # Built-in Modules:
 import codecs
 import collections
@@ -12,8 +13,10 @@ import threading
 # Local Modules:
 from .utils import getDirectoryPath
 
+
 class Error(Exception):
 	pass
+
 
 class Config(collections.MutableMapping):
 	def __init__(self, name="config", *args, **kwargs):
@@ -72,5 +75,6 @@ class Config(collections.MutableMapping):
 
 	def __len__(self):
 		return len(self._config)
+
 
 config_lock = threading.RLock()

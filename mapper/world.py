@@ -2,11 +2,11 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import print_function
 
 import gc
 import heapq
 import itertools
+import operator
 try:
 	from Queue import Queue
 except ImportError:
@@ -83,7 +83,7 @@ class World(object):
 				from .gui.hc import Window
 			elif interface == "sighted":
 				from .gui.sighted import Window
-			self.window=Window(self)
+			self.window = Window(self)
 		self._currentRoom = None
 		self.loadRooms()
 		self.loadLabels()
@@ -247,15 +247,15 @@ class World(object):
 	def sortExits(self, exitsDict):
 		return sorted(exitsDict.items(), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
 
-	def isBidirectional(self,exit):
+	def isBidirectional(self, exitObj):
 		"""Returns True if an exit is bidirectional, False if unidirectional.
 		I.E. True if moving in a given direction then moving back in the direction you just came from would put you back where you started, False otherwise."""
 		try:
-			dest = self.rooms[exit.to]
+			dest = self.rooms[exitObj.to]
 		except KeyError:
 			return False
-		revdir = REVERSE_DIRECTIONS[exit.direction]
-		if revdir in dest.exits and dest.exits[revdir].to == exit.vnum:
+		revdir = REVERSE_DIRECTIONS[exitObj.direction]
+		if revdir in dest.exits and dest.exits[revdir].to == exitObj.vnum:
 			return True
 		else:
 			return False
@@ -266,19 +266,16 @@ class World(object):
 		try:
 			iter(start)
 		except TypeError:
-			x, y, z = 0, 0, 0
-		else:
-			x, y, z = start
+			start = (0, 0, 0)
 		try:
 			iter(radius)
 		except TypeError:
-			radiusX = radiusY = radiusZ = int(radius)
-		else:
-			radiusX, radiusY, radiusZ = radius
+			radius = (int(radius),) * 3
 		for vnum, obj in self.rooms.items():
-			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
-			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ and any(difference):
-				yield(vnum, obj, differenceX, differenceY, differenceZ)
+			coords = (obj.x, obj.y, obj.z)
+			delta = self.coordinatesSubtract(coords, start)
+			if coords != start and all(abs(d) <= r for d, r in zip(delta, radius)):
+				yield(vnum, obj, *delta)
 
 	def getNeighborsFromRoom(self, start=None, radius=1):
 		"""A generator which yields all rooms in the vicinity of a room object.
@@ -307,12 +304,18 @@ class World(object):
 				break
 		return result
 
+	def coordinatesSubtract(self, first, second):
+		return tuple(map(operator.sub, first, second))
+
+	def coordinatesAdd(self, first, second):
+		return tuple(map(operator.add, first, second))
+
 	def coordinatesAddDirection(self, first, second):
 		if first in DIRECTIONS:
 			first = DIRECTION_COORDINATES[first]
 		if second in DIRECTIONS:
 			second = DIRECTION_COORDINATES[second]
-		return tuple(sum(coord) for coord in zip(first, second))
+		return self.coordinatesAdd(first, second)
 
 	def getNewVnum(self):
 		return str(max(int(i) for i in self.rooms) + 1)
@@ -863,10 +866,10 @@ class World(object):
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
-		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destination
-		exitIgnoreFunc = lambda exitObj: exitObj.to in ignoreVnums
-		exitCostFunc = lambda exitObj, neighborRoomObj: (5 if "door" in exitObj.exitFlags or "climb" in exitObj.exitFlags else 0) + (1000 if "avoid" in exitObj.exitFlags else 0) + (10 if neighborRoomObj.terrain in avoidTerrains else 0)
-		exitDestinationFunc = None # lambda exitObj, neighborRoomObj
+		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destination  # NOQA: E731
+		exitIgnoreFunc = lambda exitObj: exitObj.to in ignoreVnums  # NOQA: E731
+		exitCostFunc = lambda exitObj, neighborRoomObj: (5 if "door" in exitObj.exitFlags or "climb" in exitObj.exitFlags else 0) + (1000 if "avoid" in exitObj.exitFlags else 0) + (10 if neighborRoomObj.terrain in avoidTerrains else 0)  # NOQA: E731
+		exitDestinationFunc = None
 		return self._pathFind(origin, isDestinationFunc, exitIgnoreFunc, exitCostFunc, exitDestinationFunc)
 
 	def _pathFind(self, origin, isDestinationFunc=None, exitIgnoreFunc=None, exitCostFunc=None, exitDestinationFunc=None):
