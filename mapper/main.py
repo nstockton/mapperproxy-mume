@@ -20,7 +20,9 @@ from .utils import getDirectoryPath, touch, unescapeXML
 
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
 CHARSET = chr(42).encode("us-ascii")
-SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (chr(i).encode("us-ascii") for i in range(1, 8))
+SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (
+	chr(i).encode("us-ascii") for i in range(1, 8)
+)
 
 
 class Proxy(threading.Thread):
@@ -36,7 +38,10 @@ class Proxy(threading.Thread):
 		self.alive.clear()
 
 	def run(self):
-		userCommands = [func[len("user_command_"):].encode("us-ascii", "ignore") for func in dir(self._mapper) if func.startswith("user_command_")]
+		userCommands = [
+			func[len("user_command_"):].encode("us-ascii", "ignore") for func in dir(self._mapper)
+			if func.startswith("user_command_")
+		]
 		self.alive.set()
 		while self.alive.isSet():
 			try:
@@ -200,7 +205,8 @@ class Server(threading.Thread):
 						# It must be removed as character set negotiation data should not be sent to the mud client.
 						del clientBuffer[-3:]
 					elif byte == ordGA:
-						# Replace the IAC-GA sequence (used by the game to terminate a prompt) with the user specified prompt terminator.
+						# Replace the IAC-GA sequence (used by the game to terminate a prompt)
+						# with the user specified prompt terminator.
 						del clientBuffer[-2:]
 						clientBuffer.extend(self._promptTerminator)
 						self._mapper.queue.put((MUD_DATA, ("iac_ga", b"")))
@@ -237,13 +243,24 @@ class Server(threading.Thread):
 						mpiBuffer.append(byte)
 						if mpiLen is not None and len(mpiBuffer) >= mpiLen:
 							# The last byte in the MPI data has been reached.
-							mpiThreads.append(MPI(client=self._client, server=self._server, isTinTin=tinTinFormat, command=mpiCommand, data=bytes(mpiBuffer)))
+							mpiThreads.append(
+								MPI(
+									client=self._client,
+									server=self._server,
+									isTinTin=tinTinFormat,
+									command=mpiCommand,
+									data=bytes(mpiBuffer)
+								)
+							)
 							mpiThreads[-1].start()
 							del mpiBuffer[:]
 							mpiCommand = None
 							mpiLen = None
 							inMPI = False
-				elif byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n") or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2:
+				elif (
+					byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n")
+					or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2
+				):
 					# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E).
 					mpiCounter += 1
 				elif byte == 69 and mpiCounter == 3:
@@ -262,7 +279,8 @@ class Server(threading.Thread):
 							elif tagBuffer.startswith(b"room"):
 								xmlMode = modeRoom
 							elif tagBuffer.startswith(b"movement"):
-								self._mapper.queue.put((MUD_DATA, ("movement", bytes(tagBuffer)[8:].replace(b" dir=", b"", 1).split(b"/", 1)[0])))
+								movementDir = bytes(tagBuffer)[8:].replace(b" dir=", b"", 1).split(b"/", 1)[0]
+								self._mapper.queue.put((MUD_DATA, ("movement", movementDir)))
 						elif xmlMode == modeRoom:
 							if tagBuffer.startswith(b"name"):
 								xmlMode = modeName
@@ -364,7 +382,12 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, loca
 	serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 	if not noSsl and ssl is not None:
-		serverConnection = ssl.wrap_socket(serverConnection, cert_reqs=ssl.CERT_REQUIRED, ca_certs=certifi.where(), ssl_version=ssl.PROTOCOL_TLS)
+		serverConnection = ssl.wrap_socket(
+			serverConnection,
+			cert_reqs=ssl.CERT_REQUIRED,
+			ca_certs=certifi.where(),
+			ssl_version=ssl.PROTOCOL_TLS
+		)
 	try:
 		serverConnection.connect((remoteHost, remotePort))
 
@@ -378,7 +401,7 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, loca
 		clientConnection.close()
 		try:
 			os.remove(LISTENING_STATUS_FILE)
-		except:  # NOQA: E722
+		except Exception:
 			pass
 		return
 	if not noSsl and ssl is not None:
@@ -389,9 +412,24 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, loca
 				certhost = field[0][1]
 				if certhost != "mume.org":
 					raise ssl.SSLError("Host name 'mume.org' doesn't match certificate host '{}'".format(certhost))
-	mapperThread = Mapper(client=clientConnection, server=serverConnection, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator, gagPrompts=gagPrompts, findFormat=findFormat)
+	mapperThread = Mapper(
+		client=clientConnection,
+		server=serverConnection,
+		outputFormat=outputFormat,
+		interface=interface,
+		promptTerminator=promptTerminator,
+		gagPrompts=gagPrompts,
+		findFormat=findFormat
+	)
 	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread)
-	serverThread = Server(client=clientConnection, server=serverConnection, mapper=mapperThread, outputFormat=outputFormat, interface=interface, promptTerminator=promptTerminator)
+	serverThread = Server(
+		client=clientConnection,
+		server=serverConnection,
+		mapper=mapperThread,
+		outputFormat=outputFormat,
+		interface=interface,
+		promptTerminator=promptTerminator
+	)
 	serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
@@ -415,5 +453,5 @@ def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, loca
 	clientConnection.close()
 	try:
 		os.remove(LISTENING_STATUS_FILE)
-	except:  # NOQA: E722
+	except Exception:
 		pass

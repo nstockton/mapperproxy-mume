@@ -53,13 +53,17 @@ class EmulatedWorld(World):
 				doorList.append("{0}: {1}".format(direction, exitObj.door if exitObj.door else "exit"))
 				if "hidden" not in exitObj.doorFlags:
 					# The door is not a secret exit.
-					# Enclose the direction of the door in parentheses '()' for use in the exits line. In Mume, enclosing an exits line direction in parentheses denotes an opened door in that direction.
+					# Enclose the direction of the door in parentheses '()' for use in the exits line.
+					# In Mume, enclosing an exits line direction in parentheses denotes an opened door in that direction.
 					direction = "({0})".format(direction)
 				else:
 					# The door is a secret exit.
-					# Enclose the direction of the door in brackets '[]' for use in the exits line. In Mume, enclosing an exits line direction in brackets denotes a closed door in that direction.
+					# Enclose the direction of the door in brackets '[]' for use in the exits line.
+					# In Mume, enclosing an exits line direction in brackets denotes a closed door in that direction.
 					direction = "[{0}]".format(direction)
-			# The next 2 symbols which might be added are just convenience symbols for denoting if the exit is to an undefined room or a known deathtrap. They don't actually exist in Mume.
+			# The next 2 symbols which might be added are just convenience
+			# symbols for denoting if the exit is to an undefined room or a known deathtrap.
+			# They don't actually exist in Mume.
 			if exitObj.to == "death":
 				direction = "!!{0}!!".format(direction)
 			elif exitObj.to not in self.rooms or exitObj.to == "undefined":
@@ -71,7 +75,8 @@ class EmulatedWorld(World):
 				# The '-' sign is used in Mume to denote that the room in that direction is a trail.
 				direction = "-{0}-".format(direction)
 			exitList.append(direction)
-		# If any of the exits had a door in that direction, print the direction and name of the door before the exits line.
+		# If any of the exits had a door in that direction, print the direction
+		# and name of the door before the exits line.
 		if doorList:
 			self.output("Doors:")
 			self.output(",\n".join(doorList))
@@ -93,7 +98,12 @@ class EmulatedWorld(World):
 			exitLine = []
 			exitLine.append("{0}:".format(direction.capitalize()))
 			if exitObj.door or "door" in exitObj.exitFlags:
-				exitLine.append("{0} ({1}),".format("visible" if "hidden" not in exitObj.doorFlags else "hidden", exitObj.door if exitObj.door else "exit"))
+				exitLine.append(
+					"{hidden} ({door}),".format(
+						hidden="visible" if "hidden" not in exitObj.doorFlags else "hidden",
+						door=exitObj.door if exitObj.door else "exit"
+					)
+				)
 			if exitObj.to.isdigit() and exitObj.to in self.rooms:
 				exitLine.append("{0}, {1}".format(self.rooms[exitObj.to].name, self.rooms[exitObj.to].terrain))
 			elif exitObj.to == "death":
@@ -260,8 +270,14 @@ class EmulatedWorld(World):
 
 	def parseInput(self, userInput):
 		"""Parse the user input"""
-		userCommands = [func[len("user_command_"):] for func in dir(self) if not func.startswith("user_command_partial_") and func.startswith("user_command_")]
-		userCommandsPartial = [func[len("user_command_partial_"):] for func in dir(self) if func.startswith("user_command_partial_")]
+		userCommands = [
+			func[len("user_command_"):] for func in dir(self)
+			if not func.startswith("user_command_partial_") and func.startswith("user_command_")
+		]
+		userCommandsPartial = [
+			func[len("user_command_partial_"):] for func in dir(self)
+			if func.startswith("user_command_partial_")
+		]
 		match = re.match(r"^(?P<command>\S+)(?:\s+(?P<arguments>.*))?", userInput)
 		command = match.group("command")
 		arguments = match.group("arguments")

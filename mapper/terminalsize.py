@@ -70,7 +70,7 @@ def _get_terminal_size_tput():
 		cols = int(subprocess.check_output(shlex.split('tput cols')))
 		rows = int(subprocess.check_output(shlex.split('tput lines')))
 		return (cols, rows)
-	except:  # NOQA: E722
+	except Exception:
 		return None
 
 
@@ -78,7 +78,7 @@ def ioctl_GWINSZ(fd):
 	if fcntl and termios:
 		try:
 			return struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234"))
-		except:  # NOQA: E722
+		except Exception:
 			return None
 
 
@@ -89,12 +89,12 @@ def _get_terminal_size_linux():
 			fd = os.open(os.ctermid(), os.O_RDONLY)
 			cr = ioctl_GWINSZ(fd)
 			os.close(fd)
-		except:  # NOQA: E722
+		except Exception:
 			pass
 	if not cr:
 		try:
 			cr = (os.environ['LINES'], os.environ['COLUMNS'])
-		except:  # NOQA: E722
+		except Exception:
 			return None
 	return int(cr[1]), int(cr[0])
 
