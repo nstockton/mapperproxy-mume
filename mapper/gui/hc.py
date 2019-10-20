@@ -6,6 +6,7 @@
 
 
 from collections import namedtuple
+from itertools import chain
 import logging
 import math
 try:
@@ -479,24 +480,21 @@ class Window(pyglet.window.Window):
 		y = 0
 		ps = []
 		for i in range(num_segments):
-			ps += [Vec2d(cp.x + x, cp.y + y)]
+			ps.append(Vec2d(cp.x + x, cp.y + y))
 			t = x
 			x = c * x - s * y
 			y = s * t + c * y
-		ps2 = [ps[0]]
-		for i in range(1, int((len(ps) + 1) // 2)):
-			ps2.append(ps[i])
-			ps2.append(ps[-i])
-		ps = ps2
-		vs = []
-		for p in [ps[0]] + ps + [ps[-1]]:
-			vs += [p.x, p.y]
-		return vs
+		ps2 = [
+			ps[0],
+			*chain.from_iterable((ps[i], ps[-i]) for i in range(1, (len(ps) + 1) // 2))
+		]
+		ps = [ps2[0], *ps2, ps2[-1]]
+		return list(chain.from_iterable((p.x, p.y) for p in ps))
 
 	def draw_circle(self, cp, radius, color, group=None):
 		vs = self.circle_vertices(cp, radius)
-		l = len(vs) // 2
-		return self.batch.add(l, pyglet.gl.GL_TRIANGLE_STRIP, group, ("v2f", vs), ("c4B", color.as_int() * l))
+		count = len(vs) // 2
+		return self.batch.add(count, pyglet.gl.GL_TRIANGLE_STRIP, group, ("v2f", vs), ("c4B", color.as_int() * count))
 
 	def draw_segment(self, a, b, color, group=None):
 		pv1 = Vec2d(a)
@@ -521,8 +519,8 @@ class Window(pyglet.window.Window):
 
 	def draw_fat_segment(self, a, b, radius, color, group=None):
 		vs = self.fat_segment_vertices(a, b, radius)
-		l = len(vs) // 2
-		return self.batch.add(l, pyglet.gl.GL_TRIANGLES, group, ("v2f", vs), ("c4B", color.as_int() * l))
+		count = len(vs) // 2
+		return self.batch.add(count, pyglet.gl.GL_TRIANGLES, group, ("v2f", vs), ("c4B", color.as_int() * count))
 
 	def corners_2_vertices(self, ps):
 		ps = [ps[1], ps[2], ps[0]] + ps[3:]
@@ -534,8 +532,8 @@ class Window(pyglet.window.Window):
 	def draw_polygon(self, verts, color, group=None):
 		mode = pyglet.gl.GL_TRIANGLE_STRIP
 		vs = self.corners_2_vertices(verts)
-		l = len(vs) // 2
-		return self.batch.add(l, mode, group, ("v2f", vs), ("c4B", color.as_int() * l))
+		count = len(vs) // 2
+		return self.batch.add(count, mode, group, ("v2f", vs), ("c4B", color.as_int() * count))
 
 	def equilateral_triangle(self, cp, radius, angle_degrees):
 		v = Vec2d(radius, 0)
@@ -547,19 +545,19 @@ class Window(pyglet.window.Window):
 	def square_from_cp(self, cp, d):
 		return [cp - d, cp - (d, d * -1), cp + d, cp + (d, d * -1)]
 
-	def arrow_points(self, a, d, r):
-		l = d - a
-		h = (r * 1.5) * math.sqrt(3)
-		l.length -= h
-		b = a + l
-		l.length += h / 3.0
-		c = a + l
-		return (b, c, l.angle_degrees)
+	def arrow_points(self, a, d, radius):
+		vec = d - a
+		h = (radius * 1.5) * math.sqrt(3)
+		vec.length -= h
+		b = a + vec
+		vec.length += h / 3.0
+		c = a + vec
+		return (b, c, vec.angle_degrees)
 
-	def arrow_vertices(self, a, d, r):
-		b, c, angle = self.arrow_points(a, d, r)
-		vs1 = self.fat_segment_vertices(a, b, r)
-		vs2 = self.corners_2_vertices(self.equilateral_triangle(c, r * 3, angle))
+	def arrow_vertices(self, a, d, radius):
+		b, c, angle = self.arrow_points(a, d, radius)
+		vs1 = self.fat_segment_vertices(a, b, radius)
+		vs2 = self.corners_2_vertices(self.equilateral_triangle(c, radius * 3, angle))
 		return (vs1, vs2)
 
 	def draw_arrow(self, a, d, radius, color, group=None):
@@ -665,10 +663,10 @@ class Window(pyglet.window.Window):
 						else:  # Death
 							self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255, 0, 0, 255), batch=self.batch, group=self.groups[2])
 					else:  # one-way, random, etc
-						l = new_cp - cp
-						l.length /= 2
-						a = new_cp - l
-						d = new_cp + l
+						vec = new_cp - cp
+						vec.length /= 2
+						a = new_cp - vec
+						d = new_cp + vec
 						r = (self.size / radius) / 2.0
 						if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
 							vl1, vl2 = self.visible_exits[name]
@@ -691,26 +689,19 @@ class Window(pyglet.window.Window):
 							color = Color(255, 0, 0, 255)
 						else:
 							color = Color(0, 255, 0, 255)
-						a, b, c, d = self.square_from_cp(cp, self.size / 2.0)
-						if direction == "west":
-							s = (a, b)
-						elif direction == "north":
-							s = (b, c)
-						elif direction == "east":
-							s = (c, d)
-						elif direction == "south":
-							s = (d, a)
+						square = self.square_from_cp(cp, self.size / 2.0)
+						a = square[(DIRECTIONS.index(direction) + 1) % 4]
+						b = square[(DIRECTIONS.index(direction) + 2) % 4]
 						if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
 							vl = self.visible_exits[name]
-							vl.vertices = self.fat_segment_vertices(s[0], s[1], self.size / radius / 2.0)
+							vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
 							vl.colors = color * (len(vl.colors) // 4)
 						else:
-							self.visible_exits[name] = self.draw_fat_segment(s[0], s[1], self.size / radius, color, group=self.groups[2])
+							self.visible_exits[name] = self.draw_fat_segment(a, b, self.size / radius, color, group=self.groups[2])
 					else:
 						if self.world.isBidirectional(exit):
-							l = (self.size * self.gap_as_float) / 2
 							a = cp + (dv * (self.size / 2.0))
-							b = a + (dv * l)
+							b = a + (dv * ((self.size * self.gap_as_float) / 2))
 							if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
 								vl = self.visible_exits[name]
 								vs = self.fat_segment_vertices(a, b, self.size / radius)
@@ -718,8 +709,7 @@ class Window(pyglet.window.Window):
 							else:
 								self.visible_exits[name] = self.draw_fat_segment(a, b, self.size / radius, exit_color1, group=self.groups[2])
 						elif exit.to in ("undefined", "death"):
-							l = (self.size * 0.75)
-							new_cp = cp + dv * l
+							new_cp = cp + dv * (self.size * 0.75)
 							if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
 								vl = self.visible_exits[name]
 								vl.x, vl.y = new_cp
@@ -729,9 +719,8 @@ class Window(pyglet.window.Window):
 								self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255, 0, 0, 255), batch=self.batch, group=self.groups[2])
 						else:  # One-way, random, etc.
 							color = exit_color1
-							l = (self.size * self.gap_as_float) / 2
 							a = cp + (dv * (self.size / 2.0))
-							d = a + (dv * l)
+							d = a + (dv * ((self.size * self.gap_as_float) / 2))
 							r = ((self.size / radius) / 2.0) * self.gap_as_float
 							if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
 								vl1, vl2 = self.visible_exits[name]
