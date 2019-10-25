@@ -383,7 +383,7 @@ class World(object):
 			for key, value in kwArgs.items():
 				if key in ("name", "desc", "dynamicDesc", "note"):
 					roomData = getattr(roomObj, key, "").strip().lower()
-					if exactMatch and roomData == value or value in roomData:
+					if not exactMatch and value in roomData or roomData == value:
 						keysMatched += 1
 				elif key in ("terrain", "light", "align", "portable", "ridable", "x", "y", "z") and getattr(roomObj, key, "").strip().lower() == value:
 					keysMatched += 1
