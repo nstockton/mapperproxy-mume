@@ -266,16 +266,21 @@ class World(object):
 		try:
 			iter(start)
 		except TypeError:
-			start = (0, 0, 0)
+			x = y = z = 0
+		else:
+			x, y, z = start
 		try:
 			iter(radius)
 		except TypeError:
-			radius = (int(radius),) * 3
+			radiusX = radiusY = radiusZ = int(radius)
+		else:
+			radiusX, radiusY, radiusZ = radius
 		for vnum, obj in self.rooms.items():
-			coords = (obj.x, obj.y, obj.z)
-			delta = self.coordinatesSubtract(coords, start)
-			if coords != start and all(abs(d) <= r for d, r in zip(delta, radius)):
-				yield(vnum, obj, *delta)
+			if obj.x == x and obj.y == y and obj.z == z:
+				continue
+			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
+			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ:
+				yield(vnum, obj, differenceX, differenceY, differenceZ)
 
 	def getNeighborsFromRoom(self, start=None, radius=1):
 		"""A generator which yields all rooms in the vicinity of a room object.
