@@ -33,7 +33,13 @@ with config_lock:
 	del cfg
 
 if debug_level is not None or debug_level != 0:
-	logging.basicConfig(filename="debug.log", filemode="w", level=debug_level, format="%(levelname)s: from %(name)s in %(threadName)s: \"%(message)s\" @ %(asctime)s.%(msecs)d", datefmt="%m/%d/%Y %H:%M:%S")
+	logging.basicConfig(
+		filename="debug.log",
+		filemode="w",
+		level=debug_level,
+		format="%(levelname)s: from %(name)s in %(threadName)s: \"%(message)s\" @ %(asctime)s.%(msecs)d",
+		datefmt="%m/%d/%Y %H:%M:%S"
+	)
 	logging.info("Initializing")
 else:
 	del logging

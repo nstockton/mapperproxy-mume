@@ -80,7 +80,9 @@ def loadRooms():
 	errors, result = _load(SAMPLE_MAP_FILE_PATH)
 	if result is None:
 		errorMessages.append(errors)
-		errorMessages.append("Error: neither '{}' nor '{}' can be found.".format(MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH))
+		errorMessages.append(
+			"Error: neither '{}' nor '{}' can be found.".format(MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH)
+		)
 		return "\n".join(errorMessages), None
 	else:
 		return None, result

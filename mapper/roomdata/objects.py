@@ -9,7 +9,16 @@ from ..gui.vec2d import Vec2d
 
 
 COMPASS_DIRECTIONS = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"]
-AVOID_DYNAMIC_DESC_REGEX = re.compile(r"Some roots lie here waiting to ensnare weary travellers\.|The remains of a clump of roots lie here in a heap of rotting compost\.|A clump of roots is here, fighting|Some withered twisted roots writhe towards you\.|Black roots shift uneasily all around you\.|black tangle of roots|Massive roots shift uneasily all around you\.|rattlesnake")
+AVOID_DYNAMIC_DESC_REGEX = re.compile(
+	r"Some roots lie here waiting to ensnare weary travellers\.|"
+	r"The remains of a clump of roots lie here in a heap of rotting compost\.|"
+	r"A clump of roots is here, fighting|"
+	r"Some withered twisted roots writhe towards you\.|"
+	r"Black roots shift uneasily all around you\.|"
+	r"black tangle of roots|"
+	r"Massive roots shift uneasily all around you\.|"
+	r"rattlesnake"
+)
 TERRAIN_COSTS = {
 	"cavern": 0.75,
 	"city": 0.75,
@@ -125,9 +134,14 @@ class Room(object):
 		self.exits = {}
 
 	def __lt__(self, other):
-		# Unlike in Python 2 where most objects are sortable by default, our Room class isn't automatically sortable in Python 3.
-		# If we don't override this method, the path finder will throw an exception in Python 3 because heapq.heappush requires that any object passed to it be sortable.
-		# We'll return False because we want heapq.heappush to sort the tuples of movement cost and room object by the first item in the tuple (room cost), and the order of rooms with the same movement cost is irrelevant.
+		# Unlike in Python 2 where most objects are sortable by default, our
+		# Room class isn't automatically sortable in Python 3.
+		# If we don't override this method, the path finder will throw an
+		# exception in Python 3 because heapq.heappush requires that any object
+		# passed to it be sortable.
+		# We'll return False because we want heapq.heappush to sort the tuples
+		# of movement cost and room object by the first item in the tuple (room cost),
+		# and the order of rooms with the same movement cost is irrelevant.
 		return False
 
 	def calculateCost(self):
@@ -146,11 +160,21 @@ class Room(object):
 	def clockPositionTo(self, destination):
 		# https://en.wikipedia.org/wiki/Clock_position
 		delta = Vec2d(destination.x, destination.y) - (self.x, self.y)
-		return "here" if self.vnum == destination.vnum else "same X-Y" if delta.get_length_sqrd() == 0 else "{:d} o'clock".format(round((90 - delta.get_angle_degrees() + 360) % 360 / 30) or 12)
+		if self.vnum == destination.vnum:
+			return "here"
+		elif delta.get_length_sqrd() == 0:
+			return "same X-Y"
+		else:
+			return "{:d} o'clock".format(round((90 - delta.get_angle_degrees() + 360) % 360 / 30) or 12)
 
 	def directionTo(self, destination):
 		delta = Vec2d(destination.x, destination.y) - (self.x, self.y)
-		return "here" if self.vnum == destination.vnum else "same X-Y" if delta.get_length_sqrd() == 0 else COMPASS_DIRECTIONS[round((90 - delta.get_angle_degrees() + 360) % 360 / 45) % 8]
+		if self.vnum == destination.vnum:
+			return "here"
+		elif delta.get_length_sqrd() == 0:
+			return "same X-Y"
+		else:
+			return COMPASS_DIRECTIONS[round((90 - delta.get_angle_degrees() + 360) % 360 / 45) % 8]
 
 
 class Exit(object):

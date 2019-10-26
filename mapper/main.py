@@ -257,10 +257,7 @@ class Server(threading.Thread):
 							mpiCommand = None
 							mpiLen = None
 							inMPI = False
-				elif (
-					byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n")
-					or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2
-				):
+				elif byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n") or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2:
 					# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E).
 					mpiCounter += 1
 				elif byte == 69 and mpiCounter == 3:

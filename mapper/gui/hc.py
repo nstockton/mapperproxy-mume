@@ -85,7 +85,13 @@ class Color(namedtuple("Color", ["r", "g", "b", "a"])):
 
 class Blinker(object):
 	def __init__(self, blink_rate, draw_func, args_func):
-		logger.debug("Creating blinker with blink rate {}, calling function {}, with {} for arguments.".format(blink_rate, draw_func, args_func))
+		logger.debug(
+			"Creating blinker with blink rate {}, calling function {}, with {} for arguments.".format(
+				blink_rate,
+				draw_func,
+				args_func
+			)
+		)
 		self.blink_rate = blink_rate
 		self.draw_func = draw_func
 		self.args_func = args_func
@@ -124,7 +130,10 @@ class Window(pyglet.window.Window):
 			self.say = self._speech.say
 		else:
 			self.say = lambda *args, **kwargs: None
-			msg = "Speech disabled. Unable to import speechlight. Please download from:\nhttps://github.com/nstockton/speechlight"
+			msg = (
+				"Speech disabled. Unable to import speechlight. Please download from:\n"
+				"https://github.com/nstockton/speechlight"
+			)
 			self.message(msg)
 			logger.warning(msg)
 		self._cfg = {}
@@ -156,7 +165,8 @@ class Window(pyglet.window.Window):
 		logger.info("Created window {}".format(self))
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 		if self.blink:
-			# If blinking was enabled in the cconfig file, resetting self.blink to True will trigger the initial scheduling of the blinker in the clock.
+			# If blinking was enabled in the cconfig file, resetting self.blink
+			# to True will trigger the initial scheduling of the blinker in the clock.
 			self.blink = True
 
 	@property
@@ -257,7 +267,11 @@ class Window(pyglet.window.Window):
 		except KeyError:
 			self._cfg["current_room_mark_radius"] = 10
 		except ValueError:
-			logger.warning("Invalid value for current_room_mark_radius: {}".format(self._cfg["current_room_mark_radius"]))
+			logger.warning(
+				"Invalid value for current_room_mark_radius: {}".format(
+					self._cfg["current_room_mark_radius"]
+				)
+			)
 			self._cfg["current_room_mark_radius"] = 10
 		return int(self._cfg["current_room_mark_radius"])
 
@@ -291,7 +305,22 @@ class Window(pyglet.window.Window):
 
 	@property
 	def room_draw_radius(self):
-		return (int(math.ceil(self.width / self.size / (1 if self.continuous_view else self.gap_as_float + 1.0) / 2)), int(math.ceil(self.height / self.size / (1 if self.continuous_view else self.gap_as_float + 1.0) / 2)), 1)
+		space = 1 if self.continuous_view else self.gap_as_float + 1.0
+		return (
+			int(math.ceil(self.width / self.size / space / 2)),
+			int(math.ceil(self.height / self.size / space / 2)),
+			1
+		)
+
+	def room_offset_from_pixels(self, x, y, z=None):
+		"""
+		Given a pair of X-Y coordinates in pixels, return the
+		offset in room coordinates from the center room.
+		"""
+		return (
+			int((x - self.cx + self.size / 2) // self.size),
+			int((y - self.cy + self.size / 2) // self.size)
+		)
 
 	def message(self, text):
 		self.say(text)
@@ -336,7 +365,10 @@ class Window(pyglet.window.Window):
 		self.redraw()
 
 	def on_gui_refresh(self):
-		"""This event is fired when the mapper needs to signal the GUI to clear the visible rooms cache and redraw the map view."""
+		"""
+		This event is fired when the mapper needs to signal the GUI to clear the
+		visible rooms cache and redraw the map view.
+		"""
 		logger.debug("Clearing visible exits.")
 		for dead in self.visible_exits:
 			try:
@@ -357,8 +389,22 @@ class Window(pyglet.window.Window):
 				i.delete()
 			del self.center_mark[:]
 		self.redraw()
-		self.center_mark.append(self.draw_circle(self.cp, self.size / 2.0 / 8 * 3, Color(0, 0, 0, 255), self.groups[4]))
-		self.center_mark.append(self.draw_circle(self.cp, self.size / 2.0 / 8, Color(255, 255, 255, 255), self.groups[5]))
+		self.center_mark.append(
+			self.draw_circle(
+				self.cp,
+				self.size / 2.0 / 8 * 3,
+				Color(0, 0, 0, 255),
+				self.groups[4]
+			)
+		)
+		self.center_mark.append(
+			self.draw_circle(
+				self.cp,
+				self.size / 2.0 / 8,
+				Color(255, 255, 255, 255),
+				self.groups[5]
+			)
+		)
 		logger.debug("GUI refreshed.")
 
 	def on_resize(self, width, height):
@@ -384,7 +430,7 @@ class Window(pyglet.window.Window):
 	def on_mouse_motion(self, x, y, dx, dy):
 		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
-			if math.floor((cp.x - self.cx + self.size / 2) / self.size) == math.floor((x - self.cx + self.size / 2) / self.size) and math.floor((cp.y - self.cy + self.size / 2) / self.size) == math.floor((y - self.cy + self.size / 2) / self.size):
+			if self.room_offset_from_pixels(*cp) == self.room_offset_from_pixels(x, y):
 				if vnum is None or vnum not in self.world.rooms:
 					return
 				elif self.highlight == vnum:
@@ -405,7 +451,7 @@ class Window(pyglet.window.Window):
 		# check if the player clicked on a room
 		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
-			if math.floor((cp.x - self.cx + self.size / 2) / self.size) == math.floor((x - self.cx + self.size / 2) / self.size) and math.floor((cp.y - self.cy + self.size / 2) / self.size) == math.floor((y - self.cy + self.size / 2) / self.size):
+			if self.room_offset_from_pixels(*cp) == self.room_offset_from_pixels(x, y):
 				# Action depends on which button the player clicked
 				if vnum is None or vnum not in self.world.rooms:
 					return
@@ -428,7 +474,7 @@ class Window(pyglet.window.Window):
 		elif scroll_y < 0:
 			self.do_adjust_size(key.LEFT, 0)
 
-	def on_mouse_leave(self, wx, wy):
+	def on_mouse_leave(self, x, y):
 		self.highlight = None
 		self.on_gui_refresh()
 
@@ -494,7 +540,13 @@ class Window(pyglet.window.Window):
 	def draw_circle(self, cp, radius, color, group=None):
 		vs = self.circle_vertices(cp, radius)
 		count = len(vs) // 2
-		return self.batch.add(count, pyglet.gl.GL_TRIANGLE_STRIP, group, ("v2f", vs), ("c4B", color.as_int() * count))
+		return self.batch.add(
+			count,
+			pyglet.gl.GL_TRIANGLE_STRIP,
+			group,
+			("v2f", vs),
+			("c4B", color.as_int() * count)
+		)
 
 	def draw_segment(self, a, b, color, group=None):
 		pv1 = Vec2d(a)
@@ -567,7 +619,10 @@ class Window(pyglet.window.Window):
 		return (vl1, vl2)
 
 	def draw_room(self, room, cp, group=None):
-		color = Color(*self.terrain_colors.get("highlight" if self.highlight is not None and self.highlight == room.vnum else room.terrain, "undefined"))
+		if self.highlight is not None and self.highlight == room.vnum:
+			color = Color(*self.terrain_colors.get("highlight", "undefined"))
+		else:
+			color = Color(*self.terrain_colors.get(room.terrain, "undefined"))
 		vs = self.square_from_cp(cp, self.size / 2.0)
 		if group is None:
 			group = self.groups[0]
@@ -586,7 +641,8 @@ class Window(pyglet.window.Window):
 		logger.debug("Drawing rooms near {}".format(current_room))
 		self.draw_room(current_room, self.cp, group=self.groups[1])
 		newrooms = {current_room.vnum}
-		for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=current_room, radius=self.room_draw_radius):
+		neighbors = self.world.getNeighborsFromRoom(start=current_room, radius=self.room_draw_radius)
+		for vnum, room, x, y, z in neighbors:
 			if z == 0:
 				newrooms.add(vnum)
 				d = Vec2d(x, y) * (self.size * (1 if self.continuous_view else self.gap_as_float + 1.0))
@@ -624,10 +680,13 @@ class Window(pyglet.window.Window):
 		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
 			if self.continuous_view:
-				exits = DIRECTIONS_2D.symmetric_difference(room.exits)  # Swap NESW exits with directions you can't go. Leave up/down in place if present.
+				# Swap NESW exits with directions you can't go. Leave up/down in place if present.
+				exits = DIRECTIONS_2D.symmetric_difference(room.exits)
 				for direction in room.exits:
 					if not self.world.isBidirectional(room.exits[direction]):
-						exits.add(direction)  # Add any existing NESW exits that are unidirectional back to the exits set for processing later.
+						# Add any existing NESW exits that are unidirectional back
+						# to the exits set for processing later.
+						exits.add(direction)
 			else:
 				exits = set(room.exits)  # Normal exits list
 			for direction in exits:
@@ -659,9 +718,31 @@ class Window(pyglet.window.Window):
 							vl = self.visible_exits[name]
 							vl.x, vl.y = new_cp
 						elif exit.to == "undefined":
-							self.visible_exits[name] = pyglet.text.Label("?", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=exit_color2, batch=self.batch, group=self.groups[2])
+							self.visible_exits[name] = pyglet.text.Label(
+								"?",
+								font_name="Times New Roman",
+								font_size=(self.size / 100.0) * 72,
+								x=new_cp.x,
+								y=new_cp.y,
+								anchor_x="center",
+								anchor_y="center",
+								color=exit_color2,
+								batch=self.batch,
+								group=self.groups[2]
+							)
 						else:  # Death
-							self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255, 0, 0, 255), batch=self.batch, group=self.groups[2])
+							self.visible_exits[name] = pyglet.text.Label(
+								"X",
+								font_name="Times New Roman",
+								font_size=(self.size / 100.0) * 72,
+								x=new_cp.x,
+								y=new_cp.y,
+								anchor_x="center",
+								anchor_y="center",
+								color=Color(255, 0, 0, 255),
+								batch=self.batch,
+								group=self.groups[2]
+							)
 					else:  # one-way, random, etc
 						vec = new_cp - cp
 						vec.length /= 2
@@ -697,7 +778,9 @@ class Window(pyglet.window.Window):
 							vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
 							vl.colors = color * (len(vl.colors) // 4)
 						else:
-							self.visible_exits[name] = self.draw_fat_segment(a, b, self.size / radius, color, group=self.groups[2])
+							self.visible_exits[name] = self.draw_fat_segment(
+								a, b, self.size / radius, color, group=self.groups[2]
+							)
 					else:
 						if self.world.isBidirectional(exit):
 							a = cp + (dv * (self.size / 2.0))
@@ -707,16 +790,40 @@ class Window(pyglet.window.Window):
 								vs = self.fat_segment_vertices(a, b, self.size / radius)
 								vl.vertices = vs
 							else:
-								self.visible_exits[name] = self.draw_fat_segment(a, b, self.size / radius, exit_color1, group=self.groups[2])
+								self.visible_exits[name] = self.draw_fat_segment(
+									a, b, self.size / radius, exit_color1, group=self.groups[2]
+								)
 						elif exit.to in ("undefined", "death"):
 							new_cp = cp + dv * (self.size * 0.75)
 							if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
 								vl = self.visible_exits[name]
 								vl.x, vl.y = new_cp
 							elif exit.to == "undefined":
-								self.visible_exits[name] = pyglet.text.Label("?", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=exit_color1, batch=self.batch, group=self.groups[2])
+								self.visible_exits[name] = pyglet.text.Label(
+									"?",
+									font_name="Times New Roman",
+									font_size=(self.size / 100.0) * 72,
+									x=new_cp.x,
+									y=new_cp.y,
+									anchor_x="center",
+									anchor_y="center",
+									color=exit_color1,
+									batch=self.batch,
+									group=self.groups[2]
+								)
 							else:  # Death
-								self.visible_exits[name] = pyglet.text.Label("X", font_name="Times New Roman", font_size=(self.size / 100.0) * 72, x=new_cp.x, y=new_cp.y, anchor_x="center", anchor_y="center", color=Color(255, 0, 0, 255), batch=self.batch, group=self.groups[2])
+								self.visible_exits[name] = pyglet.text.Label(
+									"X",
+									font_name="Times New Roman",
+									font_size=(self.size / 100.0) * 72,
+									x=new_cp.x,
+									y=new_cp.y,
+									anchor_x="center",
+									anchor_y="center",
+									color=Color(255, 0, 0, 255),
+									batch=self.batch,
+									group=self.groups[2]
+								)
 						else:  # One-way, random, etc.
 							color = exit_color1
 							a = cp + (dv * (self.size / 2.0))
@@ -749,10 +856,62 @@ class Window(pyglet.window.Window):
 		if "current_room_markers" in self.blinkers:
 			return
 		current_room_markers = []
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp - (self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp - (self.size / 2.0, -self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp + (self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
-		current_room_markers.append(Blinker(self.blink_rate, self.draw_circle, lambda: ((self.cp + (self.size / 2.0, -self.size / 2.0), (self.size / 100.0) * self.current_room_mark_radius, self.current_room_mark_color), {"group": self.groups[5]})))
+		current_room_markers.append(
+			Blinker(
+				self.blink_rate,
+				self.draw_circle,
+				lambda: (
+					(
+						self.cp - (self.size / 2.0),
+						(self.size / 100.0) * self.current_room_mark_radius,
+						self.current_room_mark_color
+					),
+					{"group": self.groups[5]}
+				)
+			)
+		)
+		current_room_markers.append(
+			Blinker(
+				self.blink_rate,
+				self.draw_circle,
+				lambda: (
+					(
+						self.cp - (self.size / 2.0, -self.size / 2.0),
+						(self.size / 100.0) * self.current_room_mark_radius,
+						self.current_room_mark_color
+					),
+					{"group": self.groups[5]}
+				)
+			)
+		)
+		current_room_markers.append(
+			Blinker(
+				self.blink_rate,
+				self.draw_circle,
+				lambda: (
+					(
+						self.cp + (self.size / 2.0),
+						(self.size / 100.0) * self.current_room_mark_radius,
+						self.current_room_mark_color
+					),
+					{"group": self.groups[5]}
+				)
+			)
+		)
+		current_room_markers.append(
+			Blinker(
+				self.blink_rate,
+				self.draw_circle,
+				lambda: (
+					(
+						self.cp + (self.size / 2.0, -self.size / 2.0),
+						(self.size / 100.0) * self.current_room_mark_radius,
+						self.current_room_mark_color
+					),
+					{"group": self.groups[5]}
+				)
+			)
+		)
 		self.blinkers["current_room_markers"] = tuple(current_room_markers)
 
 	def redraw(self):

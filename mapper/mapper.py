@@ -13,13 +13,34 @@ import threading
 from timeit import default_timer
 
 from . import roomdata
-from .clock import CLOCK_REGEX, TIME_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, NIGHT_REGEX, MONTHS, timeToEpoch, Clock
+from .clock import (
+	CLOCK_REGEX,
+	TIME_REGEX,
+	DAWN_REGEX,
+	DAY_REGEX,
+	DUSK_REGEX,
+	NIGHT_REGEX,
+	MONTHS,
+	timeToEpoch,
+	Clock
+)
 from .timers import Timer
-from .world import DIRECTIONS, LIGHT_SYMBOLS, REVERSE_DIRECTIONS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
+from .world import (
+	DIRECTIONS,
+	REVERSE_DIRECTIONS,
+	LIGHT_SYMBOLS,
+	TERRAIN_SYMBOLS,
+	RUN_DESTINATION_REGEX,
+	World
+)
 from .utils import stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
 
 
-EXIT_TAGS_REGEX = re.compile(r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)(?P<direction>{})".format("|".join(DIRECTIONS)))
+EXIT_TAGS_REGEX = re.compile(
+	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)(?P<direction>{dirs})".format(
+		dirs="|".join(DIRECTIONS)
+	)
+)
 MOVEMENT_FORCED_REGEX = re.compile(
 	"|".join(
 		[
@@ -36,7 +57,6 @@ MOVEMENT_FORCED_REGEX = re.compile(
 			r"You board the ferry\.",
 			r"You are dead\! Sorry\.\.\.",
 			r"With a jerk\, the basket starts gliding down the rope towards the platform\.",
-			r"#You cannot control your mount on the slanted and unstable surface\! You begin to slide to the north\, and plunge toward the water below\!",
 			r"The current pulls you faster\. Suddenly\, you are sucked downwards into darkness\!",
 			r"You are washed blindly over the rocks\, and plummet sickeningly downwards\.\.\.",
 			r"Oops\! You walk off the bridge and fall into the rushing water below\!",
@@ -44,13 +64,20 @@ MOVEMENT_FORCED_REGEX = re.compile(
 			r"You tighten your grip as (:a Great Eagle|Gwaihir the Windlord) starts to descend fast\.",
 			r"The trees confuse you\, making you wander around in circles\.",
 			r"Sarion helps you outside\.",
-			r"Stepping on the lizard corpses\, you use some depressions in the wall for support\, push the muddy ceiling apart and climb out of the cave\."
+			(
+				r"You cannot control your mount on the slanted and unstable surface\!"
+				r"(?: You begin to slide to the north\, and plunge toward the water below\!)?"
+			),
+			(
+				r"Stepping on the lizard corpses\, you use some depressions in the wall for support\, "
+				r"push the muddy ceiling apart and climb out of the cave\."
+			)
 		]
 	)
 )
 MOVEMENT_PREVENTED_REGEX = re.compile(
-	"^{}$".format(
-		"|".join(
+	"^(?:{lines})$".format(
+		lines="|".join(
 			[
 				r"The \w+ seem[s]? to be closed\.",
 				r"It seems to be locked\.",
@@ -74,20 +101,32 @@ MOVEMENT_PREVENTED_REGEX = re.compile(
 				r"You don\'t control your mount\!",
 				r"Your mount is too sensible to attempt such a feat\.",
 				r"Oops\! You cannot go there riding\!",
-				r"A (?:pony|dales-pony|horse|warhorse|pack horse|trained horse|horse of the Rohirrim|brown donkey|mountain mule|hungry warg|brown wolf)(?: \(\w+\))? (?:is too exhausted|doesn't want you riding (?:him|her|it) anymore)\.",
 				r"You\'d better be swimming if you want to dive underwater\.",
 				r"You need to climb to go there\.",
 				r"You cannot climb there\.",
 				r"If you still want to try\, you must \'climb\' there\.",
-				r".+ (?:prevents|keeps) you from going (?:north|south|east|west|up|down|upstairs|downstairs|past (?:him|her|it))\.",
 				r"Nah\.\.\. You feel too relaxed to do that\.",
 				r"Maybe you should get on your feet first\?",
-				r"Not from your present position\!"
+				r"Not from your present position\!",
+				(
+					r".+ (?:prevents|keeps) you from going "
+					r"(?:north|south|east|west|up|down|upstairs|downstairs|past (?:him|her|it))\."
+				),
+				(
+					r"A (?:pony|dales-pony|horse|warhorse|pack horse|trained horse|"
+					r"horse of the Rohirrim|brown donkey|mountain mule|hungry warg|brown wolf)"
+					r"(?: \(\w+\))? (?:is too exhausted|doesn't want you riding (?:him|her|it) anymore)\."
+				)
 			]
 		)
 	)
 )
-PROMPT_REGEX = re.compile(r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=<]?)(?P<weather>[*'\"~=-]{0,2})\s*(?P<movementFlags>[RrSsCcW]{0,4})[^\>]*\>$")
+PROMPT_REGEX = re.compile(
+	(
+		r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=<]?)"
+		r"(?P<weather>[*'\"~=-]{0,2})\s*(?P<movementFlags>[RrSsCcW]{0,4})[^\>]*\>$"
+	)
+)
 USER_DATA = 0
 MUD_DATA = 1
 
@@ -123,19 +162,40 @@ class Mapper(threading.Thread, World):
 	def clientSend(self, msg, showPrompt=True):
 		if self._outputFormat == "raw":
 			if showPrompt and self.lastPrompt and not self.gagPrompts:
-				self._client.sendall("{}\r\n<prompt>{}</prompt>".format(escapeXML(msg), escapeXML(self.lastPrompt)).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
+				self._client.sendall(
+					"{msg}\r\n<prompt>{prompt}</prompt>".format(
+						msg=escapeXML(msg),
+						prompt=escapeXML(self.lastPrompt)
+					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
+				)
 			else:
-				self._client.sendall("\r\n{}\r\n".format(escapeXML(msg)).encode("utf-8").replace(IAC, IAC + IAC))
+				self._client.sendall(
+					"\r\n{msg}\r\n".format(msg=escapeXML(msg)).encode("utf-8").replace(IAC, IAC + IAC)
+				)
 		elif self._outputFormat == "tintin":
 			if showPrompt and self.lastPrompt and not self.gagPrompts:
-				self._client.sendall("{}\r\nPROMPT:{}:PROMPT".format(msg, self.lastPrompt).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
+				self._client.sendall(
+					"{msg}\r\nPROMPT:{prompt}:PROMPT".format(
+						msg=msg,
+						prompt=self.lastPrompt
+					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
+				)
 			else:
-				self._client.sendall("\r\n{}\r\n".format(msg).encode("utf-8").replace(IAC, IAC + IAC))
+				self._client.sendall(
+					"\r\n{msg}\r\n".format(msg=msg).encode("utf-8").replace(IAC, IAC + IAC)
+				)
 		else:
 			if showPrompt and self.lastPrompt and not self.gagPrompts:
-				self._client.sendall("{}\r\n{}".format(msg, self.lastPrompt).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator)
+				self._client.sendall(
+					"{msg}\r\n{prompt}".format(
+						msg=msg,
+						prompt=self.lastPrompt
+					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
+				)
 			else:
-				self._client.sendall("\r\n{}\r\n".format(msg).encode("utf-8").replace(IAC, IAC + IAC))
+				self._client.sendall(
+					"\r\n{msg}\r\n".format(msg=msg).encode("utf-8").replace(IAC, IAC + IAC)
+				)
 		return None
 
 	def serverSend(self, msg):
@@ -160,8 +220,14 @@ class Mapper(threading.Thread, World):
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return self.clientSend("Syntax: 'secretaction [action] [{}]'.".format(" | ".join(DIRECTIONS)))
-		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"])) if matchDict["direction"] else ""
-		door = self.currentRoom.exits[direction].door if direction and direction in self.currentRoom.exits and self.currentRoom.exits[direction].door else "exit"
+		if matchDict["direction"]:
+			direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
+		else:
+			direction = ""
+		if direction and direction in self.currentRoom.exits and self.currentRoom.exits[direction].door:
+			door = self.currentRoom.exits[direction].door
+		else:
+			door = "exit"
 		return self.serverSend(" ".join(item for item in (matchDict["action"], door, direction[0:1]) if item))
 
 	def user_command_automap(self, *args):
@@ -176,7 +242,7 @@ class Mapper(threading.Thread, World):
 			self.autoUpdating = not self.autoUpdating
 		else:
 			self.autoUpdating = args[0].strip().lower() == "on"
-		self.clientSend("Auto Updating Room Names and Descriptions {}.".format("on" if self.autoUpdating else "off"))
+		self.clientSend("Auto update rooms {}.".format("on" if self.autoUpdating else "off"))
 
 	def user_command_automerge(self, *args):
 		if not args or not args[0] or not args[0].strip():
@@ -297,7 +363,11 @@ class Mapper(threading.Thread, World):
 			argString = argString[2:].strip()
 			if not argString:
 				if self.lastPathFindQuery:
-					return self.clientSend("Run target set to '{}'. Use 'run t [rlabel|vnum]' to change it.".format(self.lastPathFindQuery))
+					return self.clientSend(
+						"Run target set to '{}'. Use 'run t [rlabel|vnum]' to change it.".format(
+							self.lastPathFindQuery
+						)
+					)
 				else:
 					return self.clientSend("Please specify a VNum or room label to target.")
 			self.lastPathFindQuery = argString
@@ -401,7 +471,12 @@ class Mapper(threading.Thread, World):
 			elif len(nameVnums) == 1:
 				self.currentRoom = self.rooms[nameVnums[0]]
 				self.isSynced = True
-				self.clientSend("Name-only synced to room {0} with vnum {1}".format(self.currentRoom.name, self.currentRoom.vnum))
+				self.clientSend(
+					"Name-only synced to room {0} with vnum {1}".format(
+						self.currentRoom.name,
+						self.currentRoom.vnum
+					)
+				)
 			else:
 				self.clientSend("More than one room in the database matches current room. Unable to sync.")
 		return self.isSynced
@@ -471,7 +546,10 @@ class Mapper(threading.Thread, World):
 				output.append("Adding exit '{}' to current room.".format(direction))
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
 				if self.autoLinking:
-					vnums = [vnum for vnum, roomObj in self.rooms.items() if self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction) == (roomObj.x, roomObj.y, roomObj.z)]
+					vnums = [
+						vnum for vnum, roomObj in self.rooms.items()
+						if self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction) == (roomObj.x, roomObj.y, roomObj.z)
+					]
 					if len(vnums) == 1 and REVERSE_DIRECTIONS[direction] in self.rooms[vnums[0]].exits and self.rooms[vnums[0]].exits[REVERSE_DIRECTIONS[direction]].to == "undefined":
 						output.append(self.rlink("add {} {}".format(vnums[0], direction)))
 			roomExit = self.currentRoom.exits[direction]
@@ -629,7 +707,10 @@ class Mapper(threading.Thread, World):
 					elif data == "You are already riding." and self.currentRoom.ridable != "ridable":
 						self.clientSend(self.rridable("ridable"))
 			elif event == "name":
-				name = simplified(data) if data not in ("You just see a dense fog around you...", "It is pitch black...") else ""
+				if data not in ("You just see a dense fog around you...", "It is pitch black..."):
+					name = simplified(data)
+				else:
+					name = ""
 			elif event == "description":
 				description = simplified(data)
 			elif event == "dynamic":
@@ -653,10 +734,17 @@ class Mapper(threading.Thread, World):
 					self.clientSend("Error: direction '{0}' not in database. Map no longer synced!".format(movement))
 				elif not self.autoMapping and self.currentRoom.exits[movement].to not in self.rooms:
 					self.isSynced = False
-					self.clientSend("Error: vnum ({0}) in direction ({1}) is not in the database. Map no longer synced!".format(self.currentRoom.exits[movement].to, movement))
+					self.clientSend(
+						"Error: vnum ({}) in direction ({}) is not in the database. "
+						"Map no longer synced!".format(
+							self.currentRoom.exits[movement].to,
+							movement
+						)
+					)
 				else:
 					if self.autoMapping and movement in DIRECTIONS and (movement not in self.currentRoom.exits or self.currentRoom.exits[movement].to not in self.rooms):
-						# Player has moved in a direction that either doesn't exist in the database or links to an invalid vnum (E.G. undefined).
+						# Player has moved in a direction that either doesn't exist in the database
+						# or links to an invalid vnum (E.G. undefined).
 						if self.autoMerging and name and description:
 							duplicateRooms = self.searchRooms(exactMatch=True, name=name, desc=description)
 						else:

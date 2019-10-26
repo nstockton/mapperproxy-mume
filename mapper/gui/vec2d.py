@@ -328,7 +328,8 @@ class Vec2d(object):
 	def get_length_sqrd(self):
 		"""
 		Get the squared length of the vector.
-		It is more efficient to use this method instead of calling get_length() or access .length and then doing an sqrt().
+		It is more efficient to use this method instead of calling get_length()
+		or access .length and then doing an sqrt().
 
 		:return: The squared length
 		"""
@@ -400,7 +401,11 @@ class Vec2d(object):
 	def __set_angle_degrees(self, angle_degrees):
 		self.__setangle(math.radians(angle_degrees))
 
-	angle_degrees = property(get_angle_degrees, __set_angle_degrees, doc="""Gets or sets the angle (in degrees) of a vector""")
+	angle_degrees = property(
+		get_angle_degrees,
+		__set_angle_degrees,
+		doc="""Gets or sets the angle (in degrees) of a vector"""
+	)
 
 	def get_angle_between(self, other):
 		"""

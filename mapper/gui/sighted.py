@@ -155,7 +155,8 @@ class Window(pyglet.window.Window):
 		self.draw_map(currentRoom)
 
 	def on_gui_refresh(self):
-		'''This event is fired when the mapper needs to signal the GUI to clear the visible rooms cache and redraw the map view.'''
+		'''This event is fired when the mapper needs to signal the GUI to clear
+		the visible rooms cache and redraw the map view.'''
 		if self.centerRoom is not None:
 			self.draw_map(self.centerRoom)
 			logger.debug('GUI refreshed.')

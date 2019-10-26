@@ -21,7 +21,10 @@ ESCAPE_XML_STR_ENTITIES = (
 	(">", "&gt;")
 )
 UNESCAPE_XML_STR_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_STR_ENTITIES)
-ESCAPE_XML_BYTES_ENTITIES = tuple((first.encode("us-ascii"), second.encode("us-ascii")) for first, second in ESCAPE_XML_STR_ENTITIES)
+ESCAPE_XML_BYTES_ENTITIES = tuple(
+	(first.encode("us-ascii"), second.encode("us-ascii"))
+	for first, second in ESCAPE_XML_STR_ENTITIES
+)
 UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES)
 
 
@@ -34,7 +37,10 @@ def simplified(data):
 
 
 def touch(name, times=None):
-	"""Touches a file (I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does."""
+	"""
+	Touches a file.
+	I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does.
+	"""
 	with open(name, "a"):
 		os.utime(name, times)
 
@@ -43,7 +49,7 @@ def padList(lst, padding, count, fixed=False, left=False):
 	"""
 	Pad a list with the value of 'padding' so that the list is *at least* 'count' number of items.
 	If 'fixed' is True, the number of items in the returned list will be *restricted* to 'count'.
-	If 'left' is True, the list will be padded at the left (top) of the list, rather than the right (bottom) of the list.
+	If 'left' is True, the list will be padded at the left (top), rather than the right (bottom).
 	"""
 	if left and fixed:
 		return ([padding] * (count - len(lst)) + lst)[:count]
@@ -62,7 +68,13 @@ def round_half_away_from_zero(n, decimals=0):
 
 
 def humanSort(listToSort):
-	return sorted(listToSort, key=lambda item: [int(text) if text.isdigit() else text for text in re.split(r"(\d+)", item, re.UNICODE)])
+	return sorted(
+		listToSort,
+		key=lambda item: [
+			int(text) if text.isdigit() else text
+			for text in re.split(r"(\d+)", item, re.UNICODE)
+		]
+	)
 
 
 def regexFuzzy(data):
@@ -115,7 +127,8 @@ def page(lines):
 	"""Output word wrapped lines using the 'more' shell command if necessary."""
 	lines = "\n".join(lines).splitlines()
 	width, height = terminalsize.get_terminal_size()
-	# Word wrapping to 1 less than the terminal width is necessary to prevent occasional blank lines in the terminal output.
+	# Word wrapping to 1 less than the terminal width is necessary to prevent
+	# occasional blank lines in the terminal output.
 	text = "\n".join(textwrap.fill(line.strip(), width - 1) for line in lines)
 	if text.count("\n") + 1 < height:
 		print(text)
