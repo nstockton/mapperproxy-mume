@@ -866,7 +866,7 @@ class World(object):
 				similarLabels.sort(reverse=True, key=lambda label: fuzz.ratio(label, destination))
 				self.output("Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?")
 				return None
-		destinationRoom = self.rooms[destinationVnum]
+		destinationRoom = destinationVnum in self.rooms and self.rooms[destinationVnum]
 		if not origin or not destinationRoom:
 			self.output("Error: Invalid origin or destination.")
 			return None
