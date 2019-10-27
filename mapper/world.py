@@ -13,6 +13,7 @@ except ImportError:
 	from queue import Queue
 import re
 import threading
+from difflib import SequenceMatcher
 
 from . import roomdata
 from .utils import regexFuzzy
@@ -859,7 +860,9 @@ class World(object):
 			if destination and destination in self.labels:
 				destinationVnum = self.labels[destination]
 			else:
-				self.output("Unknown label")
+				similarLabels = list(self.labels)
+				similarLabels.sort(reverse=True, key=lambda label: SequenceMatcher(None, label, destination).ratio())
+				self.output("Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?")
 				return None
 		destinationRoom = self.rooms[destinationVnum]
 		if not origin or not destinationRoom:
