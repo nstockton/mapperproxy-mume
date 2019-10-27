@@ -13,7 +13,7 @@ except ImportError:
 	from queue import Queue
 import re
 import threading
-from difflib import SequenceMatcher
+from fuzzywuzzy import fuzz
 
 from . import roomdata
 from .utils import regexFuzzy
@@ -861,7 +861,7 @@ class World(object):
 				destinationVnum = self.labels[destination]
 			else:
 				similarLabels = list(self.labels)
-				similarLabels.sort(reverse=True, key=lambda label: SequenceMatcher(None, label, destination).ratio())
+				similarLabels.sort(reverse=True, key=lambda label: fuzz.ratio(label, destination))
 				self.output("Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?")
 				return None
 		destinationRoom = self.rooms[destinationVnum]
