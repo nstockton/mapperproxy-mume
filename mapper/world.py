@@ -13,6 +13,7 @@ except ImportError:
 	from queue import Queue
 import re
 import threading
+from fuzzywuzzy import fuzz
 
 from . import roomdata
 from .utils import regexFuzzy
@@ -736,6 +737,9 @@ class World(object):
 			self.output("Error: you need to supply a label.")
 			return None
 		label = matchDict["label"]
+		if label.isdecimal():
+			self.output("labels cannot be decimal values.")
+			return None
 		if matchDict["action"] == "add":
 			if not matchDict["vnum"]:
 				vnum = self.currentRoom.vnum
@@ -822,6 +826,7 @@ class World(object):
 				else:
 					speedWalkDirs.append("{0}{1}".format(lenGroup, direction[0]))
 			return speedWalkDirs
+		numDirections = len([d for d in directionsList  if d in DIRECTIONS])
 		result = []
 		directionsBuffer = []
 		while directionsList:
@@ -836,7 +841,7 @@ class World(object):
 		# Process any remaining items in the directions buffer.
 		if directionsBuffer:
 			result.extend(compressDirections(directionsBuffer))
-		return ", ".join(result)
+		return "{} rooms. {}".format(numDirections, ", ".join(result))
 
 	def path(self, *args):
 		if not args or not args[0]:
@@ -856,14 +861,22 @@ class World(object):
 		"""Find the path"""
 		if not origin:
 			origin = self.currentRoom
-		if destination and destination.strip().lower() in self.labels:
-			destination = self.labels[destination.strip().lower()]
-		if destination and destination in self.rooms:
-			destination = self.rooms[destination]
-		if not origin or not destination:
+		destination = destination.strip().lower()
+		try:
+			destinationVnum = str(abs(int(destination)))
+		except ValueError:
+			if destination and destination in self.labels:
+				destinationVnum = self.labels[destination]
+			else:
+				similarLabels = list(self.labels)
+				similarLabels.sort(reverse=True, key=lambda label: fuzz.ratio(label, destination))
+				self.output("Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?")
+				return None
+		destinationRoom = destinationVnum in self.rooms and self.rooms[destinationVnum]
+		if not origin or not destinationRoom:
 			self.output("Error: Invalid origin or destination.")
 			return None
-		if origin is destination:
+		if origin is destinationRoom:
 			self.output("You are already there!")
 			return []
 		if flags:
@@ -871,7 +884,7 @@ class World(object):
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
-		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destination  # NOQA: E731
+		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destinationRoom  # NOQA: E731
 		exitIgnoreFunc = lambda exitObj: exitObj.to in ignoreVnums  # NOQA: E731
 		exitCostFunc = lambda exitObj, neighborRoomObj: (5 if "door" in exitObj.exitFlags or "climb" in exitObj.exitFlags else 0) + (1000 if "avoid" in exitObj.exitFlags else 0) + (10 if neighborRoomObj.terrain in avoidTerrains else 0)  # NOQA: E731
 		exitDestinationFunc = None
