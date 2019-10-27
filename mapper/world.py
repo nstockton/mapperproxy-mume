@@ -851,14 +851,21 @@ class World(object):
 		"""Find the path"""
 		if not origin:
 			origin = self.currentRoom
-		if destination and destination.strip().lower() in self.labels:
-			destination = self.labels[destination.strip().lower()]
-		if destination and destination in self.rooms:
-			destination = self.rooms[destination]
-		if not origin or not destination:
+		destination = destination.strip().lower()
+		try:
+			int(destination)  # just checking if this is an int
+			destinationVnum = destination
+		except ValueError:
+			if destination and destination in self.labels:
+				destinationVnum = self.labels[destination]
+			else:
+				self.output("Unknown label")
+				return None
+		destinationRoom = self.rooms[destinationVnum]
+		if not origin or not destinationRoom:
 			self.output("Error: Invalid origin or destination.")
 			return None
-		if origin is destination:
+		if origin is destinationRoom:
 			self.output("You are already there!")
 			return []
 		if flags:
@@ -866,7 +873,7 @@ class World(object):
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
-		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destination  # NOQA: E731
+		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destinationRoom  # NOQA: E731
 		exitIgnoreFunc = lambda exitObj: exitObj.to in ignoreVnums  # NOQA: E731
 		exitCostFunc = lambda exitObj, neighborRoomObj: (5 if "door" in exitObj.exitFlags or "climb" in exitObj.exitFlags else 0) + (1000 if "avoid" in exitObj.exitFlags else 0) + (10 if neighborRoomObj.terrain in avoidTerrains else 0)  # NOQA: E731
 		exitDestinationFunc = None
