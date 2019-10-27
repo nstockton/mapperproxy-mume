@@ -150,6 +150,8 @@ class Mapper(threading.Thread, World):
 		self.autoLinking = True
 		self.autoWalk = False
 		self.autoWalkDirections = []
+		self.emulationCommands = [func[len("emulation_command_"):] for func in dir(self)
+			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))]
 		self.lastPathFindQuery = ""
 		self.lastPrompt = ""
 		self.clock = Clock()
@@ -201,6 +203,15 @@ class Mapper(threading.Thread, World):
 	def serverSend(self, msg):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
+
+	def user_command_emu(self, *args):
+		self.output("the available emulation commands are: "+", ".join(self.emulationCommands))
+
+	def emulation_command_test(self, *args):
+		pass
+
+	def emulation_command_l(self, *args):
+		pass
 
 	def user_command_gettimer(self, *args):
 		self.clientSend("TIMER:{:d}:TIMER".format(int(default_timer() - self.initTimer)))
