@@ -257,8 +257,13 @@ class Server(threading.Thread):
 							mpiCommand = None
 							mpiLen = None
 							inMPI = False
-				elif byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n") or byte == 36 and mpiCounter == 1 or byte == 35 and mpiCounter == 2:
-					# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E).
+				elif (
+					byte == 126 and mpiCounter == 0 and clientBuffer.endswith(b"\n")  # "~" after a "\n".
+					or byte == 36 and mpiCounter == 1  # "$" after "\n~".
+					or byte == 35 and mpiCounter == 2  # "#" after "\n~$".
+				):
+					# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E),
+					# and the sequence was preceded by a new-line character (\n).
 					mpiCounter += 1
 				elif byte == 69 and mpiCounter == 3:
 					# Byte is the final byte in the 4-byte MPI sequence (~$#E).
@@ -353,7 +358,18 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-def main(outputFormat, interface, promptTerminator, gagPrompts, findFormat, localHost, localPort, remoteHost, remotePort, noSsl):
+def main(
+		outputFormat,
+		interface,
+		promptTerminator,
+		gagPrompts,
+		findFormat,
+		localHost,
+		localPort,
+		remoteHost,
+		remotePort,
+		noSsl
+):
 	outputFormat = outputFormat.strip().lower()
 	interface = interface.strip().lower()
 	if not promptTerminator:

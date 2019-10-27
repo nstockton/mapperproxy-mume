@@ -30,23 +30,47 @@ for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
 	if match is not None:
 		APP_VERSION = match.groups()[0]
-		APP_VERSION_TYPE = match.groups()[1] if match.groups()[2].startswith("0-g") else "_".join(match.groups()[1:])
+		if match.groups()[2].startswith("0-g"):
+			APP_VERSION_TYPE = match.groups()[1]
+		else:
+			APP_VERSION_TYPE = "_".join(match.groups()[1:])
 		found_version = "command line"
 		break
 else:
-	if os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
-		with codecs.open(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "rb", encoding="utf-8") as f:
+	if (
+		os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")))
+		and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")))
+	):
+		with codecs.open(
+			os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")),
+			"rb",
+			encoding="utf-8"
+		) as f:
 			match = VERSION_REGEX.search(f.read(30).strip().lower())
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = match.groups()[1] if match.groups()[2].startswith("0-g") else "_".join(match.groups()[1:])
+				if match.groups()[2].startswith("0-g"):
+					APP_VERSION_TYPE = match.groups()[1]
+				else:
+					APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "version file"
-	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))):
+	elif (
+		os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git")))
+		and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git")))
+	):
 		try:
-			match = VERSION_REGEX.search(subprocess.check_output("git describe --tags --always --long", shell=True).decode("utf-8").strip().lower())
+			match = VERSION_REGEX.search(
+				subprocess.check_output(
+					"git describe --tags --always --long",
+					shell=True
+				).decode("utf-8").strip().lower()
+			)
 			if match is not None:
 				APP_VERSION = match.groups()[0]
-				APP_VERSION_TYPE = match.groups()[1] if match.groups()[2].startswith("0-g") else "_".join(match.groups()[1:])
+				if match.groups()[2].startswith("0-g"):
+					APP_VERSION_TYPE = match.groups()[1]
+				else:
+					APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "latest Git tag"
 		except subprocess.CalledProcessError:
 			pass
@@ -59,8 +83,16 @@ else:
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 APP_VERSION_CSV = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
-APP_DEST = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace("-", "_").replace(" ", "_")))
-VERSION_FILE = os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore"))
+APP_DEST = os.path.normpath(
+	os.path.join(
+		ORIG_DEST,
+		os.pardir,
+		"{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace("-", "_").replace(" ", "_")
+	)
+)
+VERSION_FILE = os.path.normpath(
+	os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore")
+)
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
 excludes = [
@@ -180,21 +212,34 @@ VSVersionInfo(
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
 )
-""".format(name=APP_NAME, version=APP_VERSION, version_type=APP_VERSION_TYPE, version_csv=APP_VERSION_CSV, author=APP_AUTHOR)
+""".format(
+	name=APP_NAME,
+	version=APP_VERSION,
+	version_type=APP_VERSION_TYPE,
+	version_csv=APP_VERSION_CSV,
+	author=APP_AUTHOR
+)
 
 # Remove old dist directory and old version file.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(APP_DEST, ignore_errors=True)
 if os.path.exists(APP_DEST + ".zip") and not os.path.isdir(APP_DEST + ".zip"):
 	os.remove(APP_DEST + ".zip")
-if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
+if (
+	os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
+	and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
+):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(VERSION_FILE, ignore_errors=True)
 
 with codecs.open(VERSION_FILE, "wb", encoding="utf-8") as f:
 	f.write(version_data)
 
-with codecs.open(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "wb", encoding="utf-8") as f:
+with codecs.open(
+	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")),
+	"wb",
+	encoding="utf-8"
+) as f:
 	f.write("version = \"{} V{}-{}\"".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE))
 
 a = Analysis(  # NOQA: F821
@@ -204,7 +249,17 @@ a = Analysis(  # NOQA: F821
 	datas=[],
 	hiddenimports=["uuid"],
 	hookspath=[],
-	runtime_hooks=[os.path.normpath(os.path.join(APP_DEST, os.pardir, "_pyinstaller_hooks", "runtime_hooks", "use_lib.py"))],
+	runtime_hooks=[
+		os.path.normpath(
+			os.path.join(
+				APP_DEST,
+				os.pardir,
+				"_pyinstaller_hooks",
+				"runtime_hooks",
+				"use_lib.py"
+			)
+		)
+	],
 	excludes=excludes,
 	win_no_prefer_redirects=False,
 	win_private_assemblies=False,
@@ -245,15 +300,29 @@ shutil.rmtree(os.path.normpath(os.path.join(APP_DEST, os.pardir, "__pycache__"))
 shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True)  # NOQA: F821
 # The directory above workpath should now be empty.
 # Using os.rmdir to remove it instead of shutil.rmtree for safety.
-os.rmdir(os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir)))  # NOQA: F821
-if os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
+os.rmdir(
+	os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir))  # NOQA: F821
+)
+if (
+	os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
+	and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
+):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
 shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 
 lib_files = [
-	([path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.dll"))) if os.path.basename(path).lower() not in ("python37.dll", "vcruntime140.dll")], "lib"),
-	(glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.pyd"))), "lib")
+	(
+		[
+			path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.dll")))
+			if os.path.basename(path).lower() not in ("python37.dll", "vcruntime140.dll")
+		],
+		"lib"
+	),
+	(
+		glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.pyd"))),
+		"lib"
+	)
 ]
 
 for files, destination in lib_files:
@@ -265,8 +334,17 @@ for files, destination in lib_files:
 			shutil.move(src, dest_dir)
 
 include_files = [
-	([os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")), os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md"))], "."),
-	(glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")), "speech_libs"),
+	(
+		[
+			os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")),
+			os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md"))
+		],
+		"."
+	),
+	(
+		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")),
+		"speech_libs"
+	),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles")
@@ -281,7 +359,14 @@ for files, destination in include_files:
 			shutil.copy(src, dest_dir)
 
 print("Compressing the distribution to {}.zip".format(APP_DEST))
-shutil.make_archive(base_name=APP_DEST, format="zip", root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)), base_dir=os.path.basename(APP_DEST), owner=None, group=None)
+shutil.make_archive(
+	base_name=APP_DEST,
+	format="zip",
+	root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)),
+	base_dir=os.path.basename(APP_DEST),
+	owner=None,
+	group=None
+)
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
