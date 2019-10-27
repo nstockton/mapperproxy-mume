@@ -732,6 +732,9 @@ class World(object):
 			self.output("Error: you need to supply a label.")
 			return None
 		label = matchDict["label"]
+		if label.isdecimal():
+			self.output("labels cannot be decimal values.")
+			return None
 		if matchDict["action"] == "add":
 			if not matchDict["vnum"]:
 				vnum = self.currentRoom.vnum
