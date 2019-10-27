@@ -821,6 +821,7 @@ class World(object):
 				else:
 					speedWalkDirs.append("{0}{1}".format(lenGroup, direction[0]))
 			return speedWalkDirs
+		numDirections = len([d for d in directionsList  if d in DIRECTIONS])
 		result = []
 		directionsBuffer = []
 		while directionsList:
@@ -835,7 +836,7 @@ class World(object):
 		# Process any remaining items in the directions buffer.
 		if directionsBuffer:
 			result.extend(compressDirections(directionsBuffer))
-		return ", ".join(result)
+		return "{} rooms. {}".format(numDirections, ", ".join(result))
 
 	def path(self, *args):
 		if not args or not args[0]:
