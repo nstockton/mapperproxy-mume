@@ -854,8 +854,7 @@ class World(object):
 			origin = self.currentRoom
 		destination = destination.strip().lower()
 		try:
-			int(destination)  # just checking if this is an int
-			destinationVnum = destination
+			destinationVnum = str(abs(int(destination)))
 		except ValueError:
 			if destination and destination in self.labels:
 				destinationVnum = self.labels[destination]
