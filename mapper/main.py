@@ -358,6 +358,23 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
+class MockedSocket():
+	def connect(self, *args):
+		pass
+
+	def getpeercert(*args):
+		return {"subject": [["commonName", "mume.org"]]}
+
+	def shutdown(self, *args):
+		pass
+
+	def close(self, *args):
+		pass
+
+	def sendall(self, *args):
+		pass
+
+
 def main(
 		outputFormat,
 		interface,
@@ -383,6 +400,8 @@ def main(
 		except ImportError:
 			print("Unable to find pyglet. Disabling the GUI")
 			interface = "text"
+
+	# initialise client connection
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -392,16 +411,21 @@ def main(
 	touch(LISTENING_STATUS_FILE)
 	clientConnection, proxyAddress = proxySocket.accept()
 	clientConnection.settimeout(1.0)
-	serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-	serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-	if not noSsl and ssl is not None:
-		serverConnection = ssl.wrap_socket(
-			serverConnection,
-			cert_reqs=ssl.CERT_REQUIRED,
-			ca_certs=certifi.where(),
-			ssl_version=ssl.PROTOCOL_TLS
-		)
+
+	# initialise server connection
+	if emulation:
+		serverConnection = MockedSocket()
+	else:
+		serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+		serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+		if not noSsl and ssl is not None:
+			serverConnection = ssl.wrap_socket(
+				serverConnection,
+				cert_reqs=ssl.CERT_REQUIRED,
+				ca_certs=certifi.where(),
+				ssl_version=ssl.PROTOCOL_TLS
+			)
 	try:
 		serverConnection.connect((remoteHost, remotePort))
 
@@ -444,17 +468,20 @@ def main(
 		interface=interface,
 		promptTerminator=promptTerminator
 	)
-	serverThread.start()
+	if not emulation:
+		serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
 	if interface != "text":
 		pyglet.app.run()
-	serverThread.join()
+	if not emulation:
+		serverThread.join()
 	try:
 		serverConnection.shutdown(socket.SHUT_RDWR)
 	except EnvironmentError:
 		pass
-	mapperThread.queue.put((None, None))
+	if not emulation:
+		mapperThread.queue.put((None, None))
 	mapperThread.join()
 	try:
 		clientConnection.sendall(b"\r\n")
