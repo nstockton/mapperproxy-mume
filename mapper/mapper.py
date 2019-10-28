@@ -493,7 +493,10 @@ class Mapper(threading.Thread, World):
 				undefineds.append(direction)
 			elif exitObj.to == "death":
 				deathTraps.append(direction)
-			elif REVERSE_DIRECTIONS[direction] not in self.rooms[exitObj.to].exits or self.rooms[exitObj.to].exits[REVERSE_DIRECTIONS[direction]].to != self.currentRoom.vnum:
+			elif (
+				REVERSE_DIRECTIONS[direction] not in self.rooms[exitObj.to].exits
+				or self.rooms[exitObj.to].exits[REVERSE_DIRECTIONS[direction]].to != self.currentRoom.vnum
+			):
 				oneWays.append(direction)
 		if doors:
 			self.clientSend("Doors: {}".format(", ".join(doors)), showPrompt=False)
@@ -548,9 +551,18 @@ class Mapper(threading.Thread, World):
 				if self.autoLinking:
 					vnums = [
 						vnum for vnum, roomObj in self.rooms.items()
-						if self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction) == (roomObj.x, roomObj.y, roomObj.z)
+						if (
+							self.coordinatesAddDirection(
+								(self.currentRoom.x, self.currentRoom.y, self.currentRoom.z),
+								direction
+							) == (roomObj.x, roomObj.y, roomObj.z)
+						)
 					]
-					if len(vnums) == 1 and REVERSE_DIRECTIONS[direction] in self.rooms[vnums[0]].exits and self.rooms[vnums[0]].exits[REVERSE_DIRECTIONS[direction]].to == "undefined":
+					if (
+						len(vnums) == 1
+						and REVERSE_DIRECTIONS[direction] in self.rooms[vnums[0]].exits
+						and self.rooms[vnums[0]].exits[REVERSE_DIRECTIONS[direction]].to == "undefined"
+					):
 						output.append(self.rlink("add {} {}".format(vnums[0], direction)))
 			roomExit = self.currentRoom.exits[direction]
 			if door and "door" not in roomExit.exitFlags:
@@ -568,7 +580,11 @@ class Mapper(threading.Thread, World):
 
 	def autoMergeRoom(self, movement, roomObj):
 		output = []
-		if self.autoLinking and REVERSE_DIRECTIONS[movement] in roomObj.exits and roomObj.exits[REVERSE_DIRECTIONS[movement]].to == "undefined":
+		if (
+			self.autoLinking
+			and REVERSE_DIRECTIONS[movement] in roomObj.exits
+			and roomObj.exits[REVERSE_DIRECTIONS[movement]].to == "undefined"
+		):
 			output.append(self.rlink("add {} {}".format(roomObj.vnum, movement)))
 		else:
 			output.append(self.rlink("add oneway {} {}".format(roomObj.vnum, movement)))
@@ -581,7 +597,10 @@ class Mapper(threading.Thread, World):
 		newRoom.name = name
 		newRoom.desc = description
 		newRoom.dynamicDesc = dynamic
-		newRoom.x, newRoom.y, newRoom.z = self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), movement)
+		newRoom.x, newRoom.y, newRoom.z = self.coordinatesAddDirection(
+			(self.currentRoom.x, self.currentRoom.y, self.currentRoom.z),
+			movement
+		)
 		self.rooms[vnum] = newRoom
 		if movement not in self.currentRoom.exits:
 			self.currentRoom.exits[movement] = self.getNewExit(movement)
@@ -650,9 +669,16 @@ class Mapper(threading.Thread, World):
 				if data.startswith("You quietly scout "):
 					scouting = True
 					continue
-				elif data == "Wet, cold and filled with mud you drop down into a dark and moist cave, while you notice the mud above you moving to close the hole you left in the cave ceiling.":
+				elif data == (
+					"Wet, cold and filled with mud you drop down into a dark "
+					"and moist cave, while you notice the mud above you moving "
+					"to close the hole you left in the cave ceiling."
+				):
 					self.sync(vnum="17189")
-				elif data == "The gravel below your feet loosens, shifting slightly.. Suddenly, you lose your balance and crash to the cave floor below.":
+				elif data == (
+					"The gravel below your feet loosens, shifting slightly.. "
+					"Suddenly, you lose your balance and crash to the cave floor below."
+				):
 					self.sync(vnum="15324")
 				elif not timeSynchronized:
 					if timeEvent is None:
@@ -742,7 +768,14 @@ class Mapper(threading.Thread, World):
 						)
 					)
 				else:
-					if self.autoMapping and movement in DIRECTIONS and (movement not in self.currentRoom.exits or self.currentRoom.exits[movement].to not in self.rooms):
+					if (
+						self.autoMapping
+						and movement in DIRECTIONS
+						and (
+							movement not in self.currentRoom.exits
+							or self.currentRoom.exits[movement].to not in self.rooms
+						)
+					):
 						# Player has moved in a direction that either doesn't exist in the database
 						# or links to an invalid vnum (E.G. undefined).
 						if self.autoMerging and name and description:
@@ -776,7 +809,10 @@ class Mapper(threading.Thread, World):
 				exits = data
 				if self.autoMapping and self.isSynced and moved:
 					if addedNewRoomFrom and REVERSE_DIRECTIONS[moved] in exits:
-						self.currentRoom.exits[REVERSE_DIRECTIONS[moved]] = self.getNewExit(direction=REVERSE_DIRECTIONS[moved], to=addedNewRoomFrom)
+						self.currentRoom.exits[REVERSE_DIRECTIONS[moved]] = self.getNewExit(
+							direction=REVERSE_DIRECTIONS[moved],
+							to=addedNewRoomFrom
+						)
 					self.updateExitFlags(exits)
 				addedNewRoomFrom = None
 		# end while, mapper thread ending.
