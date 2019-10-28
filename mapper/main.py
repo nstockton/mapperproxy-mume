@@ -361,6 +361,7 @@ class Server(threading.Thread):
 def main(
 		outputFormat,
 		interface,
+		emulation,
 		promptTerminator,
 		gagPrompts,
 		findFormat,
