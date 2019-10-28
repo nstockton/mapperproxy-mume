@@ -204,6 +204,12 @@ class Mapper(threading.Thread, World):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
 
+	def emulation_command_l(self, *args):
+		self.output(self.emulationRoom.name)
+		self.output(self.emulationRoom.dynamicDesc)
+		if self.emulationRoom.note:
+			self.output("Note: {0}".format(self.emulationRoom.note))
+
 	def user_command_emu(self, *args):
 		command = args[0].split(" ")[0]
 		if command in self.emulationCommands:
@@ -215,9 +221,6 @@ class Mapper(threading.Thread, World):
 
 	def emulation_command_test(self, *args):
 		self.output("emulating test")
-
-	def emulation_command_l(self, *args):
-		self.output("emulating look")
 
 	def user_command_gettimer(self, *args):
 		self.clientSend("TIMER:{:d}:TIMER".format(int(default_timer() - self.initTimer)))

@@ -183,6 +183,7 @@ class World(object):
 			roomDict.clear()
 			del roomDict
 		self.currentRoom = self.rooms["0"]
+		self.emulationRoom = self.rooms["0"]
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
