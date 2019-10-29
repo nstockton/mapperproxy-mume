@@ -938,6 +938,16 @@ class World(object):
 		return results
 
 	def getRoomFromLabel(self, label):
+		"""Takes a single argument, and returns a tuple of length 2.
+		If successful, the first element returned is a room object, and the second element is none.
+		Otherwise, the first element returned is None, and the second element is a human-readable error message.
+		If the given argument is a room object, it is returned as is.
+		If the given argument is a room vnum corresponding to an extant room, the corresponding room is returned.
+		If the given argument is the label of a room, that room is returned.
+		Otherwise, None is returned with a helpful error message for the user.
+		"""
+		if isinstance(label, roomdata.objects.Room):
+			return label, None
 		label = label.strip().lower()
 		if not label:
 			return None, "No label or room vnum specified."
