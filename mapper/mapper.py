@@ -132,7 +132,7 @@ MUD_DATA = 1
 
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat, emulation=False):
+	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat, isEmulatingOffline=False):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
 		# Initialize the timer.
@@ -143,7 +143,7 @@ class Mapper(threading.Thread, World):
 		self._promptTerminator = promptTerminator
 		self.gagPrompts = gagPrompts
 		self.findFormat = findFormat
-		self.emulation = emulation
+		self.isEmulatingOffline = isEmulatingOffline
 		self.queue = Queue()
 		self.autoMapping = False
 		self.autoUpdating = False
@@ -220,7 +220,7 @@ class Mapper(threading.Thread, World):
 		self.emulationRoom = room
 		self.emulation_command_l()
 		self.emulation_command_ex()
-		if self.emulation:
+		if self.isEmulatingOffline:
 			self.currentRoom = self.emulationRoom
 		if isJump:
 			self.lastEmulatedJump = room
@@ -241,7 +241,7 @@ class Mapper(threading.Thread, World):
 	def emulation_command_sync(self, *args):
 		"""When emulating while connected to the mud, syncs the emulated location with the in-game location.
 		When running in offline mode, is equivalent to the return command."""
-		if self.emulation:
+		if self.isEmulatingOffline:
 			self.emulation_command_return()
 		else:
 			self.emulation_command_go(self.currentRoom)
@@ -265,7 +265,7 @@ class Mapper(threading.Thread, World):
 		userArgs = " ".join(inputText[1:])
 		if userCommand in self.emulationCommands:
 			getattr(self, "emulation_command_"+userCommand)(userArgs)
-		elif self.emulation and userCommand in self.userCommands:
+		elif self.isEmulatingOffline and userCommand in self.userCommands:
 			getattr(self, "user_command_"+userCommand)(userArgs)
 		elif userCommand:
 			direction = [direction for direction in DIRECTIONS if direction.startswith(userCommand)]
@@ -704,7 +704,7 @@ class Mapper(threading.Thread, World):
 				break
 			elif dataType == USER_DATA:
 				# The data was a valid mapper command, sent from the user's mud client.
-				if self.emulation:
+				if self.isEmulatingOffline:
 					self.user_command_emu(decodeBytes(data).strip())
 				else:
 					userCommand = data.strip().split()[0]

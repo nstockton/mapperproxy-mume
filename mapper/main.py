@@ -26,13 +26,13 @@ SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABL
 
 
 class Proxy(threading.Thread):
-	def __init__(self, client, server, mapper, emulation=False):
+	def __init__(self, client, server, mapper, isEmulatingOffline=False):
 		threading.Thread.__init__(self)
 		self.name = "Proxy"
 		self._client = client
 		self._server = server
 		self._mapper = mapper
-		self.emulation = emulation
+		self.isEmulatingOffline = isEmulatingOffline
 		self.alive = threading.Event()
 
 	def close(self):
@@ -54,7 +54,7 @@ class Proxy(threading.Thread):
 				continue
 			if not data:
 				self.close()
-			elif self.emulation or data.strip() and data.strip().split()[0] in userCommands:
+			elif self.isEmulatingOffline or data.strip() and data.strip().split()[0] in userCommands:
 				self._mapper.queue.put((USER_DATA, data))
 			else:
 				try:
@@ -379,7 +379,7 @@ class MockedSocket():
 def main(
 		outputFormat,
 		interface,
-		emulation,
+		isEmulatingOffline,
 		promptTerminator,
 		gagPrompts,
 		findFormat,
@@ -414,7 +414,7 @@ def main(
 	clientConnection.settimeout(1.0)
 
 	# initialise server connection
-	if emulation:
+	if isEmulatingOffline:
 		serverConnection = MockedSocket()
 	else:
 		serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -459,9 +459,9 @@ def main(
 		promptTerminator=promptTerminator,
 		gagPrompts=gagPrompts,
 		findFormat=findFormat,
-		emulation=emulation,
+		isEmulatingOffline=isEmulatingOffline,
 	)
-	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread, emulation=emulation)
+	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread, isEmulatingOffline=isEmulatingOffline)
 	serverThread = Server(
 		client=clientConnection,
 		server=serverConnection,
@@ -470,19 +470,19 @@ def main(
 		interface=interface,
 		promptTerminator=promptTerminator
 	)
-	if not emulation:
+	if not isEmulatingOffline:
 		serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
 	if interface != "text":
 		pyglet.app.run()
-	if not emulation:
+	if not isEmulatingOffline:
 		serverThread.join()
 	try:
 		serverConnection.shutdown(socket.SHUT_RDWR)
 	except EnvironmentError:
 		pass
-	if not emulation:
+	if not isEmulatingOffline:
 		mapperThread.queue.put((None, None))
 	mapperThread.join()
 	try:

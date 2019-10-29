@@ -101,7 +101,7 @@ if __name__ == "__main__":
 		mapper.main.main(
 			outputFormat=args.format,
 			interface=args.interface,
-			emulation=args.emulation,
+			isEmulatingOffline=args.emulation,
 			promptTerminator=b"\r\n" if args.prompt_terminator_lf else None,
 			gagPrompts=args.gag_prompts,
 			findFormat=args.find_format,
