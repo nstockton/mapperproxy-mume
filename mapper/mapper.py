@@ -151,6 +151,8 @@ class Mapper(threading.Thread, World):
 		self.autoLinking = True
 		self.autoWalk = False
 		self.autoWalkDirections = []
+		self.userCommands = [func[len("user_command_"):] for func in dir(self)
+			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))]
 		self.emulationCommands = [func[len("emulation_command_"):] for func in dir(self)
 			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))]
 		self.lastPathFindQuery = ""
@@ -218,6 +220,8 @@ class Mapper(threading.Thread, World):
 		self.emulationRoom = room
 		self.emulation_command_l()
 		self.emulation_command_ex()
+		if self.emulation:
+			self.currentRoom = self.emulationRoom
 		if isJump:
 			self.lastEmulatedJump = room
 
@@ -261,6 +265,8 @@ class Mapper(threading.Thread, World):
 		userArgs = " ".join(inputText[1:])
 		if userCommand in self.emulationCommands:
 			getattr(self, "emulation_command_"+userCommand)(userArgs)
+		elif self.emulation and userCommand in self.userCommands:
+			getattr(self, "user_command_"+userCommand)(userArgs)
 		elif userCommand:
 			direction = [direction for direction in DIRECTIONS if direction.startswith(userCommand)]
 			if direction:
