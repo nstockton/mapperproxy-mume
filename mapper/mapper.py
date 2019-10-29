@@ -205,6 +205,10 @@ class Mapper(threading.Thread, World):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
 
+	def emulation_command_ex(self, *args):
+		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
+		self.output("Exits: {}.".format(", ".join(exits)))
+
 	def emulation_command_l(self, *args):
 		self.output(self.emulationRoom.name)
 		self.output(self.emulationRoom.dynamicDesc)
