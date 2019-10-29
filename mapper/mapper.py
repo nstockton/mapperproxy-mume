@@ -234,6 +234,14 @@ class Mapper(threading.Thread, World):
 		else:
 			self.output("Cannot return anywhere until the go command has been used at least once.")
 
+	def emulation_command_sync(self, *args):
+		"""When emulating while connected to the mud, syncs the emulated location with the in-game location.
+		When running in offline mode, is equivalent to the return command."""
+		if self.emulation:
+			self.emulation_command_return()
+		else:
+			self.emulation_command_go(self.currentRoom)
+
 	def emulate_leave(self, direction):
 		"""emulates leaving the room into a neighbouring room"""
 		if direction not in self.emulationRoom.exits:
