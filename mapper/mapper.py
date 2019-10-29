@@ -403,9 +403,11 @@ class Mapper(threading.Thread, World):
 		self.clientSend("\n".join(self.rinfo(*args)))
 
 	def user_command_vnum(self, *args):
+		"""states the vnum of the current room"""
 		self.clientSend("Vnum: {}.".format(self.currentRoom.vnum))
 
 	def user_command_tvnum(self, *args):
+		"""tells a given char the vnum of your room"""
 		if not args or not args[0] or not args[0].strip():
 			self.clientSend("Tell VNum to who?")
 		else:
@@ -497,6 +499,25 @@ class Mapper(threading.Thread, World):
 			self.serverSend("look")
 		else:
 			self.sync(vnum=args[0].strip())
+
+	def user_command_maphelp(self, *args):
+		"""Shows documentation for mapper commands"""
+		helpTexts = [(funcName, getattr(self, "user_command_"+funcName).__doc__)
+			for funcName in self.userCommands]
+		documentedFuncs = [text for text in helpTexts if text[1]]
+		undocumentedFuncs = [text for text in helpTexts if not text[1]]
+		self.output("""
+			Mapper Commands
+			The following commands are used for viewing and editing map data:
+			{}
+
+			Undocumented Commands:
+			{}
+			""".format(
+				"\n".join(["{}: {}".format(*helpText) for helpText in documentedFuncs]),
+				", ".join([helpText[0] for helpText in undocumentedFuncs]),
+			)
+		)
 
 	def walkNextDirection(self):
 		if not self.autoWalkDirections:
