@@ -225,6 +225,24 @@ class Mapper(threading.Thread, World):
 		if isJump:
 			self.lastEmulatedJump = room
 
+	def emulation_command_help(self, *args):
+		"""Shows documentation for mapper's emulation commands"""
+		helpTexts = [(funcName, getattr(self, "emulation_command_"+funcName).__doc__)
+			for funcName in self.emulationCommands]
+		documentedFuncs = [text for text in helpTexts if text[1]]
+		undocumentedFuncs = [text for text in helpTexts if not text[1]]
+		self.output("""
+			The following commands allow you to emulate exploring the map without needing to move in game:
+			{}
+
+			The following commands have no documentation yet.
+			{}
+			""".format(
+				"\n".join(["    {}: {}".format(*helpText) for helpText in documentedFuncs]),
+				", ".join([helpText[0] for helpText in undocumentedFuncs]),
+			)
+		)
+
 	def emulation_command_l(self, *args):
 		self.output(self.emulationRoom.name)
 		self.output(self.emulationRoom.dynamicDesc)
@@ -272,8 +290,7 @@ class Mapper(threading.Thread, World):
 			if direction:
 				self.emulate_leave(direction[0])
 			else:
-				self.output("Invalid emulation command. Options are: {options}, or any direction."\
-					.format(options=", ".join(self.emulationCommands)))
+				self.output("Invalid command. Type 'help' for more help.")
 		else:
 			self.output("What command do you want to emulate?")
 
