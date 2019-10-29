@@ -216,16 +216,15 @@ class Mapper(threading.Thread, World):
 			self.output("Note: {0}".format(self.emulationRoom.note))
 
 	def user_command_emu(self, *args):
-		command = args[0].split(" ")[0]
-		if command in self.emulationCommands:
-			getattr(self, "emulation_command_"+command)()
-		elif command:
+		inputText = args[0].split(" ")
+		userCommand = inputText[0].lower()
+		userArgs = " ".join(inputText[1:])
+		if userCommand in self.emulationCommands:
+			getattr(self, "emulation_command_"+userCommand)(userArgs)
+		elif userCommand:
 			self.output("Invalid emulation command. Options are: "+", ".join(self.emulationCommands))
 		else:
 			self.output("What command do you want to emulate?")
-
-	def emulation_command_test(self, *args):
-		self.output("emulating test")
 
 	def user_command_gettimer(self, *args):
 		self.clientSend("TIMER:{:d}:TIMER".format(int(default_timer() - self.initTimer)))
