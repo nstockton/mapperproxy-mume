@@ -283,8 +283,13 @@ class Mapper(threading.Thread, World):
 		userArgs = " ".join(inputText[1:])
 		if userCommand in self.emulationCommands:
 			getattr(self, "emulation_command_"+userCommand)(userArgs)
-		elif self.isEmulatingOffline and userCommand in self.userCommands:
+		elif userCommand in self.userCommands:
+			# call the user command
+			# first set current room to the emulation room so the user command acts on the emulation room
+			oldRoom = self.currentRoom
+			self.currentRoom = self.emulationRoom
 			getattr(self, "user_command_"+userCommand)(userArgs)
+			self.currentRoom = oldRoom
 		elif userCommand:
 			direction = [direction for direction in DIRECTIONS if direction.startswith(userCommand)]
 			if direction:
