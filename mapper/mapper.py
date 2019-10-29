@@ -209,7 +209,7 @@ class Mapper(threading.Thread, World):
 		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
 		self.output("Exits: {}.".format(", ".join(exits)))
 
-	def emulation_command_go(self, label):
+	def emulation_command_go(self, label, isJump=True):
 		"""mimic the /go command that the ainur use"""
 		room, error = self.getRoomFromLabel(label)
 		if error:
@@ -218,12 +218,21 @@ class Mapper(threading.Thread, World):
 		self.emulationRoom = room
 		self.emulation_command_l()
 		self.emulation_command_ex()
+		if isJump:
+			self.lastEmulatedJump = room
 
 	def emulation_command_l(self, *args):
 		self.output(self.emulationRoom.name)
 		self.output(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
 			self.output("Note: {0}".format(self.emulationRoom.note))
+
+	def emulation_command_return(self, *args):
+		"""returns to the last room jumped to with the go command"""
+		if self.lastEmulatedJump:
+			self.emulation_command_go(self.lastEmulatedJump)
+		else:
+			self.output("Cannot return anywhere until the go command has been used at least once.")
 
 	def emulate_leave(self, direction):
 		"""emulates leaving the room into a neighbouring room"""
@@ -236,7 +245,7 @@ class Mapper(threading.Thread, World):
 		elif "undefined" == room:
 			self.output("undefined")
 		else:
-			self.emulation_command_go(room)
+			self.emulation_command_go(room, isJump=False)
 
 	def user_command_emu(self, *args):
 		inputText = args[0].split(" ")

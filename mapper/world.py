@@ -184,6 +184,7 @@ class World(object):
 			del roomDict
 		self.currentRoom = self.rooms["0"]
 		self.emulationRoom = self.rooms["0"]
+		self.lastEmulatedJump = None
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
