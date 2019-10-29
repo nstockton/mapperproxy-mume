@@ -209,6 +209,16 @@ class Mapper(threading.Thread, World):
 		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
 		self.output("Exits: {}.".format(", ".join(exits)))
 
+	def emulation_command_go(self, label):
+		"""mimic the /go command that the ainur use"""
+		room, error = self.getRoomFromLabel(label)
+		if error:
+			self.output(error)
+			return
+		self.emulationRoom = room
+		self.emulation_command_l()
+		self.emulation_command_ex()
+
 	def emulation_command_l(self, *args):
 		self.output(self.emulationRoom.name)
 		self.output(self.emulationRoom.dynamicDesc)
