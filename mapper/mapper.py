@@ -225,6 +225,19 @@ class Mapper(threading.Thread, World):
 		if self.emulationRoom.note:
 			self.output("Note: {0}".format(self.emulationRoom.note))
 
+	def emulate_leave(self, direction):
+		"""emulates leaving the room into a neighbouring room"""
+		if direction not in self.emulationRoom.exits:
+			self.output("Alas, you cannot go that way...")
+			return
+		room = self.emulationRoom.exits[direction].to
+		if "death" == room:
+			self.output("deathtrap!")
+		elif "undefined" == room:
+			self.output("undefined")
+		else:
+			self.emulation_command_go(room)
+
 	def user_command_emu(self, *args):
 		inputText = args[0].split(" ")
 		userCommand = inputText[0].lower()
@@ -232,7 +245,12 @@ class Mapper(threading.Thread, World):
 		if userCommand in self.emulationCommands:
 			getattr(self, "emulation_command_"+userCommand)(userArgs)
 		elif userCommand:
-			self.output("Invalid emulation command. Options are: "+", ".join(self.emulationCommands))
+			direction = [direction for direction in DIRECTIONS if direction.startswith(userCommand)]
+			if direction:
+				self.emulate_leave(direction[0])
+			else:
+				self.output("Invalid emulation command. Options are: {options}, or any direction."\
+					.format(options=", ".join(self.emulationCommands)))
 		else:
 			self.output("What command do you want to emulate?")
 
