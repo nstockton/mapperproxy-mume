@@ -132,7 +132,7 @@ MUD_DATA = 1
 
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat):
+	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat, emulation=False):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
 		# Initialize the timer.
@@ -143,6 +143,7 @@ class Mapper(threading.Thread, World):
 		self._promptTerminator = promptTerminator
 		self.gagPrompts = gagPrompts
 		self.findFormat = findFormat
+		self.emulation = emulation
 		self.queue = Queue()
 		self.autoMapping = False
 		self.autoUpdating = False
@@ -649,9 +650,12 @@ class Mapper(threading.Thread, World):
 				break
 			elif dataType == USER_DATA:
 				# The data was a valid mapper command, sent from the user's mud client.
-				userCommand = data.strip().split()[0]
-				args = data[len(userCommand):].strip()
-				getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
+				if self.emulation:
+					self.user_command_emu(decodeBytes(data).strip())
+				else:
+					userCommand = data.strip().split()[0]
+					args = data[len(userCommand):].strip()
+					getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
 				continue
 			# The data was from the mud server.
 			event, data = data
