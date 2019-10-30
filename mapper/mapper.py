@@ -155,6 +155,7 @@ class Mapper(threading.Thread, World):
 			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))]
 		self.emulationCommands = [func[len("emulation_command_"):] for func in dir(self)
 			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))]
+		self.isEmulatingBriefMode = True
 		self.lastPathFindQuery = ""
 		self.lastPrompt = ""
 		self.clock = Clock()
@@ -207,6 +208,11 @@ class Mapper(threading.Thread, World):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
 
+	def emulation_command_brief(self, *args):
+		"""toggles brief mode."""
+		self.isEmulatingBriefMode = False if self.isEmulatingBriefMode else True 
+		self.output("Brief mode {}".format("on" if self.isEmulatingBriefMode else "off"))
+
 	def emulation_command_examine(self, *args):
 		"""shows the room's description."""
 		self.output(self.emulationRoom.desc)
@@ -255,6 +261,8 @@ class Mapper(threading.Thread, World):
 	def emulation_command_look(self, *args):
 		"""looks at the room."""
 		self.output(self.emulationRoom.name)
+		if not self.isEmulatingBriefMode:
+			self.output(self.emulationRoom.desc)
 		self.output(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
 			self.output("Note: {0}".format(self.emulationRoom.note))
