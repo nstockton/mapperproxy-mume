@@ -185,6 +185,7 @@ class Mapper(threading.Thread, World):
 			)
 		)
 		self.isEmulatingBriefMode: bool = True
+		self.isEmulatingDynamicDescs: bool = True
 		self.lastPathFindQuery: str = ""
 		self.prompt: str = ""
 		self.clock: Clock = Clock()
@@ -300,6 +301,11 @@ class Mapper(threading.Thread, World):
 		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
 		self.output(f"Brief mode {'on' if self.isEmulatingBriefMode else 'off'}")
 
+	def emulation_command_dynamic(self, *args: str) -> None:
+		"""toggles automatic speaking of dynamic descs."""
+		self.isEmulatingDynamicDescs = not self.isEmulatingDynamicDescs
+		self.sendPlayer("dynamic descs {}".format("on" if self.isEmulatingDynamicDescs else "off"))
+
 	def emulation_command_examine(self, *args: str) -> None:
 		"""shows the room's description."""
 		self.output(self.emulationRoom.desc)
@@ -358,7 +364,8 @@ class Mapper(threading.Thread, World):
 		self.output(self.emulationRoom.name)
 		if not self.isEmulatingBriefMode:
 			self.output(self.emulationRoom.desc)
-		self.output(self.emulationRoom.dynamicDesc)
+		if self.isEmulatingDynamicDescs:
+			self.sendPlayer(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
 			self.output(f"Note: {self.emulationRoom.note}")
 
