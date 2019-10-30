@@ -207,7 +207,7 @@ class Mapper(threading.Thread, World):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
 
-	def emulation_command_ex(self, *args):
+	def emulation_command_exits(self, *args):
 		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
 		self.output("Exits: {}.".format(", ".join(exits)))
 
@@ -218,8 +218,8 @@ class Mapper(threading.Thread, World):
 			self.output(error)
 			return
 		self.emulationRoom = room
-		self.emulation_command_l()
-		self.emulation_command_ex()
+		self.emulation_command_look()
+		self.emulation_command_exits()
 		if self.isEmulatingOffline:
 			self.currentRoom = self.emulationRoom
 		if isJump:
@@ -243,7 +243,7 @@ class Mapper(threading.Thread, World):
 			)
 		)
 
-	def emulation_command_l(self, *args):
+	def emulation_command_look(self, *args):
 		self.output(self.emulationRoom.name)
 		self.output(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
@@ -281,9 +281,20 @@ class Mapper(threading.Thread, World):
 		inputText = args[0].split(" ")
 		userCommand = inputText[0].lower()
 		userArgs = " ".join(inputText[1:])
-		if userCommand in self.emulationCommands:
-			getattr(self, "emulation_command_"+userCommand)(userArgs)
-		elif userCommand in self.userCommands:
+		if not userCommand:
+			self.output("What command do you want to emulate?")
+			return
+
+		# get the full name of the user's command
+		for command in DIRECTIONS+self.emulationCommands:
+			if command.startswith(userCommand):
+				if command in DIRECTIONS:
+					self.emulate_leave(command)
+				else:
+					getattr(self, "emulation_command_"+command)(userArgs)
+				return
+
+		if userCommand in self.userCommands:
 			# call the user command
 			# first set current room to the emulation room so the user command acts on the emulation room
 			oldRoom = self.currentRoom
@@ -291,13 +302,7 @@ class Mapper(threading.Thread, World):
 			getattr(self, "user_command_"+userCommand)(userArgs)
 			self.currentRoom = oldRoom
 		elif userCommand:
-			direction = [direction for direction in DIRECTIONS if direction.startswith(userCommand)]
-			if direction:
-				self.emulate_leave(direction[0])
-			else:
-				self.output("Invalid command. Type 'help' for more help.")
-		else:
-			self.output("What command do you want to emulate?")
+			self.output("Invalid command. Type 'help' for more help.")
 
 	def user_command_gettimer(self, *args):
 		self.clientSend("TIMER:{:d}:TIMER".format(int(default_timer() - self.initTimer)))
