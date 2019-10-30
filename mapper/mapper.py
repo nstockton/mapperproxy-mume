@@ -208,11 +208,12 @@ class Mapper(threading.Thread, World):
 		return None
 
 	def emulation_command_exits(self, *args):
+		"""shows the exits in the room."""
 		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
 		self.output("Exits: {}.".format(", ".join(exits)))
 
 	def emulation_command_go(self, label, isJump=True):
-		"""mimic the /go command that the ainur use"""
+		"""mimic the /go command that the ainur use."""
 		room, error = self.getRoomFromLabel(label)
 		if error:
 			self.output(error)
@@ -226,7 +227,7 @@ class Mapper(threading.Thread, World):
 			self.lastEmulatedJump = room
 
 	def emulation_command_help(self, *args):
-		"""Shows documentation for mapper's emulation commands"""
+		"""Shows documentation for mapper's emulation commands."""
 		helpTexts = [(funcName, getattr(self, "emulation_command_"+funcName).__doc__)
 			for funcName in self.emulationCommands]
 		documentedFuncs = [text for text in helpTexts if text[1]]
@@ -234,23 +235,28 @@ class Mapper(threading.Thread, World):
 		self.output("""
 			The following commands allow you to emulate exploring the map without needing to move in game:
 			{}
-
-			The following commands have no documentation yet.
-			{}
 			""".format(
 				"\n".join(["    {}: {}".format(*helpText) for helpText in documentedFuncs]),
-				", ".join([helpText[0] for helpText in undocumentedFuncs]),
 			)
 		)
+		if undocumentedFuncs:
+			self.output("""
+				The following commands have no documentation yet.
+				{}
+				""".format(
+					", ".join([helpText[0] for helpText in undocumentedFuncs]),
+				)
+			)
 
 	def emulation_command_look(self, *args):
+		"""looks at the room."""
 		self.output(self.emulationRoom.name)
 		self.output(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
 			self.output("Note: {0}".format(self.emulationRoom.note))
 
 	def emulation_command_return(self, *args):
-		"""returns to the last room jumped to with the go command"""
+		"""returns to the last room jumped to with the go command."""
 		if self.lastEmulatedJump:
 			self.emulation_command_go(self.lastEmulatedJump)
 		else:
