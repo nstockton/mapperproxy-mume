@@ -207,6 +207,10 @@ class Mapper(threading.Thread, World):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
 
+	def emulation_command_examine(self, *args):
+		"""shows the room's description."""
+		self.output(self.emulationRoom.desc)
+
 	def emulation_command_exits(self, *args):
 		"""shows the exits in the room."""
 		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
