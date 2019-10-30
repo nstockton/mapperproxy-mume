@@ -155,6 +155,14 @@ class Mapper(threading.Thread, World):
 			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))]
 		self.emulationCommands = [func[len("emulation_command_"):] for func in dir(self)
 			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))]
+		priorityCommands = [  # commands that should have priority when matching user input to an emulation command
+			"exits",
+		]
+		self.emulationCommands.sort(key=lambda command:
+			command in priorityCommands and  # if the command has a specified priority, then
+				chr(priorityCommands.index(command))  # sort by its index in the list of priority commands
+				or chr(len(priorityCommands))+command  # else sort alphabetically
+		)
 		self.isEmulatingBriefMode = True
 		self.lastPathFindQuery = ""
 		self.lastPrompt = ""
