@@ -26,12 +26,13 @@ SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABL
 
 
 class Proxy(threading.Thread):
-	def __init__(self, client, server, mapper):
+	def __init__(self, client, server, mapper, isEmulatingOffline=False):
 		threading.Thread.__init__(self)
 		self.name = "Proxy"
 		self._client = client
 		self._server = server
 		self._mapper = mapper
+		self.isEmulatingOffline = isEmulatingOffline
 		self.alive = threading.Event()
 
 	def close(self):
@@ -53,7 +54,7 @@ class Proxy(threading.Thread):
 				continue
 			if not data:
 				self.close()
-			elif data.strip() and data.strip().split()[0] in userCommands:
+			elif self.isEmulatingOffline or data.strip() and data.strip().split()[0] in userCommands:
 				self._mapper.queue.put((USER_DATA, data))
 			else:
 				try:
@@ -358,9 +359,27 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
+class MockedSocket():
+	def connect(self, *args):
+		pass
+
+	def getpeercert(*args):
+		return {"subject": [["commonName", "mume.org"]]}
+
+	def shutdown(self, *args):
+		pass
+
+	def close(self, *args):
+		pass
+
+	def sendall(self, *args):
+		pass
+
+
 def main(
 		outputFormat,
 		interface,
+		isEmulatingOffline,
 		promptTerminator,
 		gagPrompts,
 		findFormat,
@@ -382,6 +401,8 @@ def main(
 		except ImportError:
 			print("Unable to find pyglet. Disabling the GUI")
 			interface = "text"
+
+	# initialise client connection
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -391,16 +412,21 @@ def main(
 	touch(LISTENING_STATUS_FILE)
 	clientConnection, proxyAddress = proxySocket.accept()
 	clientConnection.settimeout(1.0)
-	serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-	serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-	if not noSsl and ssl is not None:
-		serverConnection = ssl.wrap_socket(
-			serverConnection,
-			cert_reqs=ssl.CERT_REQUIRED,
-			ca_certs=certifi.where(),
-			ssl_version=ssl.PROTOCOL_TLS
-		)
+
+	# initialise server connection
+	if isEmulatingOffline:
+		serverConnection = MockedSocket()
+	else:
+		serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+		serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+		if not noSsl and ssl is not None:
+			serverConnection = ssl.wrap_socket(
+				serverConnection,
+				cert_reqs=ssl.CERT_REQUIRED,
+				ca_certs=certifi.where(),
+				ssl_version=ssl.PROTOCOL_TLS
+			)
 	try:
 		serverConnection.connect((remoteHost, remotePort))
 
@@ -432,9 +458,10 @@ def main(
 		interface=interface,
 		promptTerminator=promptTerminator,
 		gagPrompts=gagPrompts,
-		findFormat=findFormat
+		findFormat=findFormat,
+		isEmulatingOffline=isEmulatingOffline,
 	)
-	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread)
+	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread, isEmulatingOffline=isEmulatingOffline)
 	serverThread = Server(
 		client=clientConnection,
 		server=serverConnection,
@@ -443,17 +470,20 @@ def main(
 		interface=interface,
 		promptTerminator=promptTerminator
 	)
-	serverThread.start()
+	if not isEmulatingOffline:
+		serverThread.start()
 	proxyThread.start()
 	mapperThread.start()
 	if interface != "text":
 		pyglet.app.run()
-	serverThread.join()
+	if not isEmulatingOffline:
+		serverThread.join()
 	try:
 		serverConnection.shutdown(socket.SHUT_RDWR)
 	except EnvironmentError:
 		pass
-	mapperThread.queue.put((None, None))
+	if not isEmulatingOffline:
+		mapperThread.queue.put((None, None))
 	mapperThread.join()
 	try:
 		clientConnection.sendall(b"\r\n")

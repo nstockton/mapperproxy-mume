@@ -183,6 +183,8 @@ class World(object):
 			roomDict.clear()
 			del roomDict
 		self.currentRoom = self.rooms["0"]
+		self.emulationRoom = self.rooms["0"]
+		self.lastEmulatedJump = None
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
@@ -859,22 +861,12 @@ class World(object):
 
 	def pathFind(self, origin=None, destination=None, flags=None):
 		"""Find the path"""
+		origin = origin or self.currentRoom
 		if not origin:
-			origin = self.currentRoom
-		destination = destination.strip().lower()
-		try:
-			destinationVnum = str(abs(int(destination)))
-		except ValueError:
-			if destination and destination in self.labels:
-				destinationVnum = self.labels[destination]
-			else:
-				similarLabels = list(self.labels)
-				similarLabels.sort(reverse=True, key=lambda label: fuzz.ratio(label, destination))
-				self.output("Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?")
-				return None
-		destinationRoom = destinationVnum in self.rooms and self.rooms[destinationVnum]
-		if not origin or not destinationRoom:
-			self.output("Error: Invalid origin or destination.")
+			self.output("Error! The mapper has no location. Please use the sync command then try again.")
+		destinationRoom, errorFindingDestination = self.getRoomFromLabel(destination)
+		if errorFindingDestination:
+			self.output(errorFindingDestination)
 			return None
 		if origin is destinationRoom:
 			self.output("You are already there!")
@@ -945,3 +937,35 @@ class World(object):
 			if "door" in currentRoomObj.exits[direction].exitFlags:
 				results.append("open {} {}".format(currentRoomObj.exits[direction].door if currentRoomObj.exits[direction].door else "exit", direction))
 		return results
+
+	def getRoomFromLabel(self, label):
+		"""Takes a single argument, and returns a tuple of length 2.
+		If successful, the first element returned is a room object, and the second element is none.
+		Otherwise, the first element returned is None, and the second element is a human-readable error message.
+		If the given argument is a room object, it is returned as is.
+		If the given argument is a room vnum corresponding to an extant room, the corresponding room is returned.
+		If the given argument is the label of a room, that room is returned.
+		Otherwise, None is returned with a helpful error message for the user.
+		"""
+		if isinstance(label, roomdata.objects.Room):
+			return label, None
+		label = label.strip().lower()
+		if not label:
+			return None, "No label or room vnum specified."
+		elif label.isdecimal():
+			vnum = label
+			if vnum in self.rooms:
+				return self.rooms[vnum], None
+			else:
+				return None, "No room with vnum "+vnum
+		elif label in self.labels:
+			vnum = self.labels[label]
+			if vnum in self.rooms:
+				return self.rooms[vnum], None
+			else:
+				return None, "{label} is set to vnum {vnum}, but there is no room with that vnum"\
+					.format(label=label, vnum=vnum)
+		else:  # The label is neither a vnum nor an existing label
+			similarLabels = list(self.labels)
+			similarLabels.sort(reverse=True, key=lambda l: fuzz.ratio(l, label))
+			return None, "Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?"
