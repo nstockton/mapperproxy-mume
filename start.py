@@ -96,7 +96,6 @@ if __name__ == "__main__":
 		default="{vnum}, {name}, {attribute}"
 	)
 	args = parser.parse_args()
-
 	try:
 		mapper.main.main(
 			outputFormat=args.format,

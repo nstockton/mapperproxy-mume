@@ -957,14 +957,16 @@ class World(object):
 			if vnum in self.rooms:
 				return self.rooms[vnum], None
 			else:
-				return None, "No room with vnum "+vnum
+				return None, "No room with vnum " + vnum
 		elif label in self.labels:
 			vnum = self.labels[label]
 			if vnum in self.rooms:
 				return self.rooms[vnum], None
 			else:
-				return None, "{label} is set to vnum {vnum}, but there is no room with that vnum"\
-					.format(label=label, vnum=vnum)
+				return None, "{label} is set to vnum {vnum}, but there is no room with that vnum".format(
+					label=label,
+					vnum=vnum
+				)
 		else:  # The label is neither a vnum nor an existing label
 			similarLabels = list(self.labels)
 			similarLabels.sort(reverse=True, key=lambda l: fuzz.ratio(l, label))

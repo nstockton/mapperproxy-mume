@@ -9,6 +9,7 @@ except ImportError:
 	from queue import Queue
 import re
 from telnetlib import IAC
+import textwrap
 import threading
 from timeit import default_timer
 
@@ -33,7 +34,7 @@ from .world import (
 	RUN_DESTINATION_REGEX,
 	World
 )
-from .utils import stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
+from .utils import formatDocString, stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
 
 
 EXIT_TAGS_REGEX = re.compile(
@@ -132,7 +133,17 @@ MUD_DATA = 1
 
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat, isEmulatingOffline=False):
+	def __init__(
+			self,
+			client,
+			server,
+			outputFormat,
+			interface,
+			promptTerminator,
+			gagPrompts,
+			findFormat,
+			isEmulatingOffline
+	):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
 		# Initialize the timer.
@@ -151,17 +162,23 @@ class Mapper(threading.Thread, World):
 		self.autoLinking = True
 		self.autoWalk = False
 		self.autoWalkDirections = []
-		self.userCommands = [func[len("user_command_"):] for func in dir(self)
-			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))]
-		self.emulationCommands = [func[len("emulation_command_"):] for func in dir(self)
-			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))]
-		priorityCommands = [  # commands that should have priority when matching user input to an emulation command
-			"exits",
+		self.userCommands = [
+			func[len("user_command_"):] for func in dir(self)
+			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))
 		]
-		self.emulationCommands.sort(key=lambda command:
-			command in priorityCommands and  # if the command has a specified priority, then
-				chr(priorityCommands.index(command))  # sort by its index in the list of priority commands
-				or chr(len(priorityCommands))+command  # else sort alphabetically
+		self.emulationCommands = [
+			func[len("emulation_command_"):] for func in dir(self)
+			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))
+		]
+		priorityCommands = [  # commands that should have priority when matching user input to an emulation command
+			"exits"
+		]
+		self.emulationCommands.sort(
+			key=lambda command: (
+				# Sort emulation commands with prioritized commands at the top, alphabetically otherwise.
+				priorityCommands.index(command) if command in priorityCommands else len(priorityCommands),
+				command
+			)
 		)
 		self.isEmulatingBriefMode = True
 		self.lastPathFindQuery = ""
@@ -218,7 +235,7 @@ class Mapper(threading.Thread, World):
 
 	def emulation_command_brief(self, *args):
 		"""toggles brief mode."""
-		self.isEmulatingBriefMode = False if self.isEmulatingBriefMode else True 
+		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
 		self.output("Brief mode {}".format("on" if self.isEmulatingBriefMode else "off"))
 
 	def emulation_command_examine(self, *args):
@@ -246,25 +263,30 @@ class Mapper(threading.Thread, World):
 
 	def emulation_command_help(self, *args):
 		"""Shows documentation for mapper's emulation commands."""
-		helpTexts = [(funcName, getattr(self, "emulation_command_"+funcName).__doc__)
-			for funcName in self.emulationCommands]
-		documentedFuncs = [text for text in helpTexts if text[1]]
-		undocumentedFuncs = [text for text in helpTexts if not text[1]]
-		self.output("""
-			The following commands allow you to emulate exploring the map without needing to move in game:
-			{}
-			""".format(
-				"\n".join(["    {}: {}".format(*helpText) for helpText in documentedFuncs]),
-			)
-		)
+		helpTexts = [
+			(funcName, getattr(self, "emulation_command_" + funcName).__doc__)
+			for funcName in self.emulationCommands
+		]
+		documentedFuncs = [
+			(name, formatDocString(docString, prefix=" " * 8).strip()) for name, docString in helpTexts
+			if docString.strip()
+		]
+		undocumentedFuncs = [text for text in helpTexts if not text[1].strip()]
+		result = [
+			"The following commands allow you to emulate exploring the map without needing to move in game:",
+			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs)
+		]
 		if undocumentedFuncs:
-			self.output("""
-				The following commands have no documentation yet.
-				{}
-				""".format(
-					", ".join([helpText[0] for helpText in undocumentedFuncs]),
+			result.append("The following commands have no documentation yet.")
+			result.append(
+				textwrap.indent(
+					"\n".join(
+						textwrap.wrap(", ".join(helpText[0] for helpText in undocumentedFuncs), width=79)
+					),
+					prefix="    "
 				)
 			)
+		self.output("\n".join(result))
 
 	def emulation_command_look(self, *args):
 		"""looks at the room."""
@@ -273,7 +295,7 @@ class Mapper(threading.Thread, World):
 			self.output(self.emulationRoom.desc)
 		self.output(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
-			self.output("Note: {0}".format(self.emulationRoom.note))
+			self.output("Note: {}".format(self.emulationRoom.note))
 
 	def emulation_command_return(self, *args):
 		"""returns to the last room jumped to with the go command."""
@@ -283,8 +305,10 @@ class Mapper(threading.Thread, World):
 			self.output("Cannot return anywhere until the go command has been used at least once.")
 
 	def emulation_command_sync(self, *args):
-		"""When emulating while connected to the mud, syncs the emulated location with the in-game location.
-		When running in offline mode, is equivalent to the return command."""
+		"""
+		When emulating while connected to the mud, syncs the emulated location with the in-game location.
+		When running in offline mode, is equivalent to the return command.
+		"""
 		if self.isEmulatingOffline:
 			self.emulation_command_return()
 		else:
@@ -310,22 +334,20 @@ class Mapper(threading.Thread, World):
 		if not userCommand:
 			self.output("What command do you want to emulate?")
 			return
-
 		# get the full name of the user's command
-		for command in DIRECTIONS+self.emulationCommands:
+		for command in DIRECTIONS + self.emulationCommands:
 			if command.startswith(userCommand):
 				if command in DIRECTIONS:
 					self.emulate_leave(command)
 				else:
-					getattr(self, "emulation_command_"+command)(userArgs)
+					getattr(self, "emulation_command_" + command)(userArgs)
 				return
-
 		if userCommand in self.userCommands:
 			# call the user command
 			# first set current room to the emulation room so the user command acts on the emulation room
 			oldRoom = self.currentRoom
 			self.currentRoom = self.emulationRoom
-			getattr(self, "user_command_"+userCommand)(userArgs)
+			getattr(self, "user_command_" + userCommand)(userArgs)
 			self.currentRoom = oldRoom
 		elif userCommand:
 			self.output("Invalid command. Type 'help' for more help.")
@@ -555,22 +577,31 @@ class Mapper(threading.Thread, World):
 
 	def user_command_maphelp(self, *args):
 		"""Shows documentation for mapper commands"""
-		helpTexts = [(funcName, getattr(self, "user_command_"+funcName).__doc__)
-			for funcName in self.userCommands]
-		documentedFuncs = [text for text in helpTexts if text[1]]
-		undocumentedFuncs = [text for text in helpTexts if not text[1]]
-		self.output("""
-			Mapper Commands
-			The following commands are used for viewing and editing map data:
-			{}
-
-			Undocumented Commands:
-			{}
-			""".format(
-				"\n".join(["{}: {}".format(*helpText) for helpText in documentedFuncs]),
-				", ".join([helpText[0] for helpText in undocumentedFuncs]),
+		helpTexts = [
+			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "")
+			for funcName in self.userCommands
+		]
+		documentedFuncs = [
+			(name, formatDocString(docString, prefix=" " * 8).strip()) for name, docString in helpTexts
+			if docString.strip()
+		]
+		undocumentedFuncs = [text for text in helpTexts if not text[1].strip()]
+		result = [
+			"Mapper Commands",
+			"The following commands are used for viewing and editing map data:",
+			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs)
+		]
+		if undocumentedFuncs:
+			result.append("Undocumented Commands:")
+			result.append(
+				textwrap.indent(
+					"\n".join(
+						textwrap.wrap(", ".join(helpText[0] for helpText in undocumentedFuncs), width=79)
+					),
+					prefix="    "
+				)
 			)
-		)
+		self.output("\n".join(result))
 
 	def walkNextDirection(self):
 		if not self.autoWalkDirections:

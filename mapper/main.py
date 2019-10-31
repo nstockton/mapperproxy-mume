@@ -26,7 +26,7 @@ SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABL
 
 
 class Proxy(threading.Thread):
-	def __init__(self, client, server, mapper, isEmulatingOffline=False):
+	def __init__(self, client, server, mapper, isEmulatingOffline):
 		threading.Thread.__init__(self)
 		self.name = "Proxy"
 		self._client = client
@@ -359,7 +359,7 @@ class Server(threading.Thread):
 			mpiThread.join()
 
 
-class MockedSocket():
+class MockedSocket(object):
 	def connect(self, *args):
 		pass
 
@@ -401,7 +401,6 @@ def main(
 		except ImportError:
 			print("Unable to find pyglet. Disabling the GUI")
 			interface = "text"
-
 	# initialise client connection
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
@@ -412,7 +411,6 @@ def main(
 	touch(LISTENING_STATUS_FILE)
 	clientConnection, proxyAddress = proxySocket.accept()
 	clientConnection.settimeout(1.0)
-
 	# initialise server connection
 	if isEmulatingOffline:
 		serverConnection = MockedSocket()
@@ -461,7 +459,12 @@ def main(
 		findFormat=findFormat,
 		isEmulatingOffline=isEmulatingOffline,
 	)
-	proxyThread = Proxy(client=clientConnection, server=serverConnection, mapper=mapperThread, isEmulatingOffline=isEmulatingOffline)
+	proxyThread = Proxy(
+		client=clientConnection,
+		server=serverConnection,
+		mapper=mapperThread,
+		isEmulatingOffline=isEmulatingOffline
+	)
 	serverThread = Server(
 		client=clientConnection,
 		server=serverConnection,
