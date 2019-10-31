@@ -9,6 +9,7 @@ except ImportError:
 	from queue import Queue
 import re
 from telnetlib import IAC
+import textwrap
 import threading
 from timeit import default_timer
 
@@ -33,7 +34,7 @@ from .world import (
 	RUN_DESTINATION_REGEX,
 	World
 )
-from .utils import stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
+from .utils import formatDocString, stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, unescapeXML
 
 
 EXIT_TAGS_REGEX = re.compile(
@@ -132,7 +133,17 @@ MUD_DATA = 1
 
 
 class Mapper(threading.Thread, World):
-	def __init__(self, client, server, outputFormat, interface, promptTerminator, gagPrompts, findFormat):
+	def __init__(
+			self,
+			client,
+			server,
+			outputFormat,
+			interface,
+			promptTerminator,
+			gagPrompts,
+			findFormat,
+			isEmulatingOffline
+	):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
 		# Initialize the timer.
@@ -143,6 +154,7 @@ class Mapper(threading.Thread, World):
 		self._promptTerminator = promptTerminator
 		self.gagPrompts = gagPrompts
 		self.findFormat = findFormat
+		self.isEmulatingOffline = isEmulatingOffline
 		self.queue = Queue()
 		self.autoMapping = False
 		self.autoUpdating = False
@@ -150,6 +162,25 @@ class Mapper(threading.Thread, World):
 		self.autoLinking = True
 		self.autoWalk = False
 		self.autoWalkDirections = []
+		self.userCommands = [
+			func[len("user_command_"):] for func in dir(self)
+			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))
+		]
+		self.emulationCommands = [
+			func[len("emulation_command_"):] for func in dir(self)
+			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))
+		]
+		priorityCommands = [  # commands that should have priority when matching user input to an emulation command
+			"exits"
+		]
+		self.emulationCommands.sort(
+			key=lambda command: (
+				# Sort emulation commands with prioritized commands at the top, alphabetically otherwise.
+				priorityCommands.index(command) if command in priorityCommands else len(priorityCommands),
+				command
+			)
+		)
+		self.isEmulatingBriefMode = True
 		self.lastPathFindQuery = ""
 		self.lastPrompt = ""
 		self.clock = Clock()
@@ -201,6 +232,125 @@ class Mapper(threading.Thread, World):
 	def serverSend(self, msg):
 		self._server.sendall(msg.encode("utf-8").replace(IAC, IAC + IAC) + b"\r\n")
 		return None
+
+	def emulation_command_brief(self, *args):
+		"""toggles brief mode."""
+		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
+		self.output("Brief mode {}".format("on" if self.isEmulatingBriefMode else "off"))
+
+	def emulation_command_examine(self, *args):
+		"""shows the room's description."""
+		self.output(self.emulationRoom.desc)
+
+	def emulation_command_exits(self, *args):
+		"""shows the exits in the room."""
+		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
+		self.output("Exits: {}.".format(", ".join(exits)))
+
+	def emulation_command_go(self, label, isJump=True):
+		"""mimic the /go command that the ainur use."""
+		room, error = self.getRoomFromLabel(label)
+		if error:
+			self.output(error)
+			return
+		self.emulationRoom = room
+		self.emulation_command_look()
+		self.emulation_command_exits()
+		if self.isEmulatingOffline:
+			self.currentRoom = self.emulationRoom
+		if isJump:
+			self.lastEmulatedJump = room
+
+	def emulation_command_help(self, *args):
+		"""Shows documentation for mapper's emulation commands."""
+		helpTexts = [
+			(funcName, getattr(self, "emulation_command_" + funcName).__doc__)
+			for funcName in self.emulationCommands
+		]
+		documentedFuncs = [
+			(name, formatDocString(docString, prefix=" " * 8).strip()) for name, docString in helpTexts
+			if docString.strip()
+		]
+		undocumentedFuncs = [text for text in helpTexts if not text[1].strip()]
+		result = [
+			"The following commands allow you to emulate exploring the map without needing to move in game:",
+			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs)
+		]
+		if undocumentedFuncs:
+			result.append("The following commands have no documentation yet.")
+			result.append(
+				textwrap.indent(
+					"\n".join(
+						textwrap.wrap(", ".join(helpText[0] for helpText in undocumentedFuncs), width=79)
+					),
+					prefix="    "
+				)
+			)
+		self.output("\n".join(result))
+
+	def emulation_command_look(self, *args):
+		"""looks at the room."""
+		self.output(self.emulationRoom.name)
+		if not self.isEmulatingBriefMode:
+			self.output(self.emulationRoom.desc)
+		self.output(self.emulationRoom.dynamicDesc)
+		if self.emulationRoom.note:
+			self.output("Note: {}".format(self.emulationRoom.note))
+
+	def emulation_command_return(self, *args):
+		"""returns to the last room jumped to with the go command."""
+		if self.lastEmulatedJump:
+			self.emulation_command_go(self.lastEmulatedJump)
+		else:
+			self.output("Cannot return anywhere until the go command has been used at least once.")
+
+	def emulation_command_sync(self, *args):
+		"""
+		When emulating while connected to the mud, syncs the emulated location with the in-game location.
+		When running in offline mode, is equivalent to the return command.
+		"""
+		if self.isEmulatingOffline:
+			self.emulation_command_return()
+		else:
+			self.emulation_command_go(self.currentRoom)
+
+	def emulate_leave(self, direction):
+		"""emulates leaving the room into a neighbouring room"""
+		if direction not in self.emulationRoom.exits:
+			self.output("Alas, you cannot go that way...")
+			return
+		room = self.emulationRoom.exits[direction].to
+		if "death" == room:
+			self.output("deathtrap!")
+		elif "undefined" == room:
+			self.output("undefined")
+		else:
+			self.emulation_command_go(room, isJump=False)
+
+	def user_command_emu(self, *args):
+		inputText = args[0].split(" ")
+		userCommand = inputText[0].lower()
+		userArgs = " ".join(inputText[1:])
+		if not userCommand:
+			self.output("What command do you want to emulate?")
+			return
+		# get the full name of the user's command
+		for command in DIRECTIONS + self.emulationCommands:
+			if command.startswith(userCommand):
+				if command in DIRECTIONS:
+					self.emulate_leave(command)
+				else:
+					getattr(self, "emulation_command_" + command)(userArgs)
+				return
+		if userCommand in self.userCommands:
+			# call the user command
+			# first set current room to the emulation room so the user command acts on the emulation room
+			oldRoom = self.currentRoom
+			self.currentRoom = self.emulationRoom
+			getattr(self, "user_command_" + userCommand)(userArgs)
+			self.currentRoom = oldRoom
+		elif userCommand:
+			self.output("Invalid command. Type 'help' for more help.")
 
 	def user_command_gettimer(self, *args):
 		self.clientSend("TIMER:{:d}:TIMER".format(int(default_timer() - self.initTimer)))
@@ -328,9 +478,11 @@ class Mapper(threading.Thread, World):
 		self.clientSend("\n".join(self.rinfo(*args)))
 
 	def user_command_vnum(self, *args):
+		"""states the vnum of the current room"""
 		self.clientSend("Vnum: {}.".format(self.currentRoom.vnum))
 
 	def user_command_tvnum(self, *args):
+		"""tells a given char the vnum of your room"""
 		if not args or not args[0] or not args[0].strip():
 			self.clientSend("Tell VNum to who?")
 		else:
@@ -422,6 +574,34 @@ class Mapper(threading.Thread, World):
 			self.serverSend("look")
 		else:
 			self.sync(vnum=args[0].strip())
+
+	def user_command_maphelp(self, *args):
+		"""Shows documentation for mapper commands"""
+		helpTexts = [
+			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "")
+			for funcName in self.userCommands
+		]
+		documentedFuncs = [
+			(name, formatDocString(docString, prefix=" " * 8).strip()) for name, docString in helpTexts
+			if docString.strip()
+		]
+		undocumentedFuncs = [text for text in helpTexts if not text[1].strip()]
+		result = [
+			"Mapper Commands",
+			"The following commands are used for viewing and editing map data:",
+			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs)
+		]
+		if undocumentedFuncs:
+			result.append("Undocumented Commands:")
+			result.append(
+				textwrap.indent(
+					"\n".join(
+						textwrap.wrap(", ".join(helpText[0] for helpText in undocumentedFuncs), width=79)
+					),
+					prefix="    "
+				)
+			)
+		self.output("\n".join(result))
 
 	def walkNextDirection(self):
 		if not self.autoWalkDirections:
@@ -629,9 +809,12 @@ class Mapper(threading.Thread, World):
 				break
 			elif dataType == USER_DATA:
 				# The data was a valid mapper command, sent from the user's mud client.
-				userCommand = data.strip().split()[0]
-				args = data[len(userCommand):].strip()
-				getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
+				if self.isEmulatingOffline:
+					self.user_command_emu(decodeBytes(data).strip())
+				else:
+					userCommand = data.strip().split()[0]
+					args = data[len(userCommand):].strip()
+					getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
 				continue
 			# The data was from the mud server.
 			event, data = data

@@ -28,6 +28,23 @@ ESCAPE_XML_BYTES_ENTITIES = tuple(
 UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES)
 
 
+def formatDocString(func, width=79, prefix=""):
+	"""
+	Format a docstring to be displayed.
+	This function requires that the first non-blank line of the docstring
+	starts with the white space prefix to be stripped from each original
+	line, such as the docstring for this function.
+	"""
+	if callable(func):
+		docString = func.__docstring__ if func.__docstring__ is not None else ""
+	else:
+		docString = func
+	docString = textwrap.dedent(docString)
+	docString = "\n".join(textwrap.wrap(docString, width=width - len(prefix)))
+	docString = textwrap.indent(docString, prefix=prefix)
+	return docString
+
+
 def stripAnsi(data):
 	return ANSI_COLOR_REGEX.sub("", data)
 
