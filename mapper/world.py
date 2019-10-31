@@ -167,8 +167,8 @@ class World(object):
 				newRoom.avoid = roomDict["avoid"]
 			except KeyError:
 				pass
-			newRoom.mobFlags = {flag if flag not in mobFlagReplacements else mobFlagReplacements[flag] for flag in roomDict["mobFlags"]}
-			newRoom.loadFlags = {flag if flag not in loadFlagReplacements else loadFlagReplacements[flag] for flag in roomDict["loadFlags"]}
+			newRoom.mobFlags = {mobFlagReplacements.get(flag, flag) for flag in roomDict["mobFlags"]}
+			newRoom.loadFlags = {loadFlagReplacements.get(flag, flag) for flag in roomDict["loadFlags"]}
 			newRoom.x = roomDict["x"]
 			newRoom.y = roomDict["y"]
 			newRoom.z = roomDict["z"]
@@ -176,7 +176,7 @@ class World(object):
 			for direction, exitDict in roomDict["exits"].items():
 				newExit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.exitFlags = set(exitDict["exitFlags"])
-				newExit.doorFlags = {flag if flag not in doorFlagReplacements else doorFlagReplacements[flag] for flag in exitDict["doorFlags"]}
+				newExit.doorFlags = {doorFlagReplacements.get(flag, flag) for flag in exitDict["doorFlags"]}
 				newExit.door = exitDict["door"]
 				newRoom.exits[direction] = newExit
 			self.rooms[vnum] = newRoom
@@ -248,11 +248,19 @@ class World(object):
 		return newExit
 
 	def sortExits(self, exitsDict):
-		return sorted(exitsDict.items(), key=lambda direction: DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS))
+		return sorted(
+			exitsDict.items(),
+			key=lambda direction: (
+				DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS)
+			)
+		)
 
 	def isBidirectional(self, exitObj):
-		"""Returns True if an exit is bidirectional, False if unidirectional.
-		I.E. True if moving in a given direction then moving back in the direction you just came from would put you back where you started, False otherwise."""
+		"""
+		Returns True if an exit is bidirectional, False if unidirectional.
+		I.E. True if moving in a given direction then moving back in the direction
+		you just came from would put you back where you started, False otherwise.
+		"""
 		try:
 			dest = self.rooms[exitObj.to]
 		except KeyError:
@@ -299,7 +307,12 @@ class World(object):
 			radiusX, radiusY, radiusZ = radius
 		for vnum, obj in self.rooms.items():
 			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
-			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ and obj is not start:
+			if (
+				abs(differenceX) <= radiusX
+				and abs(differenceY) <= radiusY
+				and abs(differenceZ) <= radiusZ
+				and obj is not start
+			):
 				yield(vnum, obj, differenceX, differenceY, differenceZ)
 
 	def getVnum(self, roomObj=None):
@@ -381,8 +394,30 @@ class World(object):
 
 	def searchRooms(self, *args, **kwArgs):
 		exactMatch = bool(kwArgs.get("exactMatch"))
-		validArgs = ("name", "desc", "dynamicDesc", "note", "terrain", "light", "align", "portable", "ridable", "x", "y", "z", "mobFlags", "loadFlags", "exitFlags", "doorFlags", "to", "door")
-		kwArgs = dict((key, value.strip().lower()) for key, value in kwArgs.items() if key.strip() in validArgs and value.strip())
+		validArgs = (
+			"name",
+			"desc",
+			"dynamicDesc",
+			"note",
+			"terrain",
+			"light",
+			"align",
+			"portable",
+			"ridable",
+			"x",
+			"y",
+			"z",
+			"mobFlags",
+			"loadFlags",
+			"exitFlags",
+			"doorFlags",
+			"to",
+			"door"
+		)
+		kwArgs = {
+			key: value.strip().lower() for key, value in kwArgs.items()
+			if key.strip() in validArgs and value.strip()
+		}
 		results = []
 		if not kwArgs:
 			return results
@@ -393,7 +428,10 @@ class World(object):
 					roomData = getattr(roomObj, key, "").strip().lower()
 					if not exactMatch and value in roomData or roomData == value:
 						keysMatched += 1
-				elif key in ("terrain", "light", "align", "portable", "ridable", "x", "y", "z") and getattr(roomObj, key, "").strip().lower() == value:
+				elif (
+					key in ("terrain", "light", "align", "portable", "ridable", "x", "y", "z")
+					and getattr(roomObj, key, "").strip().lower() == value
+				):
 					keysMatched += 1
 				elif key in ("mobFlags", "loadFlags") and getattr(roomObj, key, set()).intersection(value):
 					keysMatched += 1
@@ -415,7 +453,18 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join(findFormat.format(attribute=", ".join(exitDir + ": " + exitObj.door for exitDir, exitObj in roomObj.exits.items() if args[0].strip() in exitObj.door), direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(results[:20]))
+		return "\n".join(
+			findFormat.format(
+				attribute=", ".join(
+					exitDir + ": " + exitObj.door for exitDir, exitObj in roomObj.exits.items()
+					if args[0].strip() in exitObj.door
+				),
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj)
+			) for roomObj in reversed(results[:20])
+		)
 
 	def fdynamic(self, findFormat, *args):
 		if not args or args[0] is None or not args[0].strip():
@@ -425,7 +474,15 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join(findFormat.format(attribute=roomObj.dynamicDesc, direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(results[:20]))
+		return "\n".join(
+			findFormat.format(
+				attribute=roomObj.dynamicDesc,
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj)
+			) for roomObj in reversed(results[:20])
+		)
 
 	def flabel(self, findFormat, *args):
 		if not self.labels:
@@ -434,11 +491,22 @@ class World(object):
 			text = ""
 		else:
 			text = args[0].strip().lower()
-		results = {self.rooms[vnum] for label, vnum in self.labels.items() if text and text in label.strip().lower() or not text}
+		results = {
+			self.rooms[vnum] for label, vnum in self.labels.items()
+			if text and text in label.strip().lower() or not text
+		}
 		if not results:
 			return "Nothing found."
 		currentRoom = self.currentRoom
-		return "\n".join(findFormat.format(attribute=self.getlabel(roomObj.vnum), direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(sorted(results, key=lambda r: r.manhattanDistance(currentRoom))[:20]))
+		return "\n".join(
+			findFormat.format(
+				attribute=self.getlabel(roomObj.vnum),
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj)
+			) for roomObj in reversed(sorted(results, key=lambda r: r.manhattanDistance(currentRoom))[:20])
+		)
 
 	def fname(self, findFormat, *args):
 		if not args or args[0] is None or not args[0].strip():
@@ -448,7 +516,15 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join(findFormat.format(attribute="" if "{name}" in findFormat and "{attribute}" in findFormat else roomObj.name, direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(results[:20]))
+		return "\n".join(
+			findFormat.format(
+				attribute="" if "{name}" in findFormat and "{attribute}" in findFormat else roomObj.name,
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj)
+			) for roomObj in reversed(results[:20])
+		)
 
 	def fnote(self, findFormat, *args):
 		if not args or args[0] is None or not args[0].strip():
@@ -458,11 +534,22 @@ class World(object):
 			return "Nothing found."
 		currentRoom = self.currentRoom
 		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
-		return "\n".join(findFormat.format(attribute=roomObj.note, direction=currentRoom.directionTo(roomObj), clockPosition=currentRoom.clockPositionTo(roomObj), distance=currentRoom.manhattanDistance(roomObj), **vars(roomObj)) for roomObj in reversed(results[:20]))
+		return "\n".join(
+			findFormat.format(
+				attribute=roomObj.note,
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj)
+			) for roomObj in reversed(results[:20])
+		)
 
 	def rnote(self, *args):
 		if not args or args[0] is None or not args[0].strip():
-			return "Room note set to '{}'. Use 'rnote [text]' to change it, 'rnote -a [text]' to append to it, or 'rnote -r' to remove it.".format(self.currentRoom.note)
+			return (
+				"Room note set to '{}'. Use 'rnote [text]' to change it, "
+				+ "'rnote -a [text]' to append to it, or 'rnote -r' to remove it."
+			).format(self.currentRoom.note)
 		note = args[0].strip()
 		if note.lower().startswith("-r"):
 			if len(note) > 2:
@@ -480,13 +567,22 @@ class World(object):
 	def ralign(self, *args):
 		validValues = ("good", "neutral", "evil", "undefined")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
-			return "Room alignment set to '{}'. Use 'ralign [{}]' to change it.".format(self.currentRoom.align, " | ".join(validValues))
+			return (
+				"Room alignment set to '{}'. Use 'ralign [{}]' to change it."
+			).format(self.currentRoom.align, " | ".join(validValues))
 		self.currentRoom.align = args[0].strip().lower()
 		return "Setting room align to '{}'.".format(self.currentRoom.align)
 
 	def rlight(self, *args):
-		if not args or not args[0] or args[0].strip() not in LIGHT_SYMBOLS and args[0].strip().lower() not in LIGHT_SYMBOLS.values():
-			return "Room light set to '{}'. Use 'rlight [{}]' to change it.".format(self.currentRoom.light, " | ".join(set(LIGHT_SYMBOLS.values())))
+		if (
+			not args
+			or not args[0]
+			or args[0].strip() not in LIGHT_SYMBOLS
+			and args[0].strip().lower() not in LIGHT_SYMBOLS.values()
+		):
+			return (
+				"Room light set to '{}'. Use 'rlight [{}]' to change it."
+			).format(self.currentRoom.light, " | ".join(set(LIGHT_SYMBOLS.values())))
 		try:
 			self.currentRoom.light = LIGHT_SYMBOLS[args[0].strip()]
 		except KeyError:
@@ -496,14 +592,18 @@ class World(object):
 	def rportable(self, *args):
 		validValues = ("portable", "notportable", "undefined")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
-			return "Room portable set to '{}'. Use 'rportable [{}]' to change it.".format(self.currentRoom.portable, " | ".join(validValues))
+			return (
+				"Room portable set to '{}'. Use 'rportable [{}]' to change it."
+			).format(self.currentRoom.portable, " | ".join(validValues))
 		self.currentRoom.portable = args[0].strip().lower()
 		return "Setting room portable to '{}'.".format(self.currentRoom.portable)
 
 	def rridable(self, *args):
 		validValues = ("ridable", "notridable", "undefined")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
-			return "Room ridable set to '{}'. Use 'rridable [{}]' to change it.".format(self.currentRoom.ridable, " | ".join(validValues))
+			return (
+				"Room ridable set to '{}'. Use 'rridable [{}]' to change it."
+			).format(self.currentRoom.ridable, " | ".join(validValues))
 		self.currentRoom.ridable = args[0].strip().lower()
 		self.currentRoom.calculateCost()
 		return "Setting room ridable to '{}'.".format(self.currentRoom.ridable)
@@ -511,14 +611,23 @@ class World(object):
 	def ravoid(self, *args):
 		validValues = ("+", "-")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
-			return "Room avoid {}. Use 'ravoid [{}]' to change it.".format("enabled" if self.currentRoom.avoid else "disabled", " | ".join(validValues))
+			return (
+				"Room avoid {}. Use 'ravoid [{}]' to change it."
+			).format("enabled" if self.currentRoom.avoid else "disabled", " | ".join(validValues))
 		self.currentRoom.avoid = args[0].strip() == "+"
 		self.currentRoom.calculateCost()
 		return "{} room avoid.".format("Enabling" if self.currentRoom.avoid else "Disabling")
 
 	def rterrain(self, *args):
-		if not args or not args[0] or args[0].strip() not in TERRAIN_SYMBOLS and args[0].strip().lower() not in TERRAIN_SYMBOLS.values():
-			return "Room terrain set to '{}'. Use 'rterrain [{}]' to change it.".format(self.currentRoom.terrain, " | ".join(sorted(TERRAIN_SYMBOLS.values())))
+		if (
+			not args
+			or not args[0]
+			or args[0].strip() not in TERRAIN_SYMBOLS
+			and args[0].strip().lower() not in TERRAIN_SYMBOLS.values()
+		):
+			return (
+				"Room terrain set to '{}'. Use 'rterrain [{}]' to change it."
+			).format(self.currentRoom.terrain, " | ".join(sorted(TERRAIN_SYMBOLS.values())))
 		try:
 			self.currentRoom.terrain = TERRAIN_SYMBOLS[args[0].strip()]
 		except KeyError:
@@ -558,11 +667,19 @@ class World(object):
 		return "Room coordinate Z set to '{}'. Use 'rz [digit]' to change it.".format(self.currentRoom.z)
 
 	def rmobflags(self, *args):
-		regex = re.compile(r"^(?P<mode>{}|{})\s+(?P<flag>{})".format(regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_MOB_FLAGS)))
+		regex = re.compile(
+			r"^(?P<mode>{}|{})\s+(?P<flag>{})".format(
+				regexFuzzy("add"),
+				regexFuzzy("remove"),
+				"|".join(roomdata.objects.VALID_MOB_FLAGS)
+			)
+		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Mob flags set to '{}'. Use 'rmobflags [add | remove] [{}]' to change them.".format(", ".join(self.currentRoom.mobFlags), " | ".join(roomdata.objects.VALID_MOB_FLAGS))
+			return (
+				"Mob flags set to '{}'. Use 'rmobflags [add | remove] [{}]' to change them."
+			).format(", ".join(self.currentRoom.mobFlags), " | ".join(roomdata.objects.VALID_MOB_FLAGS))
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.mobFlags:
 				self.currentRoom.mobFlags.remove(matchDict["flag"])
@@ -577,11 +694,19 @@ class World(object):
 				return "Mob flag '{}' added.".format(matchDict["flag"])
 
 	def rloadflags(self, *args):
-		regex = re.compile(r"^(?P<mode>{}|{})\s+(?P<flag>{})".format(regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_LOAD_FLAGS)))
+		regex = re.compile(
+			r"^(?P<mode>{}|{})\s+(?P<flag>{})".format(
+				regexFuzzy("add"),
+				regexFuzzy("remove"),
+				"|".join(roomdata.objects.VALID_LOAD_FLAGS)
+			)
+		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Load flags set to '{}'. Use 'rloadflags [add | remove] [{}]' to change them.".format(", ".join(self.currentRoom.loadFlags), " | ".join(roomdata.objects.VALID_LOAD_FLAGS))
+			return (
+				"Load flags set to '{}'. Use 'rloadflags [add | remove] [{}]' to change them."
+			).format(", ".join(self.currentRoom.loadFlags), " | ".join(roomdata.objects.VALID_LOAD_FLAGS))
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.loadFlags:
 				self.currentRoom.loadFlags.remove(matchDict["flag"])
@@ -596,16 +721,27 @@ class World(object):
 				return "Load flag '{}' added.".format(matchDict["flag"])
 
 	def exitflags(self, *args):
-		regex = re.compile(r"^((?P<mode>{}|{})\s+)?((?P<flag>{})\s+)?(?P<direction>{})".format(regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_EXIT_FLAGS), regexFuzzy(DIRECTIONS)))
+		regex = re.compile(
+			r"^((?P<mode>{}|{})\s+)?((?P<flag>{})\s+)?(?P<direction>{})".format(
+				regexFuzzy("add"),
+				regexFuzzy("remove"),
+				"|".join(roomdata.objects.VALID_EXIT_FLAGS),
+				regexFuzzy(DIRECTIONS)
+			)
+		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Syntax: 'exitflags [add | remove] [{}] [{}]'.".format(" | ".join(roomdata.objects.VALID_EXIT_FLAGS), " | ".join(DIRECTIONS))
+			return (
+				"Syntax: 'exitflags [add | remove] [{}] [{}]'."
+			).format(" | ".join(roomdata.objects.VALID_EXIT_FLAGS), " | ".join(DIRECTIONS))
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if direction not in self.currentRoom.exits:
 			return "Exit {} does not exist.".format(direction)
 		elif not matchDict["mode"]:
-			return "Exit flags '{}' set to '{}'.".format(direction, ", ".join(self.currentRoom.exits[direction].exitFlags))
+			return (
+				"Exit flags '{}' set to '{}'."
+			).format(direction, ", ".join(self.currentRoom.exits[direction].exitFlags))
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 				self.currentRoom.exits[direction].exitFlags.remove(matchDict["flag"])
@@ -620,16 +756,27 @@ class World(object):
 				return "Exit flag '{}' in direction '{}' added.".format(matchDict["flag"], direction)
 
 	def doorflags(self, *args):
-		regex = re.compile(r"^((?P<mode>{}|{})\s+)?((?P<flag>{})\s+)?(?P<direction>{})".format(regexFuzzy("add"), regexFuzzy("remove"), "|".join(roomdata.objects.VALID_DOOR_FLAGS), regexFuzzy(DIRECTIONS)))
+		regex = re.compile(
+			r"^((?P<mode>{}|{})\s+)?((?P<flag>{})\s+)?(?P<direction>{})".format(
+				regexFuzzy("add"),
+				regexFuzzy("remove"),
+				"|".join(roomdata.objects.VALID_DOOR_FLAGS),
+				regexFuzzy(DIRECTIONS)
+			)
+		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Syntax: 'doorflags [add | remove] [{}] [{}]'.".format(" | ".join(roomdata.objects.VALID_DOOR_FLAGS), " | ".join(DIRECTIONS))
+			return (
+				"Syntax: 'doorflags [add | remove] [{}] [{}]'."
+			).format(" | ".join(roomdata.objects.VALID_DOOR_FLAGS), " | ".join(DIRECTIONS))
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if direction not in self.currentRoom.exits:
 			return "Exit {} does not exist.".format(direction)
 		elif not matchDict["mode"]:
-			return "Door flags '{}' set to '{}'.".format(direction, ", ".join(self.currentRoom.exits[direction].doorFlags))
+			return (
+				"Door flags '{}' set to '{}'."
+			).format(direction, ", ".join(self.currentRoom.exits[direction].doorFlags))
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 				self.currentRoom.exits[direction].doorFlags.remove(matchDict["flag"])
@@ -644,7 +791,13 @@ class World(object):
 				return "Door flag '{}' in direction '{}' added.".format(matchDict["flag"], direction)
 
 	def secret(self, *args):
-		regex = re.compile(r"^((?P<mode>{}|{})\s+)?((?P<name>[A-Za-z]+)\s+)?(?P<direction>{})".format(regexFuzzy("add"), regexFuzzy("remove"), regexFuzzy(DIRECTIONS)))
+		regex = re.compile(
+			r"^((?P<mode>{}|{})\s+)?((?P<name>[A-Za-z]+)\s+)?(?P<direction>{})".format(
+				regexFuzzy("add"),
+				regexFuzzy("remove"),
+				regexFuzzy(DIRECTIONS)
+			)
+		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
@@ -676,7 +829,15 @@ class World(object):
 			return "Secret {} removed.".format(direction)
 
 	def rlink(self, *args):
-		regex = re.compile(r"^((?P<mode>{}|{})\s+)?((?P<oneway>{})\s+)?((?P<vnum>\d+|undefined)\s+)?(?P<direction>{})".format(regexFuzzy("add"), regexFuzzy("remove"), regexFuzzy("oneway"), regexFuzzy(DIRECTIONS)))
+		regex = re.compile(
+			r"^((?P<mode>{}|{})\s+)?((?P<oneway>{})\s+)?"
+			r"((?P<vnum>\d+|undefined)\s+)?(?P<direction>{})".format(
+				regexFuzzy("add"),
+				regexFuzzy("remove"),
+				regexFuzzy("oneway"),
+				regexFuzzy(DIRECTIONS)
+			)
+		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
@@ -695,20 +856,56 @@ class World(object):
 				self.GUIRefresh()
 				return "Direction {} now undefined.".format(direction)
 			elif not matchDict["oneway"]:
-				if reversedDirection not in self.rooms[matchDict["vnum"]].exits or self.rooms[matchDict["vnum"]].exits[reversedDirection].to == "undefined":
-					self.rooms[matchDict["vnum"]].exits[reversedDirection] = self.getNewExit(reversedDirection, self.currentRoom.vnum)
+				if (
+					reversedDirection not in self.rooms[matchDict["vnum"]].exits
+					or self.rooms[matchDict["vnum"]].exits[reversedDirection].to == "undefined"
+				):
+					self.rooms[matchDict["vnum"]].exits[reversedDirection] = self.getNewExit(
+						reversedDirection,
+						self.currentRoom.vnum
+					)
 					self.GUIRefresh()
-					return "Linking direction {} to {} with name '{}'.\nLinked exit {} in second room with this room.".format(direction, matchDict["vnum"], self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "", reversedDirection)
+					return (
+						"Linking direction {} to {} with name '{}'.\n"
+						"Linked exit {} in second room with this room.".format(
+							direction,
+							matchDict["vnum"],
+							self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "",
+							reversedDirection
+						)
+					)
 				else:
 					self.GUIRefresh()
-					return "Linking direction {} to {} with name '{}'.\nUnable to link exit {} in second room with this room: exit already defined.".format(direction, matchDict["vnum"], self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "", reversedDirection)
+					return (
+						"Linking direction {} to {} with name '{}'.\n"
+						"Unable to link exit {} in second room with this room: exit already defined.".format(
+							direction,
+							matchDict["vnum"],
+							self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "",
+							reversedDirection
+						)
+					)
 			else:
 				self.GUIRefresh()
-				return "Linking direction {} one way to {} with name '{}'.".format(direction, matchDict["vnum"], self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "")
+				return (
+					"Linking direction {} one way to {} with name '{}'.".format(
+						direction,
+						matchDict["vnum"],
+						self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
+					)
+				)
 		elif direction not in self.currentRoom.exits:
 			return "Exit {} does not exist.".format(direction)
 		elif not matchDict["mode"]:
-			return "Exit '{}' links to '{}' with name '{}'.".format(direction, self.currentRoom.exits[direction].to, self.rooms[self.currentRoom.exits[direction].to].name if self.currentRoom.exits[direction].to in self.rooms else "")
+			return "Exit '{}' links to '{}' with name '{}'.".format(
+				direction,
+				self.currentRoom.exits[direction].to,
+				(
+					self.rooms[self.currentRoom.exits[direction].to].name
+					if self.currentRoom.exits[direction].to in self.rooms
+					else ""
+				)
+			)
 		elif "remove".startswith(matchDict["mode"]):
 			del self.currentRoom.exits[direction]
 			self.GUIRefresh()
@@ -729,9 +926,15 @@ class World(object):
 		if not args or not args[0]:
 			match = None
 		else:
-			match = re.match(r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$", args[0].strip().lower())
+			match = re.match(
+				r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$",
+				args[0].strip().lower()
+			)
 		if not match:
-			self.output("Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. Leave it blank to use the current room's vnum. Use '_label info all' to get a list of all labels.")
+			self.output(
+				"Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. "
+				+ "Leave it blank to use the current room's vnum. Use '_label info all' to get a list of all labels."
+			)
 			return None
 		else:
 			matchDict = match.groupdict()
@@ -769,7 +972,13 @@ class World(object):
 			else:
 				self.output("Label '{0}' points to room '{1}'.".format(label, self.labels[label]))
 		elif matchDict["action"] == "search":
-			results = sorted("{} - {} - {}".format(name, self.rooms[vnum].name if vnum in self.rooms else "VNum not in map", vnum) for name, vnum in self.labels.items() if label in name)
+			results = sorted(
+				"{} - {} - {}".format(
+					name,
+					self.rooms[vnum].name if vnum in self.rooms else "VNum not in map",
+					vnum
+				) for name, vnum in self.labels.items() if label in name
+			)
 			if not results:
 				self.output("Nothing found.")
 			else:
@@ -828,7 +1037,7 @@ class World(object):
 				else:
 					speedWalkDirs.append("{0}{1}".format(lenGroup, direction[0]))
 			return speedWalkDirs
-		numDirections = len([d for d in directionsList  if d in DIRECTIONS])
+		numDirections = len([d for d in directionsList if d in DIRECTIONS])
 		result = []
 		directionsBuffer = []
 		while directionsList:
@@ -836,7 +1045,8 @@ class World(object):
 			if item in DIRECTIONS:
 				directionsBuffer.append(item)
 			else:
-				# The item is not a direction, so process the directions buffer, clear the buffer, and add the resulting list plus the item to the result.
+				# The item is not a direction, so process the directions buffer, clear the buffer,
+				# and add the resulting list plus the item to the result.
 				result.extend(compressDirections(directionsBuffer))
 				directionsBuffer = []
 				result.append(item)
@@ -872,17 +1082,31 @@ class World(object):
 			self.output("You are already there!")
 			return []
 		if flags:
-			avoidTerrains = frozenset(terrain for terrain in roomdata.objects.TERRAIN_COSTS if "no{0}".format(terrain) in flags)
+			avoidTerrains = frozenset(
+				terrain for terrain in roomdata.objects.TERRAIN_COSTS
+				if "no{}".format(terrain) in flags
+			)
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
 		isDestinationFunc = lambda currentRoomObj: currentRoomObj is destinationRoom  # NOQA: E731
 		exitIgnoreFunc = lambda exitObj: exitObj.to in ignoreVnums  # NOQA: E731
-		exitCostFunc = lambda exitObj, neighborRoomObj: (5 if "door" in exitObj.exitFlags or "climb" in exitObj.exitFlags else 0) + (1000 if "avoid" in exitObj.exitFlags else 0) + (10 if neighborRoomObj.terrain in avoidTerrains else 0)  # NOQA: E731
+		exitCostFunc = lambda exitObj, neighborRoomObj: (  # NOQA: E731
+			(5 if "door" in exitObj.exitFlags or "climb" in exitObj.exitFlags else 0)
+			+ (1000 if "avoid" in exitObj.exitFlags else 0)
+			+ (10 if neighborRoomObj.terrain in avoidTerrains else 0)
+		)
 		exitDestinationFunc = None
 		return self._pathFind(origin, isDestinationFunc, exitIgnoreFunc, exitCostFunc, exitDestinationFunc)
 
-	def _pathFind(self, origin, isDestinationFunc=None, exitIgnoreFunc=None, exitCostFunc=None, exitDestinationFunc=None):
+	def _pathFind(
+			self,
+			origin,
+			isDestinationFunc=None,
+			exitIgnoreFunc=None,
+			exitCostFunc=None,
+			exitDestinationFunc=None
+	):
 		# Each key-value pare that gets added to this dict will be a parent room and child room respectively.
 		parents = {origin: origin}
 		# unprocessed rooms.
@@ -909,33 +1133,60 @@ class World(object):
 					continue
 				# Get a reference to the room object that the exit leads to using the room's vnum.
 				neighborRoomObj = self.rooms[exitObj.to]
-				# The neighbor room cost should be the sum of all movement costs to get to the neighbor room from the origin room.
-				neighborRoomCost = currentRoomCost + neighborRoomObj.cost + exitCostFunc(exitObj, neighborRoomObj) if exitCostFunc else 0
-				# We're only interested in the neighbor room if it hasn't been encountered yet, or if the cost of moving from the current room to the neighbor room is less than the cost of moving to the neighbor room from a previously discovered room.
+				# The neighbor room cost should be the sum of all movement costs
+				# to get to the neighbor room from the origin room.
+				neighborRoomCost = (
+					currentRoomCost
+					+ neighborRoomObj.cost
+					+ exitCostFunc(exitObj, neighborRoomObj) if exitCostFunc else 0
+				)
+				# We're only interested in the neighbor room if it hasn't been encountered yet,
+				# or if the cost of moving from the current room to the neighbor room is less than
+				# the cost of moving to the neighbor room from a previously discovered room.
 				if neighborRoomObj not in closed or closed[neighborRoomObj] > neighborRoomCost:
-					# Add the room object and room cost to the dict of closed rooms, and put it on the opened rooms heap to be processed.
+					# Add the room object and room cost to the dict of closed rooms,
+					# and put it on the opened rooms heap to be processed.
 					closed[neighborRoomObj] = neighborRoomCost
 					heapq.heappush(opened, (neighborRoomCost, neighborRoomObj))
-					# Since the current room is so far the most optimal way into the neighbor room, set it as the parent of the neighbor room.
+					# Since the current room is so far the most optimal way into the neighbor room,
+					# set it as the parent of the neighbor room.
 					parents[neighborRoomObj] = (currentRoomObj, exitDirection)
 					if exitDestinationFunc and exitDestinationFunc(exitObj, neighborRoomObj):
 						break
 		else:
-			# The while loop terminated normally (I.E. without encountering a break statement), and the destination was *not* found.
+			# The while loop terminated normally (I.E. without encountering a break statement),
+			# and the destination was *not* found.
 			self.output("No routes found.")
 			return None
 		# The while statement was broken prematurely, meaning that the destination was found.
-		# Find the path from the origin to the destination by traversing the hierarchy of room parents, starting with the current room.
+		# Find the path from the origin to the destination by traversing the hierarchy
+		# of room parents, starting with the current room.
 		results = []
 		while currentRoomObj is not origin:
 			currentRoomObj, direction = parents[currentRoomObj]
-			if currentRoomObj.vnum in LEAD_BEFORE_ENTERING_VNUMS and currentRoomObj.exits[direction].to not in LEAD_BEFORE_ENTERING_VNUMS and currentRoomObj is not origin:
+			if (
+				currentRoomObj.vnum in LEAD_BEFORE_ENTERING_VNUMS
+				and currentRoomObj.exits[direction].to not in LEAD_BEFORE_ENTERING_VNUMS
+				and currentRoomObj is not origin
+			):
 				results.append("ride")
 			results.append(direction)
-			if currentRoomObj.exits[direction].to in LEAD_BEFORE_ENTERING_VNUMS and (currentRoomObj.vnum not in LEAD_BEFORE_ENTERING_VNUMS or currentRoomObj is origin):
+			if (
+				currentRoomObj.exits[direction].to in LEAD_BEFORE_ENTERING_VNUMS
+				and (currentRoomObj.vnum not in LEAD_BEFORE_ENTERING_VNUMS or currentRoomObj is origin)
+			):
 				results.append("lead")
 			if "door" in currentRoomObj.exits[direction].exitFlags:
-				results.append("open {} {}".format(currentRoomObj.exits[direction].door if currentRoomObj.exits[direction].door else "exit", direction))
+				results.append(
+					"open {} {}".format(
+						(
+							currentRoomObj.exits[direction].door
+							if currentRoomObj.exits[direction].door
+							else "exit"
+						),
+						direction
+					)
+				)
 		return results
 
 	def getRoomFromLabel(self, label):
@@ -970,4 +1221,4 @@ class World(object):
 		else:  # The label is neither a vnum nor an existing label
 			similarLabels = list(self.labels)
 			similarLabels.sort(reverse=True, key=lambda l: fuzz.ratio(l, label))
-			return None, "Unknown label. Did you mean "+", ".join(similarLabels[0:4])+"?"
+			return None, "Unknown label. Did you mean {}?".format(", ".join(similarLabels[0:4]))
