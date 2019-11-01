@@ -280,6 +280,21 @@ class Mapper(threading.Thread, World):
 		"""Exits the program."""
 		self.proxy.game.write(b"quit")
 
+	def emulation_command_at(self, label: str, *args: str) -> None:
+		"""mimic the /at command that the ainur use."""
+		room: Union[Room, None] = self.getRoomFromLabel(label)
+		if room is None:
+			return None
+		command = " ".join(args)
+		if not command:
+			self.sendPlayer(f"What do you want to do at {label}?")
+			return
+		# execute command at room
+		oldRoom = self.emulationRoom
+		self.emulationRoom = room
+		self.user_command_emu(command)
+		self.emulationRoom = oldRoom
+
 	def emulation_command_brief(self, *args: str) -> None:
 		"""toggles brief mode."""
 		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
