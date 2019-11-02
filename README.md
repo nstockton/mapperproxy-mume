@@ -104,9 +104,13 @@ Auto mapping mode must be on for these commands to have any effect.
 
 ### Miscellaneous Mapper Commands
 * clock [action]  --  If no action is given, print the output from the mapper's clock. If the action is 'pull', send the appropriate commands to the game for opening the exit in mystical. If any other action is given, send a line with the current game time to the game, prefixed by the action. Example: `clock narrate` to narrate the current game time.
+* emu [command]  --  If not in emulation mode (I.E. connected to the game), execute an emulation command.
 * getlabel [vnum]  --  Returns the label or labels defined for the room with vnum. If no vnum is supplied, the current room's vnum is used.
 * gettimer  --  Returns the amount of seconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
 * gettimerms  --  Returns the amount of milliseconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
+* help  --  If in emulation mode, print a summery of the available emulation commands.
+* maphelp  --  Print a summery of the available mapper commands.
+* rinfo [vnum|label]  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
 * rinfo [vnum|label]  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
 * sync [vnum|label]  --  Manually sync the map to the room with vnum or label. If no vnum or label is given, mapper will be placed in an unsynced state, and will try to automatically sync to the current room.
 * tvnum  --  Tell the vnum of the current room to another player.

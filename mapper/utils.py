@@ -15,7 +15,7 @@ from . import terminalsize
 
 ANSI_COLOR_REGEX = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX = re.compile(r"\s+", flags=re.UNICODE)
-INDENT_REGEX = re.compile(r"^(?P<indent>\s*)(?P<text>.*)$", flags=re.UNICODE)
+INDENT_REGEX = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
 ESCAPE_XML_STR_ENTITIES = (
 	("&", "&amp;"),
 	("<", "&lt;"),
