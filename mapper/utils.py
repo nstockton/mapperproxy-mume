@@ -15,6 +15,7 @@ from . import terminalsize
 
 ANSI_COLOR_REGEX = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX = re.compile(r"\s+", flags=re.UNICODE)
+INDENT_REGEX = re.compile(r"^(?P<indent>\s*)(?P<text>.*)$", flags=re.UNICODE)
 ESCAPE_XML_STR_ENTITIES = (
 	("&", "&amp;"),
 	("<", "&lt;"),
@@ -28,20 +29,36 @@ ESCAPE_XML_BYTES_ENTITIES = tuple(
 UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES)
 
 
-def formatDocString(func, width=79, prefix=""):
-	"""
-	Format a docstring to be displayed.
-	This function requires that the first non-blank line of the docstring
-	starts with the white space prefix to be stripped from each original
-	line, such as the docstring for this function.
-	"""
-	if callable(func):
-		docString = func.__docstring__ if func.__docstring__ is not None else ""
-	else:
-		docString = func
-	docString = textwrap.dedent(docString)
-	docString = "\n".join(textwrap.wrap(docString, width=width - len(prefix)))
-	docString = textwrap.indent(docString, prefix=prefix)
+def formatDocString(functionOrString, width=79, prefix=""):
+	"""Format a docstring for displaying."""
+	if callable(functionOrString):  # It's a function.
+		docString = functionOrString.__docstring__ if functionOrString.__docstring__ is not None else ""
+	else:  # It's a string.
+		docString = functionOrString
+	docString = docString.lstrip("\r\n")  # Remove any empty lines from the beginning, while keeping indention.
+	if not INDENT_REGEX.search(docString).group("indent"):
+		# The first line was not indented.
+		# Prefix the first line with the white space from the subsequent, non-empty
+		# line with the least amount of indention.
+		# This is needed so that textwrap.dedent will work.
+		minWhiteSpace = min(
+			(
+				INDENT_REGEX.search(line).group("indent")
+				for line in docString.splitlines()[1:]
+				if line.strip("\r\n")
+			),
+			default="",
+			key=len
+		)
+		docString = minWhiteSpace + docString
+	docString = textwrap.dedent(docString)  # Remove common indention from lines.
+	docString = docString.rstrip()  # Remove trailing white space from the end of the docstring.
+	# Word wrap long lines, while maintaining existing structure.
+	docString = "\n".join(
+		textwrap.fill(line, width=width - len(prefix), break_long_words=False, break_on_hyphens=False)
+		for line in docString.splitlines()
+	)
+	docString = textwrap.indent(docString, prefix=prefix)  # Indent docstring lines with the prefix.
 	return docString
 
 

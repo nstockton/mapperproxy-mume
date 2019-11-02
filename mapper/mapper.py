@@ -280,8 +280,11 @@ class Mapper(threading.Thread, World):
 			result.append("The following commands have no documentation yet.")
 			result.append(
 				textwrap.indent(
-					"\n".join(
-						textwrap.wrap(", ".join(helpText[0] for helpText in undocumentedFuncs), width=79)
+					textwrap.fill(
+						", ".join(helpText[0] for helpText in undocumentedFuncs),
+						width=79,
+						break_long_words=False,
+						break_on_hyphens=False
 					),
 					prefix="    "
 				)
@@ -595,8 +598,11 @@ class Mapper(threading.Thread, World):
 			result.append("Undocumented Commands:")
 			result.append(
 				textwrap.indent(
-					"\n".join(
-						textwrap.wrap(", ".join(helpText[0] for helpText in undocumentedFuncs), width=79)
+					textwrap.fill(
+						", ".join(helpText[0] for helpText in undocumentedFuncs),
+						width=79,
+						break_long_words=False,
+						break_on_hyphens=False
 					),
 					prefix="    "
 				)
