@@ -414,6 +414,7 @@ class Mapper(threading.Thread, World):
 				else:
 					getattr(self, f"emulation_command_{command}")(userArgs)
 				return None
+		# else try to execute the user command as a regular mapper command
 		if userCommand in self.userCommands:
 			# call the user command
 			# first set current room to the emulation room so the user command acts on the emulation room
@@ -421,8 +422,12 @@ class Mapper(threading.Thread, World):
 			self.currentRoom = self.emulationRoom
 			getattr(self, f"user_command_{userCommand}")(userArgs)
 			self.currentRoom = oldRoom
-		elif userCommand:
-			self.output("Invalid command. Type 'help' for more help.")
+		else:
+			room = self.getRoomFromLabel(userCommand)
+			if room:
+				self.emulation_command_go(room)
+			else:
+				self.output("Invalid command. Type 'help' for more help.")
 
 	def user_command_gettimer(self, *args: str) -> None:
 		self.sendPlayer(f"TIMER:{int(default_timer() - self.initTimer)}:TIMER")
