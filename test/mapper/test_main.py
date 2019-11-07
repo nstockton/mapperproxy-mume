@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import call, Mock
-from telnetlib import ECHO, IAC, NAWS, SB, TTYPE, WILL
+from telnetlib import CHARSET, ECHO, IAC, NAWS, RCP, SB, TTYPE, WILL
 from queue import Empty, Queue
 
 from mapper.main import *
@@ -15,7 +15,7 @@ class TestServerThread(unittest.TestCase):
 			b"~$#EI\n",
 			b"~$#EX2\n3G\n",
 			b"~$#EP2\nG\n",
-			IAC+WILL+b"*",
+			IAC+WILL+CHARSET,
 		]
 
 		serverSocket = Mock(spec=socket.socket)
@@ -66,20 +66,32 @@ class TestServerThread(unittest.TestCase):
 			self.assertEqual(welcomeMessage, clientWelcomeMessage)
 		except Empty:
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
-
-		#in goes some more negociation
-		#assert it comes out
-		# put in password
-		#assert it comes out
-		 #input nothing to close it
-		 # assert thread is dead
 		
-		serverThreadInput = [  # list binary input in chronological order
-			IAC+DO+b"*"+IAC+SB+TTYPE+ECHO+IAC+SE,
-			b"IACSB*\x02US-ASCIIIACSE",
-			b"",
-		]
-		serverThreadInput.reverse()  # reverse because the pop function takes from the end of the list
+		self.assertTrue(outputFromMume.empty())
+		self.assertTrue(inputToMume.empty())
+		self.assertTrue(outputToUser.empty())
+
+		# test that further telnet negociations are passed to the client with the exception of charset negociations
+		try:
+			charsetNegociation = IAC+DO+CHARSET+IAC+SB+TTYPE+ECHO+IAC+SE
+			charsetSubnegociation = IAC+SB+CHARSET+RCP+b"US-ASCII"+IAC+SE
+			outputFromMume.put(charsetNegociation)
+			data = outputToUser.get(timeout=1)
+			self.assertEqual(data, charsetNegociation[3:])
+			outputFromMume.put(charsetSubnegociation)
+			data = outputToUser.get(timeout=1)
+			self.assertEqual(data, b"")
+		except Empty:
+			raise AssertionError("Further telnet negociations were not passed to the client")
+
+		# test further text is passed to the user
+		try:
+			usernamePrompt = b"By what name do you wish to be known? "
+			outputFromMume.put(usernamePrompt)
+			data = outputToUser.get(timeout=1)
+			self.assertEqual(data, usernamePrompt)
+		except Empty:
+			raise AssertionError("Further text was not passed to the user")
 
 		# close server thread
 		outputFromMume.put(b"")
