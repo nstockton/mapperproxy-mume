@@ -1,3 +1,7 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 import unittest
 from unittest.mock import call, Mock
 
@@ -60,7 +64,7 @@ class TestServerThread(unittest.TestCase):
 			self.assertEqual(data, INITIAL_OUTPUT)
 		except Empty:
 			raise AssertionError("initial telnet negociations were not passed to the client")
-			
+
 		# test regular text is passed through to the client
 		try:
 			outputFromMume.put(WELCOME_MESSAGE)
@@ -68,7 +72,7 @@ class TestServerThread(unittest.TestCase):
 			self.assertEqual(WELCOME_MESSAGE, data)
 		except Empty:
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
-		
+
 		# test further telnet negociations are passed to the client with the exception of charset negociations
 		try:
 			charsetNegociation = IAC+DO+CHARSET+IAC+SB+TTYPE+ECHO+IAC+SE
