@@ -7,11 +7,12 @@ import socket
 import unittest
 from unittest.mock import Mock
 
-from mapper.main import Server
-from telnetlib import CHARSET, ECHO, IAC, DO, NAWS, RCP, SB, SE, TTYPE, WILL
+from mapper.main import SB_ACCEPTED, Server
+from telnetlib import CHARSET, IAC, DO, NAWS, SB, SE, TTYPE, WILL
 from queue import Empty, Queue
 
 
+TTYPE_SEND = b"\x01"  # Part of terminal type sub-negotiation (RFC 1091).
 INITIAL_OUTPUT = IAC + DO + TTYPE + IAC + DO + NAWS
 WELCOME_MESSAGE = b"\r\n                              ***  MUME VIII  ***\r\n\r\n"
 
@@ -77,8 +78,8 @@ class TestServerThread(unittest.TestCase):
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
 		# test further telnet negociations are passed to the client with the exception of charset negociations
 		try:
-			charsetNegociation = IAC + DO + CHARSET + IAC + SB + TTYPE + ECHO + IAC + SE
-			charsetSubnegociation = IAC + SB + CHARSET + RCP + b"US-ASCII" + IAC + SE
+			charsetNegociation = IAC + DO + CHARSET + IAC + SB + TTYPE + TTYPE_SEND + IAC + SE
+			charsetSubnegociation = IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE
 			outputFromMume.put(charsetNegociation)
 			data = outputToUser.get(timeout=1)
 			self.assertEqual(data, charsetNegociation[3:])  # slicing off the charset negociation

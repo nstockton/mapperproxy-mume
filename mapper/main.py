@@ -10,7 +10,7 @@ try:
 	import ssl
 except ImportError:
 	ssl = None
-from telnetlib import IAC, GA, DONT, DO, WONT, WILL, theNULL, SB, SE, TTYPE, NAWS
+from telnetlib import IAC, DO, DONT, WILL, WONT, SB, SE, CHARSET, GA, theNULL, TTYPE, NAWS
 import threading
 
 from .mapper import USER_DATA, MUD_DATA, Mapper
@@ -19,7 +19,6 @@ from .utils import getDirectoryPath, touch, unescapeXML
 
 
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
-CHARSET = chr(42).encode("us-ascii")
 SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (
 	chr(i).encode("us-ascii") for i in range(1, 8)
 )
@@ -331,6 +330,8 @@ class Server(threading.Thread):
 				# Identify for Mume Remote Editing.
 				self._server.sendall(b"~$#EI\n")
 				# Turn on XML mode.
+				# Mode "3" tells MUME to enable XML output without sending an initial "<xml>" tag.
+				# Option "G" tells MUME to wrap room descriptions in gratuitous tags if they would otherwise be hidden.
 				self._server.sendall(b"~$#EX2\n3G\n")
 				# Tell the Mume server to put IAC-GA at end of prompts.
 				self._server.sendall(b"~$#EP2\nG\n")
