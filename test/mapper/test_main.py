@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import call, Mock
 from telnetlib import ECHO, IAC, NAWS, SB, TTYPE, WILL
-from queue import Queue
+from time import sleep
+from queue import Empty, Queue
 
 from mapper.main import *
 
@@ -30,18 +31,32 @@ class TestServerThread(unittest.TestCase):
 			interface="text",
 			promptTerminator=None
 		)
+		serverThread.daemon = True
 		serverThread.start()
-
-		serverSocketOutput.put(IAC+DO+TTYPE+IAC+DO+NAWS,)
-		self.assertEqual(serverSocketInput.get(), b"~$#EI\n")
-		#self.assertEqual(initialConfiguration, serverSocket.sendall.mock_calls)
-		
 		initialConfiguration = [
-			call(),
-			call(b"~$#EX2\n3G\n"),
-			call(b"~$#EP2\nG\n"),
-			call(IAC+WILL+b"*"),
+			b"~$#EI\n",
+			b"~$#EX2\n3G\n",
+			b"~$#EP2\nG\n",
+			IAC+WILL+b"*",
 		]
+
+		# test that the initial configuration parameters are outputted when the server first replies
+		serverSocketOutput.put(IAC+DO+TTYPE+IAC+DO+NAWS,)
+		try:
+			while initialConfiguration:
+				output = serverSocketInput.get(timeout=1)
+				self.assertIn(output, initialConfiguration, "Unknown initial configuration: "+str(output))
+				initialConfiguration.remove(output)
+		except Empty:
+			raise AssertionError("The server thread did not output the expected number of configuration parameters.\
+				The yet-to-be-seen configurations are: "+"; ".join(initialConfiguration))
+		if not serverSocketInput.empty():
+			remainingOutput = serverSocketInput.get()
+			raise AssertionError("The server thread spat out at least once unexpected initial configuration: "+str(remainingOutput))
+		
+		print("size of array is "+str(len(initialConfiguration)))
+		self.assertFalse(initialConfiguration, "have not seen all the expected initial configurations")
+		
 
 		# put initial telnet bits out of server
 		# test that negociation stuff came back out server input
@@ -68,4 +83,4 @@ class TestServerThread(unittest.TestCase):
 		serverThreadInput.reverse()  # reverse because the pop function takes from the end of the list
 		serverSocketOutput.put(b"")
 		serverThread.join(1)
-		self.assertTrue(serverThread.is_alive())
+		self.assertFalse(serverThread.is_alive())
