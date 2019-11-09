@@ -9,6 +9,7 @@
 *.md text eol=crlf
 *.spec text eol=crlf
 *.json.sample text eol=lf
+data/config.json.sample text eol=crlf
 *.jpg -text
 *.png -text
 *.xcf -text
