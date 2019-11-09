@@ -8,10 +8,11 @@ import socket
 from queue import Empty, Queue
 from telnetlib import CHARSET, IAC, DO, NAWS, SB, SE, TTYPE, WILL
 import unittest
-from unittest.mock import Mock
+from unittest.mock import call, Mock
 
 # Local Modules:
 from mapper.main import Server
+from mapper.mapper import MUD_DATA
 from mapper.protocols.mpi import MPI_INIT
 from mapper.protocols.telnet import SB_ACCEPTED, SB_SEND
 
@@ -111,3 +112,27 @@ class TestServerThread(unittest.TestCase):
 		outputFromMume.put(b"")
 		serverThread.join(1)
 		self.assertFalse(serverThread.is_alive())
+
+	def testProcessData(self):
+		mapperThread = Mock()
+		serverThread = Server(
+			client=None,
+			server=Mock(),
+			mapper=mapperThread,
+			outputFormat="normal",
+			interface="text",
+			promptTerminator=b"\r\n",
+		)
+
+		prompt = b'<prompt>\x1b[34mMana:Hot Move:Tired&gt;\x1b[0m</prompt>\xff\xf9'
+		promptResult = b'\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n'
+		promptCalls = [
+			call((MUD_DATA, ("prompt", b'\x1b[34mMana:Hot Move:Tired>\x1b[0m'))),
+			call((MUD_DATA, ("iac_ga", b""))),
+		]
+
+		res = serverThread._handler.parse(prompt)
+		self.assertEqual(res, promptResult)
+		for c in mapperThread.queue.put.mock_calls:
+			self.assertEqual(c, promptCalls[0])
+			promptCalls = promptCalls[1:]
