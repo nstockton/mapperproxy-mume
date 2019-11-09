@@ -3,6 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Built-in Modules:
+import logging
 import os
 import socket
 try:
@@ -13,15 +15,22 @@ except ImportError:
 from telnetlib import IAC, DO, DONT, WILL, WONT, SB, SE, CHARSET, GA, theNULL, TTYPE, NAWS
 import threading
 
+# Local Modules:
 from .mapper import USER_DATA, MUD_DATA, Mapper
-from .mpi import MPI
+from .mpi import MPI_INIT, MPI
 from .utils import getDirectoryPath, touch, unescapeXML
 
 
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
+# Telnet terminal type sub-option (RFC 1091).
+SB_IS, SB_SEND = (chr(i).encode("us-ascii") for i in range(2))
+# Telnet charset sub-option (RFC 2066).
 SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABLE_ACK, SB_TTABLE_NAK = (
 	chr(i).encode("us-ascii") for i in range(1, 8)
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class Proxy(threading.Thread):
@@ -73,13 +82,27 @@ class Server(threading.Thread):
 		self._interface = interface
 		self._promptTerminator = promptTerminator
 		self.finished = threading.Event()
+		# The initial output of MUME. Used by the server thread to detect connection success.
+		self.initialOutput = IAC + DO + TTYPE + IAC + DO + NAWS
+		self.initialConfiguration = [  # What the server thread sends MUME on connection success.
+			# Identify for Mume Remote Editing.
+			MPI_INIT + b"I\n",
+			# Turn on XML mode.
+			# Mode "3" tells MUME to enable XML output without sending an initial "<xml>" tag.
+			# Option "G" tells MUME to wrap room descriptions in gratuitous tags if they would otherwise be hidden.
+			MPI_INIT + b"X2\n3G\n",
+			# Tell the Mume server to put IAC-GA at end of prompts.
+			MPI_INIT + b"P2\nG\n",
+			# Tell the server that we will negotiate the character set.
+			IAC + WILL + CHARSET
+		]
 		self.ignoreBytes = frozenset([ord(theNULL), 0x11])
-		self.negotiationBytes = frozenset(ord(byte) for byte in [DONT, DO, WONT, WILL])
+		self.optionNegotiationBytes = frozenset(ord(byte) for byte in [DONT, DO, WONT, WILL])
 		self.inNegotiation = False
-		self.inSubNegotiation = False
-		self.subNegotiationBuffer = bytearray()
+		self.inSubOption = False
+		self.subOptionBuffer = bytearray()
+		self.announcedCharset = False
 		self.inCharset = False
-		self.inCharsetResponse = False
 		self.charsetResponseCode = None
 		self.charsetResponseBuffer = bytearray()
 		self.charsetSep = b";"
@@ -137,33 +160,32 @@ class Server(threading.Thread):
 		self.finished.set()
 
 	def processNegotiationByte(self, byte):
-		if byte in self.negotiationBytes:
-			# This is the second byte in a 3-byte telnet negotiation sequence.
-			if self.inSubNegotiation:
-				self.subNegotiationBuffer.extend((ord(IAC), byte))
+		# See RFC 854 (Telnet Protocol Specifications) and RFC 855 (Telnet Option Specifications).
+		if byte in self.optionNegotiationBytes:
+			# This is the second byte in a 3-byte telnet option negotiation.
+			if self.inSubOption:
+				self.subOptionBuffer.extend((ord(IAC), byte))
 			else:
 				self.clientBuffer.extend((ord(IAC), byte))
 		else:
 			# byte is the final byte in a 2-3 byte telnet negotiation sequence.
 			self.inNegotiation = False
 			if byte == ord(SB):
-				# Sub-negotiation begin
-				self.inSubNegotiation = True
+				# Sub-option negotiation begin
+				self.inSubOption = True
 			elif byte == ord(SE):
-				# Sub-negotiation end.
-				if self.inCharsetResponse:
-					self.charsetResponseCode = None
-					self.charsetResponseBuffer.clear()
-					self.inCharsetResponse = False
+				# Sub-option negotiation end.
+				if self.inCharset:
+					self.processCharset()
 				else:
-					self.clientBuffer.extend(IAC + SB + self.subNegotiationBuffer + IAC + SE)
-				self.subNegotiationBuffer.clear()
-				self.inSubNegotiation = False
-			elif self.inSubNegotiation:
-				if self.subNegotiationBuffer[-1] in self.negotiationBytes:
-					self.subNegotiationBuffer.append(byte)
+					self.clientBuffer.extend(IAC + SB + self.subOptionBuffer + IAC + SE)
+				self.subOptionBuffer.clear()
+				self.inSubOption = False
+			elif self.inSubOption:
+				if self.subOptionBuffer[-1] in self.optionNegotiationBytes:
+					self.subOptionBuffer.append(byte)
 				else:
-					self.subNegotiationBuffer.extend((ord(IAC), byte))
+					self.subOptionBuffer.extend((ord(IAC), byte))
 			elif byte == ord(IAC):
 				# This is an escaped IAC byte to be added to the buffer.
 				if self.inMPI:
@@ -172,8 +194,14 @@ class Server(threading.Thread):
 					self.clientBuffer.extend(IAC + IAC)
 					if self.xmlMode is None:
 						self.lineBuffer.append(byte)
-			elif byte == ord(CHARSET) and self.inCharset and self.clientBuffer.endswith(IAC + DO):
+			elif self.announcedCharset and self.clientBuffer.endswith(IAC + DO) and byte == ord(CHARSET):
+				logger.debug("MUME acknowledges our request, tells us to begin charset negotiation.")
 				# Negotiate the character set.
+				logger.debug(
+					"Tell MUME we would like to use the '{}' charset.".format(
+						self.defaultCharset.decode("us-ascii")
+					)
+				)
 				self._server.sendall(IAC + SB + CHARSET + SB_REQUEST + self.charsetSep + self.defaultCharset + IAC + SE)
 				# IAC + DO was appended to the client buffer earlier.
 				# It must be removed as character set negotiation data should not be sent to the mud client.
@@ -186,21 +214,33 @@ class Server(threading.Thread):
 				if self.xmlMode is None:
 					self.lineBuffer.extend(b"\r\n")
 			else:
-				if self.clientBuffer[-1] in self.negotiationBytes:
+				if self.clientBuffer[-1] in self.optionNegotiationBytes:
 					self.clientBuffer.append(byte)
 				else:
 					self.clientBuffer.extend((ord(IAC), byte))
 
-	def processSubNegotiation(self, byte):
-		if self.inCharset and byte == ord(CHARSET):
-			self.inCharsetResponse = True
-		elif self.inCharsetResponse and byte not in self.ignoreBytes:
+	def processSubOption(self, byte):
+		if self.announcedCharset and byte == ord(CHARSET):
+			self.inCharset = True
+			self.announcedCharset = False
+		elif self.inCharset and byte not in self.ignoreBytes:
 			if self.charsetResponseCode is None:
 				self.charsetResponseCode = byte
 			else:
 				self.charsetResponseBuffer.append(byte)
 		else:
-			self.subNegotiationBuffer.append(byte)
+			self.subOptionBuffer.append(byte)
+
+	def processCharset(self):
+		if self.charsetResponseCode == ord(SB_ACCEPTED):
+			logger.debug("MUME responds: Charset '{}' accepted.".format(self.charsetResponseBuffer.decode("us-ascii")))
+		elif self.charsetResponseCode == ord(SB_REJECTED):
+			logger.debug("MUME responds: Charset rejected.")
+		else:
+			logger.warning("Unknown charset negotiation response from MUME: {!r}".format(self.charsetResponseBuffer))
+		self.charsetResponseCode = None
+		self.charsetResponseBuffer.clear()
+		self.inCharset = False
 
 	def processMPIByte(self, byte):
 		if byte == ord("\n") and self.mpiCommand is None and self.mpiLen is None:
@@ -246,7 +286,7 @@ class Server(threading.Thread):
 				if tag == b"/room":
 					self._mapper.queue.put((MUD_DATA, ("dynamic", text)))
 				elif tag.startswith(b"/"):
-					self._mapper.queue.put((MUD_DATA, (tag[1:].decode("ascii"), text)))
+					self._mapper.queue.put((MUD_DATA, (tag[1:].decode("us-ascii"), text)))
 			elif tag == b"gratuitous":
 				self.inGratuitous = True
 			elif tag == b"/gratuitous":
@@ -276,24 +316,23 @@ class Server(threading.Thread):
 				self.processNegotiationByte(byte)
 			elif byte == ord(IAC):
 				self.inNegotiation = True
-			elif self.inSubNegotiation:
-				self.processSubNegotiation(byte)
+			elif self.inSubOption:
+				self.processSubOption(byte)
 			elif byte in self.ignoreBytes:
 				self.clientBuffer.append(byte)
 			elif self.inMPI:
 				self.processMPIByte(byte)
 			elif (
-				byte == ord("~") and self.mpiInitCounter == 0 and self.clientBuffer.endswith(b"\n")
-				or self.mpiInitCounter == 1 and byte == ord("$")
-				or self.mpiInitCounter == 2 and byte == ord("#")
+				byte == MPI_INIT[0] and self.mpiInitCounter == 0 and self.clientBuffer.endswith(b"\n")
+				or byte in MPI_INIT and self.mpiInitCounter == MPI_INIT.index(byte)
 			):
-				# Byte is one of the first 3 bytes in the 4-byte MPI sequence (~$#E),
+				# Byte is one of the bytes in the 4-byte MPI_INIT sequence,
 				# and the sequence was preceded by a new-line character (\n).
 				self.mpiInitCounter += 1
-			elif self.mpiInitCounter == 3 and byte == ord("E"):
-				# Byte is the final byte in the 4-byte MPI sequence (~$#E).
-				self.inMPI = True
-				self.mpiInitCounter = 0
+				if byte == MPI_INIT[-1]:
+					# Byte is the final byte in the 4-byte MPI sequence (~$#E).
+					self.inMPI = True
+					self.mpiInitCounter = 0
 			elif self.inXML or byte == ord("<"):
 				self.mpiInitCounter = 0
 				if byte == ord("<"):
@@ -314,7 +353,6 @@ class Server(threading.Thread):
 		return result
 
 	def run(self):
-		initialOutput = b"".join((IAC, DO, TTYPE, IAC, DO, NAWS))
 		encounteredInitialOutput = False
 		while not self.finished.isSet():
 			try:
@@ -325,19 +363,13 @@ class Server(threading.Thread):
 			if not data:
 				self.close()
 				continue
-			elif not encounteredInitialOutput and data.startswith(initialOutput):
+			elif not encounteredInitialOutput and data.startswith(self.initialOutput):
 				# The connection to Mume has been established, and the game has just responded with the login screen.
-				# Identify for Mume Remote Editing.
-				self._server.sendall(b"~$#EI\n")
-				# Turn on XML mode.
-				# Mode "3" tells MUME to enable XML output without sending an initial "<xml>" tag.
-				# Option "G" tells MUME to wrap room descriptions in gratuitous tags if they would otherwise be hidden.
-				self._server.sendall(b"~$#EX2\n3G\n")
-				# Tell the Mume server to put IAC-GA at end of prompts.
-				self._server.sendall(b"~$#EP2\nG\n")
-				# Tell the server that we will negotiate the character set.
-				self._server.sendall(IAC + WILL + CHARSET)
-				self.inCharset = True
+				for item in self.initialConfiguration:
+					self._server.sendall(item)
+				if IAC + WILL + CHARSET in self.initialConfiguration:
+					logger.debug("Ask MUME to negotiate charset.")
+					self.announcedCharset = True
 				encounteredInitialOutput = True
 			result = self.processData(data)
 			try:

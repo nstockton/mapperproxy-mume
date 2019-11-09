@@ -13,6 +13,9 @@ import threading
 from .utils import decodeBytes
 
 
+MPI_INIT = b"~$#E"
+
+
 def removeFile(fileObj):
 	if not fileObj.closed:
 		fileObj.close()
