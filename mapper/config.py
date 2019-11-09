@@ -62,9 +62,12 @@ class Config(collections.MutableMapping):
 		data_directory = getDirectoryPath("data")
 		filename = os.path.join(data_directory, "{}.json".format(self._name))
 		with codecs.open(filename, "wb", encoding="utf-8") as fileObj:
-			# Configuration should be stored using Windows style line endings (\r\n) so the file can be viewed in Notepad.
-			# However, codecs.open forces opening files in binary mode, which prevents the use of the newline flag to force a particular delimiter for new lines.
-			# The json data must therefore be modified to replace Unix line endings with Windows line endings before it is written.
+			# Configuration should be stored using Windows style line endings (\r\n)
+			# so the file can be viewed in Notepad.
+			# However, codecs.open forces opening files in binary mode, which
+			# prevents the use of the newline flag to force a particular delimiter for new lines.
+			# The json data must therefore be modified to replace Unix line endings
+			# with Windows line endings before it is written.
 			data = json.dumps(self._config, sort_keys=True, indent=2)
 			fileObj.write(data.replace("\n", "\r\n"))
 

@@ -23,7 +23,7 @@ with config_lock:
 			debugLevel = None
 	else:
 		debugLevel = None
-	if debugLevel is None and cfg.get("debug_level") is not None:  # Invalid debug_level in the configuration file.
+	if debugLevel is None and cfg.get("debug_level") is not None:  # Invalid value in the configuration file.
 		cfg["debug_level"] = debugLevel
 		cfg.save()
 	del cfg
