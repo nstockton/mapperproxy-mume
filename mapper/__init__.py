@@ -34,7 +34,8 @@ if debugLevel is not None:
 		filename="debug.log",
 		filemode="w",
 		level=debugLevel,
-		format="%(levelname)s: from %(name)s in %(threadName)s: \"%(message)s\" @ %(asctime)s.%(msecs)d",
+		format="{levelname}: from {name} in {threadName}: \"{message}\" @ {asctime}.{msecs:0f}",
+		style="{",
 		datefmt="%m/%d/%Y %H:%M:%S"
 	)
 	logging.info("Initializing")

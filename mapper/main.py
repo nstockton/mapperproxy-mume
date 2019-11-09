@@ -197,11 +197,7 @@ class Server(threading.Thread):
 			elif self.announcedCharset and self.clientBuffer.endswith(IAC + DO) and byte == ord(CHARSET):
 				logger.debug("MUME acknowledges our request, tells us to begin charset negotiation.")
 				# Negotiate the character set.
-				logger.debug(
-					"Tell MUME we would like to use the '{}' charset.".format(
-						self.defaultCharset.decode("us-ascii")
-					)
-				)
+				logger.debug(f"Tell MUME we would like to use the '{self.defaultCharset.decode('us-ascii')}' charset.")
 				self._server.sendall(IAC + SB + CHARSET + SB_REQUEST + self.charsetSep + self.defaultCharset + IAC + SE)
 				# IAC + DO was appended to the client buffer earlier.
 				# It must be removed as character set negotiation data should not be sent to the mud client.
@@ -233,11 +229,11 @@ class Server(threading.Thread):
 
 	def processCharset(self):
 		if self.charsetResponseCode == ord(SB_ACCEPTED):
-			logger.debug("MUME responds: Charset '{}' accepted.".format(self.charsetResponseBuffer.decode("us-ascii")))
+			logger.debug(f"MUME responds: Charset '{self.charsetResponseBuffer.decode('us-ascii')}' accepted.")
 		elif self.charsetResponseCode == ord(SB_REJECTED):
 			logger.debug("MUME responds: Charset rejected.")
 		else:
-			logger.warning("Unknown charset negotiation response from MUME: {!r}".format(self.charsetResponseBuffer))
+			logger.warning(f"Unknown charset negotiation response from MUME: {self.charsetResponseBuffer!r}")
 		self.charsetResponseCode = None
 		self.charsetResponseBuffer.clear()
 		self.inCharset = False
