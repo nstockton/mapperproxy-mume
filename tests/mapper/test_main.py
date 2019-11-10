@@ -113,26 +113,49 @@ class TestServerThread(unittest.TestCase):
 		serverThread.join(1)
 		self.assertFalse(serverThread.is_alive())
 
-	def testProcessData(self):
-		mapperThread = Mock()
-		serverThread = Server(
-			client=None,
+
+class TestServerThreadThroughput(unittest.TestCase):
+	def setUp(self):
+		self.mapperThread = Mock()
+		self.serverThread = Server(
+			client=Mock(),
 			server=Mock(),
-			mapper=mapperThread,
+			mapper=self.mapperThread,
 			outputFormat="normal",
 			interface="text",
 			promptTerminator=b"\r\n",
 		)
 
-		prompt = b'<prompt>\x1b[34mMana:Hot Move:Tired&gt;\x1b[0m</prompt>\xff\xf9'
-		promptResult = b'\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n'
-		promptCalls = [
-			call((MUD_DATA, ("prompt", b'\x1b[34mMana:Hot Move:Tired>\x1b[0m'))),
-			call((MUD_DATA, ("iac_ga", b""))),
-		]
+	def tearDown(self):
+		del self.mapperThread
+		del self.serverThread
 
-		res = serverThread._handler.parse(prompt)
-		self.assertEqual(res, promptResult)
-		for c in mapperThread.queue.put.mock_calls:
-			self.assertEqual(c, promptCalls[0])
-			promptCalls = promptCalls[1:]
+	def runThroughput(self, input, expectedOutput, expectedData, inputDescription):
+		res = self.serverThread._handler.parse(input)
+		self.assertEqual(
+			res, expectedOutput,
+			"When entering {}, the expected output did not match {}".format(inputDescription, expectedOutput)
+		)
+		actualData = self.mapperThread.queue.put.mock_calls
+		i = 0
+		while len(actualData) > i < len(expectedData):
+			self.assertEqual(
+				actualData[i], expectedData[i],
+				"When entering {}, call #{} to the mapper queue was not as expected".format(inputDescription, i)
+			)
+			i += 1
+		if i < len(actualData):
+			raise AssertionError("The mapper queue received the unexpected data: " + actualData[i])
+		if i < len(expectedData):
+			raise AssertionError("The mapper queue did not receive the expected data: " + expectedData[i])
+
+	def testProcessData(self):
+		self.runThroughput(
+			input=b'<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>\xff\xf9',
+			expectedOutput=b'\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n',
+			expectedData=[
+				call((MUD_DATA, ("prompt", b'\x1b[34mMana:Hot Move:Tired>\x1b[0m'))),
+				call((MUD_DATA, ("iac_ga", b""))),
+			],
+			inputDescription="prompt with mana burning and moves tired"
+		)
