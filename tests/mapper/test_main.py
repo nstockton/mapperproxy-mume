@@ -50,7 +50,7 @@ class TestServerThread(unittest.TestCase):
 		)
 		serverThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
 		serverThread.start()
-		# test when the server sends its initial negociations, the server thread outputs its initial configuration
+		# test when the server sends its initial negotiations, the server thread outputs its initial configuration
 		self.assertEqual(initialConfiguration, serverThread.initialConfiguration)
 		self.assertEqual(INITIAL_OUTPUT, serverThread.initialOutput)
 		outputFromMume.put(INITIAL_OUTPUT)
@@ -75,12 +75,12 @@ class TestServerThread(unittest.TestCase):
 				"Remaining output: {!r}".format(remainingOutput)
 			)
 			raise AssertionError("\n".join(errorMessage))
-		# test initial telnet negociations were passed to the client
+		# test initial telnet negotiations were passed to the client
 		try:
 			data = outputToUser.get(timeout=1)
 			self.assertEqual(data, INITIAL_OUTPUT)
 		except Empty:
-			raise AssertionError("initial telnet negociations were not passed to the client")
+			raise AssertionError("initial telnet negotiations were not passed to the client")
 		# test regular text is passed through to the client
 		try:
 			outputFromMume.put(WELCOME_MESSAGE)
@@ -88,18 +88,18 @@ class TestServerThread(unittest.TestCase):
 			self.assertEqual(WELCOME_MESSAGE, data)
 		except Empty:
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
-		# test further telnet negociations are passed to the client with the exception of charset negociations
+		# test further telnet negotiations are passed to the client with the exception of charset negotiations
 		try:
-			charsetNegociation = IAC + DO + CHARSET + IAC + SB + TTYPE + SB_SEND + IAC + SE
-			charsetSubnegociation = IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE
-			outputFromMume.put(charsetNegociation)
+			charsetNegotiation = IAC + DO + CHARSET + IAC + SB + TTYPE + SB_SEND + IAC + SE
+			charsetSubnegotiation = IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE
+			outputFromMume.put(charsetNegotiation)
 			data = outputToUser.get(timeout=1)
-			self.assertEqual(data, charsetNegociation[3:])  # slicing off the charset negociation
-			outputFromMume.put(charsetSubnegociation)
+			self.assertEqual(data, charsetNegotiation[3:])  # slicing off the charset negotiation
+			outputFromMume.put(charsetSubnegotiation)
 			data = outputToUser.get(timeout=1)
 			self.assertEqual(data, b"")
 		except Empty:
-			raise AssertionError("Further telnet negociations were not passed to the client")
+			raise AssertionError("Further telnet negotiations were not passed to the client")
 		# when mume outputs further text, test it is passed to the user
 		try:
 			usernamePrompt = b"By what name do you wish to be known? "
