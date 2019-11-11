@@ -166,6 +166,10 @@ class Mapper(threading.Thread, World):
 			func[len("user_command_"):] for func in dir(self)
 			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))
 		]
+		self.mudEvents = [
+			func[len("mud_event_"):] for func in dir(self)
+			if func and func.startswith("mud_event_") and callable(self.__getattribute__(func))
+		]
 		self.emulationCommands = [
 			func[len("emulation_command_"):] for func in dir(self)
 			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))
@@ -1005,19 +1009,24 @@ class Mapper(threading.Thread, World):
 
 	def handleServerData(self, event, data):
 		data = stripAnsi(unescapeXML(decodeBytes(data)))
-		if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
-			getattr(self, "mud_event_" + event)(data)
+		if event in self.mudEvents:
+			if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
+				getattr(self, "mud_event_" + event)(data)
 
 	def run(self):
 		while True:
-			dataType, data = self.queue.get()
-			if data is None:
-				break
-			elif dataType == USER_DATA:
-				# The data was a valid mapper command, sent from the user's mud client.
-				self.handleUserData(data)
-			elif dataType == MUD_DATA:
-				# The data was from the mud server.
-				event, data = data
-				self.handleServerData(event, data)
+			try:
+				dataType, data = self.queue.get()
+				if data is None:
+					break
+				elif dataType == USER_DATA:
+					# The data was a valid mapper command, sent from the user's mud client.
+					self.handleUserData(data)
+				elif dataType == MUD_DATA:
+					# The data was from the mud server.
+					event, data = data
+					self.handleServerData(event, data)
+			except Exception as e:
+				self.output("map error")
+				print("error " + str(e))
 		self.clientSend("Exiting mapper thread.")
