@@ -817,185 +817,192 @@ class Mapper(threading.Thread, World):
 
 	def handleServerData(self, event, data):
 		data = stripAnsi(unescapeXML(decodeBytes(data)))
-		if event == "iac_ga":
-			if self.isSynced:
-				if self.autoMapping and self.moved:
-					self.updateRoomFlags(self.prompt)
-			elif self.name:
-				self.sync(self.name, self.description)
-			if self.isSynced and self.dynamic is not None:
-				self.roomDetails()
-				if self.autoWalkDirections and self.moved and self.autoWalk:
-					# The player is auto-walking. Send the next direction to Mume.
-					self.walkNextDirection()
-			self.addedNewRoomFrom = None
-			self.scouting = False
-			self.movement = None
-			self.moved = None
-			self.prompt = None
-			self.name = None
-			self.description = None
-			self.dynamic = None
-			self.exits = None
-		elif event == "prompt":
-			self.prompt = data
-			self.lastPrompt = self.prompt
-		elif event == "movement":
-			self.movement = data
-			self.scouting = False
-		elif self.scouting:
-			# Ignore room data received by self.scouting.
+		if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
+			getattr(self, "mud_event_" + event)(data)
+
+	def mud_event_iac_ga(self, data):
+		if self.isSynced:
+			if self.autoMapping and self.moved:
+				self.updateRoomFlags(self.prompt)
+		elif self.name:
+			self.sync(self.name, self.description)
+		if self.isSynced and self.dynamic is not None:
+			self.roomDetails()
+			if self.autoWalkDirections and self.moved and self.autoWalk:
+				# The player is auto-walking. Send the next direction to Mume.
+				self.walkNextDirection()
+		self.addedNewRoomFrom = None
+		self.scouting = False
+		self.movement = None
+		self.moved = None
+		self.prompt = None
+		self.name = None
+		self.description = None
+		self.dynamic = None
+		self.exits = None
+
+	def mud_event_prompt(self, data):
+		self.prompt = data
+		self.lastPrompt = self.prompt
+
+	def mud_event_movement(self, data):
+		self.movement = data
+		self.scouting = False
+
+	def mud_event_line(self, data):
+		if data.startswith("You quietly scout "):
+			self.scouting = True
 			return
-		elif event == "line":
-			if data.startswith("You quietly scout "):
-				self.scouting = True
-				return
-			elif data == (
-				"Wet, cold and filled with mud you drop down into a dark "
-				"and moist cave, while you notice the mud above you moving "
-				"to close the hole you left in the cave ceiling."
-			):
-				self.sync(vnum="17189")
-			elif data == (
-				"The gravel below your feet loosens, shifting slightly.. "
-				"Suddenly, you lose your balance and crash to the cave floor below."
-			):
-				self.sync(vnum="15324")
-			elif not self.timeSynchronized:
-				if self.timeEvent is None:
-					if CLOCK_REGEX.match(data):
-						hour, minutes, amPm = CLOCK_REGEX.match(data).groups()
-						# parsedHour should be 0 - 23.
-						self.parsedHour = int(hour) % 12 + (12 if amPm == "pm" else 0)
-						self.parsedMinutes = int(minutes)
-						if self.parsedHour == 23 and self.parsedMinutes == 59:
-							Timer(1.0, self.serverSend, "look at clock").start()
-						else:
-							self.timeEvent = "clock"
-							self.serverSend("time")
-					elif DAWN_REGEX.match(data):
-						self.timeEvent = "dawn"
-						self.timeEventOffset = 0
+		elif data == (
+			"Wet, cold and filled with mud you drop down into a dark "
+			"and moist cave, while you notice the mud above you moving "
+			"to close the hole you left in the cave ceiling."
+		):
+			self.sync(vnum="17189")
+		elif data == (
+			"The gravel below your feet loosens, shifting slightly.. "
+			"Suddenly, you lose your balance and crash to the cave floor below."
+		):
+			self.sync(vnum="15324")
+		elif not self.timeSynchronized:
+			if self.timeEvent is None:
+				if CLOCK_REGEX.match(data):
+					hour, minutes, amPm = CLOCK_REGEX.match(data).groups()
+					# parsedHour should be 0 - 23.
+					self.parsedHour = int(hour) % 12 + (12 if amPm == "pm" else 0)
+					self.parsedMinutes = int(minutes)
+					if self.parsedHour == 23 and self.parsedMinutes == 59:
+						Timer(1.0, self.serverSend, "look at clock").start()
+					else:
+						self.timeEvent = "clock"
 						self.serverSend("time")
-					elif DAY_REGEX.match(data):
-						self.timeEvent = "dawn"
-						self.timeEventOffset = 1
-						self.serverSend("time")
-					elif DUSK_REGEX.match(data):
-						self.timeEvent = "dusk"
-						self.timeEventOffset = 0
-						self.serverSend("time")
-					elif NIGHT_REGEX.match(data):
-						self.timeEvent = "dusk"
-						self.timeEventOffset = 1
-						self.serverSend("time")
-				elif TIME_REGEX.match(data):
-					match = TIME_REGEX.match(data)
-					day = int(match.group("day"))
-					year = int(match.group("year"))
-					month = 0
-					for i, m in enumerate(MONTHS):
-						if m["westron"] == match.group("month") or m["sindarin"] == match.group("month"):
-							month = i
-							break
-					if self.timeEvent == "dawn" or self.timeEvent == "dusk":
-						self.parsedHour = MONTHS[month][self.timeEvent] + self.timeEventOffset
-						self.parsedMinutes = 0
-					self.clock.epoch = timeToEpoch(year, month, day, self.parsedHour, self.parsedMinutes)
-					self.timeEvent = None
+				elif DAWN_REGEX.match(data):
+					self.timeEvent = "dawn"
 					self.timeEventOffset = 0
-					self.timeSynchronized = True
-					self.clientSend("Synchronized with epoch {}.".format(self.clock.epoch), showPrompt=False)
-			if MOVEMENT_FORCED_REGEX.search(data) or MOVEMENT_PREVENTED_REGEX.search(data):
-				self.stopRun()
-			if self.isSynced and self.autoMapping:
-				if data == "It's too difficult to ride here." and self.currentRoom.ridable != "notridable":
-					self.clientSend(self.rridable("notridable"))
-				elif data == "You are already riding." and self.currentRoom.ridable != "ridable":
-					self.clientSend(self.rridable("ridable"))
-		elif event == "name":
-			if data not in ("You just see a dense fog around you...", "It is pitch black..."):
-				self.name = simplified(data)
-			else:
-				self.name = ""
-		elif event == "description":
-			self.description = simplified(data)
-		elif event == "dynamic":
-			self.dynamic = data
-			self.moved = None
-			self.addedNewRoomFrom = None
-			self.exits = None
-			if not self.timeSynchronized and self.timeEvent is None and "A huge clock is standing here." in data:
-				self.serverSend("look at clock")
-			if not self.isSynced or self.movement is None:
-				return
-			elif not self.movement:
-				# The player was forcibly moved in an unknown direction.
-				self.isSynced = False
-				self.clientSend("Forced movement, no longer synced.")
-			elif self.movement not in DIRECTIONS:
-				self.isSynced = False
-				self.clientSend("Error: Invalid direction '{0}'. Map no longer synced!".format(self.movement))
-			elif not self.autoMapping and self.movement not in self.currentRoom.exits:
-				self.isSynced = False
-				self.clientSend("Error: direction '{0}' not in database. Map no longer synced!".format(self.movement))
-			elif not self.autoMapping and self.currentRoom.exits[self.movement].to not in self.rooms:
-				self.isSynced = False
-				self.clientSend(
-					"Error: vnum ({}) in direction ({}) is not in the database. "
-					"Map no longer synced!".format(
-						self.currentRoom.exits[self.movement].to,
-						self.movement
-					)
+					self.serverSend("time")
+				elif DAY_REGEX.match(data):
+					self.timeEvent = "dawn"
+					self.timeEventOffset = 1
+					self.serverSend("time")
+				elif DUSK_REGEX.match(data):
+					self.timeEvent = "dusk"
+					self.timeEventOffset = 0
+					self.serverSend("time")
+				elif NIGHT_REGEX.match(data):
+					self.timeEvent = "dusk"
+					self.timeEventOffset = 1
+					self.serverSend("time")
+			elif TIME_REGEX.match(data):
+				match = TIME_REGEX.match(data)
+				day = int(match.group("day"))
+				year = int(match.group("year"))
+				month = 0
+				for i, m in enumerate(MONTHS):
+					if m["westron"] == match.group("month") or m["sindarin"] == match.group("month"):
+						month = i
+						break
+				if self.timeEvent == "dawn" or self.timeEvent == "dusk":
+					self.parsedHour = MONTHS[month][self.timeEvent] + self.timeEventOffset
+					self.parsedMinutes = 0
+				self.clock.epoch = timeToEpoch(year, month, day, self.parsedHour, self.parsedMinutes)
+				self.timeEvent = None
+				self.timeEventOffset = 0
+				self.timeSynchronized = True
+				self.clientSend("Synchronized with epoch {}.".format(self.clock.epoch), showPrompt=False)
+		if MOVEMENT_FORCED_REGEX.search(data) or MOVEMENT_PREVENTED_REGEX.search(data):
+			self.stopRun()
+		if self.isSynced and self.autoMapping:
+			if data == "It's too difficult to ride here." and self.currentRoom.ridable != "notridable":
+				self.clientSend(self.rridable("notridable"))
+			elif data == "You are already riding." and self.currentRoom.ridable != "ridable":
+				self.clientSend(self.rridable("ridable"))
+
+	def mud_event_name(self, data):
+		if data not in ("You just see a dense fog around you...", "It is pitch black..."):
+			self.name = simplified(data)
+		else:
+			self.name = ""
+
+	def mud_event_description(self, data):
+		self.description = simplified(data)
+
+	def mud_event_dynamic(self, data):
+		self.dynamic = data
+		self.moved = None
+		self.addedNewRoomFrom = None
+		self.exits = None
+		if not self.timeSynchronized and self.timeEvent is None and "A huge clock is standing here." in data:
+			self.serverSend("look at clock")
+		if not self.isSynced or self.movement is None:
+			return
+		elif not self.movement:
+			# The player was forcibly moved in an unknown direction.
+			self.isSynced = False
+			self.clientSend("Forced movement, no longer synced.")
+		elif self.movement not in DIRECTIONS:
+			self.isSynced = False
+			self.clientSend("Error: Invalid direction '{0}'. Map no longer synced!".format(self.movement))
+		elif not self.autoMapping and self.movement not in self.currentRoom.exits:
+			self.isSynced = False
+			self.clientSend("Error: direction '{0}' not in database. Map no longer synced!".format(self.movement))
+		elif not self.autoMapping and self.currentRoom.exits[self.movement].to not in self.rooms:
+			self.isSynced = False
+			self.clientSend(
+				"Error: vnum ({}) in direction ({}) is not in the database. "
+				"Map no longer synced!".format(
+					self.currentRoom.exits[self.movement].to,
+					self.movement
 				)
-			else:
-				if (
-					self.autoMapping
-					and self.movement in DIRECTIONS
-					and (
-						self.movement not in self.currentRoom.exits
-						or self.currentRoom.exits[self.movement].to not in self.rooms
-					)
-				):
-					# Player has moved in a direction that either doesn't exist in the database
-					# or links to an invalid vnum (E.G. undefined).
-					if self.autoMerging and self.name and self.description:
-						duplicateRooms = self.searchRooms(exactMatch=True, name=self.name, desc=self.description)
-					else:
-						duplicateRooms = None
-					if not self.name:
-						self.clientSend("Unable to add new room: empty room name.")
-					elif not self.description:
-						self.clientSend("Unable to add new room: empty room description.")
-					elif duplicateRooms and len(duplicateRooms) == 1:
-						self.autoMergeRoom(self.movement, duplicateRooms[0])
-					else:
-						# Create new room.
-						self.addedNewRoomFrom = self.currentRoom.vnum
-						self.addNewRoom(self.movement, self.name, self.description, self.dynamic)
-				self.currentRoom = self.rooms[self.currentRoom.exits[self.movement].to]
-				self.moved = self.movement
-				self.movement = None
-				if self.autoMapping and self.autoUpdating:
-					if self.name and self.currentRoom.name != self.name:
-						self.currentRoom.name = self.name
-						self.clientSend("Updating room name.")
-					if self.description and self.currentRoom.desc != self.description:
-						self.currentRoom.desc = self.description
-						self.clientSend("Updating room description.")
-					if self.dynamic and self.currentRoom.dynamicDesc != self.dynamic:
-						self.currentRoom.dynamicDesc = self.dynamic
-						self.clientSend("Updating room dynamic description.")
-		elif event == "exits":
-			exits = data
-			if self.autoMapping and self.isSynced and self.moved:
-				if self.addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in exits:
-					self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(
-						direction=REVERSE_DIRECTIONS[self.moved],
-						to=self.addedNewRoomFrom
-					)
-				self.updateExitFlags(exits)
-			self.addedNewRoomFrom = None
+			)
+		else:
+			if (
+				self.autoMapping
+				and self.movement in DIRECTIONS
+				and (
+					self.movement not in self.currentRoom.exits
+					or self.currentRoom.exits[self.movement].to not in self.rooms
+				)
+			):
+				# Player has moved in a direction that either doesn't exist in the database
+				# or links to an invalid vnum (E.G. undefined).
+				if self.autoMerging and self.name and self.description:
+					duplicateRooms = self.searchRooms(exactMatch=True, name=self.name, desc=self.description)
+				else:
+					duplicateRooms = None
+				if not self.name:
+					self.clientSend("Unable to add new room: empty room name.")
+				elif not self.description:
+					self.clientSend("Unable to add new room: empty room description.")
+				elif duplicateRooms and len(duplicateRooms) == 1:
+					self.autoMergeRoom(self.movement, duplicateRooms[0])
+				else:
+					# Create new room.
+					self.addedNewRoomFrom = self.currentRoom.vnum
+					self.addNewRoom(self.movement, self.name, self.description, self.dynamic)
+			self.currentRoom = self.rooms[self.currentRoom.exits[self.movement].to]
+			self.moved = self.movement
+			self.movement = None
+			if self.autoMapping and self.autoUpdating:
+				if self.name and self.currentRoom.name != self.name:
+					self.currentRoom.name = self.name
+					self.clientSend("Updating room name.")
+				if self.description and self.currentRoom.desc != self.description:
+					self.currentRoom.desc = self.description
+					self.clientSend("Updating room description.")
+				if self.dynamic and self.currentRoom.dynamicDesc != self.dynamic:
+					self.currentRoom.dynamicDesc = self.dynamic
+					self.clientSend("Updating room dynamic description.")
+
+	def mud_event_exits(self, data):
+		exits = data
+		if self.autoMapping and self.isSynced and self.moved:
+			if self.addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in exits:
+				self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(
+					direction=REVERSE_DIRECTIONS[self.moved],
+					to=self.addedNewRoomFrom
+				)
+			self.updateExitFlags(exits)
+		self.addedNewRoomFrom = None
 
 	def run(self):
 		while True:

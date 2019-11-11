@@ -86,3 +86,16 @@ class TestMapper(unittest.TestCase):
 		]:
 			with self.assertRaises(AttributeError):
 				self.mapper.handleUserData(command)
+
+	def testMapper_handleServerData(self):
+		handleServerData = self.mapper.handleServerData
+
+		# check that handleServerData properly delegates to mud_event functions
+		for event, data, funcname, args in [
+			("line", b"Welcome to mume", "mud_event_line", "Welcome to mume"),
+			("dynamic", b"A beautiful room", "mud_event_dynamic", "A beautiful room"),
+			("prompt", b"hp:hurt", "mud_event_prompt", "hp:hurt"),
+		]:
+			with patch.object(self.mapper, funcname) as func:
+				handleServerData(event, data)
+				func.assert_called_with(args)
