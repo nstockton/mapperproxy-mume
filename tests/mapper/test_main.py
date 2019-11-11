@@ -130,8 +130,8 @@ class TestServerThreadThroughput(unittest.TestCase):
 		del self.mapperThread
 		del self.serverThread
 
-	def runThroughput(self, input, expectedOutput, expectedData, inputDescription):
-		res = self.serverThread._handler.parse(input)
+	def runThroughput(self, threadInput, expectedOutput, expectedData, inputDescription):
+		res = self.serverThread._handler.parse(threadInput)
 		self.assertEqual(
 			res, expectedOutput,
 			"When entering {}, the expected output did not match {}".format(inputDescription, expectedOutput)
@@ -145,13 +145,13 @@ class TestServerThreadThroughput(unittest.TestCase):
 			)
 			i += 1
 		if i < len(actualData):
-			raise AssertionError("The mapper queue received the unexpected data: " + actualData[i])
+			raise AssertionError("The mapper queue received the unexpected data: " + str(actualData[i]))
 		if i < len(expectedData):
-			raise AssertionError("The mapper queue did not receive the expected data: " + expectedData[i])
+			raise AssertionError("The mapper queue did not receive the expected data: " + str(expectedData[i]))
 
-	def testProcessData(self):
+	def testProcessingPrompt(self):
 		self.runThroughput(
-			input=b'<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>\xff\xf9',
+			threadInput=b'<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>\xff\xf9',
 			expectedOutput=b'\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n',
 			expectedData=[
 				call((MUD_DATA, ("prompt", b'\x1b[34mMana:Hot Move:Tired>\x1b[0m'))),
@@ -159,3 +159,15 @@ class TestServerThreadThroughput(unittest.TestCase):
 			],
 			inputDescription="prompt with mana burning and moves tired"
 		)
+
+	def testProcessingEnteringRoom(self):
+		input = b'<movement dir=down/><room><name>Seagull Inn</name>\r\n<gratuitous><description>This is the most famous meeting-place in Harlond where people of all sorts\r\nexchange news, rumours, deals and friendships. Sailors from the entire coast of\r\nMiddle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\nFor the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\nthe wall.\r\n</description></gratuitous>A large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n</room>'  # noqa
+		expectedOutput = b'Seagull Inn\r\nA large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n'  # noqa
+		expectedData = [
+			call((MUD_DATA, ("movement", b"down"))),
+			call((MUD_DATA, ("name", b'Seagull Inn'))),
+			call((1, ('description', b'This is the most famous meeting-place in Harlond where people of all sorts\r\nexchange news, rumours, deals and friendships. Sailors from the entire coast of\r\nMiddle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\nFor the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\nthe wall.\r\n'))),  # noqa
+			call((1, ("dynamic", b'A large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n'))),  # noqa
+		]
+		inputDescription = "moving into a room"
+		self.runThroughput(input, expectedOutput, expectedData, inputDescription)
