@@ -807,19 +807,6 @@ class Mapper(threading.Thread, World):
 		self.currentRoom.exits[movement].to = vnum
 		self.clientSend("Adding room '{}' with vnum '{}'".format(newRoom.name, vnum))
 
-	def handleUserData(self, data):
-		if self.isEmulatingOffline:
-			self.user_command_emu(decodeBytes(data).strip())
-		else:
-			userCommand = data.strip().split()[0]
-			args = data[len(userCommand):].strip()
-			getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
-
-	def handleServerData(self, event, data):
-		data = stripAnsi(unescapeXML(decodeBytes(data)))
-		if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
-			getattr(self, "mud_event_" + event)(data)
-
 	def mud_event_iac_ga(self, data):
 		if self.isSynced:
 			if self.autoMapping and self.moved:
@@ -1007,6 +994,19 @@ class Mapper(threading.Thread, World):
 				)
 			self.updateExitFlags(exits)
 		self.addedNewRoomFrom = None
+
+	def handleUserData(self, data):
+		if self.isEmulatingOffline:
+			self.user_command_emu(decodeBytes(data).strip())
+		else:
+			userCommand = data.strip().split()[0]
+			args = data[len(userCommand):].strip()
+			getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
+
+	def handleServerData(self, event, data):
+		data = stripAnsi(unescapeXML(decodeBytes(data)))
+		if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
+			getattr(self, "mud_event_" + event)(data)
 
 	def run(self):
 		while True:
