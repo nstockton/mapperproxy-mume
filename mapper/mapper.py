@@ -853,6 +853,9 @@ class Mapper(threading.Thread, World):
 		if data.startswith("You quietly scout "):
 			self.scouting = True
 			return
+		elif data == "A huge clock is standing here.":
+			self.serverSend("look at clock")
+
 		elif data == (
 			"Wet, cold and filled with mud you drop down into a dark "
 			"and moist cave, while you notice the mud above you moving "
@@ -865,50 +868,7 @@ class Mapper(threading.Thread, World):
 		):
 			self.sync(vnum="15324")
 		elif not self.timeSynchronized:
-			if self.timeEvent is None:
-				if CLOCK_REGEX.match(data):
-					hour, minutes, amPm = CLOCK_REGEX.match(data).groups()
-					# parsedHour should be 0 - 23.
-					self.parsedHour = int(hour) % 12 + (12 if amPm == "pm" else 0)
-					self.parsedMinutes = int(minutes)
-					if self.parsedHour == 23 and self.parsedMinutes == 59:
-						Timer(1.0, self.serverSend, "look at clock").start()
-					else:
-						self.timeEvent = "clock"
-						self.serverSend("time")
-				elif DAWN_REGEX.match(data):
-					self.timeEvent = "dawn"
-					self.timeEventOffset = 0
-					self.serverSend("time")
-				elif DAY_REGEX.match(data):
-					self.timeEvent = "dawn"
-					self.timeEventOffset = 1
-					self.serverSend("time")
-				elif DUSK_REGEX.match(data):
-					self.timeEvent = "dusk"
-					self.timeEventOffset = 0
-					self.serverSend("time")
-				elif NIGHT_REGEX.match(data):
-					self.timeEvent = "dusk"
-					self.timeEventOffset = 1
-					self.serverSend("time")
-			elif TIME_REGEX.match(data):
-				match = TIME_REGEX.match(data)
-				day = int(match.group("day"))
-				year = int(match.group("year"))
-				month = 0
-				for i, m in enumerate(MONTHS):
-					if m["westron"] == match.group("month") or m["sindarin"] == match.group("month"):
-						month = i
-						break
-				if self.timeEvent == "dawn" or self.timeEvent == "dusk":
-					self.parsedHour = MONTHS[month][self.timeEvent] + self.timeEventOffset
-					self.parsedMinutes = 0
-				self.clock.epoch = timeToEpoch(year, month, day, self.parsedHour, self.parsedMinutes)
-				self.timeEvent = None
-				self.timeEventOffset = 0
-				self.timeSynchronized = True
-				self.clientSend("Synchronized with epoch {}.".format(self.clock.epoch), showPrompt=False)
+			self.syncTime(data)
 		if MOVEMENT_FORCED_REGEX.search(data) or MOVEMENT_PREVENTED_REGEX.search(data):
 			self.stopRun()
 		if self.isSynced and self.autoMapping:
@@ -916,6 +876,52 @@ class Mapper(threading.Thread, World):
 				self.clientSend(self.rridable("notridable"))
 			elif data == "You are already riding." and self.currentRoom.ridable != "ridable":
 				self.clientSend(self.rridable("ridable"))
+
+	def syncTime(self, data):
+		if self.timeEvent is None:
+			if CLOCK_REGEX.match(data):
+				hour, minutes, amPm = CLOCK_REGEX.match(data).groups()
+				# parsedHour should be 0 - 23.
+				self.parsedHour = int(hour) % 12 + (12 if amPm == "pm" else 0)
+				self.parsedMinutes = int(minutes)
+				if self.parsedHour == 23 and self.parsedMinutes == 59:
+					Timer(1.0, self.serverSend, "look at clock").start()
+				else:
+					self.timeEvent = "clock"
+					self.serverSend("time")
+			elif DAWN_REGEX.match(data):
+				self.timeEvent = "dawn"
+				self.timeEventOffset = 0
+				self.serverSend("time")
+			elif DAY_REGEX.match(data):
+				self.timeEvent = "dawn"
+				self.timeEventOffset = 1
+				self.serverSend("time")
+			elif DUSK_REGEX.match(data):
+				self.timeEvent = "dusk"
+				self.timeEventOffset = 0
+				self.serverSend("time")
+			elif NIGHT_REGEX.match(data):
+				self.timeEvent = "dusk"
+				self.timeEventOffset = 1
+				self.serverSend("time")
+		elif TIME_REGEX.match(data):
+			match = TIME_REGEX.match(data)
+			day = int(match.group("day"))
+			year = int(match.group("year"))
+			month = 0
+			for i, m in enumerate(MONTHS):
+				if m["westron"] == match.group("month") or m["sindarin"] == match.group("month"):
+					month = i
+					break
+			if self.timeEvent == "dawn" or self.timeEvent == "dusk":
+				self.parsedHour = MONTHS[month][self.timeEvent] + self.timeEventOffset
+				self.parsedMinutes = 0
+			self.clock.epoch = timeToEpoch(year, month, day, self.parsedHour, self.parsedMinutes)
+			self.timeEvent = None
+			self.timeEventOffset = 0
+			self.timeSynchronized = True
+			self.clientSend("Synchronized with epoch {}.".format(self.clock.epoch), showPrompt=False)
 
 	def mud_event_name(self, data):
 		if data not in ("You just see a dense fog around you...", "It is pitch black..."):
@@ -931,8 +937,6 @@ class Mapper(threading.Thread, World):
 		self.moved = None
 		self.addedNewRoomFrom = None
 		self.exits = None
-		if not self.timeSynchronized and self.timeEvent is None and "A huge clock is standing here." in data:
-			self.serverSend("look at clock")
 		if not self.isSynced or self.movement is None:
 			return
 		elif not self.movement:
