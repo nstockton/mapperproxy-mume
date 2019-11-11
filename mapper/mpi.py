@@ -10,30 +10,21 @@ from telnetlib import IAC
 import tempfile
 import threading
 
-from .utils import decodeBytes
+from .utils import removeFile
 
 
 MPI_INIT = b"~$#E"
 
 
-def removeFile(fileObj):
-	if not fileObj.closed:
-		fileObj.close()
-	try:
-		os.unlink(fileObj.name)
-	except FileNotFoundError:
-		pass
-
-
 class MPI(threading.Thread):
-	def __init__(self, client, server, isTinTin=None, command=None, data=None):
+	def __init__(self, client, server, isTinTin, command, data):
 		threading.Thread.__init__(self)
 		self.daemon = True
 		self._client = client
 		self._server = server
 		self.isTinTin = bool(isTinTin)
-		self.command = decodeBytes(command)
-		self.data = decodeBytes(data)
+		self.command = command
+		self.data = data
 		if sys.platform == "win32":
 			self.editor = "notepad"
 			self.pager = "notepad"
@@ -42,37 +33,32 @@ class MPI(threading.Thread):
 			self.pager = os.getenv("TINTINPAGER", "less")
 
 	def run(self):
-		if self.command not in ("V", "E") or self.data is None:
-			return
-		elif self.command == "V":
+		if self.command == b"V":
 			with tempfile.NamedTemporaryFile(suffix=".txt", prefix="mume_viewing_", delete=False) as fileObj:
-				fileObj.write(self.data.replace("\n", "\r\n").encode("utf-8"))
+				fileObj.write(self.data.replace(b"\n", b"\r\n"))
 			if self.isTinTin:
-				print("MPICOMMAND:{0} {1}:MPICOMMAND".format(self.pager, fileObj.name))
+				print("MPICOMMAND:{} {}:MPICOMMAND".format(self.pager, fileObj.name))
 			else:
 				pagerProcess = subprocess.Popen(self.pager.split() + [fileObj.name])
 				pagerProcess.wait()
 				removeFile(fileObj)
-		elif self.command == "E":
-			session, description, body = self.data[1:].split("\n", 2)
+		elif self.command == b"E":
+			session, description, body = self.data[1:].split(b"\n", 2)
 			with tempfile.NamedTemporaryFile(suffix=".txt", prefix="mume_editing_", delete=False) as fileObj:
-				fileObj.write(body.replace("\n", "\r\n").encode("utf-8"))
+				fileObj.write(body.replace(b"\n", b"\r\n"))
 			lastModified = os.path.getmtime(fileObj.name)
 			if self.isTinTin:
-				print("MPICOMMAND:{0} {1}:MPICOMMAND".format(self.editor, fileObj.name))
-				try:
-					raw_input("Continue:")
-				except NameError:
-					input("Continue:")
+				print("MPICOMMAND:{} {}:MPICOMMAND".format(self.editor, fileObj.name))
+				input("Continue:")
 			else:
 				editorProcess = subprocess.Popen(self.editor.split() + [fileObj.name])
 				editorProcess.wait()
 			if os.path.getmtime(fileObj.name) == lastModified:
 				# The user closed the text editor without saving. Cancel the editing session.
-				response = b"C" + session.encode("utf-8")
+				response = b"C" + session
 			else:
 				with open(fileObj.name, "rb") as fileObj:
-					response = b"E" + session.encode("utf-8") + b"\n" + fileObj.read()
+					response = b"E" + session + b"\n" + fileObj.read()
 			response = response.replace(b"\r", b"").replace(IAC, IAC + IAC).strip() + b"\n"
-			self._server.sendall(b"".join((b"~$#EE", str(len(response)).encode("utf-8"), b"\n", response)))
+			self._server.sendall(MPI_INIT + b"E" + str(len(response)).encode("us-ascii") + b"\n" + response)
 			removeFile(fileObj)

@@ -18,7 +18,7 @@ import threading
 # Local Modules:
 from .mapper import USER_DATA, MUD_DATA, Mapper
 from .mpi import MPI_INIT, MPI
-from .utils import getDirectoryPath, touch, unescapeXML
+from .utils import getDirectoryPath, removeFile, touch, unescapeXML
 
 
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
@@ -231,7 +231,8 @@ class Server(threading.Thread):
 		if self.charsetResponseCode == ord(SB_ACCEPTED):
 			logger.debug(f"MUME responds: Charset '{self.charsetResponseBuffer.decode('us-ascii')}' accepted.")
 		elif self.charsetResponseCode == ord(SB_REJECTED):
-			logger.debug("MUME responds: Charset rejected.")
+			# Note: MUME does not respond with the charset name if it was rejected.
+			logger.warning(f"MUME responds: Charset '{self.defaultCharset.decode('us-ascii')}' rejected.")
 		else:
 			logger.warning(f"Unknown charset negotiation response from MUME: {self.charsetResponseBuffer!r}")
 		self.charsetResponseCode = None
@@ -462,10 +463,7 @@ def main(
 		except EnvironmentError:
 			pass
 		clientConnection.close()
-		try:
-			os.remove(LISTENING_STATUS_FILE)
-		except Exception:
-			pass
+		removeFile(LISTENING_STATUS_FILE)
 		return
 	if not noSsl and ssl is not None:
 		# Validating server identity with ssl module
@@ -523,7 +521,4 @@ def main(
 	proxyThread.join()
 	serverConnection.close()
 	clientConnection.close()
-	try:
-		os.remove(LISTENING_STATUS_FILE)
-	except Exception:
-		pass
+	removeFile(LISTENING_STATUS_FILE)

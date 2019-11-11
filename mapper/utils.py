@@ -70,6 +70,18 @@ def simplified(data):
 	return WHITE_SPACE_REGEX.sub(" ", data).strip()
 
 
+def removeFile(toRemove):
+	"""Remove a file, ignoring any errors."""
+	try:
+		if not toRemove.closed:
+			toRemove.close()
+		os.remove(toRemove.name)
+	except AttributeError:
+		os.remove(toRemove)
+	except Exception:
+		pass
+
+
 def touch(name, times=None):
 	"""
 	Touches a file.
