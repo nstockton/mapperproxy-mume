@@ -3,14 +3,17 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Built-in Modules:
 import socket
+from queue import Empty, Queue
+from telnetlib import CHARSET, IAC, DO, NAWS, SB, SE, TTYPE, WILL
 import unittest
 from unittest.mock import Mock
 
-from mapper.main import SB_ACCEPTED, SB_SEND, Server
-from mapper.mpi import MPI_INIT
-from telnetlib import CHARSET, IAC, DO, NAWS, SB, SE, TTYPE, WILL
-from queue import Empty, Queue
+# Local Modules:
+from mapper.main import Server
+from mapper.protocols.mpi import MPI_INIT
+from mapper.protocols.telnet import SB_ACCEPTED, SB_SEND
 
 
 # The initial output of MUME. Used by the server thread to detect connection success.
@@ -26,9 +29,7 @@ class TestServerThread(unittest.TestCase):
 			# Turn on XML mode.
 			MPI_INIT + b"X2\n3G\n",
 			# Tell the Mume server to put IAC-GA at end of prompts.
-			MPI_INIT + b"P2\nG\n",
-			# Tell the server that we will negotiate the character set.
-			IAC + WILL + CHARSET,
+			MPI_INIT + b"P2\nG\n"
 		]
 		mumeSocket = Mock(spec=socket.socket)
 		outputFromMume = Queue()
@@ -53,6 +54,8 @@ class TestServerThread(unittest.TestCase):
 		self.assertEqual(INITIAL_OUTPUT, serverThread.initialOutput)
 		outputFromMume.put(INITIAL_OUTPUT)
 		try:
+			# Expect IAC + WILL + CHARSET, even though it's not in initialConfiguration.
+			initialConfiguration.append(IAC + WILL + CHARSET)
 			while initialConfiguration:
 				data = inputToMume.get(timeout=1)
 				self.assertIn(data, initialConfiguration, "Unknown initial configuration: {!r}".format(data))

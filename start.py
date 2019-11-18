@@ -75,7 +75,7 @@ if __name__ == "__main__":
 	parser.add_argument(
 		"-ptlf",
 		"--prompt-terminator-lf",
-		help="Terminate game prompts with new line characters (IAC + GA is default).",
+		help="Terminate game prompts with return-linefeed characters (IAC + GA is default).",
 		action="store_true"
 	)
 	parser.add_argument(
