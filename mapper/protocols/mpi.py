@@ -27,9 +27,9 @@ class MPIHandler(object):
 		self._processed = processed
 		self._remoteSender = remoteSender
 		self._isTinTin = outputFormat == "tintin"
-		self.MPIBuffer = bytearray()
-		self.canInit = threading.Event()
-		self.inMPI = threading.Event()
+		self._MPIBuffer = bytearray()
+		self._lfReceived = threading.Event()
+		self._inMPI = threading.Event()
 		self._commands = {
 			b"E": self._edit,
 			b"V": self._view
@@ -84,43 +84,71 @@ class MPIHandler(object):
 			pagerProcess.wait()
 			removeFile(fileObj)
 
-	def handleMPI(self, ordinal):
+	def _handleMPI(self, ordinal):
 		if self._command is None:
 			# The first byte is the MPI command.
 			self._command = bytes([ordinal])
 			if self._command not in self._commands:
 				# Invalid MPI command.
-				self.inMPI.clear()
+				self._inMPI.clear()
 				self._processed.extend(b"\n" + MPI_INIT + self._command)
 				self._command = None
 		elif self._length is None and ordinal in b"\n":
 			# The buffer contains the length of subsequent bytes to be received.
 			try:
-				self._length = int(self.MPIBuffer)
-				self.MPIBuffer.clear()
+				self._length = int(self._MPIBuffer)
+				self._MPIBuffer.clear()
 			except (TypeError, ValueError):
 				# Invalid length.
-				self.inMPI.clear()
-				self._processed.extend(b"\n" + MPI_INIT + self._command + self.MPIBuffer + b"\n")
+				self._inMPI.clear()
+				self._processed.extend(b"\n" + MPI_INIT + self._command + self._MPIBuffer + b"\n")
 				self._command = None
-				self.MPIBuffer.clear()
+				self._MPIBuffer.clear()
 		else:
-			self.MPIBuffer.append(ordinal)
-			if len(self.MPIBuffer) == self._length:
+			self._MPIBuffer.append(ordinal)
+			if len(self._MPIBuffer) == self._length:
 				# The final byte in the expected MPI data has been received.
 				thread = threading.Thread(
 					target=self._commands[self._command],
-					args=(bytes(self.MPIBuffer),),
+					args=(bytes(self._MPIBuffer),),
 					daemon=True
 				)
 				self._MPIThreads.append(thread)
 				self._command = None
 				self._length = None
-				self.MPIBuffer.clear()
-				self.inMPI.clear()
+				self._MPIBuffer.clear()
+				self._inMPI.clear()
 				thread.start()
 
 	def close(self):
 		for thread in self._MPIThreads:
 			thread.join()
 		self._MPIThreads.clear()
+
+	def parse(self, ordinal):
+		if self._inMPI.isSet():
+			self._handleMPI(ordinal)
+		elif self._lfReceived.isSet() and ordinal in MPI_INIT and MPI_INIT.startswith(self._MPIBuffer):
+			# Ordinal is one of the bytes in the 4-byte MPI_INIT sequence,
+			# and the sequence was preceded by a new-line character (\n).
+			self._MPIBuffer.append(ordinal)
+			if self._MPIBuffer == MPI_INIT:
+				# Ordinal is the final byte.
+				self._inMPI.set()
+				self._MPIBuffer.clear()
+				if self._processed.endswith(b"\n"):
+					del self._processed[-1]
+		else:
+			# The byte is not part of an MPI negotiation.
+			if ordinal in b"\n":
+				self._lfReceived.set()
+			else:
+				self._lfReceived.clear()
+			if self._MPIBuffer:
+				# The Bytes in the buffer are in MPI_INIT, but aren't part of an MPI init sequence.
+				self._MPIBuffer.append(ordinal)
+				value = bytes(self._MPIBuffer)
+				self._MPIBuffer.clear()
+				return value
+			else:
+				return ordinal

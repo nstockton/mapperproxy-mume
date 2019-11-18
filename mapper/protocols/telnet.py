@@ -33,10 +33,10 @@ class TelnetHandler(object):
 		self._processed = processed
 		self._remoteSender = remoteSender
 		self._promptTerminator = promptTerminator
-		self.optionNegotiationOrds = frozenset(ord(byte) for byte in (DONT, DO, WONT, WILL))
-		self.inCommand = threading.Event()
-		self.optionNegotiation = None
-		self.inSubOption = threading.Event()
+		self._optionNegotiationOrds = frozenset(ord(byte) for byte in (DONT, DO, WONT, WILL))
+		self._inCommand = threading.Event()
+		self._optionNegotiation = None
+		self._inSubOption = threading.Event()
 		self._subOptionBuffer = bytearray()
 		self.charsets = {
 			"us-ascii": b"US-ASCII",
@@ -62,25 +62,25 @@ class TelnetHandler(object):
 	def _sendOption(self, command, option):
 		self._sendRemote(IAC + command + option)
 
-	def handleCommand(self, ordinal):
+	def _handleCommand(self, ordinal):
 		if ordinal in IAC:
 			# Escaped IAC, ignore.
 			pass
 		elif ordinal in SB:
 			# Sub-option begin.
-			self.inSubOption.set()
+			self._inSubOption.set()
 		elif ordinal in GA:
 			# MUME will send IAC + GA after a prompt.
 			self._processed.extend(self._promptTerminator if self._promptTerminator is not None else IAC + GA)
-		elif ordinal in self.optionNegotiationOrds and self.optionNegotiation is None:
-			self.optionNegotiation = ordinal
+		elif ordinal in self._optionNegotiationOrds and self._optionNegotiation is None:
+			self._optionNegotiation = ordinal
 		else:
 			self._processed.extend((IAC[0], ordinal))
-		self.inCommand.clear()
+		self._inCommand.clear()
 
-	def handleOption(self, ordinal):
-		command = bytes([self.optionNegotiation])
-		self.optionNegotiation = None
+	def _handleOption(self, ordinal):
+		command = bytes([self._optionNegotiation])
+		self._optionNegotiation = None
 		option = bytes([ordinal])
 		if option in self._options:
 			if command == WILL or command == WONT:
@@ -127,7 +127,7 @@ class TelnetHandler(object):
 		else:
 			self._processed.extend(IAC + command + option)
 
-	def handleSubOption(self, ordinal):
+	def _handleSubOption(self, ordinal):
 		if self._subOptionBuffer.endswith(IAC) and ordinal in SE:
 			# Sub-option end.
 			del self._subOptionBuffer[-1]  # Remove IAC from the end.
@@ -149,7 +149,7 @@ class TelnetHandler(object):
 			else:
 				self._processed.extend(IAC + SB + option + self._subOptionBuffer + IAC + SE)
 			self._subOptionBuffer.clear()
-			self.inSubOption.clear()
+			self._inSubOption.clear()
 		else:
 			self._subOptionBuffer.append(ordinal)
 
@@ -203,3 +203,23 @@ class TelnetHandler(object):
 		# Tell the server that we will negotiate the character set.
 		self._options[CHARSET]["name"] = self.charsets[name]
 		self.enableOption(CHARSET, LOCAL)
+
+	def parse(self, ordinal):
+		if self._inSubOption.isSet():
+			# The byte is part of a sub-negotiation.
+			self._handleSubOption(ordinal)
+		elif self._optionNegotiation is not None:
+			# The byte is the final byte of a 3-byte option.
+			self._handleOption(ordinal)
+		elif self._inCommand.isSet():
+			# The byte is the final byte of a 2-byte command, or the second byte of a 3-byte option.
+			self._handleCommand(ordinal)
+			if ordinal in IAC:
+				# Escaped IAC.
+				return ordinal
+		elif ordinal in IAC:
+			# The byte is the first byte of a 2-byte command / 3-byte option.
+			self._inCommand.set()
+		else:
+			# The byte is not part of a Telnet negotiation.
+			return ordinal

@@ -24,8 +24,9 @@ class XMLHandler(object):
 		self._outputFormat = outputFormat
 		self._tagBuffer = bytearray()  # Used for start and end tag names.
 		self._textBuffer = bytearray()  # Used for the text between start and end tags.
-		self.inTag = threading.Event()
-		self.inGratuitous = threading.Event()
+		self._lineBuffer = bytearray()  # Used for non-XML lines.
+		self._inTag = threading.Event()
+		self._inGratuitous = threading.Event()
 		self._mode = None
 		self._modes = {  # If a tag matches a key, self._mode will be changed to its value.
 			b"room": b"room",
@@ -67,41 +68,49 @@ class XMLHandler(object):
 			else:
 				raise
 
-	def handleXML(self, ordinal):
+	def _handleTag(self, ordinal):
 		modes = self._modes
 		if ordinal in b">":
 			# End of tag reached.
-			self.inTag.clear()
+			self._inTag.clear()
 			tag = bytes(self._tagBuffer)
 			self._tagBuffer.clear()
 			text = unescapeXML(bytes(self._textBuffer), True)
 			self._textBuffer.clear()
 			if self._outputFormat == "raw":
 				self._processed.extend(b"<" + escapeIAC(tag) + b">")
-			elif self._outputFormat == "tintin" and not self.inGratuitous.isSet():
+			elif self._outputFormat == "tintin" and not self._inGratuitous.isSet():
 				self._processed.extend(self._tintinReplacements.get(escapeIAC(tag), b""))
 			if self._mode is None and tag.startswith(b"movement"):
 				self._sendEvent((MUD_DATA, ("movement", tag[13:-1])))
 			elif tag == b"gratuitous":
-				self.inGratuitous.set()
+				self._inGratuitous.set()
 			elif tag == b"/gratuitous":
-				self.inGratuitous.clear()
+				self._inGratuitous.clear()
 			elif tag in modes:
 				self._mode = modes[tag]
 				if tag.startswith(b"/"):
 					self._sendEvent((MUD_DATA, ("dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"), text)))
 				if tag == b"/prompt":
 					self._sendEvent((MUD_DATA, ("iac_ga", b"")))
-		elif ordinal in b"<":
-			self.inTag.set()
-		elif self.inTag.isSet():
+		else:
 			self._tagBuffer.append(ordinal)
+
+	def parse(self, ordinal):
+		if self._inTag.isSet():
+			self._handleTag(ordinal)
+		elif ordinal in b"<":
+			self._inTag.set()
 		else:
 			self._textBuffer.append(ordinal)
-			if self._outputFormat == "raw" or not self.inGratuitous.isSet():
+			if self._outputFormat == "raw" or not self._inGratuitous.isSet():
 				self._processed.append(ordinal)
 				if ordinal in IAC:
 					self._processed.append(ordinal)  # Double the IAC to escape it.
-			if self._mode is None and ordinal in b"\n":
-				line = bytes(unescapeXML(self._textBuffer.splitlines()[-1], True))
-				self._sendEvent((MUD_DATA, ("line", line)))
+			if self._mode is None:
+				if ordinal in b"\n":
+					line = bytes(unescapeXML(self._lineBuffer.rstrip(b"\r\n"), True))
+					self._lineBuffer.clear()
+					self._sendEvent((MUD_DATA, ("line", line)))
+				else:
+					self._lineBuffer.append(ordinal)

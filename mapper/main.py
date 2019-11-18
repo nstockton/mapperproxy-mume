@@ -89,7 +89,7 @@ class Server(threading.Thread):
 			# Tell the Mume server to put IAC-GA at end of prompts.
 			MPI_INIT + b"P2\nG\n"
 		]
-		self._protocolHandler = ProtocolHandler(
+		self._handler = ProtocolHandler(
 			remoteSender=self._server.sendall,
 			eventSender=self._mapper.queue.put,
 			outputFormat=self._outputFormat,
@@ -100,7 +100,7 @@ class Server(threading.Thread):
 		self.finished.set()
 
 	def run(self):
-		protocolHandler = self._protocolHandler
+		handler = self._handler
 		encounteredInitialOutput = False
 		while not self.finished.isSet():
 			try:
@@ -115,10 +115,10 @@ class Server(threading.Thread):
 				# The connection to Mume has been established, and the game has just responded with the login screen.
 				for item in self.initialConfiguration:
 					self._server.sendall(item)
-				protocolHandler._telnet.charset("us-ascii")
+				handler._telnet.charset("us-ascii")
 				encounteredInitialOutput = True
 			try:
-				self._client.sendall(protocolHandler.feed(data))
+				self._client.sendall(handler.parse(data))
 			except EnvironmentError:
 				self.close()
 				continue
@@ -126,7 +126,7 @@ class Server(threading.Thread):
 			# Shutdown the gui
 			with self._mapper._gui_queue_lock:
 				self._mapper._gui_queue.put(None)
-		protocolHandler.close()
+		handler.close()
 
 
 class MockedSocket(object):
