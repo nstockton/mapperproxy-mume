@@ -25,6 +25,7 @@ APP_NAME = "Mapper Proxy"
 APP_AUTHOR = "Nick Stockton"
 VERSION_REGEX = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
 ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))  # NOQA: F821
+isTag = False
 found_version = None
 for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
@@ -32,6 +33,7 @@ for arg in sys.argv[1:]:
 		APP_VERSION = match.groups()[0]
 		if match.groups()[2].startswith("0-g"):
 			APP_VERSION_TYPE = match.groups()[1]
+			isTag = True
 		else:
 			APP_VERSION_TYPE = "_".join(match.groups()[1:])
 		found_version = "command line"
@@ -51,6 +53,7 @@ else:
 				APP_VERSION = match.groups()[0]
 				if match.groups()[2].startswith("0-g"):
 					APP_VERSION_TYPE = match.groups()[1]
+					isTag = True
 				else:
 					APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "version file"
@@ -69,6 +72,7 @@ else:
 				APP_VERSION = match.groups()[0]
 				if match.groups()[2].startswith("0-g"):
 					APP_VERSION_TYPE = match.groups()[1]
+					isTag = True
 				else:
 					APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "latest Git tag"
@@ -90,6 +94,10 @@ APP_DEST = os.path.normpath(
 		"{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace("-", "_").replace(" ", "_")
 	)
 )
+if isTag:
+	ZIP_FILE = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "MapperProxy.zip"))
+else:
+	ZIP_FILE = APP_DEST + ".zip"
 VERSION_FILE = os.path.normpath(
 	os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore")
 )
@@ -223,8 +231,8 @@ VSVersionInfo(
 # Remove old dist directory and old version file.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(APP_DEST, ignore_errors=True)
-if os.path.exists(APP_DEST + ".zip") and not os.path.isdir(APP_DEST + ".zip"):
-	os.remove(APP_DEST + ".zip")
+if os.path.exists(ZIP_FILE) and not os.path.isdir(ZIP_FILE):
+	os.remove(ZIP_FILE)
 if (
 	os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 	and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
@@ -358,9 +366,9 @@ for files, destination in include_files:
 		if os.path.exists(src) and not os.path.isdir(src):
 			shutil.copy(src, dest_dir)
 
-print("Compressing the distribution to {}.zip".format(APP_DEST))
+print("Compressing the distribution to {}.".format(ZIP_FILE))
 shutil.make_archive(
-	base_name=APP_DEST,
+	base_name=os.path.splitext(ZIP_FILE)[0],
 	format="zip",
 	root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)),
 	base_dir=os.path.basename(APP_DEST),
@@ -371,17 +379,15 @@ shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
 hashes = {
-	"sha256": hashlib.sha256(),
-	"sha512": hashlib.sha512()
+	"sha256": hashlib.sha256()
 }
-file_name = APP_DEST + ".zip"
 block_size = 2 ** 16
-with open(file_name, "rb") as f:
+with open(ZIP_FILE, "rb") as f:
 	for block in iter(lambda: f.read(block_size), b""):
 		for _, hash in hashes.items():
 			hash.update(block)
 for hashtype, hash in hashes.items():
-	with codecs.open("{}.{}".format(file_name, hashtype), "wb", encoding="utf-8") as f:
-		f.write("{} *{}\n".format(hash.hexdigest().lower(), os.path.basename(file_name)))
+	with codecs.open("{}.{}".format(ZIP_FILE, hashtype), "wb", encoding="utf-8") as f:
+		f.write("{} *{}\n".format(hash.hexdigest().lower(), os.path.basename(ZIP_FILE)))
 
 print("Done.")
