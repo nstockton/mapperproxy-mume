@@ -95,9 +95,9 @@ APP_DEST = os.path.normpath(
 	)
 )
 if isTag:
-	ZIP_FILE = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "MapperProxy.zip"))
-else:
 	ZIP_FILE = APP_DEST + ".zip"
+else:
+	ZIP_FILE = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "MapperProxy.zip"))
 VERSION_FILE = os.path.normpath(
 	os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore")
 )
