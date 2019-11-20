@@ -282,7 +282,7 @@ class Mapper(threading.Thread, World):
 		self.proxy.game.write(b"quit")
 
 	def emulation_command_at(self, label: str, *args: str) -> None:
-		"""mimic the /at command that the ainur use."""
+		"""mimic the /at command that the ainur use. Syntax: at <room label|room number> <command>"""
 		room: Union[Room, None] = self.getRoomFromLabel(label)
 		if room is None:
 			return None
@@ -316,7 +316,7 @@ class Mapper(threading.Thread, World):
 		self.output(f"Exits: {', '.join(exits)}.")
 
 	def emulation_command_go(self, label: Union[str, Room], isJump: bool = True) -> None:
-		"""mimic the /go command that the ainur use."""
+		"""mimic the /go command that the ainur use. Syntax: go <room label|room number> <command>"""
 		room: Union[Room, None] = label if isinstance(label, Room) else self.getRoomFromLabel(label)
 		if room is None:
 			return None
