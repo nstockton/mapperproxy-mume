@@ -748,7 +748,7 @@ class Mapper(threading.Thread, World):
 		for door, road, climb, portal, direction in EXIT_TAGS_REGEX.findall(exits):
 			# Portals aren't real exits.
 			if portal:
-				return
+				continue
 			if direction not in self.currentRoom.exits:
 				output.append("Adding exit '{}' to current room.".format(direction))
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
@@ -815,7 +815,7 @@ class Mapper(threading.Thread, World):
 		if self.isSynced:
 			if self.autoMapping and self.moved:
 				self.updateRoomFlags(self.prompt)
-		elif self.name:
+		elif self.name and self.name != "None":
 			self.sync(self.name, self.description)
 		if self.isSynced and self.dynamic is not None:
 			self.roomDetails()
