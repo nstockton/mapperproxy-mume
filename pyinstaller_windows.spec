@@ -322,13 +322,15 @@ shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 lib_files = [
 	(
 		[
-			path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.dll")))
-			if os.path.basename(path).lower() not in ("python37.dll", "vcruntime140.dll")
+			path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.pyd")))
+			if os.path.basename(path).lower() not in (
+				"_ctypes.pyd",
+				"_socket.pyd",
+				"_ssl.pyd",
+				"select.pyd",
+				"win32api.pyd"
+			)
 		],
-		"lib"
-	),
-	(
-		glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.pyd"))),
 		"lib"
 	)
 ]
