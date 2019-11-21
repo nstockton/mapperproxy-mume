@@ -8,10 +8,11 @@ import socket
 from queue import Empty, Queue
 from telnetlib import CHARSET, IAC, DO, NAWS, SB, SE, TTYPE, WILL
 import unittest
-from unittest.mock import Mock
+from unittest.mock import call, Mock
 
 # Local Modules:
 from mapper.main import Server
+from mapper.mapper import MUD_DATA
 from mapper.protocols.mpi import MPI_INIT
 from mapper.protocols.telnet import SB_ACCEPTED, SB_SEND
 
@@ -49,7 +50,7 @@ class TestServerThread(unittest.TestCase):
 		)
 		serverThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
 		serverThread.start()
-		# test when the server sends its initial negociations, the server thread outputs its initial configuration
+		# test when the server sends its initial negotiations, the server thread outputs its initial configuration
 		self.assertEqual(initialConfiguration, serverThread.initialConfiguration)
 		self.assertEqual(INITIAL_OUTPUT, serverThread.initialOutput)
 		outputFromMume.put(INITIAL_OUTPUT)
@@ -74,12 +75,12 @@ class TestServerThread(unittest.TestCase):
 				"Remaining output: {!r}".format(remainingOutput)
 			)
 			raise AssertionError("\n".join(errorMessage))
-		# test initial telnet negociations were passed to the client
+		# test initial telnet negotiations were passed to the client
 		try:
 			data = outputToUser.get(timeout=1)
 			self.assertEqual(data, INITIAL_OUTPUT)
 		except Empty:
-			raise AssertionError("initial telnet negociations were not passed to the client")
+			raise AssertionError("initial telnet negotiations were not passed to the client")
 		# test regular text is passed through to the client
 		try:
 			outputFromMume.put(WELCOME_MESSAGE)
@@ -87,18 +88,18 @@ class TestServerThread(unittest.TestCase):
 			self.assertEqual(WELCOME_MESSAGE, data)
 		except Empty:
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
-		# test further telnet negociations are passed to the client with the exception of charset negociations
+		# test further telnet negotiations are passed to the client with the exception of charset negotiations
 		try:
-			charsetNegociation = IAC + DO + CHARSET + IAC + SB + TTYPE + SB_SEND + IAC + SE
-			charsetSubnegociation = IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE
-			outputFromMume.put(charsetNegociation)
+			charsetNegotiation = IAC + DO + CHARSET + IAC + SB + TTYPE + SB_SEND + IAC + SE
+			charsetSubnegotiation = IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE
+			outputFromMume.put(charsetNegotiation)
 			data = outputToUser.get(timeout=1)
-			self.assertEqual(data, charsetNegociation[3:])  # slicing off the charset negociation
-			outputFromMume.put(charsetSubnegociation)
+			self.assertEqual(data, charsetNegotiation[3:])  # slicing off the charset negotiation
+			outputFromMume.put(charsetSubnegotiation)
 			data = outputToUser.get(timeout=1)
 			self.assertEqual(data, b"")
 		except Empty:
-			raise AssertionError("Further telnet negociations were not passed to the client")
+			raise AssertionError("Further telnet negotiations were not passed to the client")
 		# when mume outputs further text, test it is passed to the user
 		try:
 			usernamePrompt = b"By what name do you wish to be known? "
@@ -111,3 +112,62 @@ class TestServerThread(unittest.TestCase):
 		outputFromMume.put(b"")
 		serverThread.join(1)
 		self.assertFalse(serverThread.is_alive())
+
+
+class TestServerThreadThroughput(unittest.TestCase):
+	def setUp(self):
+		self.mapperThread = Mock()
+		self.serverThread = Server(
+			client=Mock(),
+			server=Mock(),
+			mapper=self.mapperThread,
+			outputFormat="normal",
+			interface="text",
+			promptTerminator=b"\r\n",
+		)
+
+	def tearDown(self):
+		del self.mapperThread
+		del self.serverThread
+
+	def runThroughput(self, threadInput, expectedOutput, expectedData, inputDescription):
+		res = self.serverThread._handler.parse(threadInput)
+		self.assertEqual(
+			res, expectedOutput,
+			"When entering {}, the expected output did not match {}".format(inputDescription, expectedOutput)
+		)
+		actualData = self.mapperThread.queue.put.mock_calls
+		i = 0
+		while len(actualData) > i < len(expectedData):
+			self.assertEqual(
+				actualData[i], expectedData[i],
+				"When entering {}, call #{} to the mapper queue was not as expected".format(inputDescription, i)
+			)
+			i += 1
+		if i < len(actualData):
+			raise AssertionError("The mapper queue received the unexpected data: " + str(actualData[i]))
+		if i < len(expectedData):
+			raise AssertionError("The mapper queue did not receive the expected data: " + str(expectedData[i]))
+
+	def testProcessingPrompt(self):
+		self.runThroughput(
+			threadInput=b'<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>\xff\xf9',
+			expectedOutput=b'\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n',
+			expectedData=[
+				call((MUD_DATA, ("prompt", b'\x1b[34mMana:Hot Move:Tired>\x1b[0m'))),
+				call((MUD_DATA, ("iac_ga", b""))),
+			],
+			inputDescription="prompt with mana burning and moves tired"
+		)
+
+	def testProcessingEnteringRoom(self):
+		input = b'<movement dir=down/><room><name>Seagull Inn</name>\r\n<gratuitous><description>This is the most famous meeting-place in Harlond where people of all sorts\r\nexchange news, rumours, deals and friendships. Sailors from the entire coast of\r\nMiddle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\nFor the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\nthe wall.\r\n</description></gratuitous>A large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n</room>'  # noqa
+		expectedOutput = b'Seagull Inn\r\nA large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n'  # noqa
+		expectedData = [
+			call((MUD_DATA, ("movement", b"down"))),
+			call((MUD_DATA, ("name", b'Seagull Inn'))),
+			call((1, ('description', b'This is the most famous meeting-place in Harlond where people of all sorts\r\nexchange news, rumours, deals and friendships. Sailors from the entire coast of\r\nMiddle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\nFor the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\nthe wall.\r\n'))),  # noqa
+			call((1, ("dynamic", b'A large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n'))),  # noqa
+		]
+		inputDescription = "moving into a room"
+		self.runThroughput(input, expectedOutput, expectedData, inputDescription)
