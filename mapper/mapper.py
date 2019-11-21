@@ -193,7 +193,7 @@ class Mapper(threading.Thread, World):
 		self.movement = None
 		self.moved = None
 		self.prompt = None
-		self.name = None
+		self.roomName = None
 		self.description = None
 		self.dynamic = None
 		self.exits = None
@@ -815,8 +815,8 @@ class Mapper(threading.Thread, World):
 		if self.isSynced:
 			if self.autoMapping and self.moved:
 				self.updateRoomFlags(self.prompt)
-		elif self.name and self.name != "None":
-			self.sync(self.name, self.description)
+		elif self.roomName:
+			self.sync(self.roomName, self.description)
 		if self.isSynced and self.dynamic is not None:
 			self.roomDetails()
 			if self.autoWalkDirections and self.moved and self.autoWalk:
@@ -827,7 +827,7 @@ class Mapper(threading.Thread, World):
 		self.movement = None
 		self.moved = None
 		self.prompt = None
-		self.name = None
+		self.roomName = None
 		self.description = None
 		self.dynamic = None
 		self.exits = None
@@ -916,9 +916,9 @@ class Mapper(threading.Thread, World):
 
 	def mud_event_name(self, data):
 		if data not in ("You just see a dense fog around you...", "It is pitch black..."):
-			self.name = simplified(data)
+			self.roomName = simplified(data)
 		else:
-			self.name = ""
+			self.roomName = ""
 
 	def mud_event_description(self, data):
 		self.description = simplified(data)
@@ -960,11 +960,11 @@ class Mapper(threading.Thread, World):
 			):
 				# Player has moved in a direction that either doesn't exist in the database
 				# or links to an invalid vnum (E.G. undefined).
-				if self.autoMerging and self.name and self.description:
-					duplicateRooms = self.searchRooms(exactMatch=True, name=self.name, desc=self.description)
+				if self.autoMerging and self.roomName and self.description:
+					duplicateRooms = self.searchRooms(exactMatch=True, name=self.roomName, desc=self.description)
 				else:
 					duplicateRooms = None
-				if not self.name:
+				if not self.roomName:
 					self.clientSend("Unable to add new room: empty room name.")
 				elif not self.description:
 					self.clientSend("Unable to add new room: empty room description.")
@@ -973,13 +973,13 @@ class Mapper(threading.Thread, World):
 				else:
 					# Create new room.
 					self.addedNewRoomFrom = self.currentRoom.vnum
-					self.addNewRoom(self.movement, self.name, self.description, self.dynamic)
+					self.addNewRoom(self.movement, self.roomName, self.description, self.dynamic)
 			self.currentRoom = self.rooms[self.currentRoom.exits[self.movement].to]
 			self.moved = self.movement
 			self.movement = None
 			if self.autoMapping and self.autoUpdating:
-				if self.name and self.currentRoom.name != self.name:
-					self.currentRoom.name = self.name
+				if self.roomName and self.currentRoom.name != self.roomName:
+					self.currentRoom.name = self.roomName
 					self.clientSend("Updating room name.")
 				if self.description and self.currentRoom.desc != self.description:
 					self.currentRoom.desc = self.description
