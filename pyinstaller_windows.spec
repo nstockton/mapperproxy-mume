@@ -257,17 +257,7 @@ a = Analysis(  # NOQA: F821
 	datas=[],
 	hiddenimports=["uuid"],
 	hookspath=[],
-	runtime_hooks=[
-		os.path.normpath(
-			os.path.join(
-				APP_DEST,
-				os.pardir,
-				"_pyinstaller_hooks",
-				"runtime_hooks",
-				"use_lib.py"
-			)
-		)
-	],
+	runtime_hooks=[],
 	excludes=excludes,
 	win_no_prefer_redirects=False,
 	win_private_assemblies=False,
@@ -319,21 +309,7 @@ if (
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
 shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 
-lib_files = [
-	(
-		[
-			path for path in glob.glob(os.path.normpath(os.path.join(APP_DEST, "*.pyd")))
-			if os.path.basename(path).lower() not in (
-				"_ctypes.pyd",
-				"_socket.pyd",
-				"_ssl.pyd",
-				"select.pyd",
-				"win32api.pyd"
-			)
-		],
-		"lib"
-	)
-]
+lib_files = []
 
 for files, destination in lib_files:
 	dest_dir = os.path.join(APP_DEST, destination)
