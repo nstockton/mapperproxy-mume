@@ -1,9 +1,11 @@
 certifi
 flake8
 flake8-tabs
-fuzzywuzzy==0.17.0
+fuzzywuzzy
 pyglet
-python-Levenshtein==0.12.0
+python-Levenshtein
 python-rapidjson
 #git+https://github.com/nstockton/speechlight.git
 https://github.com/nstockton/speechlight/archive/master.zip
+# For Python3.8, the development version of PyInstaller is required to build.
+#https://github.com/pyinstaller/pyinstaller/archive/develop.zip
