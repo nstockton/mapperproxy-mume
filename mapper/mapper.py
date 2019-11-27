@@ -1014,7 +1014,7 @@ class Mapper(threading.Thread, World):
 			args = data[len(userCommand):].strip()
 			getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
 
-	def handleMudData(self, event, data):
+	def handleMudEvent(self, event, data):
 		data = stripAnsi(unescapeXML(decodeBytes(data)))
 		if event in self.mudEventHandlers:
 			if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
@@ -1026,12 +1026,12 @@ class Mapper(threading.Thread, World):
 
 	def registerMudEventHandler(self, event, handler):
 		if event not in self.mudEventHandlers:
-			self.mudEventHandlers[event] = []
-		self.mudEventHandlers[event].append(handler)
+			self.mudEventHandlers[event] = set()
+		self.mudEventHandlers[event].add(handler)
 
 	def deregisterMudEventHandler(self, event, handler):
-		if event in self.mudEventHandlers and handler in self.MudEventHandlers[event]:
-			self.MudEventHandlers[event].remove(handler)
+		if event in self.mudEventHandlers and handler in self.mudEventHandlers[event]:
+			self.mudEventHandlers[event].remove(handler)
 
 	def run(self):
 		while True:
@@ -1045,7 +1045,7 @@ class Mapper(threading.Thread, World):
 				elif dataType == MUD_DATA:
 					# The data was from the mud server.
 					event, data = data
-					self.handleMudData(event, data)
+					self.handleMudEvent(event, data)
 			except Exception as e:
 				self.output("map error")
 				print("error " + str(e))

@@ -26,7 +26,7 @@ class TestMapper(unittest.TestCase):
 
 	def testMapper_run(self):
 		self.mapper.handleUserData = Mock()
-		self.mapper.handleMudData = Mock()
+		self.mapper.handleMudEvent = Mock()
 		self.mapper.clientSend = Mock()
 		self.mapper.start()
 
@@ -58,14 +58,14 @@ class TestMapper(unittest.TestCase):
 		self.assertEqual(userCalls[2], call(b"not_a_user_command"), "Third handleUserData was not as expected.")
 		self.assertEqual(userCalls[3], call(b"run ingrove"), "Fourth call to handleUserData was not as expected.")
 
-		# validate calls to handleMudData
-		serverCalls = self.mapper.handleMudData.mock_calls
+		# validate calls to handleMudEvent
+		serverCalls = self.mapper.handleMudEvent.mock_calls
 		self.assertEqual(len(serverCalls), 5)
-		self.assertEqual(serverCalls[0], call("line", b"Welcome to mume"), "handleMudData #0 not expected.")
-		self.assertEqual(serverCalls[1], call("prompt", b"hp:hurt mana:burning>"), "Second handleMudData")
-		self.assertEqual(serverCalls[2], call("iac_ga", b""), "Third call to handleMudData")
-		self.assertEqual(serverCalls[3], call("movement", b"east"), "Fourth handleMudData not as expected")
-		self.assertEqual(serverCalls[4], call("not_an_event", b"good bype world"), "Fifth handleMudData")
+		self.assertEqual(serverCalls[0], call("line", b"Welcome to mume"), "handleMudEvent #0 not expected.")
+		self.assertEqual(serverCalls[1], call("prompt", b"hp:hurt mana:burning>"), "Second handleMudEvent")
+		self.assertEqual(serverCalls[2], call("iac_ga", b""), "Third call to handleMudEvent")
+		self.assertEqual(serverCalls[3], call("movement", b"east"), "Fourth handleMudEvent not as expected")
+		self.assertEqual(serverCalls[4], call("not_an_event", b"good bype world"), "Fifth handleMudEvent")
 
 	def testMapper_handleUserData(self):
 		handleUserData = self.mapper.handleUserData
@@ -87,49 +87,73 @@ class TestMapper(unittest.TestCase):
 			with self.assertRaises(AttributeError):
 				self.mapper.handleUserData(command)
 
-	def testMapper_handleMudData(self):
-		for event, data, handlerName, args in [
-			("line", b"Welcome to mume", "mud_event_line", "Welcome to mume"),
-			("dynamic", b"A beautiful room", "mud_event_dynamic", "A beautiful room"),
-			("exits", b"north, east, south", "mud_event_exits", "north, east, south"),
-			("prompt", b"hp:hurt", "mud_event_prompt", "hp:hurt"),
-		]:
-			with patch.object(self.mapper, handlerName) as handler:
-				self.mapper.mudEventHandlers[event] = [handler]
-				self.mapper.handleMudData(event, data)
-				handler.assert_called_with(args)
 
-	def test_handleMudEvent_issuesDebugMessageWhenTryingToHandleAnUnregisteredEvent(self):
+class TestMapper_handleMudEvent(unittest.TestCase):
+	def setUp(self):
+		Mapper.loadRooms = Mock()  # to speed execution of tests
+		self.legacyHandlerNames = [
+			handlerName for handlerName in dir(Mapper)
+			if handlerName.startswith("mud_event_") and callable(getattr(Mapper, handlerName))
+		]
+		for handlerName in self.legacyHandlerNames:
+			setattr(Mapper, handlerName, Mock())
+		self.mapper = Mapper(
+			client=Mock(),
+			server=None,
+			outputFormat=None,
+			interface="text",
+			promptTerminator=None,
+			gagPrompts=None,
+			findFormat=None,
+			isEmulatingOffline=None,
+		)
+		self.mapper.daemon = True  # this allows unittest to quit if the mapper thread does not close properly.
+
+	def test_legacyMudEventHandlers(self):
+		events = [handlerName[len("mud_event_"):] for handlerName in self.legacyHandlerNames]
+		handlers = [getattr(self.mapper, handlerName) for handlerName in self.legacyHandlerNames]
+		for event, handler in zip(events, handlers):
+			sampleInput1 = b"Helol oje"
+			sampleInput2 = b"no sir, away. a papaya war is on"
+			sampleInput3 = b"delting no sir, away. a papaya war is on"
+			self.mapper.registerMudEventHandler(event, handler)
+			self.mapper.handleMudEvent(event, sampleInput1)
+			handler.assert_called_once_with(str(sampleInput1, "US-ASCII"))
+			handler.reset_mock()
+			self.mapper.handleMudEvent(event, sampleInput2)
+			handler.assert_called_once_with(str(sampleInput2, "US-ASCII"))
+			handler.reset_mock()
+			self.mapper.deregisterMudEventHandler(event, handler)
+			self.mapper.handleMudEvent(event, sampleInput3)
+			handler.assert_not_called()
+
+	def test_newMudEventHandlers(self):
+		for event in [
+			"sillyEvent",
+			"room",
+			"otherEvent",
+		]:
+			handler = Mock()
+			sampleInput1 = b"Helol oje"
+			sampleInput2 = b"no sir, away. a papaya war is on"
+			sampleInput3 = b"delting no sir, away. a papaya war is on"
+			self.mapper.registerMudEventHandler(event, handler)
+			self.mapper.handleMudEvent(event, sampleInput1)
+			handler.assert_called_once_with(str(sampleInput1, "US-ASCII"))
+			handler.reset_mock()
+			self.mapper.handleMudEvent(event, sampleInput2)
+			handler.assert_called_once_with(str(sampleInput2, "US-ASCII"))
+			handler.reset_mock()
+			self.mapper.deregisterMudEventHandler(event, handler)
+			self.mapper.handleMudEvent(event, sampleInput3)
+			handler.assert_not_called()
+
+	def test_handleMudEvent_failsGracefullyWhenHandlingAnUnknownEvent(self):
 		for unknownEvent in [
 			"unkk",
 			"New_game_event",
 			"room",
 			"<interesting-tag-<in>-a-tag>",
 		]:
-			self.assertFalse(unknownEvent in self.mapper.unknownMudEvents)
-			self.mapper.handleMudData(unknownEvent, "meaningless input")
-			self.assertTrue(unknownEvent in self.mapper.unknownMudEvents)
-
-	def test_init_RegistersLegacyHandlers(self):
-		legacyHandlers = [
-			getattr(self.mapper, handlerName) for handlerName in dir(self.mapper)
-			if handlerName.startswith("mud_event_") and callable(getattr(self.mapper, handlerName))
-		]
-		for event in self.mapper.mudEventHandlers:
-			for handler in self.mapper.mudEventHandlers[event]:
-				if handler in legacyHandlers:
-					legacyHandlers.remove(handler)
-		self.assertFalse(legacyHandlers)
-
-	def test_registerMudEventHandler_addsTheHandler(self):
-		for event, sampleInput in [
-			("sillyEvent", b"hello world"),
-			("room", b"We start playing a game"),
-			("otherEvent", b"<unknown>mystery</unknown>"),
-		]:
-			handler = Mock()
-			self.mapper.registerMudEventHandler(event, handler)
-			self.assertTrue(event in self.mapper.mudEventHandlers)
-			self.assertTrue(handler in self.mapper.mudEventHandlers[event])
-			self.mapper.handleMudData(event, sampleInput)
-			handler.assert_called_with(str(sampleInput, "US-ASCII"))
+			self.mapper.handleMudEvent(unknownEvent, "meaningless input")
+			# simply require this to execute without raising an exception
