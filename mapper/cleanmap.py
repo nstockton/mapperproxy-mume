@@ -14,7 +14,13 @@ exitRegexp = re.compile(
 
 
 class ExitsCleaner(Handler):
+	event = "exits"
+
 	def handle(self, data):
+		"""Receives the output from the exit command in Mume.
+		Checks if the output indicates any exits that are definitely not hidden despite being flagged as so,
+		then removes any such secret exit from the map.
+		"""
 		if data.startswith("Exits:"):
 			return
 		for line in data.split("\r\n"):

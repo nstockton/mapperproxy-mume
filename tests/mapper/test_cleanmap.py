@@ -52,7 +52,7 @@ class TestExitsCleaner(unittest.TestCase):
 	def setUp(self):
 		self.mapper = Mock(spec=Mapper)
 		self.mapper.isSynced = True
-		self.exitsCleaner = ExitsCleaner(self.mapper, "exits")
+		self.exitsCleaner = ExitsCleaner(self.mapper)
 
 	def createRoom(self, *exits):
 		room = Room("0")
@@ -76,6 +76,7 @@ class TestExitsCleaner(unittest.TestCase):
 			(self.createRoom(("east", False)), "  {East}   - You see something strange.\r\n"),
 			(self.createRoom(), "  /West\\   - Western Slope\r\n"),
 			(self.createRoom(("up", False)), "  Up   - Private Stair\r\n"),
+			(self.createRoom(("down", True)), "Exits: *=Down=*   - Public Courtyard\r\n"),
 		]:
 			self.mapper.currentRoom = room
 			self.exitsCleaner.handle(exit)

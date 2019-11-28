@@ -10,8 +10,15 @@ from mapper.mudevents import Handler
 
 
 class DummieHandler(Handler):
+	event = "testEvent"
+
 	def handle(self, data):
 		self.mapper.queue.put("I received " + data)
+
+
+class HandlerWithoutType(Handler):
+	def handle(self, data):
+		pass
 
 
 class TestHandler(unittest.TestCase):
@@ -32,13 +39,19 @@ class TestHandler(unittest.TestCase):
 	def testMapper_handle(self):
 		queue = self.mapper.queue
 		queue.put = Mock()
-		dummieHandler = DummieHandler(self.mapper, "testEvent")
-		self.mapper.handleMudEvent("testEvent", b"Hello world")
+		dummieHandler = DummieHandler(self.mapper)
+
+		self.mapper.handleMudEvent(dummieHandler.event, b"Hello world")
 		queue.put.assert_called_once_with("I received Hello world")
 		queue.put.reset_mock()
+
 		self.mapper.handleMudEvent("testEvent", b"I am here.")
 		queue.put.assert_called_once_with("I received I am here.")
 		queue.put.reset_mock()
+
 		dummieHandler.__del__()
 		self.mapper.handleMudEvent("testEvent", b"Goodbye world")
 		queue.put.assert_not_called()
+
+	def test_init_raisesValueErrorWhenNoEventTypeIsProvided(self):
+		self.assertRaises(ValueError, HandlerWithoutType, self.mapper)
