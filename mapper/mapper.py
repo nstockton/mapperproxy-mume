@@ -15,6 +15,7 @@ import threading
 from timeit import default_timer
 
 from . import roomdata
+from .cleanmap import ExitsCleaner
 from .clock import (
 	CLOCK_REGEX,
 	TIME_REGEX,
@@ -177,6 +178,7 @@ class Mapper(threading.Thread, World):
 		]:
 			self.registerMudEventHandler(legacyHandler, getattr(self, "mud_event_" + legacyHandler))
 		self.unknownMudEvents = []
+		ExitsCleaner(self, "exits")
 		self.emulationCommands = [
 			func[len("emulation_command_"):] for func in dir(self)
 			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))
