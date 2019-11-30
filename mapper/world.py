@@ -820,8 +820,6 @@ class World(object):
 		elif not matchDict["mode"]:
 			return "Exit '{}' has secret '{}'.".format(direction, self.currentRoom.exits[direction].door)
 		elif "remove".startswith(matchDict["mode"]):
-			if "door" in self.currentRoom.exits[direction].exitFlags:
-				self.currentRoom.exits[direction].exitFlags.remove("door")
 			if "hidden" in self.currentRoom.exits[direction].doorFlags:
 				self.currentRoom.exits[direction].doorFlags.remove("hidden")
 			self.currentRoom.exits[direction].door = ""

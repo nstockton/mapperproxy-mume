@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+import logging
 try:
 	from Queue import Queue
 except ImportError:
@@ -14,6 +15,7 @@ import threading
 from timeit import default_timer
 
 from . import roomdata
+from .cleanmap import ExitsCleaner
 from .clock import (
 	CLOCK_REGEX,
 	TIME_REGEX,
@@ -132,6 +134,9 @@ USER_DATA = 0
 MUD_DATA = 1
 
 
+logger = logging.getLogger(__name__)
+
+
 class Mapper(threading.Thread, World):
 	def __init__(
 			self,
@@ -166,10 +171,14 @@ class Mapper(threading.Thread, World):
 			func[len("user_command_"):] for func in dir(self)
 			if func and func.startswith("user_command_") and callable(self.__getattribute__(func))
 		]
-		self.mudEvents = [
+		self.mudEventHandlers = {}
+		for legacyHandler in [
 			func[len("mud_event_"):] for func in dir(self)
 			if func and func.startswith("mud_event_") and callable(self.__getattribute__(func))
-		]
+		]:
+			self.registerMudEventHandler(legacyHandler, getattr(self, "mud_event_" + legacyHandler))
+		self.unknownMudEvents = []
+		ExitsCleaner(self, "exits")
 		self.emulationCommands = [
 			func[len("emulation_command_"):] for func in dir(self)
 			if func and func.startswith("emulation_command_") and callable(self.__getattribute__(func))
@@ -1007,11 +1016,32 @@ class Mapper(threading.Thread, World):
 			args = data[len(userCommand):].strip()
 			getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
 
-	def handleServerData(self, event, data):
+	def handleMudEvent(self, event, data):
 		data = stripAnsi(unescapeXML(decodeBytes(data)))
-		if event in self.mudEvents:
+		if event in self.mudEventHandlers:
 			if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
-				getattr(self, "mud_event_" + event)(data)
+				for handler in self.mudEventHandlers[event]:
+					handler(data)
+		elif event not in self.unknownMudEvents:
+			self.unknownMudEvents.append(event)
+			logger.debug("received data with an unknown event type of " + event)
+
+	def registerMudEventHandler(self, event, handler):
+		"""Registers a method to handle mud events of a given type.
+		Params: event, handler
+		where event is the name of the event type, typically corresponding to the XML tag of the incoming data,
+		and handler is a method that takes a single argument, data, which is the text received from the mud.
+		"""
+		if event not in self.mudEventHandlers:
+			self.mudEventHandlers[event] = set()
+		self.mudEventHandlers[event].add(handler)
+
+	def deregisterMudEventHandler(self, event, handler):
+		"""Deregisters mud event handlers.
+		params: same as registerMudEventHandler.
+		"""
+		if event in self.mudEventHandlers and handler in self.mudEventHandlers[event]:
+			self.mudEventHandlers[event].remove(handler)
 
 	def run(self):
 		while True:
@@ -1025,7 +1055,7 @@ class Mapper(threading.Thread, World):
 				elif dataType == MUD_DATA:
 					# The data was from the mud server.
 					event, data = data
-					self.handleServerData(event, data)
+					self.handleMudEvent(event, data)
 			except Exception as e:
 				self.output("map error")
 				print("error " + str(e))
