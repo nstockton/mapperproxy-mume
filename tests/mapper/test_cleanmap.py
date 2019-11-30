@@ -52,7 +52,7 @@ class TestExitsCleaner(unittest.TestCase):
 	def setUp(self):
 		self.mapper = Mock(spec=Mapper)
 		self.mapper.isSynced = True
-		self.mapper.autoUpdating = True
+		self.mapper.autoUpdateRooms = True
 		self.exitsCleaner = ExitsCleaner(self.mapper)
 
 	def createRoom(self, *exits):

@@ -162,7 +162,7 @@ class Mapper(threading.Thread, World):
 		self.isEmulatingOffline = isEmulatingOffline
 		self.queue = Queue()
 		self.autoMapping = False
-		self.autoUpdating = False
+		self.autoUpdateRooms = False
 		self.autoMerging = True
 		self.autoLinking = True
 		self.autoWalk = False
@@ -419,10 +419,10 @@ class Mapper(threading.Thread, World):
 
 	def user_command_autoupdate(self, *args):
 		if not args or not args[0] or not args[0].strip():
-			self.autoUpdating = not self.autoUpdating
+			self.autoUpdateRooms = not self.autoUpdateRooms
 		else:
-			self.autoUpdating = args[0].strip().lower() == "on"
-		self.clientSend("Auto update rooms {}.".format("on" if self.autoUpdating else "off"))
+			self.autoUpdateRooms = args[0].strip().lower() == "on"
+		self.clientSend("Auto update rooms {}.".format("on" if self.autoUpdateRooms else "off"))
 
 	def user_command_automerge(self, *args):
 		if not args or not args[0] or not args[0].strip():
@@ -986,7 +986,7 @@ class Mapper(threading.Thread, World):
 			self.currentRoom = self.rooms[self.currentRoom.exits[self.movement].to]
 			self.moved = self.movement
 			self.movement = None
-			if self.autoMapping and self.autoUpdating:
+			if self.autoMapping and self.autoUpdateRooms:
 				if self.roomName and self.currentRoom.name != self.roomName:
 					self.currentRoom.name = self.roomName
 					self.clientSend("Updating room name.")

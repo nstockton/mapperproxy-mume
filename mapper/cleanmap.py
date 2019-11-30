@@ -21,7 +21,7 @@ class ExitsCleaner(Handler):
 		Checks if the output indicates any exits that are definitely not hidden despite being flagged as so,
 		then removes any such secret exit from the map.
 		"""
-		if not self.mapper.autoUpdating or data.startswith("Exits:"):
+		if not self.mapper.autoUpdateRooms or data.startswith("Exits:"):
 			return
 		for line in data.split("\r\n"):
 			m = exitRegexp.match(line)
