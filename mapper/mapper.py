@@ -27,6 +27,7 @@ from .clock import (
 	timeToEpoch,
 	Clock
 )
+from .config import Config, config_lock
 from .timers import Timer
 from .world import (
 	DIRECTIONS,
@@ -161,8 +162,11 @@ class Mapper(threading.Thread, World):
 		self.findFormat = findFormat
 		self.isEmulatingOffline = isEmulatingOffline
 		self.queue = Queue()
+		with config_lock:
+			cfg = Config()
+			self._autoUpdateRooms = cfg.get("autoUpdateRooms", False)
+			del cfg
 		self.autoMapping = False
-		self.autoUpdateRooms = False
 		self.autoMerging = True
 		self.autoLinking = True
 		self.autoWalk = False
@@ -212,6 +216,19 @@ class Mapper(threading.Thread, World):
 		self.parsedMinutes = 0
 		self.timeSynchronized = False
 		World.__init__(self, interface=interface)
+
+	@property
+	def autoUpdateRooms(self):
+		return self._autoUpdateRooms
+
+	@autoUpdateRooms.setter
+	def autoUpdateRooms(self, value):
+		self._autoUpdateRooms = bool(value)
+		with config_lock:
+			cfg = Config()
+			cfg["autoUpdateRooms"] = self._autoUpdateRooms
+			cfg.save()
+			del cfg
 
 	def output(self, *args, **kwargs):
 		# Override World.output.
