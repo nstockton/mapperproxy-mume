@@ -199,13 +199,12 @@ class Mapper(threading.Thread, World):
 		)
 		self.isEmulatingBriefMode = True
 		self.lastPathFindQuery = ""
-		self.lastPrompt = ""
+		self.prompt = ""
 		self.clock = Clock()
 		self.addedNewRoomFrom = None
 		self.scouting = False
 		self.movement = None
 		self.moved = None
-		self.prompt = None
 		self.roomName = None
 		self.description = None
 		self.dynamic = None
@@ -236,11 +235,11 @@ class Mapper(threading.Thread, World):
 
 	def clientSend(self, msg, showPrompt=True):
 		if self._outputFormat == "raw":
-			if showPrompt and self.lastPrompt and not self.gagPrompts:
+			if showPrompt and self.prompt and not self.gagPrompts:
 				self._client.sendall(
 					"{msg}\r\n<prompt>{prompt}</prompt>".format(
 						msg=escapeXML(msg),
-						prompt=escapeXML(self.lastPrompt)
+						prompt=escapeXML(self.prompt)
 					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
 				)
 			else:
@@ -248,11 +247,11 @@ class Mapper(threading.Thread, World):
 					"\r\n{msg}\r\n".format(msg=escapeXML(msg)).encode("utf-8").replace(IAC, IAC + IAC)
 				)
 		elif self._outputFormat == "tintin":
-			if showPrompt and self.lastPrompt and not self.gagPrompts:
+			if showPrompt and self.prompt and not self.gagPrompts:
 				self._client.sendall(
 					"{msg}\r\nPROMPT:{prompt}:PROMPT".format(
 						msg=msg,
-						prompt=self.lastPrompt
+						prompt=self.prompt
 					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
 				)
 			else:
@@ -260,11 +259,11 @@ class Mapper(threading.Thread, World):
 					"\r\n{msg}\r\n".format(msg=msg).encode("utf-8").replace(IAC, IAC + IAC)
 				)
 		else:
-			if showPrompt and self.lastPrompt and not self.gagPrompts:
+			if showPrompt and self.prompt and not self.gagPrompts:
 				self._client.sendall(
 					"{msg}\r\n{prompt}".format(
 						msg=msg,
-						prompt=self.lastPrompt
+						prompt=self.prompt
 					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
 				)
 			else:
@@ -837,7 +836,8 @@ class Mapper(threading.Thread, World):
 		self.currentRoom.exits[movement].to = vnum
 		self.clientSend("Adding room '{}' with vnum '{}'".format(newRoom.name, vnum))
 
-	def mud_event_iac_ga(self, data):
+	def mud_event_prompt(self, data):
+		self.prompt = data
 		if self.isSynced:
 			if self.autoMapping and self.moved:
 				self.updateRoomFlags(self.prompt)
@@ -852,15 +852,10 @@ class Mapper(threading.Thread, World):
 		self.scouting = False
 		self.movement = None
 		self.moved = None
-		self.prompt = None
 		self.roomName = None
 		self.description = None
 		self.dynamic = None
 		self.exits = None
-
-	def mud_event_prompt(self, data):
-		self.prompt = data
-		self.lastPrompt = self.prompt
 
 	def mud_event_movement(self, data):
 		self.movement = data
@@ -1036,7 +1031,7 @@ class Mapper(threading.Thread, World):
 	def handleMudEvent(self, event, data):
 		data = stripAnsi(unescapeXML(decodeBytes(data)))
 		if event in self.mudEventHandlers:
-			if not self.scouting or event in ["iac_ga", "prompt", "movement"]:
+			if not self.scouting or event in ("prompt", "movement"):
 				for handler in self.mudEventHandlers[event]:
 					handler(data)
 		elif event not in self.unknownMudEvents:

@@ -91,8 +91,6 @@ class XMLHandler(object):
 				self._mode = modes[tag]
 				if tag.startswith(b"/"):
 					self._sendEvent((MUD_DATA, ("dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"), text)))
-				if tag == b"/prompt":
-					self._sendEvent((MUD_DATA, ("iac_ga", b"")))
 		else:
 			self._tagBuffer.append(ordinal)
 

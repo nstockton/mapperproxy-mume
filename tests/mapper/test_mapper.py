@@ -35,7 +35,6 @@ class TestMapper(unittest.TestCase):
 			(MUD_DATA, ("line", b"Welcome to mume")),
 			(MUD_DATA, ("prompt", b"hp:hurt mana:burning>")),
 			(USER_DATA, b"rinfo"),
-			(MUD_DATA, ("iac_ga", b"")),
 			(USER_DATA, b"emu go lorien"),
 			(USER_DATA, b"not_a_user_command"),
 			(MUD_DATA, ("movement", b"east")),
@@ -60,12 +59,11 @@ class TestMapper(unittest.TestCase):
 
 		# validate calls to handleMudEvent
 		serverCalls = self.mapper.handleMudEvent.mock_calls
-		self.assertEqual(len(serverCalls), 5)
+		self.assertEqual(len(serverCalls), 4)
 		self.assertEqual(serverCalls[0], call("line", b"Welcome to mume"), "handleMudEvent #0 not expected.")
 		self.assertEqual(serverCalls[1], call("prompt", b"hp:hurt mana:burning>"), "Second handleMudEvent")
-		self.assertEqual(serverCalls[2], call("iac_ga", b""), "Third call to handleMudEvent")
-		self.assertEqual(serverCalls[3], call("movement", b"east"), "Fourth handleMudEvent not as expected")
-		self.assertEqual(serverCalls[4], call("not_an_event", b"good bype world"), "Fifth handleMudEvent")
+		self.assertEqual(serverCalls[2], call("movement", b"east"), "Third handleMudEvent not as expected")
+		self.assertEqual(serverCalls[3], call("not_an_event", b"good bype world"), "Fourth handleMudEvent")
 
 	def testMapper_handleUserData(self):
 		handleUserData = self.mapper.handleUserData

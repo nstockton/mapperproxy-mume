@@ -8,16 +8,8 @@ from telnetlib import IAC, DO, WILL, SB, SE, CHARSET, GA
 import unittest
 
 # Local Modules:
+from . import parseMudOutput
 from mapper.protocols.telnet import SB_ACCEPTED, SB_REQUEST, TelnetHandler
-
-
-def parseMudOutput(handler, dataBytes):
-	result = bytearray()
-	for ordinal in dataBytes:
-		value = handler.parse(ordinal)
-		if value is not None:
-			result.append(value)
-	return result
 
 
 class TestTelnetHandler(unittest.TestCase):

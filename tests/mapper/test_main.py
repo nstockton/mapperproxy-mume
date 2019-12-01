@@ -6,7 +6,7 @@
 # Built-in Modules:
 import socket
 from queue import Empty, Queue
-from telnetlib import CHARSET, IAC, DO, NAWS, SB, SE, TTYPE, WILL
+from telnetlib import CHARSET, GA, IAC, DO, NAWS, SB, SE, TTYPE, WILL
 import unittest
 from unittest.mock import call, Mock
 
@@ -151,23 +151,55 @@ class TestServerThreadThroughput(unittest.TestCase):
 
 	def testProcessingPrompt(self):
 		self.runThroughput(
-			threadInput=b'<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>\xff\xf9',
-			expectedOutput=b'\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n',
+			threadInput=b"<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>" + IAC + GA,
+			expectedOutput=b"\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n",
 			expectedData=[
-				call((MUD_DATA, ("prompt", b'\x1b[34mMana:Hot Move:Tired>\x1b[0m'))),
-				call((MUD_DATA, ("iac_ga", b""))),
+				call((MUD_DATA, ("prompt", b"\x1b[34mMana:Hot Move:Tired>\x1b[0m")))
 			],
 			inputDescription="prompt with mana burning and moves tired"
 		)
 
 	def testProcessingEnteringRoom(self):
-		input = b'<movement dir=down/><room><name>Seagull Inn</name>\r\n<gratuitous><description>This is the most famous meeting-place in Harlond where people of all sorts\r\nexchange news, rumours, deals and friendships. Sailors from the entire coast of\r\nMiddle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\nFor the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\nthe wall.\r\n</description></gratuitous>A large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n</room>'  # noqa
-		expectedOutput = b'Seagull Inn\r\nA large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n'  # noqa
+		input = (
+			b"<movement dir=down/><room><name>Seagull Inn</name>\r\n"
+			+ b"<gratuitous><description>"
+			+ b"This is the most famous meeting-place in Harlond where people of all sorts\r\n"
+			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of\r\n"
+			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\n"
+			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\n"
+			+ b"the wall.\r\n"
+			+ b"</description></gratuitous>"
+			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here.\r\n"
+			+ b"A white-painted bench is here.\r\n"
+			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\n"
+			+ b"An elven lamplighter is resting here.\r\n"
+			+ b"</room>"
+		)
+		expectedOutput = (
+			b"Seagull Inn\r\n"
+			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here.\r\n"
+			+ b"A white-painted bench is here.\r\n"
+			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\n"
+			+ b"An elven lamplighter is resting here.\r\n"
+		)
+		expectedDesc = (
+			b"This is the most famous meeting-place in Harlond where people of all sorts\r\n"
+			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of\r\n"
+			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\n"
+			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\n"
+			+ b"the wall.\r\n"
+		)
+		expectedDynamicDesc = (
+			b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here.\r\n"
+			+ b"A white-painted bench is here.\r\n"
+			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\n"
+			+ b"An elven lamplighter is resting here.\r\n"
+		)
 		expectedData = [
 			call((MUD_DATA, ("movement", b"down"))),
-			call((MUD_DATA, ("name", b'Seagull Inn'))),
-			call((1, ('description', b'This is the most famous meeting-place in Harlond where people of all sorts\r\nexchange news, rumours, deals and friendships. Sailors from the entire coast of\r\nMiddle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\nFor the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\nthe wall.\r\n'))),  # noqa
-			call((1, ("dynamic", b'A large bulletin board, entitled "Board of the Free Peoples", is mounted here.\r\nA white-painted bench is here.\r\nEldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\nAn elven lamplighter is resting here.\r\n'))),  # noqa
+			call((MUD_DATA, ("name", b"Seagull Inn"))),
+			call((MUD_DATA, ("description", expectedDesc))),
+			call((MUD_DATA, ("dynamic", expectedDynamicDesc))),
 		]
 		inputDescription = "moving into a room"
 		self.runThroughput(input, expectedOutput, expectedData, inputDescription)
