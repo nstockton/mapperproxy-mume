@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import sys
+from telnetlib import IAC
 import textwrap
 
 from . import terminalsize
@@ -60,6 +61,11 @@ def formatDocString(functionOrString, width=79, prefix=""):
 	)
 	docString = textwrap.indent(docString, prefix=prefix)  # Indent docstring lines with the prefix.
 	return docString
+
+
+def escapeIAC(dataBytes):
+	"""Double IAC characters in a bytes or bytearray object to escape them."""
+	return dataBytes.replace(IAC, IAC + IAC)
 
 
 def stripAnsi(data):

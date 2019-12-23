@@ -8,6 +8,9 @@ import logging
 from telnetlib import IAC, DO, DONT, WILL, WONT, SB, SE, CHARSET, GA
 import threading
 
+# Local Modules:
+from ..utils import escapeIAC
+
 
 # Some sub-option constants that aren't defined in the telnetlib module.
 SB_IS, SB_SEND, SB_INFO = (bytes([i]) for i in range(3))
@@ -22,10 +25,6 @@ SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABL
 
 
 logger = logging.getLogger(__name__)
-
-
-def escapeIAC(dataBytes):
-	return dataBytes.replace(IAC, IAC + IAC)
 
 
 class TelnetHandler(object):

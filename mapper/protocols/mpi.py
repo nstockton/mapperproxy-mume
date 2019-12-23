@@ -12,8 +12,7 @@ import tempfile
 import threading
 
 # Local Modules:
-from .telnet import escapeIAC
-from ..utils import removeFile
+from ..utils import escapeIAC, removeFile
 
 
 MPI_INIT = b"~$#E"

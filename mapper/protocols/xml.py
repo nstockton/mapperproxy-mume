@@ -9,9 +9,8 @@ from telnetlib import IAC
 import threading
 
 # Local Modules:
-from .telnet import escapeIAC
 from ..mapper import MUD_DATA
-from ..utils import unescapeXML
+from ..utils import escapeIAC, unescapeXML
 
 
 logger = logging.getLogger(__name__)
