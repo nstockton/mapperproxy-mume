@@ -12,7 +12,8 @@ import tempfile
 import threading
 
 # Local Modules:
-from ..utils import escapeIAC, removeFile
+from .base import BaseProtocolHandler
+from ..utils import removeFile
 
 
 MPI_INIT = b"~$#E"
@@ -21,11 +22,9 @@ MPI_INIT = b"~$#E"
 logger = logging.getLogger(__name__)
 
 
-class MPIHandler(object):
-	def __init__(self, processed, remoteSender, outputFormat=None):
-		self._processed = processed
-		self._remoteSender = remoteSender
-		self._isTinTin = outputFormat == "tintin"
+class MPIHandler(BaseProtocolHandler):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
 		self._MPIBuffer = bytearray()
 		self._lfReceived = threading.Event()
 		self._inMPI = threading.Event()
@@ -43,21 +42,12 @@ class MPIHandler(object):
 			self.editor = os.getenv("TINTINEDITOR", "nano -w")
 			self.pager = os.getenv("TINTINPAGER", "less")
 
-	def _sendRemote(self, dataBytes):
-		try:
-			self._remoteSender(dataBytes)
-		except TypeError:
-			if isinstance(self._remoteSender, (bytearray, list)):
-				self._remoteSender.extend(dataBytes)
-			else:
-				raise
-
 	def _edit(self, dataBytes):
 		session, description, body = dataBytes[1:].split(b"\n", 2)
 		with tempfile.NamedTemporaryFile(prefix="mume_editing_", suffix=".txt", delete=False) as fileObj:
 			fileObj.write(body.replace(b"\r", b"").replace(b"\n", b"\r\n"))
 		lastModified = os.path.getmtime(fileObj.name)
-		if self._isTinTin:
+		if self._outputFormat == "tintin":
 			print(f"MPICOMMAND:{self.editor} {fileObj.name}:MPICOMMAND")
 			input("Continue:")
 		else:
@@ -69,14 +59,14 @@ class MPIHandler(object):
 		else:
 			with open(fileObj.name, "rb") as fileObj:
 				response = b"E" + session + b"\n" + fileObj.read()
-		response = escapeIAC(response.replace(b"\r", b"")).strip() + b"\n"
+		response = response.replace(b"\r", b"").strip() + b"\n"
 		removeFile(fileObj)
 		self._sendRemote(MPI_INIT + b"E" + str(len(response)).encode("us-ascii") + b"\n" + response)
 
 	def _view(self, dataBytes):
 		with tempfile.NamedTemporaryFile(prefix="mume_viewing_", suffix=".txt", delete=False) as fileObj:
 			fileObj.write(dataBytes.replace(b"\r", b"").replace(b"\n", b"\r\n"))
-		if self._isTinTin:
+		if self._outputFormat == "tintin":
 			print(f"MPICOMMAND:{self.pager} {fileObj.name}:MPICOMMAND")
 		else:
 			pagerProcess = subprocess.Popen([*self.pager.split(), fileObj.name])

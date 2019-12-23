@@ -17,6 +17,7 @@ import threading
 
 # Local Modules:
 from .protocols import ProtocolHandler
+from .protocols.telnetfilter import TelnetFilter
 from .protocols.mpi import MPI_INIT
 from .mapper import USER_DATA, Mapper
 from .utils import getDirectoryPath, removeFile, touch
@@ -36,12 +37,22 @@ class Proxy(threading.Thread):
 		self._server = server
 		self._mapper = mapper
 		self.isEmulatingOffline = isEmulatingOffline
+		self._handler = TelnetFilter()
 		self.finished = threading.Event()
 
 	def close(self):
 		self.finished.set()
 
+	def write(self, data):
+		try:
+			self._server.sendall(data)
+			return True
+		except EnvironmentError:
+			self.close()
+			return False
+
 	def run(self):
+		handler = self._handler
 		userCommands = [
 			func[len("user_command_"):].encode("us-ascii", "ignore") for func in dir(self._mapper)
 			if func.startswith("user_command_")
@@ -49,6 +60,7 @@ class Proxy(threading.Thread):
 		while not self.finished.isSet():
 			try:
 				data = self._client.recv(4096)
+				negotiations, text = handler.parse(data)
 			except socket.timeout:
 				continue
 			except EnvironmentError:
@@ -56,14 +68,12 @@ class Proxy(threading.Thread):
 				continue
 			if not data:
 				self.close()
-			elif self.isEmulatingOffline or data.strip() and data.strip().split()[0] in userCommands:
-				self._mapper.queue.put((USER_DATA, data))
+			elif text.strip() and (self.isEmulatingOffline or text.strip().split()[0] in userCommands):
+				self._mapper.queue.put((USER_DATA, text))
+				if negotiations:
+					self.write(negotiations)
 			else:
-				try:
-					self._server.sendall(data)
-				except EnvironmentError:
-					self.close()
-					continue
+				self.write(data)
 
 
 class Server(threading.Thread):

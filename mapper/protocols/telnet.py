@@ -9,6 +9,7 @@ from telnetlib import IAC, DO, DONT, WILL, WONT, SB, SE, CHARSET, GA
 import threading
 
 # Local Modules:
+from .base import BaseProtocolHandler
 from ..utils import escapeIAC
 
 
@@ -27,11 +28,9 @@ SB_REQUEST, SB_ACCEPTED, SB_REJECTED, SB_TTABLE_IS, SB_TTABLE_REJECTED, SB_TTABL
 logger = logging.getLogger(__name__)
 
 
-class TelnetHandler(object):
-	def __init__(self, processed, remoteSender, promptTerminator=None):
-		self._processed = processed
-		self._remoteSender = remoteSender
-		self._promptTerminator = promptTerminator
+class TelnetHandler(BaseProtocolHandler):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
 		self._optionNegotiationOrds = frozenset(ord(byte) for byte in (DONT, DO, WONT, WILL))
 		self._inCommand = threading.Event()
 		self._optionNegotiation = None
@@ -49,17 +48,8 @@ class TelnetHandler(object):
 			}
 		}
 
-	def _sendRemote(self, dataBytes):
-		try:
-			self._remoteSender(dataBytes)
-		except TypeError:
-			if isinstance(self._remoteSender, (bytearray, list)):
-				self._remoteSender.extend(dataBytes)
-			else:
-				raise
-
 	def _sendOption(self, command, option):
-		self._sendRemote(IAC + command + option)
+		self._sendRemote(IAC + command + option, raw=True)
 
 	def _handleCommand(self, ordinal):
 		if ordinal in IAC:
@@ -153,10 +143,10 @@ class TelnetHandler(object):
 			self._subOptionBuffer.append(ordinal)
 
 	def sendCommand(self, command):
-		self._sendRemote(IAC + command)
+		self._sendRemote(IAC + command, raw=True)
 
 	def sendSubOption(self, option, dataBytes):
-		self._sendRemote(IAC + SB + option + escapeIAC(dataBytes) + IAC + SE)
+		self._sendRemote(IAC + SB + option + escapeIAC(dataBytes) + IAC + SE, raw=True)
 
 	def isOptionEnabled(self, option, nvt, state=YES):
 		return (

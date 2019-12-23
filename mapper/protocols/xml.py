@@ -9,18 +9,16 @@ from telnetlib import IAC
 import threading
 
 # Local Modules:
-from ..mapper import MUD_DATA
-from ..utils import escapeIAC, unescapeXML
+from .base import BaseProtocolHandler
+from ..utils import escapeIAC
 
 
 logger = logging.getLogger(__name__)
 
 
-class XMLHandler(object):
-	def __init__(self, processed, eventSender, outputFormat=None):
-		self._processed = processed
-		self._eventSender = eventSender
-		self._outputFormat = outputFormat
+class XMLHandler(BaseProtocolHandler):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
 		self._tagBuffer = bytearray()  # Used for start and end tag names.
 		self._textBuffer = bytearray()  # Used for the text between start and end tags.
 		self._lineBuffer = bytearray()  # Used for non-XML lines.
@@ -58,15 +56,6 @@ class XMLHandler(object):
 			b"/emote": b":EMOTE"
 		}
 
-	def _sendEvent(self, item):
-		try:
-			self._eventSender(item)
-		except TypeError:
-			if isinstance(self._eventSender, list):
-				self._eventSender.append(item)
-			else:
-				raise
-
 	def _handleTag(self, ordinal):
 		modes = self._modes
 		if ordinal in b">":
@@ -74,14 +63,14 @@ class XMLHandler(object):
 			self._inTag.clear()
 			tag = bytes(self._tagBuffer)
 			self._tagBuffer.clear()
-			text = unescapeXML(bytes(self._textBuffer), True)
+			text = bytes(self._textBuffer)
 			self._textBuffer.clear()
 			if self._outputFormat == "raw":
 				self._processed.extend(b"<" + escapeIAC(tag) + b">")
 			elif self._outputFormat == "tintin" and not self._inGratuitous.isSet():
 				self._processed.extend(self._tintinReplacements.get(escapeIAC(tag), b""))
 			if self._mode is None and tag.startswith(b"movement"):
-				self._sendEvent((MUD_DATA, ("movement", tag[13:-1])))
+				self._sendEvent("movement", tag[13:-1])
 			elif tag == b"gratuitous":
 				self._inGratuitous.set()
 			elif tag == b"/gratuitous":
@@ -89,7 +78,7 @@ class XMLHandler(object):
 			elif tag in modes:
 				self._mode = modes[tag]
 				if tag.startswith(b"/"):
-					self._sendEvent((MUD_DATA, ("dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"), text)))
+					self._sendEvent("dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"), text)
 		else:
 			self._tagBuffer.append(ordinal)
 
@@ -105,9 +94,8 @@ class XMLHandler(object):
 				if ordinal in IAC:
 					self._processed.append(ordinal)  # Double the IAC to escape it.
 			if self._mode is None:
+				self._lineBuffer.append(ordinal)
 				if ordinal in b"\n":
-					line = bytes(unescapeXML(self._lineBuffer.rstrip(b"\r\n"), True))
+					line = bytes(self._lineBuffer.rstrip(b"\r\n"))
 					self._lineBuffer.clear()
-					self._sendEvent((MUD_DATA, ("line", line)))
-				else:
-					self._lineBuffer.append(ordinal)
+					self._sendEvent("line", line)

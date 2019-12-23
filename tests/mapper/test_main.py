@@ -133,15 +133,17 @@ class TestServerThreadThroughput(unittest.TestCase):
 	def runThroughput(self, threadInput, expectedOutput, expectedData, inputDescription):
 		res = self.serverThread._handler.parse(threadInput)
 		self.assertEqual(
-			res, expectedOutput,
-			"When entering {}, the expected output did not match {}".format(inputDescription, expectedOutput)
+			res,
+			expectedOutput,
+			f"When entering {inputDescription}, the expected output did not match {expectedOutput}"
 		)
 		actualData = self.mapperThread.queue.put.mock_calls
 		i = 0
 		while len(actualData) > i < len(expectedData):
 			self.assertEqual(
-				actualData[i], expectedData[i],
-				"When entering {}, call #{} to the mapper queue was not as expected".format(inputDescription, i)
+				actualData[i],
+				expectedData[i],
+				f"When entering {inputDescription}, call #{i} to the mapper queue was not as expected"
 			)
 			i += 1
 		if i < len(actualData):
@@ -160,7 +162,7 @@ class TestServerThreadThroughput(unittest.TestCase):
 		)
 
 	def testProcessingEnteringRoom(self):
-		input = (
+		threadInput = (
 			b"<movement dir=down/><room><name>Seagull Inn</name>\r\n"
 			+ b"<gratuitous><description>"
 			+ b"This is the most famous meeting-place in Harlond where people of all sorts\r\n"
@@ -202,4 +204,4 @@ class TestServerThreadThroughput(unittest.TestCase):
 			call((MUD_DATA, ("dynamic", expectedDynamicDesc))),
 		]
 		inputDescription = "moving into a room"
-		self.runThroughput(input, expectedOutput, expectedData, inputDescription)
+		self.runThroughput(threadInput, expectedOutput, expectedData, inputDescription)
