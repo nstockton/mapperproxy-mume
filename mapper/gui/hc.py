@@ -742,96 +742,95 @@ class Window(pyglet.window.Window):
 				vl1, vl2 = self.draw_arrow(a, d, r, exitColor2, group=self.groups[2])
 				self.visible_exits[name] = (vl1, vl2)
 
-	def exits2d(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
-		if self.continuous_view:
-			name += "-"
-			if exit is None:
-				color = exitColor2
-			elif exit.to == "undefined":
-				color = Color(0, 0, 255, 255)
-			elif exit.to == "death":
-				color = Color(255, 0, 0, 255)
-			else:
-				color = Color(0, 255, 0, 255)
-			square = self.square_vertices(cp, self.size / 2.0)
-			a = square[(DIRECTIONS.index(direction) + 1) % 4]
-			b = square[(DIRECTIONS.index(direction) + 2) % 4]
+	def exits2d_continuous(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
+		if exit is None:
+			color = exitColor2
+		elif exit.to == "undefined":
+			color = Color(0, 0, 255, 255)
+		elif exit.to == "death":
+			color = Color(255, 0, 0, 255)
+		else:
+			color = Color(0, 255, 0, 255)
+		square = self.square_vertices(cp, self.size / 2.0)
+		a = square[(DIRECTIONS.index(direction) + 1) % 4]
+		b = square[(DIRECTIONS.index(direction) + 2) % 4]
+		if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
+			vl = self.visible_exits[name]
+			vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
+			vl.colors = color * (len(vl.colors) // 4)
+		else:
+			self.visible_exits[name] = self.draw_fat_segment(
+				a,
+				b,
+				self.size / radius,
+				color,
+				group=self.groups[2]
+			)
+
+	def exits2d_tiled(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
+		directionVector = DIRECTIONS_VEC2D.get(direction, None)
+		if self.world.isBidirectional(exit):
+			a = cp + (directionVector * (self.size / 2.0))
+			b = a + (directionVector * ((self.size * self.gap_as_float) / 2))
 			if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
 				vl = self.visible_exits[name]
-				vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
-				vl.colors = color * (len(vl.colors) // 4)
+				vs = self.fat_segment_vertices(a, b, self.size / radius)
+				vl.vertices = vs
 			else:
 				self.visible_exits[name] = self.draw_fat_segment(
 					a,
 					b,
 					self.size / radius,
-					color,
+					exitColor1,
 					group=self.groups[2]
 				)
-		else:
-			directionVector = DIRECTIONS_VEC2D.get(direction, None)
-			if self.world.isBidirectional(exit):
-				a = cp + (directionVector * (self.size / 2.0))
-				b = a + (directionVector * ((self.size * self.gap_as_float) / 2))
-				if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
-					vl = self.visible_exits[name]
-					vs = self.fat_segment_vertices(a, b, self.size / radius)
-					vl.vertices = vs
-				else:
-					self.visible_exits[name] = self.draw_fat_segment(
-						a,
-						b,
-						self.size / radius,
-						exitColor1,
-						group=self.groups[2]
-					)
-			elif exit.to in ("undefined", "death"):
-				newCP = cp + directionVector * (self.size * 0.75)
-				if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
-					vl = self.visible_exits[name]
-					vl.x, vl.y = newCP
-				elif exit.to == "undefined":
-					self.visible_exits[name] = pyglet.text.Label(
-						"?",
-						font_name="Times New Roman",
-						font_size=(self.size / 100.0) * 72,
-						x=newCP.x,
-						y=newCP.y,
-						anchor_x="center",
-						anchor_y="center",
-						color=exitColor1,
-						batch=self.batch,
-						group=self.groups[2]
-					)
-				else:  # Death
-					self.visible_exits[name] = pyglet.text.Label(
-						"X",
-						font_name="Times New Roman",
-						font_size=(self.size / 100.0) * 72,
-						x=newCP.x,
-						y=newCP.y,
-						anchor_x="center",
-						anchor_y="center",
-						color=Color(255, 0, 0, 255),
-						batch=self.batch,
-						group=self.groups[2]
-					)
-			else:  # One-way, random, etc.
-				color = exitColor1
-				a = cp + (directionVector * (self.size / 2.0))
-				d = a + (directionVector * ((self.size * self.gap_as_float) / 2))
-				r = ((self.size / radius) / 2.0) * self.gap_as_float
-				if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
-					vl1, vl2 = self.visible_exits[name]
-					vs1, vs2 = self.arrow_vertices(a, d, r)
-					vl1.vertices = vs1
-					vl1.colors = color * (len(vl1.colors) // 4)
-					vl2.vertices = vs2
-					vl2.colors = color * (len(vl2.colors) // 4)
-				else:
-					if name in self.visible_exits:
-						self.visible_exits[name].delete()
-					self.visible_exits[name] = self.draw_arrow(a, d, r, color, group=self.groups[2])
+		elif exit.to in ("undefined", "death"):
+			newCP = cp + directionVector * (self.size * 0.75)
+			if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
+				vl = self.visible_exits[name]
+				vl.x, vl.y = newCP
+			elif exit.to == "undefined":
+				self.visible_exits[name] = pyglet.text.Label(
+					"?",
+					font_name="Times New Roman",
+					font_size=(self.size / 100.0) * 72,
+					x=newCP.x,
+					y=newCP.y,
+					anchor_x="center",
+					anchor_y="center",
+					color=exitColor1,
+					batch=self.batch,
+					group=self.groups[2]
+				)
+			else:  # Death
+				self.visible_exits[name] = pyglet.text.Label(
+					"X",
+					font_name="Times New Roman",
+					font_size=(self.size / 100.0) * 72,
+					x=newCP.x,
+					y=newCP.y,
+					anchor_x="center",
+					anchor_y="center",
+					color=Color(255, 0, 0, 255),
+					batch=self.batch,
+					group=self.groups[2]
+				)
+		else:  # One-way, random, etc.
+			color = exitColor1
+			a = cp + (directionVector * (self.size / 2.0))
+			d = a + (directionVector * ((self.size * self.gap_as_float) / 2))
+			r = ((self.size / radius) / 2.0) * self.gap_as_float
+			if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
+				vl1, vl2 = self.visible_exits[name]
+				vs1, vs2 = self.arrow_vertices(a, d, r)
+				vl1.vertices = vs1
+				vl1.colors = color * (len(vl1.colors) // 4)
+				vl2.vertices = vs2
+				vl2.colors = color * (len(vl2.colors) // 4)
+			else:
+				if name in self.visible_exits:
+					self.visible_exits[name].delete()
+				self.visible_exits[name] = self.draw_arrow(a, d, r, color, group=self.groups[2])
 
 	def getExits(self, room):
 		if not self.continuous_view:
@@ -886,8 +885,11 @@ class Window(pyglet.window.Window):
 				exit = room.exits.get(direction, None)
 				if direction in ("up", "down"):
 					self.exitsUpDown(direction, exit, name, cp, exitColor1, exitColor2, radius)
+				elif self.continuous_view:
+					name += "-"
+					self.exits2d_continuous(direction, exit, name, cp, exitColor1, exitColor2, radius)
 				else:
-					self.exits2d(direction, exit, name, cp, exitColor1, exitColor2, radius)
+					self.exits2d_tiled(direction, exit, name, cp, exitColor1, exitColor2, radius)
 				newExits.add(name)
 		self.clearOldVisibleExits(newExits)
 
