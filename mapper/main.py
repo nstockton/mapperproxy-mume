@@ -199,12 +199,9 @@ def main(
 		serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 		serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 		if not noSsl and ssl is not None:
-			serverConnection = ssl.wrap_socket(
-				serverConnection,
-				cert_reqs=ssl.CERT_REQUIRED,
-				ca_certs=certifi.where(),
-				ssl_version=ssl.PROTOCOL_TLS
-			)
+			context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+			context.load_verify_locations(certifi.where())
+			serverConnection = context.wrap_socket(serverConnection, server_hostname=remoteHost)
 	try:
 		serverConnection.connect((remoteHost, remotePort))
 	except TimeoutError:
@@ -217,14 +214,6 @@ def main(
 		clientConnection.close()
 		removeFile(LISTENING_STATUS_FILE)
 		return
-	if not noSsl and ssl is not None:
-		# Validating server identity with ssl module
-		# See https://wiki.python.org/moin/SSL
-		for field in serverConnection.getpeercert()["subject"]:
-			if field[0][0] == "commonName":
-				certhost = field[0][1]
-				if certhost != "mume.org":
-					raise ssl.SSLError("Host name 'mume.org' doesn't match certificate host '{}'".format(certhost))
 	mapperThread = Mapper(
 		client=clientConnection,
 		server=serverConnection,
