@@ -97,7 +97,7 @@ class Window(pyglet.window.Window):
 			self.col * self.square, self.row * self.square,
 			caption="MPM", resizable=True
 		)
-		logger.info("Creating window {}".format(self))
+		logger.info(f"Creating window {self}")
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock
 		# Sprites
@@ -126,18 +126,18 @@ class Window(pyglet.window.Window):
 					break
 
 	def on_close(self):
-		logger.debug("Closing window {}".format(self))
+		logger.debug(f"Closing window {self}")
 		super(Window, self).on_close()
 
 	def on_draw(self):
-		logger.debug("Drawing window {}".format(self))
+		logger.debug(f"Drawing window {self}")
 		# pyglet stuff to clear the window
 		self.clear()
 		# pyglet stuff to print the batch of sprites
 		self.batch.draw()
 
 	def on_resize(self, width, height):
-		logger.debug("Resizing window {}".format(self))
+		logger.debug(f"Resizing window {self}")
 		super(Window, self).on_resize(width, height)
 		# reset window size
 		self.col = int(width / self.square)
@@ -149,7 +149,7 @@ class Window(pyglet.window.Window):
 			self.draw_map(self.centerRoom)
 
 	def on_map_sync(self, currentRoom):
-		logger.debug("Map synced to {}, vnum {}".format(currentRoom, currentRoom.vnum))
+		logger.debug(f"Map synced to {currentRoom}, vnum {currentRoom.vnum}")
 		# reset player position, center the map around
 		self.playerRoom = currentRoom
 		self.draw_map(currentRoom)
@@ -164,7 +164,7 @@ class Window(pyglet.window.Window):
 			logger.debug('Unable to refresh the GUI. The center room is not defined.')
 
 	def draw_map(self, centerRoom):
-		logger.debug("Drawing rooms around {}".format(centerRoom))
+		logger.debug(f"Drawing rooms around {centerRoom}")
 		# reset the recorded state of the window
 		self.sprites = []
 		self.visibleRooms = {}
@@ -177,7 +177,7 @@ class Window(pyglet.window.Window):
 		self.draw_player()
 
 	def draw_room(self, x, y, room):
-		logger.debug("Drawing room: {} {} {}".format(x, y, room))
+		logger.debug(f"Drawing room: {x} {y} {room}")
 		self.visibleRooms[x, y] = room
 		# draw the terrain on layer 0
 		self.draw_tile(x, y, 0, room.terrain)
@@ -209,7 +209,7 @@ class Window(pyglet.window.Window):
 	def draw_player(self):
 		if self.playerRoom is None or self.centerRoom is None:
 		    return
-		logger.debug("Drawing player on room vnum {}".format(self.playerRoom.vnum))
+		logger.debug(f"Drawing player on room vnum {self.playerRoom.vnum}")
 		# transform map coordinates to window ones
 		x = self.playerRoom.x - self.centerRoom.x + self.mcol
 		y = self.playerRoom.y - self.centerRoom.y + self.mrow
@@ -220,7 +220,7 @@ class Window(pyglet.window.Window):
 			self.draw_tile(x, y, 3, "player")
 
 	def draw_tile(self, x, y, z, tile):
-		logger.debug("Drawing tile: {} {} {}".format(x, y, tile))
+		logger.debug(f"Drawing tile: {x} {y} {tile}")
 		# pyglet stuff to add a sprite to the batch
 		sprite = pyglet.sprite.Sprite(TILES[tile], batch=self.batch, group=self.layer[z])
 		# adapt sprite coordinates
@@ -230,7 +230,7 @@ class Window(pyglet.window.Window):
 		self.sprites.append(sprite)
 
 	def on_mouse_press(self, wx, wy, buttons, modifiers):
-		logger.debug("Mouse press on {} {}.".format(wx, wy))
+		logger.debug(f"Mouse press on {wx} {wy}.")
 		x = int(wx / self.square)
 		y = int(wy / self.square)
 		# check if the player clicked on a room
@@ -248,7 +248,7 @@ class Window(pyglet.window.Window):
 		    self.draw_map(self.playerRoom)
 		elif buttons == pyglet.window.mouse.RIGHT:
 		    # print the vnum
-		    self.world.output("Click on room {}.".format(room.vnum))
+		    self.world.output(f"Click on room {room.vnum}.")
 
 
 Window.register_event_type('on_map_sync')

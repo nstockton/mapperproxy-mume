@@ -59,12 +59,12 @@ class TestServerThread(unittest.TestCase):
 			initialConfiguration.append(IAC + WILL + CHARSET)
 			while initialConfiguration:
 				data = inputToMume.get(timeout=1)
-				self.assertIn(data, initialConfiguration, "Unknown initial configuration: {!r}".format(data))
+				self.assertIn(data, initialConfiguration, f"Unknown initial configuration: {repr(data)}")
 				initialConfiguration.remove(data)
 		except Empty:
 			errorMessage = (
 				"The server thread did not output the expected number of configuration parameters.",
-				"The yet-to-be-seen configurations are: {!r}".format(initialConfiguration)
+				f"The yet-to-be-seen configurations are: {repr(initialConfiguration)}"
 			)
 			raise AssertionError("\n".join(errorMessage))
 		# test nothing extra has been sent yet
@@ -72,7 +72,7 @@ class TestServerThread(unittest.TestCase):
 			remainingOutput = inputToMume.get()
 			errorMessage = (
 				"The server thread spat out at least one unexpected initial configuration.",
-				"Remaining output: {!r}".format(remainingOutput)
+				f"Remaining output: {repr(remainingOutput)}"
 			)
 			raise AssertionError("\n".join(errorMessage))
 		# test initial telnet negotiations were passed to the client

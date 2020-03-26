@@ -45,22 +45,22 @@ class Config(collections.MutableMapping):
 					with codecs.open(filename, "rb", encoding="utf-8") as fileObj:
 						return json.load(fileObj)
 				except IOError as e:
-					raise Error("{}: '{}'".format(e.strerror, e.filename))
+					raise Error(f"{e.strerror}: '{e.filename}'")
 				except ValueError:
-					raise Error("Corrupted json file: {}".format(filename))
+					raise Error(f"Corrupted json file: {filename}")
 			else:
-				raise Error("'{}' is a directory, not a file.".format(filename))
+				raise Error(f"'{filename}' is a directory, not a file.")
 		else:
 			return {}
 
 	def reload(self):
 		self._config.clear()
-		self._config.update(self._parse("{}.json.sample".format(self._name)))
-		self._config.update(self._parse("{}.json".format(self._name)))
+		self._config.update(self._parse(f"{self._name}.json.sample"))
+		self._config.update(self._parse(f"{self._name}.json"))
 
 	def save(self):
 		data_directory = getDirectoryPath("data")
-		filename = os.path.join(data_directory, "{}.json".format(self._name))
+		filename = os.path.join(data_directory, f"{self._name}.json")
 		with codecs.open(filename, "wb", encoding="utf-8") as fileObj:
 			# Configuration should be stored using Windows style line endings (\r\n)
 			# so the file can be viewed in Notepad.

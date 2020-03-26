@@ -165,7 +165,8 @@ class Room(object):
 		elif delta.get_length_sqrd() == 0:
 			return "same X-Y"
 		else:
-			return "{:d} o'clock".format(round((90 - delta.get_angle_degrees() + 360) % 360 / 30) or 12)
+			position = int(round((90 - delta.get_angle_degrees() + 360) % 360 / 30)) or 12
+			return f"{position} o'clock"
 
 	def directionTo(self, destination):
 		delta = Vec2d(destination.x, destination.y) - (self.x, self.y)

@@ -34,13 +34,13 @@ def _load(filePath):
 				with codecs.open(filePath, "rb", encoding="utf-8") as fileObj:
 					return None, json.load(fileObj)
 			except IOError as e:
-				return "{}: '{}'".format(e.strerror, e.filename), None
+				return f"{e.strerror}: '{e.filename}'", None
 			except ValueError:
-				return "Corrupted database file: {}".format(filePath), None
+				return f"Corrupted database file: {filePath}", None
 		else:
-			return "Error: '{}' is a directory, not a file.".format(filePath), None
+			return f"Error: '{filePath}' is a directory, not a file.", None
 	else:
-		return "Error: '{0}' doesn't exist.".format(filePath), None
+		return f"Error: '{filePath}' doesn't exist.", None
 
 
 def loadLabels():
@@ -81,7 +81,7 @@ def loadRooms():
 	if result is None:
 		errorMessages.append(errors)
 		errorMessages.append(
-			"Error: neither '{}' nor '{}' can be found.".format(MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH)
+			f"Error: neither '{MAP_FILE_PATH}' nor '{SAMPLE_MAP_FILE_PATH}' can be found."
 		)
 		return "\n".join(errorMessages), None
 	else:

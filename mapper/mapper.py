@@ -41,9 +41,8 @@ from .utils import formatDocString, stripAnsi, decodeBytes, regexFuzzy, simplifi
 
 
 EXIT_TAGS_REGEX = re.compile(
-	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)(?P<direction>{dirs})".format(
-		dirs="|".join(DIRECTIONS)
-	)
+	fr"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)"
+	+ fr"(?P<direction>{'|'.join(DIRECTIONS)})"
 )
 MOVEMENT_FORCED_REGEX = re.compile(
 	"|".join(
@@ -70,11 +69,11 @@ MOVEMENT_FORCED_REGEX = re.compile(
 			r"Sarion helps you outside\.",
 			(
 				r"You cannot control your mount on the slanted and unstable surface\!"
-				r"(?: You begin to slide to the north\, and plunge toward the water below\!)?"
+				+ r"(?: You begin to slide to the north\, and plunge toward the water below\!)?"
 			),
 			(
 				r"Stepping on the lizard corpses\, you use some depressions in the wall for support\, "
-				r"push the muddy ceiling apart and climb out of the cave\."
+				+ r"push the muddy ceiling apart and climb out of the cave\."
 			)
 		]
 	)
@@ -114,22 +113,20 @@ MOVEMENT_PREVENTED_REGEX = re.compile(
 				r"Not from your present position\!",
 				(
 					r".+ (?:prevents|keeps) you from going "
-					r"(?:north|south|east|west|up|down|upstairs|downstairs|past (?:him|her|it))\."
+					+ r"(?:north|south|east|west|up|down|upstairs|downstairs|past (?:him|her|it))\."
 				),
 				(
 					r"A (?:pony|dales-pony|horse|warhorse|pack horse|trained horse|"
-					r"horse of the Rohirrim|brown donkey|mountain mule|hungry warg|brown wolf)"
-					r"(?: \(\w+\))? (?:is too exhausted|doesn't want you riding (?:him|her|it) anymore)\."
+					+ r"horse of the Rohirrim|brown donkey|mountain mule|hungry warg|brown wolf)"
+					+ r"(?: \(\w+\))? (?:is too exhausted|doesn't want you riding (?:him|her|it) anymore)\."
 				)
 			]
 		)
 	)
 )
 PROMPT_REGEX = re.compile(
-	(
-		r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=<]?)"
-		r"(?P<weather>[*'\"~=-]{0,2})\s*(?P<movementFlags>[RrSsCcW]{0,4})[^\>]*\>$"
-	)
+	r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=<]?)"
+	+ r"(?P<weather>[*'\"~=-]{0,2})\s*(?P<movementFlags>[RrSsCcW]{0,4})[^\>]*\>$"
 )
 USER_DATA = 0
 MUD_DATA = 1
@@ -237,38 +234,33 @@ class Mapper(threading.Thread, World):
 		if self._outputFormat == "raw":
 			if showPrompt and self.prompt and not self.gagPrompts:
 				self._client.sendall(
-					"{msg}\r\n<prompt>{prompt}</prompt>".format(
-						msg=escapeXML(msg),
-						prompt=escapeXML(self.prompt)
+					(
+						f"{escapeXML(msg)}\r\n<prompt>{escapeXML(self.prompt)}</prompt>"
 					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
 				)
 			else:
 				self._client.sendall(
-					"\r\n{msg}\r\n".format(msg=escapeXML(msg)).encode("utf-8").replace(IAC, IAC + IAC)
+					f"\r\n{escapeXML(msg)}\r\n".encode("utf-8").replace(IAC, IAC + IAC)
 				)
 		elif self._outputFormat == "tintin":
 			if showPrompt and self.prompt and not self.gagPrompts:
 				self._client.sendall(
-					"{msg}\r\nPROMPT:{prompt}:PROMPT".format(
-						msg=msg,
-						prompt=self.prompt
+					(
+						f"{msg}\r\nPROMPT:{self.prompt}:PROMPT"
 					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
 				)
 			else:
 				self._client.sendall(
-					"\r\n{msg}\r\n".format(msg=msg).encode("utf-8").replace(IAC, IAC + IAC)
+					f"\r\n{msg}\r\n".encode("utf-8").replace(IAC, IAC + IAC)
 				)
 		else:
 			if showPrompt and self.prompt and not self.gagPrompts:
 				self._client.sendall(
-					"{msg}\r\n{prompt}".format(
-						msg=msg,
-						prompt=self.prompt
-					).encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
+					f"{msg}\r\n{self.prompt}".encode("utf-8").replace(IAC, IAC + IAC) + self._promptTerminator
 				)
 			else:
 				self._client.sendall(
-					"\r\n{msg}\r\n".format(msg=msg).encode("utf-8").replace(IAC, IAC + IAC)
+					f"\r\n{msg}\r\n".encode("utf-8").replace(IAC, IAC + IAC)
 				)
 		return None
 
@@ -279,7 +271,7 @@ class Mapper(threading.Thread, World):
 	def emulation_command_brief(self, *args):
 		"""toggles brief mode."""
 		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
-		self.output("Brief mode {}".format("on" if self.isEmulatingBriefMode else "off"))
+		self.output(f"Brief mode {'on' if self.isEmulatingBriefMode else 'off'}")
 
 	def emulation_command_examine(self, *args):
 		"""shows the room's description."""
@@ -288,7 +280,7 @@ class Mapper(threading.Thread, World):
 	def emulation_command_exits(self, *args):
 		"""shows the exits in the room."""
 		exits = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
-		self.output("Exits: {}.".format(", ".join(exits)))
+		self.output(f"Exits: {', '.join(exits)}.")
 
 	def emulation_command_go(self, label, isJump=True):
 		"""mimic the /go command that the ainur use."""
@@ -341,7 +333,7 @@ class Mapper(threading.Thread, World):
 			self.output(self.emulationRoom.desc)
 		self.output(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
-			self.output("Note: {}".format(self.emulationRoom.note))
+			self.output(f"Note: {self.emulationRoom.note}")
 
 	def emulation_command_return(self, *args):
 		"""returns to the last room jumped to with the go command."""
@@ -399,10 +391,10 @@ class Mapper(threading.Thread, World):
 			self.output("Invalid command. Type 'help' for more help.")
 
 	def user_command_gettimer(self, *args):
-		self.clientSend("TIMER:{:d}:TIMER".format(int(default_timer() - self.initTimer)))
+		self.clientSend(f"TIMER:{int(default_timer() - self.initTimer)}:TIMER")
 
 	def user_command_gettimerms(self, *args):
-		self.clientSend("TIMERMS:{:d}:TIMERMS".format(int((default_timer() - self.initTimer) * 1000)))
+		self.clientSend(f"TIMERMS:{int((default_timer() - self.initTimer) * 1000)}:TIMERMS")
 
 	def user_command_clock(self, *args):
 		if not args or not args[0] or not args[0].strip():
@@ -411,11 +403,11 @@ class Mapper(threading.Thread, World):
 			self.serverSend(self.clock.time(args[0].strip().lower()))
 
 	def user_command_secretaction(self, *args):
-		regex = re.compile(r"^\s*(?P<action>.+?)(?:\s+(?P<direction>{}))?$".format(regexFuzzy(DIRECTIONS)))
+		regex = re.compile(fr"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$")
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return self.clientSend("Syntax: 'secretaction [action] [{}]'.".format(" | ".join(DIRECTIONS)))
+			return self.clientSend(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")
 		if matchDict["direction"]:
 			direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		else:
@@ -431,28 +423,28 @@ class Mapper(threading.Thread, World):
 			self.autoMapping = not self.autoMapping
 		else:
 			self.autoMapping = args[0].strip().lower() == "on"
-		self.clientSend("Auto Mapping {}.".format("on" if self.autoMapping else "off"))
+		self.clientSend(f"Auto Mapping {'on' if self.autoMapping else 'off'}.")
 
 	def user_command_autoupdate(self, *args):
 		if not args or not args[0] or not args[0].strip():
 			self.autoUpdateRooms = not self.autoUpdateRooms
 		else:
 			self.autoUpdateRooms = args[0].strip().lower() == "on"
-		self.clientSend("Auto update rooms {}.".format("on" if self.autoUpdateRooms else "off"))
+		self.clientSend(f"Auto update rooms {'on' if self.autoUpdateRooms else 'off'}.")
 
 	def user_command_automerge(self, *args):
 		if not args or not args[0] or not args[0].strip():
 			self.autoMerging = not self.autoMerging
 		else:
 			self.autoMerging = args[0].strip().lower() == "on"
-		self.clientSend("Auto Merging {}.".format("on" if self.autoMerging else "off"))
+		self.clientSend(f"Auto Merging {'on' if self.autoMerging else 'off'}.")
 
 	def user_command_autolink(self, *args):
 		if not args or not args[0] or not args[0].strip():
 			self.autoLinking = not self.autoLinking
 		else:
 			self.autoLinking = args[0].strip().lower() == "on"
-		self.clientSend("Auto Linking {}.".format("on" if self.autoLinking else "off"))
+		self.clientSend(f"Auto Linking {'on' if self.autoLinking else 'off'}.")
 
 	def user_command_rdelete(self, *args):
 		self.clientSend(self.rdelete(*args))
@@ -525,14 +517,14 @@ class Mapper(threading.Thread, World):
 
 	def user_command_vnum(self, *args):
 		"""states the vnum of the current room"""
-		self.clientSend("Vnum: {}.".format(self.currentRoom.vnum))
+		self.clientSend(f"Vnum: {self.currentRoom.vnum}.")
 
 	def user_command_tvnum(self, *args):
 		"""tells a given char the vnum of your room"""
 		if not args or not args[0] or not args[0].strip():
 			self.clientSend("Tell VNum to who?")
 		else:
-			self.serverSend("tell {} {}".format(args[0].strip(), self.currentRoom.vnum))
+			self.serverSend(f"tell {args[0].strip()} {self.currentRoom.vnum}")
 
 	def user_command_rlabel(self, *args):
 		result = self.rlabel(*args)
@@ -562,14 +554,12 @@ class Mapper(threading.Thread, World):
 			if not argString:
 				if self.lastPathFindQuery:
 					return self.clientSend(
-						"Run target set to '{}'. Use 'run t [rlabel|vnum]' to change it.".format(
-							self.lastPathFindQuery
-						)
+						f"Run target set to '{self.lastPathFindQuery}'. Use 'run t [rlabel|vnum]' to change it."
 					)
 				else:
 					return self.clientSend("Please specify a VNum or room label to target.")
 			self.lastPathFindQuery = argString
-			return self.clientSend("Setting run target to '{}'".format(self.lastPathFindQuery))
+			return self.clientSend(f"Setting run target to '{self.lastPathFindQuery}'")
 		else:
 			match = RUN_DESTINATION_REGEX.match(argString)
 			destination = match.group("destination")
@@ -680,9 +670,9 @@ class Mapper(threading.Thread, World):
 			if vnum in self.rooms:
 				self.currentRoom = self.rooms[vnum]
 				self.isSynced = True
-				self.clientSend("Synced to room {0} with vnum {1}".format(self.currentRoom.name, self.currentRoom.vnum))
+				self.clientSend(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
 			else:
-				self.clientSend("No such vnum or label: {0}.".format(vnum))
+				self.clientSend(f"No such vnum or label: {vnum}.")
 		else:
 			nameVnums = []
 			descVnums = []
@@ -696,15 +686,12 @@ class Mapper(threading.Thread, World):
 			elif len(descVnums) == 1:
 				self.currentRoom = self.rooms[descVnums[0]]
 				self.isSynced = True
-				self.clientSend("Synced to room {0} with vnum {1}".format(self.currentRoom.name, self.currentRoom.vnum))
+				self.clientSend(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
 			elif len(nameVnums) == 1:
 				self.currentRoom = self.rooms[nameVnums[0]]
 				self.isSynced = True
 				self.clientSend(
-					"Name-only synced to room {0} with vnum {1}".format(
-						self.currentRoom.name,
-						self.currentRoom.vnum
-					)
+					f"Name-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}"
 				)
 			else:
 				self.clientSend("More than one room in the database matches current room. Unable to sync.")
@@ -717,7 +704,7 @@ class Mapper(threading.Thread, World):
 		undefineds = []
 		for direction, exitObj in self.currentRoom.exits.items():
 			if exitObj.door and exitObj.door != "exit":
-				doors.append("{}: {}".format(direction, exitObj.door))
+				doors.append(f"{direction}: {exitObj.door}")
 			if not exitObj.to or exitObj.to == "undefined":
 				undefineds.append(direction)
 			elif exitObj.to == "death":
@@ -728,15 +715,15 @@ class Mapper(threading.Thread, World):
 			):
 				oneWays.append(direction)
 		if doors:
-			self.clientSend("Doors: {}".format(", ".join(doors)), showPrompt=False)
+			self.clientSend(f"Doors: {', '.join(doors)}", showPrompt=False)
 		if deathTraps:
-			self.clientSend("Death Traps: {}".format(", ".join(deathTraps)), showPrompt=False)
+			self.clientSend(f"Death Traps: {', '.join(deathTraps)}", showPrompt=False)
 		if oneWays:
-			self.clientSend("One ways: {}".format(", ".join(oneWays)), showPrompt=False)
+			self.clientSend(f"One ways: {', '.join(oneWays)}", showPrompt=False)
 		if undefineds:
-			self.clientSend("Undefineds: {}".format(", ".join(undefineds)), showPrompt=False)
+			self.clientSend(f"Undefineds: {', '.join(undefineds)}", showPrompt=False)
 		if self.currentRoom.note:
-			self.clientSend("Note: {}".format(self.currentRoom.note), showPrompt=False)
+			self.clientSend(f"Note: {self.currentRoom.note}", showPrompt=False)
 
 	def updateRoomFlags(self, prompt):
 		match = PROMPT_REGEX.search(prompt)
@@ -775,7 +762,7 @@ class Mapper(threading.Thread, World):
 			if portal:
 				continue
 			if direction not in self.currentRoom.exits:
-				output.append("Adding exit '{}' to current room.".format(direction))
+				output.append(f"Adding exit '{direction}' to current room.")
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
 				if self.autoLinking:
 					vnums = [
@@ -792,16 +779,16 @@ class Mapper(threading.Thread, World):
 						and REVERSE_DIRECTIONS[direction] in self.rooms[vnums[0]].exits
 						and self.rooms[vnums[0]].exits[REVERSE_DIRECTIONS[direction]].to == "undefined"
 					):
-						output.append(self.rlink("add {} {}".format(vnums[0], direction)))
+						output.append(self.rlink(f"add {vnums[0]} {direction}"))
 			roomExit = self.currentRoom.exits[direction]
 			if door and "door" not in roomExit.exitFlags:
-				output.append(self.exitflags("add door {}".format(direction)))
+				output.append(self.exitflags(f"add door {direction}"))
 			if road and "road" not in roomExit.exitFlags:
-				output.append(self.exitflags("add road {}".format(direction)))
+				output.append(self.exitflags(f"add road {direction}"))
 			if climb and "climb" not in roomExit.exitFlags:
-				output.append(self.exitflags("add climb {}".format(direction)))
+				output.append(self.exitflags(f"add climb {direction}"))
 			if exitsOutput:
-				exitsOutput.insert(0, "Exit {}:".format(direction))
+				exitsOutput.insert(0, f"Exit {direction}:")
 				output.extend(exitsOutput)
 				del exitsOutput[:]
 		if output:
@@ -814,10 +801,10 @@ class Mapper(threading.Thread, World):
 			and REVERSE_DIRECTIONS[movement] in roomObj.exits
 			and roomObj.exits[REVERSE_DIRECTIONS[movement]].to == "undefined"
 		):
-			output.append(self.rlink("add {} {}".format(roomObj.vnum, movement)))
+			output.append(self.rlink(f"add {roomObj.vnum} {movement}"))
 		else:
-			output.append(self.rlink("add oneway {} {}".format(roomObj.vnum, movement)))
-		output.append("Auto Merging '{}' with name '{}'.".format(roomObj.vnum, roomObj.name))
+			output.append(self.rlink(f"add oneway {roomObj.vnum} {movement}"))
+		output.append(f"Auto Merging '{roomObj.vnum}' with name '{roomObj.name}'.")
 		return self.clientSend("\n".join(output))
 
 	def addNewRoom(self, movement, name, description, dynamic):
@@ -834,7 +821,7 @@ class Mapper(threading.Thread, World):
 		if movement not in self.currentRoom.exits:
 			self.currentRoom.exits[movement] = self.getNewExit(movement)
 		self.currentRoom.exits[movement].to = vnum
-		self.clientSend("Adding room '{}' with vnum '{}'".format(newRoom.name, vnum))
+		self.clientSend(f"Adding room '{newRoom.name}' with vnum '{vnum}'")
 
 	def mud_event_prompt(self, data):
 		self.prompt = data
@@ -933,7 +920,7 @@ class Mapper(threading.Thread, World):
 			self.timeEvent = None
 			self.timeEventOffset = 0
 			self.timeSynchronized = True
-			self.clientSend("Synchronized with epoch {}.".format(self.clock.epoch), showPrompt=False)
+			self.clientSend(f"Synchronized with epoch {self.clock.epoch}.", showPrompt=False)
 
 	def mud_event_name(self, data):
 		if data not in ("You just see a dense fog around you...", "It is pitch black..."):
@@ -957,18 +944,15 @@ class Mapper(threading.Thread, World):
 			self.clientSend("Forced movement, no longer synced.")
 		elif self.movement not in DIRECTIONS:
 			self.isSynced = False
-			self.clientSend("Error: Invalid direction '{0}'. Map no longer synced!".format(self.movement))
+			self.clientSend(f"Error: Invalid direction '{self.movement}'. Map no longer synced!")
 		elif not self.autoMapping and self.movement not in self.currentRoom.exits:
 			self.isSynced = False
-			self.clientSend("Error: direction '{0}' not in database. Map no longer synced!".format(self.movement))
+			self.clientSend(f"Error: direction '{self.movement}' not in database. Map no longer synced!")
 		elif not self.autoMapping and self.currentRoom.exits[self.movement].to not in self.rooms:
 			self.isSynced = False
 			self.clientSend(
-				"Error: vnum ({}) in direction ({}) is not in the database. "
-				"Map no longer synced!".format(
-					self.currentRoom.exits[self.movement].to,
-					self.movement
-				)
+				f"Error: vnum ({self.currentRoom.exits[self.movement].to}) in direction ({self.movement}) "
+				+ "is not in the database. Map no longer synced!"
 			)
 		else:
 			if (
@@ -1026,7 +1010,7 @@ class Mapper(threading.Thread, World):
 		else:
 			userCommand = data.strip().split()[0]
 			args = data[len(userCommand):].strip()
-			getattr(self, "user_command_{}".format(decodeBytes(userCommand)))(decodeBytes(args))
+			getattr(self, f"user_command_{decodeBytes(userCommand)}")(decodeBytes(args))
 
 	def handleMudEvent(self, event, data):
 		data = stripAnsi(unescapeXML(decodeBytes(data)))

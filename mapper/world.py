@@ -357,10 +357,10 @@ class World(object):
 		destination = matchDict["destination"]
 		if not matchDict["origin"]:
 			origin = self.currentRoom.vnum
-			self.output("Changing the VNum of the current room to '{}'.".format(destination))
+			self.output(f"Changing the VNum of the current room to '{destination}'.")
 		else:
 			origin = matchDict["origin"]
-			self.output("Changing the Vnum '{}' to '{}'.".format(origin, destination))
+			self.output(f"Changing the Vnum '{origin}' to '{destination}'.")
 		for roomVnum, roomObj in self.rooms.items():
 			for direction, exitObj in roomObj.exits.items():
 				if roomVnum == origin:
@@ -376,14 +376,14 @@ class World(object):
 			if args[0].strip() in self.rooms:
 				vnum = args[0].strip()
 			else:
-				return "Error: the vnum '{}' does not exist.".format(args[0].strip())
+				return f"Error: the vnum '{args[0].strip()}' does not exist."
 		elif self.isSynced:
 			vnum = self.currentRoom.vnum
 			self.isSynced = False
 			self.currentRoom = self.rooms["0"]
 		else:
 			return "Syntax: rdelete [vnum]"
-		output = "Deleting room '{}' with name '{}'.".format(vnum, self.rooms[vnum].name)
+		output = f"Deleting room '{vnum}' with name '{self.rooms[vnum].name}'."
 		for roomVnum, roomObj in self.rooms.items():
 			for direction, exitObj in roomObj.exits.items():
 				if exitObj.to == vnum:
@@ -547,9 +547,9 @@ class World(object):
 	def rnote(self, *args):
 		if not args or args[0] is None or not args[0].strip():
 			return (
-				"Room note set to '{}'. Use 'rnote [text]' to change it, "
+				f"Room note set to '{self.currentRoom.note}'. Use 'rnote [text]' to change it, "
 				+ "'rnote -a [text]' to append to it, or 'rnote -r' to remove it."
-			).format(self.currentRoom.note)
+			)
 		note = args[0].strip()
 		if note.lower().startswith("-r"):
 			if len(note) > 2:
@@ -559,19 +559,20 @@ class World(object):
 		elif note.lower().startswith("-a"):
 			if len(note) == 2:
 				return "Error: '-a' requires text to be appended. Change aborted."
-			self.currentRoom.note = "{} {}".format(self.currentRoom.note.strip(), note[2:].strip())
+			self.currentRoom.note = f"{self.currentRoom.note.strip()} {note[2:].strip()}"
 		else:
 			self.currentRoom.note = note
-		return "Room note now set to '{}'.".format(self.currentRoom.note)
+		return f"Room note now set to '{self.currentRoom.note}'."
 
 	def ralign(self, *args):
 		validValues = ("good", "neutral", "evil", "undefined")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
 			return (
-				"Room alignment set to '{}'. Use 'ralign [{}]' to change it."
-			).format(self.currentRoom.align, " | ".join(validValues))
+				f"Room alignment set to '{self.currentRoom.align}'. "
+				+ f"Use 'ralign [{' | '.join(validValues)}]' to change it."
+			)
 		self.currentRoom.align = args[0].strip().lower()
-		return "Setting room align to '{}'.".format(self.currentRoom.align)
+		return f"Setting room align to '{self.currentRoom.align}'."
 
 	def rlight(self, *args):
 		if (
@@ -581,42 +582,46 @@ class World(object):
 			and args[0].strip().lower() not in LIGHT_SYMBOLS.values()
 		):
 			return (
-				"Room light set to '{}'. Use 'rlight [{}]' to change it."
-			).format(self.currentRoom.light, " | ".join(set(LIGHT_SYMBOLS.values())))
+				f"Room light set to '{self.currentRoom.light}'. "
+				+ f"Use 'rlight [{' | '.join(set(LIGHT_SYMBOLS.values()))}]' to change it."
+			)
 		try:
 			self.currentRoom.light = LIGHT_SYMBOLS[args[0].strip()]
 		except KeyError:
 			self.currentRoom.light = args[0].strip().lower()
-		return "Setting room light to '{}'.".format(self.currentRoom.light)
+		return f"Setting room light to '{self.currentRoom.light}'."
 
 	def rportable(self, *args):
 		validValues = ("portable", "notportable", "undefined")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
 			return (
-				"Room portable set to '{}'. Use 'rportable [{}]' to change it."
-			).format(self.currentRoom.portable, " | ".join(validValues))
+				f"Room portable set to '{self.currentRoom.portable}'. "
+				+ f"Use 'rportable [{' | '.join(validValues)}]' to change it."
+			)
 		self.currentRoom.portable = args[0].strip().lower()
-		return "Setting room portable to '{}'.".format(self.currentRoom.portable)
+		return f"Setting room portable to '{self.currentRoom.portable}'."
 
 	def rridable(self, *args):
 		validValues = ("ridable", "notridable", "undefined")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
 			return (
-				"Room ridable set to '{}'. Use 'rridable [{}]' to change it."
-			).format(self.currentRoom.ridable, " | ".join(validValues))
+				f"Room ridable set to '{self.currentRoom.ridable}'. "
+				+ f"Use 'rridable [{' | '.join(validValues)}]' to change it."
+			)
 		self.currentRoom.ridable = args[0].strip().lower()
 		self.currentRoom.calculateCost()
-		return "Setting room ridable to '{}'.".format(self.currentRoom.ridable)
+		return f"Setting room ridable to '{self.currentRoom.ridable}'."
 
 	def ravoid(self, *args):
 		validValues = ("+", "-")
 		if not args or not args[0] or args[0].strip().lower() not in validValues:
 			return (
-				"Room avoid {}. Use 'ravoid [{}]' to change it."
-			).format("enabled" if self.currentRoom.avoid else "disabled", " | ".join(validValues))
+				f"Room avoid {'enabled' if self.currentRoom.avoid else 'disabled'}. "
+				+ f"Use 'ravoid [{' | '.join(validValues)}]' to change it."
+			)
 		self.currentRoom.avoid = args[0].strip() == "+"
 		self.currentRoom.calculateCost()
-		return "{} room avoid.".format("Enabling" if self.currentRoom.avoid else "Disabling")
+		return f"{'Enabling' if self.currentRoom.avoid else 'Disabling'} room avoid."
 
 	def rterrain(self, *args):
 		if (
@@ -626,182 +631,170 @@ class World(object):
 			and args[0].strip().lower() not in TERRAIN_SYMBOLS.values()
 		):
 			return (
-				"Room terrain set to '{}'. Use 'rterrain [{}]' to change it."
-			).format(self.currentRoom.terrain, " | ".join(sorted(TERRAIN_SYMBOLS.values())))
+				f"Room terrain set to '{self.currentRoom.terrain}'. "
+				+ f"Use 'rterrain [{' | '.join(sorted(TERRAIN_SYMBOLS.values()))}]' to change it."
+			)
 		try:
 			self.currentRoom.terrain = TERRAIN_SYMBOLS[args[0].strip()]
 		except KeyError:
 			self.currentRoom.terrain = args[0].strip().lower()
 		self.currentRoom.calculateCost()
 		self.GUIRefresh()
-		return "Setting room terrain to '{}'.".format(self.currentRoom.terrain)
+		return f"Setting room terrain to '{self.currentRoom.terrain}'."
 
 	def rx(self, *args):
 		if args and args[0] and args[0].strip():
 			try:
 				self.currentRoom.x = int(args[0].strip())
 				self.GUIRefresh()
-				return "Setting room X coordinate to '{}'.".format(self.currentRoom.x)
+				return f"Setting room X coordinate to '{self.currentRoom.x}'."
 			except ValueError:
 				return "Error: room coordinates must be comprised of digits only."
-		return "Room coordinate X set to '{}'. Use 'rx [digit]' to change it.".format(self.currentRoom.x)
+		return f"Room coordinate X set to '{self.currentRoom.x}'. Use 'rx [digit]' to change it."
 
 	def ry(self, *args):
 		if args and args[0] and args[0].strip():
 			try:
 				self.currentRoom.y = int(args[0].strip())
 				self.GUIRefresh()
-				return "Setting room Y coordinate to '{}'.".format(self.currentRoom.y)
+				return f"Setting room Y coordinate to '{self.currentRoom.y}'."
 			except ValueError:
 				return "Error: room coordinates must be comprised of digits only."
-		return "Room coordinate Y set to '{}'. Use 'ry [digit]' to change it.".format(self.currentRoom.y)
+		return f"Room coordinate Y set to '{self.currentRoom.y}'. Use 'ry [digit]' to change it."
 
 	def rz(self, *args):
 		if args and args[0] and args[0].strip():
 			try:
 				self.currentRoom.z = int(args[0].strip())
 				self.GUIRefresh()
-				return "Setting room Z coordinate to '{}'.".format(self.currentRoom.z)
+				return f"Setting room Z coordinate to '{self.currentRoom.z}'."
 			except ValueError:
 				return "Error: room coordinates must be comprised of digits only."
-		return "Room coordinate Z set to '{}'. Use 'rz [digit]' to change it.".format(self.currentRoom.z)
+		return f"Room coordinate Z set to '{self.currentRoom.z}'. Use 'rz [digit]' to change it."
 
 	def rmobflags(self, *args):
 		regex = re.compile(
-			r"^(?P<mode>{}|{})\s+(?P<flag>{})".format(
-				regexFuzzy("add"),
-				regexFuzzy("remove"),
-				"|".join(roomdata.objects.VALID_MOB_FLAGS)
-			)
+			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
+			+ fr"\s+(?P<flag>{'|'.join(roomdata.objects.VALID_MOB_FLAGS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
-				"Mob flags set to '{}'. Use 'rmobflags [add | remove] [{}]' to change them."
-			).format(", ".join(self.currentRoom.mobFlags), " | ".join(roomdata.objects.VALID_MOB_FLAGS))
+				f"Mob flags set to '{', '.join(self.currentRoom.mobFlags)}'. "
+				+ f"Use 'rmobflags [add | remove] [{' | '.join(roomdata.objects.VALID_MOB_FLAGS)}]' to change them."
+			)
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.mobFlags:
 				self.currentRoom.mobFlags.remove(matchDict["flag"])
-				return "Mob flag '{}' removed.".format(matchDict["flag"])
+				return f"Mob flag '{matchDict['flag']}' removed."
 			else:
-				return "Mob flag '{}' not set.".format(matchDict["flag"])
+				return f"Mob flag '{matchDict['flag']}' not set."
 		elif "add".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.mobFlags:
-				return "Mob flag '{}' already set.".format(matchDict["flag"])
+				return f"Mob flag '{matchDict['flag']}' already set."
 			else:
 				self.currentRoom.mobFlags.add(matchDict["flag"])
-				return "Mob flag '{}' added.".format(matchDict["flag"])
+				return f"Mob flag '{matchDict['flag']}' added."
 
 	def rloadflags(self, *args):
 		regex = re.compile(
-			r"^(?P<mode>{}|{})\s+(?P<flag>{})".format(
-				regexFuzzy("add"),
-				regexFuzzy("remove"),
-				"|".join(roomdata.objects.VALID_LOAD_FLAGS)
-			)
+			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
+			+ fr"\s+(?P<flag>{'|'.join(roomdata.objects.VALID_LOAD_FLAGS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
-				"Load flags set to '{}'. Use 'rloadflags [add | remove] [{}]' to change them."
-			).format(", ".join(self.currentRoom.loadFlags), " | ".join(roomdata.objects.VALID_LOAD_FLAGS))
+				f"Load flags set to '{', '.join(self.currentRoom.loadFlags)}'. "
+				+ f"Use 'rloadflags [add | remove] [{' | '.join(roomdata.objects.VALID_LOAD_FLAGS)}]' to change them."
+			)
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.loadFlags:
 				self.currentRoom.loadFlags.remove(matchDict["flag"])
-				return "Load flag '{}' removed.".format(matchDict["flag"])
+				return f"Load flag '{matchDict['flag']}' removed."
 			else:
-				return "Load flag '{}' not set.".format(matchDict["flag"])
+				return f"Load flag '{matchDict['flag']}' not set."
 		elif "add".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.loadFlags:
-				return "Load flag '{}' already set.".format(matchDict["flag"])
+				return f"Load flag '{matchDict['flag']}' already set."
 			else:
 				self.currentRoom.loadFlags.add(matchDict["flag"])
-				return "Load flag '{}' added.".format(matchDict["flag"])
+				return f"Load flag '{matchDict['flag']}' added."
 
 	def exitflags(self, *args):
 		regex = re.compile(
-			r"^((?P<mode>{}|{})\s+)?((?P<flag>{})\s+)?(?P<direction>{})".format(
-				regexFuzzy("add"),
-				regexFuzzy("remove"),
-				"|".join(roomdata.objects.VALID_EXIT_FLAGS),
-				regexFuzzy(DIRECTIONS)
-			)
+			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ fr"((?P<flag>{'|'.join(roomdata.objects.VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
-				"Syntax: 'exitflags [add | remove] [{}] [{}]'."
-			).format(" | ".join(roomdata.objects.VALID_EXIT_FLAGS), " | ".join(DIRECTIONS))
+				f"Syntax: 'exitflags [add | remove] [{' | '.join(roomdata.objects.VALID_EXIT_FLAGS)}] "
+				+ f"[{' | '.join(DIRECTIONS)}]'."
+			)
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if direction not in self.currentRoom.exits:
-			return "Exit {} does not exist.".format(direction)
+			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
 			return (
-				"Exit flags '{}' set to '{}'."
-			).format(direction, ", ".join(self.currentRoom.exits[direction].exitFlags))
+				f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
+			)
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 				self.currentRoom.exits[direction].exitFlags.remove(matchDict["flag"])
-				return "Exit flag '{}' in direction '{}' removed.".format(matchDict["flag"], direction)
+				return f"Exit flag '{matchDict['flag']}' in direction '{direction}' removed."
 			else:
-				return "Exit flag '{}' in direction '{}' not set.".format(matchDict["flag"], direction)
+				return f"Exit flag '{matchDict['flag']}' in direction '{direction}' not set."
 		elif "add".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
-				return "Exit flag '{}' in direction '{}' already set.".format(matchDict["flag"], direction)
+				return f"Exit flag '{matchDict['flag']}' in direction '{direction}' already set."
 			else:
 				self.currentRoom.exits[direction].exitFlags.add(matchDict["flag"])
-				return "Exit flag '{}' in direction '{}' added.".format(matchDict["flag"], direction)
+				return f"Exit flag '{matchDict['flag']}' in direction '{direction}' added."
 
 	def doorflags(self, *args):
 		regex = re.compile(
-			r"^((?P<mode>{}|{})\s+)?((?P<flag>{})\s+)?(?P<direction>{})".format(
-				regexFuzzy("add"),
-				regexFuzzy("remove"),
-				"|".join(roomdata.objects.VALID_DOOR_FLAGS),
-				regexFuzzy(DIRECTIONS)
-			)
+			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ fr"((?P<flag>{'|'.join(roomdata.objects.VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
-				"Syntax: 'doorflags [add | remove] [{}] [{}]'."
-			).format(" | ".join(roomdata.objects.VALID_DOOR_FLAGS), " | ".join(DIRECTIONS))
+				f"Syntax: 'doorflags [add | remove] [{' | '.join(roomdata.objects.VALID_DOOR_FLAGS)}] "
+				+ f"[{' | '.join(DIRECTIONS)}]'."
+			)
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if direction not in self.currentRoom.exits:
-			return "Exit {} does not exist.".format(direction)
+			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
 			return (
-				"Door flags '{}' set to '{}'."
-			).format(direction, ", ".join(self.currentRoom.exits[direction].doorFlags))
+				f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
+			)
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 				self.currentRoom.exits[direction].doorFlags.remove(matchDict["flag"])
-				return "Door flag '{}' in direction '{}' removed.".format(matchDict["flag"], direction)
+				return f"Door flag '{matchDict['flag']}' in direction '{direction}' removed."
 			else:
-				return "Door flag '{}' in direction '{}' not set.".format(matchDict["flag"], direction)
+				return f"Door flag '{matchDict['flag']}' in direction '{direction}' not set."
 		elif "add".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
-				return "Door flag '{}' in direction '{}' already set.".format(matchDict["flag"], direction)
+				return f"Door flag '{matchDict['flag']}' in direction '{direction}' already set."
 			else:
 				self.currentRoom.exits[direction].doorFlags.add(matchDict["flag"])
-				return "Door flag '{}' in direction '{}' added.".format(matchDict["flag"], direction)
+				return f"Door flag '{matchDict['flag']}' in direction '{direction}' added."
 
 	def secret(self, *args):
 		regex = re.compile(
-			r"^((?P<mode>{}|{})\s+)?((?P<name>[A-Za-z]+)\s+)?(?P<direction>{})".format(
-				regexFuzzy("add"),
-				regexFuzzy("remove"),
-				regexFuzzy(DIRECTIONS)
-			)
+			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ fr"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Syntax: 'secret [add | remove] [name] [{}]'.".format(" | ".join(DIRECTIONS))
+			return f"Syntax: 'secret [add | remove] [name] [{' | '.join(DIRECTIONS)}]'."
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 			if not matchDict["name"]:
@@ -812,47 +805,44 @@ class World(object):
 			self.currentRoom.exits[direction].doorFlags.add("hidden")
 			self.currentRoom.exits[direction].door = matchDict["name"]
 			self.GUIRefresh()
-			return "Adding secret '{}' to direction '{}'.".format(matchDict["name"], direction)
+			return f"Adding secret '{matchDict['name']}' to direction '{direction}'."
 		elif direction not in self.currentRoom.exits:
-			return "Exit {} does not exist.".format(direction)
+			return f"Exit {direction} does not exist."
 		elif not self.currentRoom.exits[direction].door:
-			return "No secret {} of here.".format(direction)
+			return f"No secret {direction} of here."
 		elif not matchDict["mode"]:
-			return "Exit '{}' has secret '{}'.".format(direction, self.currentRoom.exits[direction].door)
+			return f"Exit '{direction}' has secret '{self.currentRoom.exits[direction].door}'."
 		elif "remove".startswith(matchDict["mode"]):
 			if "hidden" in self.currentRoom.exits[direction].doorFlags:
 				self.currentRoom.exits[direction].doorFlags.remove("hidden")
 			self.currentRoom.exits[direction].door = ""
 			self.GUIRefresh()
-			return "Secret {} removed.".format(direction)
+			return f"Secret {direction} removed."
 
 	def rlink(self, *args):
 		regex = re.compile(
-			r"^((?P<mode>{}|{})\s+)?((?P<oneway>{})\s+)?"
-			r"((?P<vnum>\d+|undefined)\s+)?(?P<direction>{})".format(
-				regexFuzzy("add"),
-				regexFuzzy("remove"),
-				regexFuzzy("oneway"),
-				regexFuzzy(DIRECTIONS)
-			)
+			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ fr"((?P<oneway>{regexFuzzy('oneway')})\s+)?"
+			+ fr"((?P<vnum>\d+|undefined)\s+)?"
+			+ fr"(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
-			return "Syntax: 'rlink [add | remove] [oneway] [vnum] [{}]'.".format(" | ".join(DIRECTIONS))
+			return f"Syntax: 'rlink [add | remove] [oneway] [vnum] [{' | '.join(DIRECTIONS)}]'."
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 			reversedDirection = REVERSE_DIRECTIONS[direction]
 			if not matchDict["vnum"]:
 				return "Error: 'add' expects a vnum or 'undefined'."
 			elif matchDict["vnum"] != "undefined" and matchDict["vnum"] not in self.rooms:
-				return "Error: vnum {} not in database.".format(matchDict["vnum"])
+				return f"Error: vnum {matchDict['vnum']} not in database."
 			elif direction not in self.currentRoom.exits:
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
 			self.currentRoom.exits[direction].to = matchDict["vnum"]
 			if matchDict["vnum"] == "undefined":
 				self.GUIRefresh()
-				return "Direction {} now undefined.".format(direction)
+				return f"Direction {direction} now undefined."
 			elif not matchDict["oneway"]:
 				if (
 					reversedDirection not in self.rooms[matchDict["vnum"]].exits
@@ -864,50 +854,35 @@ class World(object):
 					)
 					self.GUIRefresh()
 					return (
-						"Linking direction {} to {} with name '{}'.\n"
-						"Linked exit {} in second room with this room.".format(
-							direction,
-							matchDict["vnum"],
-							self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "",
-							reversedDirection
-						)
+						f"Linking direction {direction} to {matchDict['vnum']} "
+						+ f"with name '{self.rooms[matchDict['vnum']].name if matchDict['vnum'] in self.rooms else ''}'.\n"
+						+ f"Linked exit {reversedDirection} in second room with this room."
 					)
 				else:
 					self.GUIRefresh()
 					return (
-						"Linking direction {} to {} with name '{}'.\n"
-						"Unable to link exit {} in second room with this room: exit already defined.".format(
-							direction,
-							matchDict["vnum"],
-							self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else "",
-							reversedDirection
-						)
+						f"Linking direction {direction} to {matchDict['vnum']} "
+						+ f"with name '{self.rooms[matchDict['vnum']].name if matchDict['vnum'] in self.rooms else ''}'.\n"
+						+ f"Unable to link exit {reversedDirection} in second room with this room: exit already defined."
 					)
 			else:
 				self.GUIRefresh()
 				return (
-					"Linking direction {} one way to {} with name '{}'.".format(
-						direction,
-						matchDict["vnum"],
-						self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
-					)
+					f"Linking direction {direction} one way to {matchDict['vnum']} "
+					+ f"with name '{self.rooms[matchDict['vnum']].name if matchDict['vnum'] in self.rooms else ''}'."
 				)
 		elif direction not in self.currentRoom.exits:
-			return "Exit {} does not exist.".format(direction)
+			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
-			return "Exit '{}' links to '{}' with name '{}'.".format(
-				direction,
-				self.currentRoom.exits[direction].to,
-				(
-					self.rooms[self.currentRoom.exits[direction].to].name
-					if self.currentRoom.exits[direction].to in self.rooms
-					else ""
-				)
-			)
+			if self.currentRoom.exits[direction].to in self.rooms:
+				toName = self.rooms[self.currentRoom.exits[direction].to].name
+			else:
+				toName = ""
+			return f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' with name '{toName}'."
 		elif "remove".startswith(matchDict["mode"]):
 			del self.currentRoom.exits[direction]
 			self.GUIRefresh()
-			return "Exit {} removed.".format(direction)
+			return f"Exit {direction} removed."
 
 	def getlabel(self, *args):
 		if not args or not args[0] or not args[0].strip().isdigit():
@@ -916,7 +891,7 @@ class World(object):
 			findVnum = args[0].strip()
 		result = ", ".join(sorted(label for label, vnum in self.labels.items() if vnum == findVnum))
 		if result:
-			return "Room labels: {}".format(result)
+			return f"Room labels: {result}"
 		else:
 			return "Room not labeled."
 
@@ -946,36 +921,33 @@ class World(object):
 		if matchDict["action"] == "add":
 			if not matchDict["vnum"]:
 				vnum = self.currentRoom.vnum
-				self.output("adding the label '{0}' to current room with VNum '{1}'.".format(label, vnum))
+				self.output(f"adding the label '{label}' to current room with VNum '{vnum}'.")
 			else:
 				vnum = matchDict["vnum"]
-				self.output("adding the label '{0}' with VNum '{1}'.".format(label, vnum))
+				self.output(f"adding the label '{label}' with VNum '{vnum}'.")
 			self.labels[label] = vnum
 			self.saveLabels()
 		elif matchDict["action"] == "delete":
 			if label not in self.labels:
-				self.output("There aren't any labels matching '{0}' in the database.".format(label))
+				self.output(f"There aren't any labels matching '{label}' in the database.")
 				return None
-			self.output("Deleting label '{0}'.".format(label))
+			self.output(f"Deleting label '{label}'.")
 			del self.labels[label]
 			self.saveLabels()
 		elif matchDict["action"] == "info":
 			if "all".startswith(label):
 				if self.labels:
-					return ["{0} - {1}".format(labelString, vnum) for labelString, vnum in sorted(self.labels.items())]
+					return [f"{labelString} - {vnum}" for labelString, vnum in sorted(self.labels.items())]
 				else:
 					self.output("There aren't any labels in the database yet.")
 			elif label not in self.labels:
-				self.output("There aren't any labels matching '{0}' in the database.".format(label))
+				self.output(f"There aren't any labels matching '{label}' in the database.")
 			else:
-				self.output("Label '{0}' points to room '{1}'.".format(label, self.labels[label]))
+				self.output(f"Label '{label}' points to room '{self.labels[label]}'.")
 		elif matchDict["action"] == "search":
 			results = sorted(
-				"{} - {} - {}".format(
-					name,
-					self.rooms[vnum].name if vnum in self.rooms else "VNum not in map",
-					vnum
-				) for name, vnum in self.labels.items() if label in name
+				f"{name} - {self.rooms[vnum].name if vnum in self.rooms else 'VNum not in map'} - {vnum}"
+				for name, vnum in self.labels.items() if label in name
 			)
 			if not results:
 				self.output("Nothing found.")
@@ -992,10 +964,10 @@ class World(object):
 		if vnum in self.rooms:
 			room = self.rooms[vnum]
 		else:
-			return ["Error: No such vnum or label, '{0}'".format(vnum)]
+			return [f"Error: No such vnum or label, '{vnum}'"]
 		info = []
-		info.append("vnum: '{0}'".format(room.vnum))
-		info.append("Name: '{0}'".format(room.name))
+		info.append(f"vnum: '{room.vnum}'")
+		info.append(f"Name: '{room.name}'")
 		info.append("Description:")
 		info.append("-----")
 		info.extend(room.desc.splitlines())
@@ -1004,24 +976,24 @@ class World(object):
 		info.append("-----")
 		info.extend(room.dynamicDesc.splitlines())
 		info.append("-----")
-		info.append("Note: '{0}'".format(room.note))
-		info.append("Terrain: '{0}'".format(room.terrain))
-		info.append("Cost: '{0}'".format(room.cost))
-		info.append("Light: '{0}'".format(room.light))
-		info.append("Align: '{0}'".format(room.align))
-		info.append("Portable: '{0}'".format(room.portable))
-		info.append("Ridable: '{0}'".format(room.ridable))
-		info.append("Mob Flags: '{0}'".format(", ".join(room.mobFlags)))
-		info.append("Load Flags: '{0}'".format(", ".join(room.loadFlags)))
-		info.append("Coordinates (X, Y, Z): '{0}', '{1}', '{2}'".format(room.x, room.y, room.z))
+		info.append(f"Note: '{room.note}'")
+		info.append(f"Terrain: '{room.terrain}'")
+		info.append(f"Cost: '{room.cost}'")
+		info.append(f"Light: '{room.light}'")
+		info.append(f"Align: '{room.align}'")
+		info.append(f"Portable: '{room.portable}'")
+		info.append(f"Ridable: '{room.ridable}'")
+		info.append(f"Mob Flags: '{', '.join(room.mobFlags)}'")
+		info.append(f"Load Flags: '{', '.join(room.loadFlags)}'")
+		info.append(f"Coordinates (X, Y, Z): '{room.x}', '{room.y}', '{room.z}'")
 		info.append("Exits:")
 		for direction, exitcls in self.sortExits(room.exits):
 			info.append("-----")
-			info.append("Direction: '{0}'".format(direction))
-			info.append("To: '{0}'".format(exitcls.to))
-			info.append("Exit Flags: '{0}'".format(", ".join(exitcls.exitFlags)))
-			info.append("Door Name: '{0}'".format(exitcls.door))
-			info.append("Door Flags: '{0}'".format(", ".join(exitcls.doorFlags)))
+			info.append(f"Direction: '{direction}'")
+			info.append(f"To: '{exitcls.to}'")
+			info.append(f"Exit Flags: '{', '.join(exitcls.exitFlags)}'")
+			info.append(f"Door Name: '{exitcls.door}'")
+			info.append(f"Door Flags: '{', '.join(exitcls.doorFlags)}'")
 		return info
 
 	def createSpeedWalk(self, directionsList):
@@ -1033,7 +1005,7 @@ class World(object):
 				if lenGroup == 1:
 					speedWalkDirs.append(direction[0])
 				else:
-					speedWalkDirs.append("{0}{1}".format(lenGroup, direction[0]))
+					speedWalkDirs.append(f"{lenGroup}{direction[0]}")
 			return speedWalkDirs
 		numDirections = len([d for d in directionsList if d in DIRECTIONS])
 		result = []
@@ -1051,7 +1023,7 @@ class World(object):
 		# Process any remaining items in the directions buffer.
 		if directionsBuffer:
 			result.extend(compressDirections(directionsBuffer))
-		return "{} rooms. {}".format(numDirections, ", ".join(result))
+		return f"{numDirections} rooms. {', '.join(result)}"
 
 	def path(self, *args):
 		if not args or not args[0]:
@@ -1082,7 +1054,7 @@ class World(object):
 		if flags:
 			avoidTerrains = frozenset(
 				terrain for terrain in roomdata.objects.TERRAIN_COSTS
-				if "no{}".format(terrain) in flags
+				if f"no{terrain}" in flags
 			)
 		else:
 			avoidTerrains = frozenset()
@@ -1176,14 +1148,8 @@ class World(object):
 				results.append("lead")
 			if "door" in currentRoomObj.exits[direction].exitFlags:
 				results.append(
-					"open {} {}".format(
-						(
-							currentRoomObj.exits[direction].door
-							if currentRoomObj.exits[direction].door
-							else "exit"
-						),
-						direction
-					)
+					f"open {currentRoomObj.exits[direction].door if currentRoomObj.exits[direction].door else 'exit'} "
+					+ f"{direction}"
 				)
 		return results
 
@@ -1212,11 +1178,8 @@ class World(object):
 			if vnum in self.rooms:
 				return self.rooms[vnum], None
 			else:
-				return None, "{label} is set to vnum {vnum}, but there is no room with that vnum".format(
-					label=label,
-					vnum=vnum
-				)
+				return None, f"{label} is set to vnum {vnum}, but there is no room with that vnum"
 		else:  # The label is neither a vnum nor an existing label
 			similarLabels = list(self.labels)
 			similarLabels.sort(reverse=True, key=lambda l: fuzz.ratio(l, label))
-			return None, "Unknown label. Did you mean {}?".format(", ".join(similarLabels[0:4]))
+			return None, f"Unknown label. Did you mean {', '.join(similarLabels[0:4])}?"

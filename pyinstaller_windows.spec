@@ -79,11 +79,11 @@ else:
 		except subprocess.CalledProcessError:
 			pass
 if found_version:
-	print("Using version info from {}. ({}-{})".format(found_version, APP_VERSION, APP_VERSION_TYPE))
+	print(f"Using version info from {found_version}. ({APP_VERSION}-{APP_VERSION_TYPE})")
 else:
 	APP_VERSION = "0.0"
 	APP_VERSION_TYPE = "beta"
-	print("No version information found. Using default. ({}-{})".format(APP_VERSION, APP_VERSION_TYPE))
+	print(f"No version information found. Using default. ({APP_VERSION}-{APP_VERSION_TYPE})")
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 APP_VERSION_CSV = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
@@ -91,7 +91,7 @@ APP_DEST = os.path.normpath(
 	os.path.join(
 		ORIG_DEST,
 		os.pardir,
-		"{}_V{}_{}".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE).replace("-", "_").replace(" ", "_")
+		f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_")
 	)
 )
 if isTag:
@@ -177,7 +177,7 @@ dll_excludes = TOC([  # NOQA: F821
 
 block_cipher = None
 
-version_data = """
+version_data = f"""
 # UTF-8
 #
 # For more details about fixed file info 'ffi' see:
@@ -186,7 +186,7 @@ VSVersionInfo(
   ffi=FixedFileInfo(
     # filevers and prodvers should be always a tuple with four items: (1, 2, 3, 4)
     # Set not needed items to zero 0.
-    filevers=({version_csv}),
+    filevers=({APP_VERSION_CSV}),
     prodvers=(1, 0, 0, 1),
     # Contains a bitmask that specifies the valid bits 'flags'r
     mask=0x3f,
@@ -210,23 +210,17 @@ VSVersionInfo(
       StringTable(
         u'040904B0',
         [StringStruct(u'CompanyName', u'LFileDescript'),
-        StringStruct(u'', u'{name} V{version}-{version_type}'),
-        StringStruct(u'FileVersion', u'{version}'),
-        StringStruct(u'LegalCopyright', u'{author}'),
-        StringStruct(u'OriginalFilename', u'{name}.exe'),
-        StringStruct(u'ProductName', u'{name}'),
-        StringStruct(u'ProductVersion', u'{version}')])
+        StringStruct(u'', u'{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}'),
+        StringStruct(u'FileVersion', u'{APP_VERSION}'),
+        StringStruct(u'LegalCopyright', u'{APP_AUTHOR}'),
+        StringStruct(u'OriginalFilename', u'{APP_NAME}.exe'),
+        StringStruct(u'ProductName', u'{APP_NAME}'),
+        StringStruct(u'ProductVersion', u'{APP_VERSION}')])
       ]),
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
 )
-""".format(
-	name=APP_NAME,
-	version=APP_VERSION,
-	version_type=APP_VERSION_TYPE,
-	version_csv=APP_VERSION_CSV,
-	author=APP_AUTHOR
-)
+"""
 
 # Remove old dist directory and old version file.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
@@ -248,7 +242,7 @@ with codecs.open(
 	"wb",
 	encoding="utf-8"
 ) as f:
-	f.write("version = \"{} V{}-{}\"".format(APP_NAME, APP_VERSION, APP_VERSION_TYPE))
+	f.write(f"version = \"{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}\"")
 
 a = Analysis(  # NOQA: F821
 	["start.py"],
@@ -344,7 +338,7 @@ for files, destination in include_files:
 		if os.path.exists(src) and not os.path.isdir(src):
 			shutil.copy(src, dest_dir)
 
-print("Compressing the distribution to {}.".format(ZIP_FILE))
+print(f"Compressing the distribution to {ZIP_FILE}.")
 shutil.make_archive(
 	base_name=os.path.splitext(ZIP_FILE)[0],
 	format="zip",
@@ -365,7 +359,7 @@ with open(ZIP_FILE, "rb") as f:
 		for _, hash in hashes.items():
 			hash.update(block)
 for hashtype, hash in hashes.items():
-	with codecs.open("{}.{}".format(ZIP_FILE, hashtype), "wb", encoding="utf-8") as f:
-		f.write("{} *{}\n".format(hash.hexdigest().lower(), os.path.basename(ZIP_FILE)))
+	with codecs.open(f"{ZIP_FILE}.{hashtype}", "wb", encoding="utf-8") as f:
+		f.write(f"{hash.hexdigest().lower()} *{os.path.basename(ZIP_FILE)}\n")
 
 print("Done.")

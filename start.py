@@ -18,7 +18,7 @@ except ImportError:
 	version = "%(prog)s: No version information available. This is normal when running from source."
 
 
-version = f"{version} (Python {'.'.join(str(i) for i in sys.version_info[:3])} {sys.version_info.releaselevel})"
+version += f" (Python {'.'.join(map(str, sys.version_info[:3]))} {sys.version_info.releaselevel})"
 
 
 if __name__ == "__main__":
