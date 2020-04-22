@@ -41,7 +41,7 @@ from .utils import formatDocString, stripAnsi, decodeBytes, regexFuzzy, simplifi
 
 
 EXIT_TAGS_REGEX = re.compile(
-	fr"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{{]?)"
+	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ fr"(?P<direction>{'|'.join(DIRECTIONS)})"
 )
 MOVEMENT_FORCED_REGEX = re.compile(

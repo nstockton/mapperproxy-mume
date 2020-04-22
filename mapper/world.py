@@ -823,7 +823,7 @@ class World(object):
 		regex = re.compile(
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<oneway>{regexFuzzy('oneway')})\s+)?"
-			+ fr"((?P<vnum>\d+|undefined)\s+)?"
+			+ r"((?P<vnum>\d+|undefined)\s+)?"
 			+ fr"(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
