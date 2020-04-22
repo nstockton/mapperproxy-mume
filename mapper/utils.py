@@ -6,12 +6,11 @@
 import math
 import os
 import re
+import shutil
 import subprocess
 import sys
 from telnetlib import IAC
 import textwrap
-
-from . import terminalsize
 
 
 ANSI_COLOR_REGEX = re.compile(r"\x1b\[[\d;]+m")
@@ -178,7 +177,7 @@ def decodeBytes(data):
 def page(lines):
 	"""Output word wrapped lines using the 'more' shell command if necessary."""
 	lines = "\n".join(lines).splitlines()
-	width, height = terminalsize.get_terminal_size()
+	width, height = shutil.get_terminal_size()
 	# Word wrapping to 1 less than the terminal width is necessary to prevent
 	# occasional blank lines in the terminal output.
 	text = "\n".join(textwrap.fill(line.strip(), width - 1) for line in lines)
