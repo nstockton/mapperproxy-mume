@@ -28,7 +28,7 @@ from .clock import (
 	Clock
 )
 from .config import Config, config_lock
-from .timers import Timer
+from .delays import OneShot
 from .world import (
 	DIRECTIONS,
 	REVERSE_DIRECTIONS,
@@ -884,7 +884,7 @@ class Mapper(threading.Thread, World):
 				self.parsedHour = int(hour) % 12 + (12 if amPm == "pm" else 0)
 				self.parsedMinutes = int(minutes)
 				if self.parsedHour == 23 and self.parsedMinutes == 59:
-					Timer(1.0, self.serverSend, "look at clock").start()
+					OneShot(1.0, self.serverSend, "look at clock")
 				else:
 					self.timeEvent = "clock"
 					self.serverSend("time")
