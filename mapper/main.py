@@ -6,14 +6,18 @@
 # Built-in Modules:
 import logging
 import os
+import select
 import socket
-try:
-	import certifi
-	import ssl
-except ImportError:
-	ssl = None
+import ssl
 from telnetlib import DO, GA, IAC, NAWS, TTYPE
 import threading
+
+# Third-party Modules:
+from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
+try:
+	import certifi
+except ImportError:
+	certifi = None
 
 # Local Modules:
 from .protocols import ProtocolHandler
@@ -27,6 +31,50 @@ LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore
 
 
 logger = logging.getLogger(__name__)
+
+
+class BufferedSSLSocket(BufferedSocket):
+	def __init__(
+			self,
+			sock,
+			timeout=_UNSET,
+			maxsize=DEFAULT_MAXSIZE,
+			recvsize=_UNSET,
+			insecure=False,
+			**sslKWArgs
+	):
+		super().__init__(sock, timeout, maxsize, recvsize)
+		if not insecure and ssl is not None:
+			self.wrapSSL(**sslKWArgs)
+
+	def wrapSSL(self, **kwargs):
+		if not certifi:
+			print("Error: cannot encrypt connection. Certifi not found.")
+			return
+		kwargs["do_handshake_on_connect"] = False  # This needs to always be set to False.
+		with self._recv_lock:
+			with self._send_lock:
+				sock = self.sock
+				originalTimeout = sock.gettimeout()
+				sock.settimeout(None)
+				try:
+					context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+					context.load_verify_locations(certifi.where())
+					sock = context.wrap_socket(sock, **kwargs)
+					self.doSSLHandshake(sock)
+				finally:
+					sock.settimeout(originalTimeout)
+					self.sock = sock
+
+	def doSSLHandshake(self, sock):
+		while True:
+			try:
+				sock.do_handshake()
+				break
+			except ssl.SSLWantReadError:
+				select.select([sock], [], [])
+			except ssl.SSLWantWriteError:
+				select.select([], [sock], [])
 
 
 class Proxy(threading.Thread):
@@ -43,7 +91,10 @@ class Proxy(threading.Thread):
 	def close(self):
 		self.finished.set()
 
-	def write(self, data):
+	def sendClient(self, data):
+		self._client.sendall(data)
+
+	def sendServer(self, data):
 		try:
 			self._server.sendall(data)
 			return True
@@ -71,9 +122,9 @@ class Proxy(threading.Thread):
 			elif text.strip() and (self.isEmulatingOffline or text.strip().split()[0] in userCommands):
 				self._mapper.queue.put((USER_DATA, text))
 				if negotiations:
-					self.write(negotiations)
+					self.sendServer(negotiations)
 			else:
-				self.write(data)
+				self.sendServer(data)
 
 
 class Server(threading.Thread):
@@ -100,7 +151,7 @@ class Server(threading.Thread):
 			MPI_INIT + b"P2\nG\n"
 		]
 		self._handler = ProtocolHandler(
-			remoteSender=self._server.sendall,
+			remoteSender=self.sendServer,
 			eventSender=self._mapper.queue.put,
 			outputFormat=self._outputFormat,
 			promptTerminator=self._promptTerminator
@@ -108,6 +159,12 @@ class Server(threading.Thread):
 
 	def close(self):
 		self.finished.set()
+
+	def sendClient(self, data):
+		self._client.sendall(data)
+
+	def sendServer(self, data):
+		self._server.sendall(data)
 
 	def run(self):
 		handler = self._handler
@@ -124,11 +181,11 @@ class Server(threading.Thread):
 			elif not encounteredInitialOutput and data.startswith(self.initialOutput):
 				# The connection to Mume has been established, and the game has just responded with the login screen.
 				for item in self.initialConfiguration:
-					self._server.sendall(item)
+					self.sendServer(item)
 				handler._telnet.charset("us-ascii")
 				encounteredInitialOutput = True
 			try:
-				self._client.sendall(handler.parse(data))
+				self.sendClient(handler.parse(data))
 			except EnvironmentError:
 				self.close()
 				continue
@@ -140,6 +197,20 @@ class Server(threading.Thread):
 
 
 class MockedSocket(object):
+	timeout = None
+
+	def gettimeout(self):
+		return self.timeout
+
+	def settimeout(self, timeout):
+		self.timeout = None if timeout is None else float(timeout)
+
+	def getblocking(self):
+		return self.gettimeout() is None
+
+	def setblocking(self, flag):
+		self.settimeout(None if flag else 0.0)
+
 	def connect(self, *args):
 		pass
 
@@ -152,8 +223,11 @@ class MockedSocket(object):
 	def close(self, *args):
 		pass
 
-	def sendall(self, *args):
-		pass
+	def send(self, data, flags=0):
+		return len(data)
+
+	def sendall(self, data, flags=0):
+		return None  # sendall returns None on success.
 
 
 def main(
@@ -190,7 +264,7 @@ def main(
 	proxySocket.listen(1)
 	touch(LISTENING_STATUS_FILE)
 	clientConnection, proxyAddress = proxySocket.accept()
-	clientConnection.settimeout(1.0)
+	clientConnection = BufferedSocket(clientConnection, timeout=1.0)
 	# initialise server connection
 	if isEmulatingOffline:
 		serverConnection = MockedSocket()
@@ -198,10 +272,6 @@ def main(
 		serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 		serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-		if not noSsl and ssl is not None:
-			context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-			context.load_verify_locations(certifi.where())
-			serverConnection = context.wrap_socket(serverConnection, server_hostname=remoteHost)
 	try:
 		serverConnection.connect((remoteHost, remotePort))
 	except TimeoutError:
@@ -214,6 +284,12 @@ def main(
 		clientConnection.close()
 		removeFile(LISTENING_STATUS_FILE)
 		return
+	serverConnection = BufferedSSLSocket(
+		serverConnection,
+		timeout=None,
+		insecure=noSsl or isEmulatingOffline,
+		server_hostname=remoteHost
+	)
 	mapperThread = Mapper(
 		client=clientConnection,
 		server=serverConnection,
