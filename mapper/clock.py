@@ -10,10 +10,10 @@ from .config import Config, config_lock
 
 
 CLOCK_REGEX = re.compile(
-	r"^The current time is (?P<hour>[1-9]|1[0-2])\:(?P<minutes>[0-5]\d)(?P<am_pm>[ap]m)\.$"
+	r"^The current time is (?P<hour>[1-9]|1[0-2])\:(?P<minutes>[0-5]\d) (?P<am_pm>[ap]m)\.$"
 )
 TIME_REGEX = re.compile(
-	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2])(?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
+	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2]) (?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
 	r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
 )
 DAWN_REGEX = re.compile(r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$")
