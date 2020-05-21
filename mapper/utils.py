@@ -3,11 +3,12 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Built-in Modules:
 import math
 import os
+import pydoc
 import re
 import shutil
-import subprocess
 import sys
 from telnetlib import IAC
 import textwrap
@@ -29,6 +30,25 @@ ESCAPE_XML_BYTES_ENTITIES = tuple(
 UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES)
 
 
+def iterBytes(data):
+	"""Yield each byte in a bytes-like object."""
+	for i in range(len(data)):
+		yield data[i:i + 1]
+
+
+def minIndent(text):
+	"""Return the white space used to indent the line with the least amount of indention."""
+	return min(
+		(
+			INDENT_REGEX.search(line).group("indent")
+			for line in text.splitlines()
+			if line.strip("\r\n")
+		),
+		default="",
+		key=len
+	)
+
+
 def formatDocString(functionOrString, width=79, prefix=""):
 	"""Format a docstring for displaying."""
 	if callable(functionOrString):  # It's a function.
@@ -41,23 +61,24 @@ def formatDocString(functionOrString, width=79, prefix=""):
 		# Prefix the first line with the white space from the subsequent, non-empty
 		# line with the least amount of indention.
 		# This is needed so that textwrap.dedent will work.
-		minWhiteSpace = min(
-			(
-				INDENT_REGEX.search(line).group("indent")
-				for line in docString.splitlines()[1:]
-				if line.strip("\r\n")
-			),
-			default="",
-			key=len
-		)
-		docString = minWhiteSpace + docString
+		docString = minIndent("\n".join(docString.splitlines()[1:])) + docString
 	docString = textwrap.dedent(docString)  # Remove common indention from lines.
 	docString = docString.rstrip()  # Remove trailing white space from the end of the docstring.
 	# Word wrap long lines, while maintaining existing structure.
-	docString = "\n".join(
-		textwrap.fill(line, width=width - len(prefix), break_long_words=False, break_on_hyphens=False)
-		for line in docString.splitlines()
-	)
+	wrappedLines = []
+	indentLevel = 0
+	lastIndent = ""
+	for line in docString.splitlines():
+		indent, text = INDENT_REGEX.search(line).groups()
+		if len(indent) > len(lastIndent):
+			indentLevel += 1
+		elif len(indent) < len(lastIndent):
+			indentLevel -= 1
+		lastIndent = indent
+		linePrefix = prefix * indentLevel if prefix else indent
+		lines = textwrap.wrap(text, width=width - len(linePrefix), break_long_words=False, break_on_hyphens=False)
+		wrappedLines.append(linePrefix + f"\n{linePrefix}".join(lines))
+	docString = "\n".join(wrappedLines)
 	docString = textwrap.indent(docString, prefix=prefix)  # Indent docstring lines with the prefix.
 	return docString
 
@@ -112,7 +133,7 @@ def padList(lst, padding, count, fixed=False, left=False):
 		return (lst + [padding] * (count - len(lst)))
 
 
-def round_half_away_from_zero(n, decimals=0):
+def roundHalfAwayFromZero(n, decimals=0):
 	# https://realpython.com/python-rounding
 	multiplier = 10 ** decimals
 	return math.copysign(math.floor(abs(n) * multiplier + 0.5) / multiplier, n)
@@ -181,10 +202,4 @@ def page(lines):
 	# Word wrapping to 1 less than the terminal width is necessary to prevent
 	# occasional blank lines in the terminal output.
 	text = "\n".join(textwrap.fill(line.strip(), width - 1) for line in lines)
-	if text.count("\n") + 1 < height:
-		print(text)
-	else:
-		more = subprocess.Popen("more", stdin=subprocess.PIPE, shell=True)
-		more.stdin.write(text.encode("utf-8"))
-		more.stdin.close()
-		more.wait()
+	pydoc.pager(text)
