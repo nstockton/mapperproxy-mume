@@ -5,7 +5,7 @@
 
 # Built-in Modules:
 import codecs
-import collections
+from collections.abc import MutableMapping
 import json
 import os.path
 import threading
@@ -21,9 +21,9 @@ class Error(Exception):
 	pass
 
 
-class Config(collections.MutableMapping):
+class Config(MutableMapping):
 	def __init__(self, name="config", *args, **kwargs):
-		super(Config, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		self._name = name
 		self._config = dict()
 		self.reload()
