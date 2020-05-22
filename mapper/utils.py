@@ -6,7 +6,7 @@
 # Built-in Modules:
 import math
 import os
-import pydoc
+from pydoc import pager
 import re
 import shutil
 import sys
@@ -197,9 +197,10 @@ def decodeBytes(data):
 
 def page(lines):
 	"""Output word wrapped lines using the 'more' shell command if necessary."""
+	# This is necessary in order for lines with embedded new line characters to be properly handled.
 	lines = "\n".join(lines).splitlines()
 	width, height = shutil.get_terminal_size()
 	# Word wrapping to 1 less than the terminal width is necessary to prevent
 	# occasional blank lines in the terminal output.
 	text = "\n".join(textwrap.fill(line.strip(), width - 1) for line in lines)
-	pydoc.pager(text)
+	pager(text)

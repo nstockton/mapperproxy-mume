@@ -5,7 +5,9 @@
 
 # Built-in Modules:
 from io import StringIO
+import os
 from telnetlib import IAC
+import textwrap
 import unittest
 from unittest import mock
 
@@ -71,23 +73,23 @@ class TestUtils(unittest.TestCase):
 			utils.simplified(sent.encode("us-ascii"))
 
 	@mock.patch("mapper.utils.os")
-	def test_removeFile(self, mock_os):
+	def test_removeFile(self, mockOs):
 		# Argument can be a file name as a string.
 		utils.removeFile("path_1")
-		mock_os.remove.assert_called_with("path_1")
+		mockOs.remove.assert_called_with("path_1")
 		# Argument can also be a file object.
 		fileObj = StringIO()
 		fileObj.name = "path_2"
 		self.assertFalse(fileObj.closed)
 		utils.removeFile(fileObj)
-		mock_os.remove.assert_called_with("path_2")
+		mockOs.remove.assert_called_with("path_2")
 		self.assertTrue(fileObj.closed)
 
 	@mock.patch("mapper.utils.open", mock.mock_open(read_data="data"))
 	@mock.patch("mapper.utils.os")
-	def test_touch(self, mock_os):
+	def test_touch(self, mockOs):
 		utils.touch("path_1", None)
-		mock_os.utime.assert_called_once_with("path_1", None)
+		mockOs.utime.assert_called_once_with("path_1", None)
 
 	def test_padList(self):
 		lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -169,3 +171,20 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.decodeBytes(characters.encode("latin-1")), characters)
 		self.assertEqual(utils.decodeBytes(characters.encode("utf-8")), characters)
 		self.assertEqual(utils.decodeBytes(characters), "")
+
+	@mock.patch("mapper.utils.pager")
+	@mock.patch("mapper.utils.shutil")
+	def test_page(self, mockShutil, mockPager):
+		cols, rows = 80, 24
+		mockShutil.get_terminal_size.return_value = (os.terminal_size((cols, rows)))
+		lines = [
+			"This is the first line.",
+			"this is the second line.",
+			"123456789 " * 10,
+			"123\n567\n9 " * 10,
+			"This is the third and final line."
+		]
+		lines = "\n".join(lines).splitlines()
+		utils.page(lines)
+		text = "\n".join(textwrap.fill(line.strip(), cols - 1) for line in lines)
+		mockPager.assert_called_once_with(text)
