@@ -4,6 +4,7 @@
 
 
 # Built-in Modules:
+import _imp
 import math
 import os
 from pydoc import pager
@@ -158,13 +159,36 @@ def regexFuzzy(data):
 		return "|".join("(".join(list(item)) + ")?" * (len(item) - 1) for item in data)
 
 
-def getDirectoryPath(directory):
-	# This is needed for py2exe
-	try:
-		if sys.frozen or sys.importers:
-			return os.path.join(os.path.dirname(sys.executable), directory)
-	except AttributeError:
-		return os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", directory)
+def getFreezer():
+	"""Return the name of the package used to freeze the running code or None."""
+	# https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py
+	frozen = getattr(sys, "frozen", None)
+	if frozen and hasattr(sys, "_MEIPASS"):
+		return "pyinstaller"
+	elif frozen is True:
+		return "cx_freeze"
+	elif frozen in ("windows_exe", "console_exe", "dll"):
+		return "py2exe"
+	elif frozen == "macosx_app":
+		return "py2app"
+	elif hasattr(sys, "importers"):
+		return "old_py2exe"
+	elif _imp.is_frozen("__main__"):
+		return "tools/freeze"
+	return frozen
+
+
+def isFrozen():
+	return bool(getFreezer())
+
+
+def getDirectoryPath(*subdirectory):
+	"""Return the location where the program is running."""
+	if isFrozen():
+		path = os.path.dirname(sys.executable)
+	else:
+		path = os.path.join(os.path.dirname(__file__), os.path.pardir)
+	return os.path.realpath(os.path.join(path, *subdirectory))
 
 
 def multiReplace(data, replacements):

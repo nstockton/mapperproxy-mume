@@ -6,6 +6,7 @@
 # Built-in Modules:
 from io import StringIO
 import os
+import sys
 from telnetlib import IAC
 import textwrap
 import unittest
@@ -136,6 +137,44 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.regexFuzzy(["east"]), "e(a(s(t)?)?)?")
 		expectedOutput = "e(a(s(t)?)?)?|w(e(s(t)?)?)?"
 		self.assertEqual(utils.regexFuzzy(["east", "west"]), expectedOutput)
+
+	@mock.patch("mapper.utils._imp")
+	@mock.patch("mapper.utils.sys")
+	def test_getFreezer(self, mockSys, mockImp):
+		del mockSys.frozen
+		del mockSys._MEIPASS
+		del mockSys.importers
+		mockImp.is_frozen.return_value = True
+		self.assertEqual(utils.getFreezer(), "tools/freeze")
+		mockImp.is_frozen.return_value = False
+		self.assertIs(utils.getFreezer(), None)
+		mockSys.importers = True
+		self.assertEqual(utils.getFreezer(), "old_py2exe")
+		del mockSys.importers
+		for item in ("windows_exe", "console_exe", "dll"):
+			mockSys.frozen = item
+			self.assertEqual(utils.getFreezer(), "py2exe")
+		mockSys.frozen = "macosx_app"
+		self.assertEqual(utils.getFreezer(), "py2app")
+		mockSys.frozen = True
+		self.assertEqual(utils.getFreezer(), "cx_freeze")
+		mockSys._MEIPASS = "."
+		self.assertEqual(utils.getFreezer(), "pyinstaller")
+
+	def test_isFrozen(self):
+		self.assertIs(utils.isFrozen(), False)
+
+	@mock.patch("mapper.utils.isFrozen")
+	def test_getDirectoryPath(self, mockIsFrozen):
+		subdirectory = ("level1", "level2")
+		frozenDirName = os.path.dirname(sys.executable)
+		frozenOutput = os.path.realpath(os.path.join(frozenDirName, *subdirectory))
+		mockIsFrozen.return_value = True
+		self.assertEqual(utils.getDirectoryPath(*subdirectory), frozenOutput)
+		unfrozenDirName = os.path.join(os.path.dirname(utils.__file__), os.path.pardir)
+		unfrozenOutput = os.path.realpath(os.path.join(unfrozenDirName, *subdirectory))
+		mockIsFrozen.return_value = False
+		self.assertEqual(utils.getDirectoryPath(*subdirectory), unfrozenOutput)
 
 	def test_multiReplace(self):
 		replacements = (
