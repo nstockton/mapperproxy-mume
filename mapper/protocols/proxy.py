@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-# Python __future__ Imports:
+# Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:
@@ -15,23 +15,19 @@ from .manager import Manager
 from .mpi import MPI_INIT, MPIProtocol
 from .telnet import TelnetProtocol
 from .telnet_constants import (
-	# Commands:
-	IAC,
-	GA,
-	# Options:
 	CHARSET,
-	NEGOTIATION_BYTES,
-	# Subnegotiation Bytes:
-	SB,
-	SE,
-	CHARSET_REQUEST,
 	CHARSET_ACCEPTED,
 	CHARSET_REJECTED,
-	# Line Endings:
+	CHARSET_REQUEST,
+	CR,
 	CR_LF,
 	CR_NULL,
-	CR,
+	GA,
+	IAC,
 	LF,
+	NEGOTIATION_BYTES,
+	SB,
+	SE,
 )
 from .xml import XMLProtocol
 from .. import USER_DATA

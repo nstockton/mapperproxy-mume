@@ -3,10 +3,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import socket
 import unittest
-from unittest.mock import call, Mock, patch
+from unittest.mock import Mock, call, patch
 
+# Mapper Modules:
 from mapper import MUD_DATA, USER_DATA
 from mapper.mapper import Mapper
 

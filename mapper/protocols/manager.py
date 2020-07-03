@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-# Python __future__ Imports:
+# Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:
@@ -13,7 +13,7 @@ from typing import Callable, Optional, Sequence, Type
 
 # Local Modules:
 from .base import Protocol
-from .telnet_constants import CR, LF, CR_LF, CR_NULL
+from .telnet_constants import CR, CR_LF, CR_NULL, LF
 from ..utils import escapeIAC
 
 

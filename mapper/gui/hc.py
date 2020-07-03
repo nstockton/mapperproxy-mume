@@ -2,35 +2,38 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 # Some code borrowed from pymunk's debug drawing functions.
 
 
-from collections import namedtuple
-from itertools import chain
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import logging
 import math
+from collections import namedtuple
+from itertools import chain
+from queue import Empty as QueueEmpty
 
-try:
-	from Queue import Empty as QueueEmpty
-except ImportError:
-	from queue import Empty as QueueEmpty
-
+# Third-party Modules:
 import pyglet
 from pyglet.window import key
+
+# Local Modules:
+from .vec2d import Vec2d
+from ..config import Config, config_lock
+from ..world import DIRECTIONS
+
 
 try:
 	from speechlight import Speech
 except ImportError:
 	Speech = None
 
-from .vec2d import Vec2d
-from ..config import Config, config_lock
-from ..world import DIRECTIONS
-
 
 FPS = 30
 DIRECTIONS_2D = set(DIRECTIONS[:-2])
-
 DIRECTIONS_VEC2D = {"north": Vec2d(0, 1), "east": Vec2d(1, 0), "south": Vec2d(0, -1), "west": Vec2d(-1, 0)}
 
 KEYS = {

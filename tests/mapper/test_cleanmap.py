@@ -2,9 +2,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import unittest
 from unittest.mock import Mock
 
+# Mapper Modules:
 from mapper.cleanmap import DIRECTIONS, ExitsCleaner, exitRegexp
 from mapper.mapper import Mapper
 from mapper.roomdata.objects import Exit, Room

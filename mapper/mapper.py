@@ -3,40 +3,43 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 import logging
-from queue import Queue
 import re
 import textwrap
 import threading
+from queue import Queue
 from timeit import default_timer
 
 # Local Modules:
-from . import INTERFACES, OUTPUT_FORMATS, USER_DATA, MUD_DATA, roomdata
+from . import INTERFACES, MUD_DATA, OUTPUT_FORMATS, USER_DATA, roomdata
 from .cleanmap import ExitsCleaner
 from .clock import (
 	CLOCK_REGEX,
-	TIME_REGEX,
 	DAWN_REGEX,
 	DAY_REGEX,
 	DUSK_REGEX,
-	NIGHT_REGEX,
 	MONTHS,
-	timeToEpoch,
+	NIGHT_REGEX,
+	TIME_REGEX,
 	Clock,
+	timeToEpoch,
 )
 from .config import Config, config_lock
 from .delays import OneShot
 from .protocols.proxy import ProtocolHandler
+from .utils import decodeBytes, escapeIAC, escapeXML, formatDocString, regexFuzzy, simplified, stripAnsi
 from .world import (
 	DIRECTIONS,
-	REVERSE_DIRECTIONS,
 	LIGHT_SYMBOLS,
-	TERRAIN_SYMBOLS,
+	REVERSE_DIRECTIONS,
 	RUN_DESTINATION_REGEX,
+	TERRAIN_SYMBOLS,
 	World,
 )
-from .utils import formatDocString, stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, escapeIAC
 
 
 EXIT_TAGS_REGEX = re.compile(

@@ -2,10 +2,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import re
 
+# Local Modules:
 from .mudevents import Handler
 from .world import DIRECTIONS
+
 
 directionsRegexp = "|".join([d.title() for d in DIRECTIONS])
 exitRegexp = re.compile(r".*(?<![#(])(?P<dir>" + directionsRegexp + r")(?![#)]).* +- .*")

@@ -28,33 +28,31 @@ Telnet protocol.
 # Author: Nick Stockton
 
 
-# Python __future__ Imports:
+# Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:
-from abc import abstractmethod
 import logging
+from abc import abstractmethod
 from typing import AbstractSet, Callable, Mapping, Union
 
 # Local Modules:
 from .base import Protocol
 from .telnet_constants import (
-	NULL,
 	COMMAND_BYTES,
-	IAC,
-	NEGOTIATION_BYTES,
-	WILL,
-	WONT,
-	DO,
-	DONT,
-	# Subnegotiation Bytes:
-	SB,
-	SE,
-	# Line Endings:
+	CR,
 	CR_LF,
 	CR_NULL,
-	CR,
+	DO,
+	DONT,
+	IAC,
 	LF,
+	NEGOTIATION_BYTES,
+	NULL,
+	SB,
+	SE,
+	WILL,
+	WONT,
 )
 from ..utils import escapeIAC
 

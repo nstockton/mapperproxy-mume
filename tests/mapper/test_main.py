@@ -3,36 +3,34 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 import socket
-from queue import Empty, Queue
 import unittest
-from unittest.mock import call, Mock
+from queue import Empty, Queue
+from unittest.mock import Mock, call
 
-# Local Modules:
-from mapper.main import Game
+# Mapper Modules:
 from mapper import MUD_DATA
-from mapper.protocols.proxy import ProtocolHandler
+from mapper.main import Game
 from mapper.protocols.mpi import MPI_INIT
+from mapper.protocols.proxy import ProtocolHandler
 from mapper.protocols.telnet_constants import (
-	IAC,
-	# Negotiation Bytes:
+	CHARSET,
+	CHARSET_ACCEPTED,
+	CR_LF,
 	DO,
-	WILL,
-	# Subnegotiation Bytes:
+	GA,
+	IAC,
+	LF,
+	NAWS,
 	SB,
 	SE,
-	TTYPE_SEND,
-	CHARSET_ACCEPTED,
-	# Commands:
-	GA,
-	# Options:
-	CHARSET,
-	NAWS,
 	TTYPE,
-	# Line Endings:
-	CR_LF,
-	LF,
+	TTYPE_SEND,
+	WILL,
 )
 
 

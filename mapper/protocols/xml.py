@@ -8,7 +8,7 @@ Mume XML Protocol.
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-# Python __future__ Imports:
+# Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:

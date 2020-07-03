@@ -3,14 +3,17 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 from queue import Empty, Queue
 from unittest import TestCase
 
-# Local Modules:
+# Mapper Modules:
 from mapper import MUD_DATA
-from mapper.utils import unescapeXML
 from mapper.protocols.xml import LF, MPI_INIT, XMLProtocol
+from mapper.utils import unescapeXML
 
 
 class TestXMLProtocol(TestCase):

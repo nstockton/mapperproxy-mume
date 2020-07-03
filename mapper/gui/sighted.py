@@ -2,29 +2,27 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 # Some code borrowed from pymunk's debug drawing functions.
 
 
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import logging
 import os.path
+from queue import Empty as QueueEmpty
 from re import search
 
-try:
-	from Queue import Empty as QueueEmpty
-except ImportError:
-	from queue import Empty as QueueEmpty
-
+# Third-party Modules:
 import pyglet
 
+# Local Modules:
 from ..utils import getDirectoryPath
 
 
-pyglet.options["debug_gl"] = False
-logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
-
 FPS = 40
-
 TILESDIR = getDirectoryPath("tiles")
 
 TILES = {
@@ -69,6 +67,11 @@ TILES = {
 	# player
 	"player": pyglet.image.load(os.path.join(TILESDIR, "player.png")),
 }
+
+
+pyglet.options["debug_gl"] = False
+logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
 
 
 class Window(pyglet.window.Window):

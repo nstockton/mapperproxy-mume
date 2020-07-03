@@ -3,21 +3,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 from unittest import TestCase
 
-# Local Modules:
+# Mapper Modules:
 from mapper.protocols.telnet import TelnetProtocol
-from mapper.protocols.telnet_constants import (
-	IAC,
-	# Commands:
-	GA,
-	# Line Endings:
-	CR_LF,
-	CR_NULL,
-	CR,
-	LF,
-)
+from mapper.protocols.telnet_constants import CR, CR_LF, CR_NULL, GA, IAC, LF
 
 
 class TestTelnetProtocol(TestCase):

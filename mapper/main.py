@@ -3,6 +3,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 import logging
 import os
@@ -15,6 +18,11 @@ import time
 # Third-party Modules:
 from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
 
+# Local Modules:
+from .mapper import Mapper
+from .utils import getDirectoryPath, removeFile, touch
+
+
 try:
 	import certifi
 except ImportError:
@@ -24,10 +32,6 @@ try:
 except ImportError:
 	print("Unable to import Pyglet. GUI will be disabled.")
 	pyglet = None
-
-# Local Modules:
-from .mapper import Mapper
-from .utils import getDirectoryPath, removeFile, touch
 
 
 LISTENING_STATUS_FILE = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")

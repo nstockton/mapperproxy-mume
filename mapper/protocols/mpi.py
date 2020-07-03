@@ -8,7 +8,7 @@ Mume Remote Editing Protocol.
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-# Python __future__ Imports:
+# Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:
@@ -22,7 +22,7 @@ from typing import AbstractSet, Callable, Mapping, Sequence
 
 # Local Modules:
 from .base import Protocol
-from .telnet_constants import CR, LF, CR_LF
+from .telnet_constants import CR, CR_LF, LF
 from ..utils import removeFile
 
 

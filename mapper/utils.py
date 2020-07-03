@@ -3,16 +3,19 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 import _imp
 import math
 import os
-from pydoc import pager
 import re
 import shutil
 import sys
-from telnetlib import IAC
 import textwrap
+from pydoc import pager
+from telnetlib import IAC
 
 
 ANSI_COLOR_REGEX = re.compile(r"\x1b\[[\d;]+m")

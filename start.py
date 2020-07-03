@@ -5,15 +5,19 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
 # Built-in Modules:
 import argparse
 import logging
 import sys
 import traceback
 
-# Local Modules:
-from mapper import INTERFACES, OUTPUT_FORMATS
+# Mapper Modules:
 import mapper.main
+from mapper import INTERFACES, OUTPUT_FORMATS
+
 
 try:
 	from mpm_version import VERSION

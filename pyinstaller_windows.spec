@@ -5,6 +5,10 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import codecs
 import glob
 import hashlib
@@ -15,9 +19,11 @@ import subprocess
 import sys
 import tempfile
 
+# Third-party Modules:
 import PyInstaller.config
 import speechlight
 
+# Mapper Modules:
 from mapper.utils import padList
 
 

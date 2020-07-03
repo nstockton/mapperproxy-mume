@@ -3,16 +3,22 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import codecs
 import json
 import os.path
+
+# Local Modules:
+from ..utils import getDirectoryPath
+
 
 try:
 	import rapidjson
 except ImportError:
 	rapidjson = None
-
-from ..utils import getDirectoryPath
 
 
 DATA_DIRECTORY = getDirectoryPath("data")

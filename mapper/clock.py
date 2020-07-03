@@ -3,9 +3,14 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Future Modules:
+from __future__ import annotations
+
+# Built-in Modules:
 import re
 import time
 
+# Local Modules:
 from .config import Config, config_lock
 
 
