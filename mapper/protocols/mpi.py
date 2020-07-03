@@ -42,7 +42,7 @@ class MPIProtocol(Protocol):
 		pager: The program to use for viewing received read-only text.
 	"""
 
-	states: AbstractSet[str] = frozenset(("data", "newline", "init", "command", "length", "body",))
+	states: AbstractSet[str] = frozenset(("data", "newline", "init", "command", "length", "body"))
 	"""Valid states for the state machine."""
 
 	def __init__(self, *args, **kwargs) -> None:

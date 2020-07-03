@@ -203,7 +203,7 @@ class TelnetProtocol(BaseTelnetProtocol):
 	"""
 
 	states: AbstractSet[str] = frozenset(
-		("data", "command", "newline", "negotiation", "subnegotiation", "subnegotiation-escaped",)
+		("data", "command", "newline", "negotiation", "subnegotiation", "subnegotiation-escaped")
 	)
 	"""Valid states for the state machine."""
 
