@@ -129,51 +129,53 @@ excludes = [
 	"xml"
 ]
 
-dll_excludes = TOC([  # NOQA: F821
-	("api-ms-win-core-console-l1-1-0.dll", None, None),
-	("api-ms-win-core-datetime-l1-1-0.dll", None, None),
-	("api-ms-win-core-debug-l1-1-0.dll", None, None),
-	("api-ms-win-core-errorhandling-l1-1-0.dll", None, None),
-	("api-ms-win-core-file-l1-1-0.dll", None, None),
-	("api-ms-win-core-file-l1-2-0.dll", None, None),
-	("api-ms-win-core-file-l2-1-0.dll", None, None),
-	("api-ms-win-core-handle-l1-1-0.dll", None, None),
-	("api-ms-win-core-heap-l1-1-0.dll", None, None),
-	("api-ms-win-core-interlocked-l1-1-0.dll", None, None),
-	("api-ms-win-core-libraryloader-l1-1-0.dll", None, None),
-	("api-ms-win-core-localization-l1-2-0.dll", None, None),
-	("api-ms-win-core-memory-l1-1-0.dll", None, None),
-	("api-ms-win-core-namedpipe-l1-1-0.dll", None, None),
-	("api-ms-win-core-processenvironment-l1-1-0.dll", None, None),
-	("api-ms-win-core-processthreads-l1-1-0.dll", None, None),
-	("api-ms-win-core-processthreads-l1-1-1.dll", None, None),
-	("api-ms-win-core-profile-l1-1-0.dll", None, None),
-	("api-ms-win-core-rtlsupport-l1-1-0.dll", None, None),
-	("api-ms-win-core-string-l1-1-0.dll", None, None),
-	("api-ms-win-core-synch-l1-1-0.dll", None, None),
-	("api-ms-win-core-synch-l1-2-0.dll", None, None),
-	("api-ms-win-core-sysinfo-l1-1-0.dll", None, None),
-	("api-ms-win-core-timezone-l1-1-0.dll", None, None),
-	("api-ms-win-core-util-l1-1-0.dll", None, None),
-	("api-ms-win-crt-conio-l1-1-0.dll", None, None),
-	("api-ms-win-crt-convert-l1-1-0.dll", None, None),
-	("api-ms-win-crt-environment-l1-1-0.dll", None, None),
-	("api-ms-win-crt-filesystem-l1-1-0.dll", None, None),
-	("api-ms-win-crt-heap-l1-1-0.dll", None, None),
-	("api-ms-win-crt-locale-l1-1-0.dll", None, None),
-	("api-ms-win-crt-math-l1-1-0.dll", None, None),
-	("api-ms-win-crt-multibyte-l1-1-0.dll", None, None),
-	("api-ms-win-crt-process-l1-1-0.dll", None, None),
-	("api-ms-win-crt-runtime-l1-1-0.dll", None, None),
-	("api-ms-win-crt-stdio-l1-1-0.dll", None, None),
-	("api-ms-win-crt-string-l1-1-0.dll", None, None),
-	("api-ms-win-crt-time-l1-1-0.dll", None, None),
-	("api-ms-win-crt-utility-l1-1-0.dll", None, None),
-	("tcl86t.dll", None, None),
-	("tk86t.dll", None, None),
-	("ucrtbase.dll", None, None),
-	("mfc140u.dll", None, None)
-])
+dll_excludes = TOC(  # NOQA: F821
+	[
+		("api-ms-win-core-console-l1-1-0.dll", None, None),
+		("api-ms-win-core-datetime-l1-1-0.dll", None, None),
+		("api-ms-win-core-debug-l1-1-0.dll", None, None),
+		("api-ms-win-core-errorhandling-l1-1-0.dll", None, None),
+		("api-ms-win-core-file-l1-1-0.dll", None, None),
+		("api-ms-win-core-file-l1-2-0.dll", None, None),
+		("api-ms-win-core-file-l2-1-0.dll", None, None),
+		("api-ms-win-core-handle-l1-1-0.dll", None, None),
+		("api-ms-win-core-heap-l1-1-0.dll", None, None),
+		("api-ms-win-core-interlocked-l1-1-0.dll", None, None),
+		("api-ms-win-core-libraryloader-l1-1-0.dll", None, None),
+		("api-ms-win-core-localization-l1-2-0.dll", None, None),
+		("api-ms-win-core-memory-l1-1-0.dll", None, None),
+		("api-ms-win-core-namedpipe-l1-1-0.dll", None, None),
+		("api-ms-win-core-processenvironment-l1-1-0.dll", None, None),
+		("api-ms-win-core-processthreads-l1-1-0.dll", None, None),
+		("api-ms-win-core-processthreads-l1-1-1.dll", None, None),
+		("api-ms-win-core-profile-l1-1-0.dll", None, None),
+		("api-ms-win-core-rtlsupport-l1-1-0.dll", None, None),
+		("api-ms-win-core-string-l1-1-0.dll", None, None),
+		("api-ms-win-core-synch-l1-1-0.dll", None, None),
+		("api-ms-win-core-synch-l1-2-0.dll", None, None),
+		("api-ms-win-core-sysinfo-l1-1-0.dll", None, None),
+		("api-ms-win-core-timezone-l1-1-0.dll", None, None),
+		("api-ms-win-core-util-l1-1-0.dll", None, None),
+		("api-ms-win-crt-conio-l1-1-0.dll", None, None),
+		("api-ms-win-crt-convert-l1-1-0.dll", None, None),
+		("api-ms-win-crt-environment-l1-1-0.dll", None, None),
+		("api-ms-win-crt-filesystem-l1-1-0.dll", None, None),
+		("api-ms-win-crt-heap-l1-1-0.dll", None, None),
+		("api-ms-win-crt-locale-l1-1-0.dll", None, None),
+		("api-ms-win-crt-math-l1-1-0.dll", None, None),
+		("api-ms-win-crt-multibyte-l1-1-0.dll", None, None),
+		("api-ms-win-crt-process-l1-1-0.dll", None, None),
+		("api-ms-win-crt-runtime-l1-1-0.dll", None, None),
+		("api-ms-win-crt-stdio-l1-1-0.dll", None, None),
+		("api-ms-win-crt-string-l1-1-0.dll", None, None),
+		("api-ms-win-crt-time-l1-1-0.dll", None, None),
+		("api-ms-win-crt-utility-l1-1-0.dll", None, None),
+		("tcl86t.dll", None, None),
+		("tk86t.dll", None, None),
+		("ucrtbase.dll", None, None),
+		("mfc140u.dll", None, None)
+	]
+)
 
 block_cipher = None
 
@@ -242,7 +244,7 @@ with codecs.open(
 	"wb",
 	encoding="utf-8"
 ) as f:
-	f.write(f"version = \"{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}\"")
+	f.write(f"VERSION = \"{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}\"")
 
 a = Analysis(  # NOQA: F821
 	["start.py"],

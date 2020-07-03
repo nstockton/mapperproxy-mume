@@ -1,0 +1,220 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+# Python __future__ Imports:
+from __future__ import annotations
+
+# Built-in Modules:
+import logging
+from typing import Optional, Sequence, Set, Union
+
+# Local Modules:
+from .manager import Manager
+from .mpi import MPI_INIT, MPIProtocol
+from .telnet import TelnetProtocol
+from .telnet_constants import (
+	# Commands:
+	IAC,
+	GA,
+	# Options:
+	CHARSET,
+	NEGOTIATION_BYTES,
+	# Subnegotiation Bytes:
+	SB,
+	SE,
+	CHARSET_REQUEST,
+	CHARSET_ACCEPTED,
+	CHARSET_REJECTED,
+	# Line Endings:
+	CR_LF,
+	CR_NULL,
+	CR,
+	LF,
+)
+from .xml import XMLProtocol
+from .. import USER_DATA
+from ..utils import escapeIAC
+
+
+logger: logging.Logger = logging.getLogger(__name__)
+
+
+class Telnet(TelnetProtocol):
+	"""
+	Attributes:
+		name: The name of this side of the connection. Can be 'game' or 'player'.
+		proxy: The proxy that spawned this object.
+	"""
+
+	def __init__(self, *args, name: Optional[str] = None, proxy: "Optional[ProtocolHandler]" = None, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.name: str = name.lower()
+		if self.name not in ("player", "game"):
+			raise ValueError("Name must be 'player' or 'game'")
+		self.proxy: "Optional[ProtocolHandler]" = proxy
+
+	@property
+	def supportedExtras(self) -> Set[bytes]:
+		"""
+		Retrieves handled commands/options, except for WILL/WONT/DO/DONT.
+
+		Returns:
+			The handled command/option bytes, except for negotiation bytes.
+		"""
+		return set(self.commandMap).union(self.subnegotiationMap).difference(NEGOTIATION_BYTES)
+
+	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
+		if command in NEGOTIATION_BYTES and option not in self.supportedExtras:
+			self.on_unhandledCommand(command, option)
+		else:
+			super().on_command(command, option)
+
+
+class Player(Telnet):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, name="player", **kwargs)
+
+	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
+		self.proxy.game.write(IAC + command + option)
+
+	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
+		self.proxy.game.write(IAC + SB + option + data + IAC + SE)
+
+	def on_enableLocal(self, option: bytes) -> bool:
+		if option in self.proxy.game._handlers[0].supportedExtras:
+			return False
+		return super().on_enableLocal(option)
+
+
+class Game(Telnet):
+	charsets: Sequence[bytes] = (
+		b"US-ASCII",
+		b"ISO-8859-1",
+		b"UTF-8",
+	)
+	"""Supported character sets."""
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, name="game", **kwargs)
+		self.commandMap[GA] = self.on_ga
+		self.subnegotiationMap[CHARSET] = self.on_charset
+
+	@property
+	def charset(self) -> bytes:
+		"""The character set to be used."""
+		return getattr(self, "_charset", self.charsets[0])
+
+	@charset.setter
+	def charset(self, value: bytes) -> None:
+		if value not in self.charsets:
+			raise ValueError(f"'{value!r}' not in {self.charsets!r}")
+		self._charset = value
+
+	def negotiateCharset(self, name: bytes) -> None:
+		"""
+		Negotiates changing the character set.
+
+		Args:
+			name: The name of the character set to use.
+		"""
+		self._oldCharset = self.charset
+		try:
+			self.charset = name
+		except ValueError:
+			logger.warning(f"Invalid charset {name!r}: falling back to {self.charset!r}.")
+			name = self.charset
+		separator = b";"
+		logger.debug(f"Tell peer we would like to use the {name!r} charset.")
+		self.requestNegotiation(CHARSET, CHARSET_REQUEST + separator + name)
+
+	def on_charset(self, data: bytes) -> None:
+		"""
+		Called when a charset subnegotiation is received.
+
+		Args:
+			data: The payload.
+		"""
+		status, response = data[:1], data[1:]
+		if status == CHARSET_ACCEPTED:
+			logger.debug(f"Peer responds: Charset {response!r} accepted.")
+		elif status == CHARSET_REJECTED:
+			logger.warning("Peer responds: Charset rejected.")
+			if self.charset == self._oldCharset:
+				logger.warning(f"Unable to fall back to {self._oldCharset}. Old and new charsets match.")
+			else:
+				logger.debug(f"Falling back to {self._oldCharset}.")
+				self.charset = self._oldCharset
+		else:
+			logger.warning(f"Unknown charset negotiation response from peer: {data!r}")
+			self.charset = self._oldCharset
+			self.wont(CHARSET)
+		del self._oldCharset
+
+	def on_ga(self, argument):
+		self.proxy.player.write(self.proxy.promptTerminator)
+
+	def on_connectionMade(self):
+		super().on_connectionMade()
+		# Offer to handle charset.
+		self.will(CHARSET)
+		# Tell the Mume server to put IAC-GA at end of prompts.
+		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
+
+	def on_unhandledCommand(self, command, argument=b""):
+		self.proxy.player.write(IAC + command + argument)
+
+	def on_unhandledSubnegotiation(self, command, data):
+		self.proxy.player.write(IAC + SB + command + data + IAC + SE)
+
+	def on_enableLocal(self, option: bytes) -> bool:
+		if option == CHARSET:
+			logger.debug("Peer acknowledges our request and tells us to begin charset sub-negotiation.")
+			self.negotiateCharset(self.charset)
+			return True
+		return super().on_enableLocal(option)
+
+	def on_disableLocal(self, option: bytes) -> None:
+		if option == CHARSET:
+			return
+		super().on_disableLocal(option)
+
+
+class ProtocolHandler(object):
+	def __init__(self, playerSocket, gameSocket, **kwargs):
+		self.outputFormat = kwargs["outputFormat"]
+		self.promptTerminator = kwargs["promptTerminator"]
+		if self.promptTerminator is None:
+			self.promptTerminator = IAC + GA
+		self.promptTerminator = self.promptTerminator.replace(CR_LF, LF).replace(CR_NULL, CR)
+		self.promptTerminator = self.promptTerminator.replace(CR_NULL, CR).replace(LF, CR_LF)
+		self.isEmulatingOffline = kwargs["isEmulatingOffline"]
+		self.mapperCommands = kwargs["mapperCommands"]
+		self.eventCaller = kwargs["eventCaller"]
+		self.player = Manager(playerSocket.sendall, self.on_playerReceived)
+		self.player.register(Player, proxy=self)
+		self.game = Manager(gameSocket.sendall, self.on_gameReceived)
+		self.game.register(Game, proxy=self)
+		self.game.register(MPIProtocol, outputFormat=self.outputFormat)
+		self.game.register(XMLProtocol, outputFormat=self.outputFormat, eventCaller=self.eventCaller)
+
+	def close(self):
+		self.disconnect()
+
+	def connect(self):
+		self.player.connect()
+		self.game.connect()
+
+	def disconnect(self):
+		self.game.disconnect()
+		self.player.disconnect()
+
+	def on_playerReceived(self, data):
+		if self.isEmulatingOffline or b"".join(data.strip().split()[:1]) in self.mapperCommands:
+			self.eventCaller((USER_DATA, data))
+		else:
+			self.game.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))
+
+	def on_gameReceived(self, data):
+		self.player.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))

@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
+import socket
 import unittest
 from unittest.mock import Mock
 
@@ -25,8 +27,8 @@ class TestHandler(unittest.TestCase):
 	def setUp(self):
 		Mapper.loadRooms = Mock()  # to speed execution of tests
 		self.mapper = Mapper(
-			client=None,
-			server=None,
+			playerSocket=Mock(spec=socket.socket),
+			gameSocket=Mock(spec=socket.socket),
 			outputFormat=None,
 			interface="text",
 			promptTerminator=None,

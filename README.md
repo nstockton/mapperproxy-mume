@@ -13,11 +13,11 @@ The tiles of the GUI for sighted players are distributed under the [CC-BY-SA 3.0
 
 
 ## Installation
-### As part of mud clients
+### As Part of Mud Clients
 Mume-mapperproxy is distributed as part of
 [MUSHclient-MUME](https://github.com/nstockton/mushclient-mume/blob/master/README.md), and [tintin-MUME](https://github.com/nstockton/tintin-mume), which also provide scripts to play Mume more easily. Refer to these projects for an installation guide.
 
-### Standalone installation
+### Standalone Installation
 If you only need the mapperproxy, install the [Python interpreter,](https://python.org "Python Home Page") and make sure it's in your path before running this package.
 
 After Python is installed, execute the following command from the top level directory of this repository to install the module dependencies.
@@ -25,8 +25,8 @@ After Python is installed, execute the following command from the top level dire
 pip install -U -r requirements.txt
 ```
 
-## Mapper Proxy usage
-### Manual start up
+## Mapper Proxy Usage
+### Manual Startup
 To start the mapper, run `python start.py` from the _mume-mapperproxy/_ directory. It accepts the following arguments:
 
 - `-h`, `--help` Show program's help and exit.
@@ -45,7 +45,7 @@ To start the mapper, run `python start.py` from the _mume-mapperproxy/_ director
 
 Once done, connect your client to `127.0.0.1`, port `4000`.
 
-### Starting up from a client
+### Starting From a Client
 It is possible to start the mapper directly from the client. Here is, for example, how to start it from a tintin+++ script, from the _mume-mapperproxy/_ directory:
 
 ```
@@ -56,7 +56,7 @@ from mapper.main import main
 #mapper main(outputFormat="tintin", interface="sighted")
 ```
 
-## Mapper Proxy commands
+## Mapper Proxy Commands
 ### Auto Mapping Commands
 Auto mapping mode must be on for these commands to have any effect.
 
@@ -93,16 +93,16 @@ Auto mapping mode must be on for these commands to have any effect.
 * fname [text]  --  Search the map for rooms with names matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
 * fnote [text]  --  Search the map for rooms with notes matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
 
-### Path commands
+### Path Commands
 * path [vnum|label] [nodeath|nocity|noshallowwater|noforest|nohills|noroad|nocavern|nofield|nowater|nounderwater|norapids|noindoors|nobrush|notunnel|nomountains|norandom|noundefined]  --  Print speed walk directions from the current room to the room with vnum or label. If one or more avoid terrain flags are given after the destination, the mapper will try to avoid all rooms with that terrain type. Multiple avoid terrains can be ringed together with the '|' character, for example, path ingrove noroad|nobrush.
 * run [c|t] [vnum|label] [nodeath|nocity|noshallowwater|noforest|nohills|noroad|nocavern|nofield|nowater|nounderwater|norapids|noindoors|nobrush|notunnel|nomountains|norandom|noundefined]  --  Automatically walk from the current room to the room with vnum or label. If 'c' is provided instead of a vnum or label, the mapper will recalculate the path from the current room to the previously provided destination. If t (short for target) is given before the vnum or label, the mapper will store the destination, but won't start auto walking until the user enters 'run c'. If one or more avoid terrain flags are given after the destination, the mapper will try to avoid all rooms with that terrain type. Multiple avoid terrains can be ringed together with the '|' character, for example, run ingrove noroad|nobrush.
 * step [label|vnum]  --  Move 1 room towards the destination room matching label or vnum.
 * stop  --  Stop auto walking.
 
-### Doors commands
+### Door Commands
 * secretaction [action] [north|east|south|west|up|down]  --  Perform an action on a secret door in a given direction. This command is meant to be called from an alias. For example, secretaction open east.
 
-### Miscellaneous Mapper Commands
+### Miscellaneous Commands
 * clock [action]  --  If no action is given, print the output from the mapper's clock. If the action is 'pull', send the appropriate commands to the game for opening the exit in mystical. If any other action is given, send a line with the current game time to the game, prefixed by the action. Example: `clock narrate` to narrate the current game time.
 * emu [command]  --  If not in emulation mode (I.E. connected to the game), execute an emulation command.
 * getlabel [vnum]  --  Returns the label or labels defined for the room with vnum. If no vnum is supplied, the current room's vnum is used.
@@ -110,6 +110,7 @@ Auto mapping mode must be on for these commands to have any effect.
 * gettimerms  --  Returns the amount of milliseconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
 * help  --  If in emulation mode, print a summery of the available emulation commands.
 * maphelp  --  Print a summery of the available mapper commands.
+* quit  --  Quit the mapper when in emulation mode.
 * rinfo [vnum|label]  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
 * rinfo [vnum|label]  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
 * sync [vnum|label]  --  Manually sync the map to the room with vnum or label. If no vnum or label is given, mapper will be placed in an unsynced state, and will try to automatically sync to the current room.

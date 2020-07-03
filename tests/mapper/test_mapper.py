@@ -3,18 +3,20 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+import socket
 import unittest
 from unittest.mock import call, Mock, patch
 
-from mapper.mapper import Mapper, MUD_DATA, USER_DATA
+from mapper import MUD_DATA, USER_DATA
+from mapper.mapper import Mapper
 
 
 class TestMapper(unittest.TestCase):
 	def setUp(self):
 		Mapper.loadRooms = Mock()  # to speed execution of tests
 		self.mapper = Mapper(
-			client=Mock(),
-			server=None,
+			playerSocket=Mock(spec=socket.socket),
+			gameSocket=Mock(spec=socket.socket),
 			outputFormat=None,
 			interface="text",
 			promptTerminator=None,
@@ -96,8 +98,8 @@ class TestMapper_handleMudEvent(unittest.TestCase):
 		for handlerName in self.legacyHandlerNames:
 			setattr(Mapper, handlerName, Mock())
 		self.mapper = Mapper(
-			client=Mock(),
-			server=None,
+			playerSocket=Mock(spec=socket.socket),
+			gameSocket=Mock(spec=socket.socket),
 			outputFormat=None,
 			interface="text",
 			promptTerminator=None,

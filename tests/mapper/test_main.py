@@ -6,65 +6,97 @@
 # Built-in Modules:
 import socket
 from queue import Empty, Queue
-from telnetlib import CHARSET, GA, IAC, DO, NAWS, SB, SE, TTYPE, WILL
 import unittest
 from unittest.mock import call, Mock
 
 # Local Modules:
-from mapper.main import Server
-from mapper.mapper import MUD_DATA
+from mapper.main import Game
+from mapper import MUD_DATA
+from mapper.protocols.proxy import ProtocolHandler
 from mapper.protocols.mpi import MPI_INIT
-from mapper.protocols.telnet import SB_ACCEPTED, SB_SEND
+from mapper.protocols.telnet_constants import (
+	IAC,
+	# Negotiation Bytes:
+	DO,
+	WILL,
+	# Subnegotiation Bytes:
+	SB,
+	SE,
+	TTYPE_SEND,
+	CHARSET_ACCEPTED,
+	# Commands:
+	GA,
+	# Options:
+	CHARSET,
+	NAWS,
+	TTYPE,
+	# Line Endings:
+	CR_LF,
+	LF,
+)
 
 
 # The initial output of MUME. Used by the server thread to detect connection success.
-INITIAL_OUTPUT = IAC + DO + TTYPE + IAC + DO + NAWS
-WELCOME_MESSAGE = b"\r\n                              ***  MUME VIII  ***\r\n\r\n"
+INITIAL_OUTPUT = [
+	IAC + DO + TTYPE,
+	IAC + DO + NAWS
+]
+WELCOME_MESSAGE = CR_LF + b"                              ***  MUME VIII  ***" + CR_LF + CR_LF
 
 
-class TestServerThread(unittest.TestCase):
-	def testServerThread(self):
-		initialConfiguration = [  # What the server thread sends MUME on connection success.
-			# Identify for Mume Remote Editing.
-			MPI_INIT + b"I\n",
-			# Turn on XML mode.
-			MPI_INIT + b"X2\n3G\n",
+class TestGameThread(unittest.TestCase):
+	def testGameThread(self):
+		initialConfiguration = (  # What the server thread sends MUME on connection success.
+			IAC + WILL + CHARSET
 			# Tell the Mume server to put IAC-GA at end of prompts.
-			MPI_INIT + b"P2\nG\n"
-		]
-		mumeSocket = Mock(spec=socket.socket)
+			+ MPI_INIT + b"P2" + LF + b"G" + LF
+			# Identify for Mume Remote Editing.
+			+ MPI_INIT + b"I" + LF
+			# Turn on XML mode.
+			+ MPI_INIT + b"X2" + LF + b"3G" + LF
+		)
+		outputToPlayer = Queue()
 		outputFromMume = Queue()
 		inputToMume = Queue()
+		mumeSocket = Mock(spec=socket.socket)
 		mumeSocket.recv.side_effect = lambda arg: outputFromMume.get()
 		mumeSocket.sendall.side_effect = lambda data: inputToMume.put(data)
 		clientSocket = Mock(spec=socket.socket)
-		outputToUser = Queue()
-		clientSocket.sendall.side_effect = lambda data: outputToUser.put(data)
-		serverThread = Server(
-			client=clientSocket,
-			server=mumeSocket,
-			mapper=Mock(),
-			outputFormat=None,
-			interface="text",
-			promptTerminator=None
+		clientSocket.sendall.side_effect = lambda data: outputToPlayer.put(data)
+		mapperThread = Mock()
+		mapperThread.interface = "text"
+		proxy = ProtocolHandler(
+			clientSocket,
+			mumeSocket,
+			outputFormat="normal",
+			promptTerminator=IAC + GA,
+			isEmulatingOffline=False,
+			mapperCommands=[],
+			eventCaller=mapperThread.queue.put,
 		)
-		serverThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
-		serverThread.start()
-		# test when the server sends its initial negotiations, the server thread outputs its initial configuration
-		self.assertEqual(initialConfiguration, serverThread.initialConfiguration)
-		self.assertEqual(INITIAL_OUTPUT, serverThread.initialOutput)
-		outputFromMume.put(INITIAL_OUTPUT)
+		proxy.connect()
+		mapperThread.proxy = proxy
+		gameThread = Game(mumeSocket, mapperThread)
+		gameThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
+		gameThread.start()
+		# test initial telnet negotiations were passed to the client
 		try:
-			# Expect IAC + WILL + CHARSET, even though it's not in initialConfiguration.
-			initialConfiguration.append(IAC + WILL + CHARSET)
+			for item in INITIAL_OUTPUT:
+				outputFromMume.put(item)
+				data = outputToPlayer.get(timeout=1)
+				self.assertEqual(data, item)
+		except Empty:
+			raise AssertionError("initial telnet negotiations were not passed to the client")
+		# test when the server sends its initial negotiations, the server thread outputs its initial configuration
+		try:
 			while initialConfiguration:
 				data = inputToMume.get(timeout=1)
-				self.assertIn(data, initialConfiguration, f"Unknown initial configuration: {repr(data)}")
-				initialConfiguration.remove(data)
+				self.assertIn(data, initialConfiguration, f"Unknown initial configuration: {data!r}")
+				initialConfiguration = initialConfiguration.replace(data, b"", 1)
 		except Empty:
 			errorMessage = (
 				"The server thread did not output the expected number of configuration parameters.",
-				f"The yet-to-be-seen configurations are: {repr(initialConfiguration)}"
+				f"The yet-to-be-seen configurations are: {initialConfiguration!r}"
 			)
 			raise AssertionError("\n".join(errorMessage))
 		# test nothing extra has been sent yet
@@ -72,72 +104,88 @@ class TestServerThread(unittest.TestCase):
 			remainingOutput = inputToMume.get()
 			errorMessage = (
 				"The server thread spat out at least one unexpected initial configuration.",
-				f"Remaining output: {repr(remainingOutput)}"
+				f"Remaining output: {remainingOutput!r}"
 			)
 			raise AssertionError("\n".join(errorMessage))
-		# test initial telnet negotiations were passed to the client
-		try:
-			data = outputToUser.get(timeout=1)
-			self.assertEqual(data, INITIAL_OUTPUT)
-		except Empty:
-			raise AssertionError("initial telnet negotiations were not passed to the client")
 		# test regular text is passed through to the client
 		try:
 			outputFromMume.put(WELCOME_MESSAGE)
-			data = outputToUser.get(timeout=1)
-			self.assertEqual(WELCOME_MESSAGE, data)
+			data = outputToPlayer.get(timeout=1)
+			self.assertEqual(data, WELCOME_MESSAGE)
 		except Empty:
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
 		# test further telnet negotiations are passed to the client with the exception of charset negotiations
 		try:
-			charsetNegotiation = IAC + DO + CHARSET + IAC + SB + TTYPE + SB_SEND + IAC + SE
-			charsetSubnegotiation = IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE
+			charsetNegotiation = IAC + DO + CHARSET + IAC + SB + TTYPE + TTYPE_SEND + IAC + SE
+			charsetResponseFromMume = IAC + SB + CHARSET + CHARSET_ACCEPTED + b"US-ASCII" + IAC + SE
 			outputFromMume.put(charsetNegotiation)
-			data = outputToUser.get(timeout=1)
+			data = outputToPlayer.get(timeout=1)
 			self.assertEqual(data, charsetNegotiation[3:])  # slicing off the charset negotiation
-			outputFromMume.put(charsetSubnegotiation)
-			data = outputToUser.get(timeout=1)
-			self.assertEqual(data, b"")
+			outputFromMume.put(charsetResponseFromMume)
+			self.assertTrue(outputToPlayer.empty())
 		except Empty:
 			raise AssertionError("Further telnet negotiations were not passed to the client")
 		# when mume outputs further text, test it is passed to the user
 		try:
 			usernamePrompt = b"By what name do you wish to be known? "
 			outputFromMume.put(usernamePrompt)
-			data = outputToUser.get(timeout=1)
+			data = outputToPlayer.get(timeout=1)
 			self.assertEqual(data, usernamePrompt)
 		except Empty:
 			raise AssertionError("Further text was not passed to the user")
 		# when mume outputs an empty string, test server thread closes within a second
 		outputFromMume.put(b"")
-		serverThread.join(1)
-		self.assertFalse(serverThread.is_alive())
+		gameThread.join(1)
+		self.assertFalse(gameThread.is_alive())
 
 
-class TestServerThreadThroughput(unittest.TestCase):
+class TestGameThreadThroughput(unittest.TestCase):
 	def setUp(self):
-		self.mapperThread = Mock()
-		self.serverThread = Server(
-			client=Mock(),
-			server=Mock(),
-			mapper=self.mapperThread,
+		self.inputFromPlayer = Queue()
+		self.outputToPlayer = Queue()
+		self.inputToMume = Queue()
+		self.outputFromMume = Queue()
+		playerSocket = Mock(spec=socket.socket)
+		playerSocket.recv.side_effect = lambda arg: self.inputFromPlayer.get()
+		playerSocket.sendall.side_effect = lambda data: self.outputToPlayer.put(data)
+		mumeSocket = Mock(spec=socket.socket)
+		mumeSocket.recv.side_effect = lambda arg: self.outputFromMume.get()
+		mumeSocket.sendall.side_effect = lambda data: self.inputToMume.put(data)
+		mapperThread = Mock()
+		mapperThread.interface = "text"
+		proxy = ProtocolHandler(
+			playerSocket,
+			mumeSocket,
 			outputFormat="normal",
-			interface="text",
-			promptTerminator=b"\r\n",
+			promptTerminator=CR_LF,
+			isEmulatingOffline=False,
+			mapperCommands=[],
+			eventCaller=mapperThread.queue.put,
 		)
+		proxy.connect()
+		mapperThread.proxy = proxy
+		self.gameThread = Game(mumeSocket, mapperThread)
+		self.gameThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
+		self.gameThread.start()
 
 	def tearDown(self):
-		del self.mapperThread
-		del self.serverThread
+		self.outputFromMume.put(b"")
+		del self.gameThread
 
 	def runThroughput(self, threadInput, expectedOutput, expectedData, inputDescription):
-		res = self.serverThread._handler.parse(threadInput)
-		self.assertEqual(
-			res,
-			expectedOutput,
-			f"When entering {inputDescription}, the expected output did not match {expectedOutput}"
-		)
-		actualData = self.mapperThread.queue.put.mock_calls
+		try:
+			self.outputFromMume.put(threadInput)
+			res = self.outputToPlayer.get(timeout=1)
+			while not self.outputToPlayer.empty():
+				res += self.outputToPlayer.get(timeout=1)
+			self.assertEqual(
+				res,
+				expectedOutput,
+				f"When entering {inputDescription}, the expected output did not match {expectedOutput!r}"
+			)
+		except Empty:
+			raise AssertionError(f"{inputDescription} data was not received by the player socket within 1 second.")
+		actualData = self.gameThread.mapper.queue.put.mock_calls
 		i = 0
 		while len(actualData) > i < len(expectedData):
 			self.assertEqual(
@@ -154,7 +202,7 @@ class TestServerThreadThroughput(unittest.TestCase):
 	def testProcessingPrompt(self):
 		self.runThroughput(
 			threadInput=b"<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>" + IAC + GA,
-			expectedOutput=b"\x1b[34mMana:Hot Move:Tired>\x1b[0m\r\n",
+			expectedOutput=b"\x1b[34mMana:Hot Move:Tired>\x1b[0m" + CR_LF,
 			expectedData=[
 				call((MUD_DATA, ("prompt", b"\x1b[34mMana:Hot Move:Tired>\x1b[0m")))
 			],
@@ -163,39 +211,39 @@ class TestServerThreadThroughput(unittest.TestCase):
 
 	def testProcessingEnteringRoom(self):
 		threadInput = (
-			b"<movement dir=down/><room><name>Seagull Inn</name>\r\n"
+			b"<movement dir=down/><room><name>Seagull Inn</name>" + CR_LF
 			+ b"<gratuitous><description>"
-			+ b"This is the most famous meeting-place in Harlond where people of all sorts\r\n"
-			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of\r\n"
-			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\n"
-			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\n"
-			+ b"the wall.\r\n"
+			+ b"This is the most famous meeting-place in Harlond where people of all sorts" + CR_LF
+			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of" + CR_LF
+			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here." + CR_LF
+			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to" + CR_LF
+			+ b"the wall." + CR_LF
 			+ b"</description></gratuitous>"
-			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here.\r\n"
-			+ b"A white-painted bench is here.\r\n"
-			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\n"
-			+ b"An elven lamplighter is resting here.\r\n"
+			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + CR_LF
+			+ b"A white-painted bench is here." + CR_LF
+			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + CR_LF
+			+ b"An elven lamplighter is resting here." + CR_LF
 			+ b"</room>"
 		)
 		expectedOutput = (
-			b"Seagull Inn\r\n"
-			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here.\r\n"
-			+ b"A white-painted bench is here.\r\n"
-			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\n"
-			+ b"An elven lamplighter is resting here.\r\n"
+			b"Seagull Inn" + CR_LF
+			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + CR_LF
+			+ b"A white-painted bench is here." + CR_LF
+			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + CR_LF
+			+ b"An elven lamplighter is resting here." + CR_LF
 		)
 		expectedDesc = (
-			b"This is the most famous meeting-place in Harlond where people of all sorts\r\n"
-			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of\r\n"
-			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here.\r\n"
-			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to\r\n"
-			+ b"the wall.\r\n"
+			b"This is the most famous meeting-place in Harlond where people of all sorts" + LF
+			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of" + LF
+			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here." + LF
+			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to" + LF
+			+ b"the wall." + LF
 		)
 		expectedDynamicDesc = (
-			b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here.\r\n"
-			+ b"A white-painted bench is here.\r\n"
-			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here.\r\n"
-			+ b"An elven lamplighter is resting here.\r\n"
+			b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + LF
+			+ b"A white-painted bench is here." + LF
+			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + LF
+			+ b"An elven lamplighter is resting here." + LF
 		)
 		expectedData = [
 			call((MUD_DATA, ("movement", b"down"))),

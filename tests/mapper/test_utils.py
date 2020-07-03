@@ -7,13 +7,13 @@
 from io import StringIO
 import os
 import sys
-from telnetlib import IAC
 import textwrap
 import unittest
 from unittest import mock
 
 # Local Modules:
 from mapper import utils
+from mapper.utils import IAC
 
 
 class TestUtils(unittest.TestCase):

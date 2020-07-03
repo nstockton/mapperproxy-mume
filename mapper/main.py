@@ -9,8 +9,8 @@ import os
 import select
 import socket
 import ssl
-from telnetlib import DO, GA, IAC, NAWS, TTYPE
 import threading
+import time
 
 # Third-party Modules:
 from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
@@ -18,12 +18,14 @@ try:
 	import certifi
 except ImportError:
 	certifi = None
+try:
+	import pyglet
+except ImportError:
+	print("Unable to import Pyglet. GUI will be disabled.")
+	pyglet = None
 
 # Local Modules:
-from .protocols import ProtocolHandler
-from .protocols.telnetfilter import TelnetFilter
-from .protocols.mpi import MPI_INIT
-from .mapper import USER_DATA, Mapper
+from .mapper import Mapper
 from .utils import getDirectoryPath, removeFile, touch
 
 
@@ -77,127 +79,72 @@ class BufferedSSLSocket(BufferedSocket):
 				select.select([], [sock], [])
 
 
-class Proxy(threading.Thread):
-	def __init__(self, client, server, mapper, isEmulatingOffline):
+class Player(threading.Thread):
+	def __init__(self, player, mapper):
 		threading.Thread.__init__(self)
-		self.name = "Proxy"
-		self._client = client
-		self._server = server
-		self._mapper = mapper
-		self.isEmulatingOffline = isEmulatingOffline
-		self._handler = TelnetFilter()
+		self.name = "Player"
+		self.player = player
+		self.mapper = mapper
 		self.finished = threading.Event()
 
 	def close(self):
 		self.finished.set()
 
-	def sendClient(self, data):
-		self._client.sendall(data)
-
-	def sendServer(self, data):
-		try:
-			self._server.sendall(data)
-			return True
-		except EnvironmentError:
-			self.close()
-			return False
-
 	def run(self):
-		handler = self._handler
-		userCommands = [
-			func[len("user_command_"):].encode("us-ascii", "ignore") for func in dir(self._mapper)
-			if func.startswith("user_command_")
-		]
 		while not self.finished.isSet():
 			try:
-				data = self._client.recv(4096)
-				negotiations, text = handler.parse(data)
+				data = self.player.recv(4096)
+				if data:
+					self.mapper.proxy.player.parse(data)
+				else:
+					self.close()
 			except socket.timeout:
 				continue
 			except EnvironmentError:
 				self.close()
 				continue
-			if not data:
-				self.close()
-			elif text.strip() and (self.isEmulatingOffline or text.strip().split()[0] in userCommands):
-				self._mapper.queue.put((USER_DATA, text))
-				if negotiations:
-					self.sendServer(negotiations)
-			else:
-				self.sendServer(data)
+		if self.mapper.isEmulatingOffline:
+			self.mapper.proxy.game.write(b"quit")
 
 
-class Server(threading.Thread):
-	def __init__(self, client, server, mapper, outputFormat, interface, promptTerminator):
+class Game(threading.Thread):
+	def __init__(self, game, mapper):
 		threading.Thread.__init__(self)
-		self.name = "Server"
-		self._client = client
-		self._server = server
-		self._mapper = mapper
-		self._outputFormat = outputFormat
-		self._interface = interface
-		self._promptTerminator = promptTerminator
+		self.name = "Game"
+		self.game = game
+		self.mapper = mapper
 		self.finished = threading.Event()
-		# The initial output of MUME. Used by the server thread to detect connection success.
-		self.initialOutput = IAC + DO + TTYPE + IAC + DO + NAWS
-		self.initialConfiguration = [  # What the server thread sends MUME on connection success.
-			# Identify for Mume Remote Editing.
-			MPI_INIT + b"I\n",
-			# Turn on XML mode.
-			# Mode "3" tells MUME to enable XML output without sending an initial "<xml>" tag.
-			# Option "G" tells MUME to wrap room descriptions in gratuitous tags if they would otherwise be hidden.
-			MPI_INIT + b"X2\n3G\n",
-			# Tell the Mume server to put IAC-GA at end of prompts.
-			MPI_INIT + b"P2\nG\n"
-		]
-		self._handler = ProtocolHandler(
-			remoteSender=self.sendServer,
-			eventSender=self._mapper.queue.put,
-			outputFormat=self._outputFormat,
-			promptTerminator=self._promptTerminator
-		)
 
 	def close(self):
 		self.finished.set()
 
-	def sendClient(self, data):
-		self._client.sendall(data)
-
-	def sendServer(self, data):
-		self._server.sendall(data)
-
 	def run(self):
-		handler = self._handler
-		encounteredInitialOutput = False
 		while not self.finished.isSet():
 			try:
-				data = self._server.recv(4096)
+				data = self.game.recv(4096)
+				if data:
+					self.mapper.proxy.game.parse(data)
+				else:
+					self.close()
+			except MockedSocketEmpty:
+				continue
 			except EnvironmentError:
 				self.close()
 				continue
-			if not data:
-				self.close()
-				continue
-			elif not encounteredInitialOutput and data.startswith(self.initialOutput):
-				# The connection to Mume has been established, and the game has just responded with the login screen.
-				for item in self.initialConfiguration:
-					self.sendServer(item)
-				handler._telnet.charset("us-ascii")
-				encounteredInitialOutput = True
-			try:
-				self.sendClient(handler.parse(data))
-			except EnvironmentError:
-				self.close()
-				continue
-		if self._interface != "text":
+		if self.mapper.interface != "text":
 			# Shutdown the gui
-			with self._mapper._gui_queue_lock:
-				self._mapper._gui_queue.put(None)
-		handler.close()
+			with self.mapper._gui_queue_lock:
+				self.mapper._gui_queue.put(None)
+
+
+class MockedSocketEmpty(Exception):
+	pass
 
 
 class MockedSocket(object):
-	timeout = None
+	def __init__(self, *args, **kwargs):
+		self.inboundBuffer = None
+		self.timeout = None
 
 	def gettimeout(self):
 		return self.timeout
@@ -214,7 +161,10 @@ class MockedSocket(object):
 	def connect(self, *args):
 		pass
 
-	def getpeercert(*args):
+	def setsockopt(self, *args):
+		pass
+
+	def getpeercert(self, *args):
 		return {"subject": [["commonName", "mume.org"]]}
 
 	def shutdown(self, *args):
@@ -224,10 +174,22 @@ class MockedSocket(object):
 		pass
 
 	def send(self, data, flags=0):
+		if data == b"quit":
+			self.inboundBuffer = b""
 		return len(data)
 
 	def sendall(self, data, flags=0):
+		self.send(data, flags)
 		return None  # sendall returns None on success.
+
+	def recv(self, buffersize, flags=0):
+		#  Simulate some lag.
+		time.sleep(0.005)
+		if self.inboundBuffer is not None:
+			inboundBuffer = self.inboundBuffer
+			self.inboundBuffer = None
+			return inboundBuffer
+		raise MockedSocketEmpty()
 
 
 def main(
@@ -243,18 +205,6 @@ def main(
 		remotePort,
 		noSsl
 ):
-	outputFormat = outputFormat.strip().lower()
-	interface = interface.strip().lower()
-	if not promptTerminator:
-		promptTerminator = IAC + GA
-	if not gagPrompts:
-		gagPrompts = False
-	if interface != "text":
-		try:
-			import pyglet
-		except ImportError:
-			print("Unable to find pyglet. Disabling the GUI")
-			interface = "text"
 	# initialise client connection
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
@@ -263,36 +213,37 @@ def main(
 	proxySocket.bind((localHost, localPort))
 	proxySocket.listen(1)
 	touch(LISTENING_STATUS_FILE)
-	clientConnection, proxyAddress = proxySocket.accept()
-	clientConnection = BufferedSocket(clientConnection, timeout=1.0)
+	playerSocket, playerAddress = proxySocket.accept()
+	playerSocket = BufferedSocket(playerSocket, timeout=1.0)
 	# initialise server connection
-	if isEmulatingOffline:
-		serverConnection = MockedSocket()
-	else:
-		serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		serverConnection.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-		serverConnection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 	try:
-		serverConnection.connect((remoteHost, remotePort))
+		if isEmulatingOffline:
+			gameSocket = MockedSocket()
+		else:
+			gameSocket = socket.create_connection((remoteHost, remotePort))
 	except TimeoutError:
 		try:
-			clientConnection.sendall(b"\r\nError: server connection timed out!\r\n")
-			clientConnection.sendall(b"\r\n")
-			clientConnection.shutdown(socket.SHUT_RDWR)
+			playerSocket.sendall(b"\r\nError: server connection timed out!\r\n")
+			playerSocket.sendall(b"\r\n")
+			playerSocket.shutdown(socket.SHUT_RDWR)
 		except EnvironmentError:
 			pass
-		clientConnection.close()
-		removeFile(LISTENING_STATUS_FILE)
-		return
-	serverConnection = BufferedSSLSocket(
-		serverConnection,
+		finally:
+			playerSocket.close()
+			removeFile(LISTENING_STATUS_FILE)
+			return
+	else:
+		gameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+		gameSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+	gameSocket = BufferedSSLSocket(
+		gameSocket,
 		timeout=None,
 		insecure=noSsl or isEmulatingOffline,
 		server_hostname=remoteHost
 	)
 	mapperThread = Mapper(
-		client=clientConnection,
-		server=serverConnection,
+		playerSocket=playerSocket,
+		gameSocket=gameSocket,
 		outputFormat=outputFormat,
 		interface=interface,
 		promptTerminator=promptTerminator,
@@ -300,42 +251,28 @@ def main(
 		findFormat=findFormat,
 		isEmulatingOffline=isEmulatingOffline,
 	)
-	proxyThread = Proxy(
-		client=clientConnection,
-		server=serverConnection,
-		mapper=mapperThread,
-		isEmulatingOffline=isEmulatingOffline
-	)
-	serverThread = Server(
-		client=clientConnection,
-		server=serverConnection,
-		mapper=mapperThread,
-		outputFormat=outputFormat,
-		interface=interface,
-		promptTerminator=promptTerminator
-	)
-	if not isEmulatingOffline:
-		serverThread.start()
-	proxyThread.start()
+	playerThread = Player(playerSocket, mapperThread)
+	gameThread = Game(gameSocket, mapperThread)
+	gameThread.start()
+	playerThread.start()
 	mapperThread.start()
 	if interface != "text":
 		pyglet.app.run()
-	if not isEmulatingOffline:
-		serverThread.join()
+	gameThread.join()
 	try:
-		serverConnection.shutdown(socket.SHUT_RDWR)
+		gameSocket.shutdown(socket.SHUT_RDWR)
 	except EnvironmentError:
 		pass
-	if not isEmulatingOffline:
-		mapperThread.queue.put((None, None))
+	mapperThread.queue.put((None, None))
 	mapperThread.join()
 	try:
-		clientConnection.sendall(b"\r\n")
-		proxyThread.close()
-		clientConnection.shutdown(socket.SHUT_RDWR)
+		playerSocket.sendall(b"\r\n")
+		playerThread.close()
+		playerSocket.shutdown(socket.SHUT_RDWR)
 	except EnvironmentError:
 		pass
-	proxyThread.join()
-	serverConnection.close()
-	clientConnection.close()
+	playerThread.join()
+	mapperThread.proxy.close()
+	gameSocket.close()
+	playerSocket.close()
 	removeFile(LISTENING_STATUS_FILE)

@@ -5,38 +5,40 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Built-in Modules:
 import argparse
 import logging
 import sys
 import traceback
 
+# Local Modules:
+from mapper import INTERFACES, OUTPUT_FORMATS
 import mapper.main
 
 try:
-	from mpm_version import version
+	from mpm_version import VERSION
 except ImportError:
-	version = "%(prog)s: No version information available. This is normal when running from source."
-
-
-version += f" (Python {'.'.join(map(str, sys.version_info[:3]))} {sys.version_info.releaselevel})"
+	VERSION = "%(prog)s: No version information available. This is normal when running from source."
+finally:
+	VERSION += f" (Python {'.'.join(str(i) for i in sys.version_info[:3])} {sys.version_info.releaselevel})"
 
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="The accessible Mume mapper.")
-	parser.add_argument("-v", "--version", action="version", version=version)
+	parser.add_argument("-v", "--version", action="version", version=VERSION)
 	parser.add_argument("-e", "--emulation", help="Start in emulation mode.", action="store_true")
 	parser.add_argument(
 		"-i",
 		"--interface",
 		help="Select a user interface.",
-		choices=["text", "hc", "sighted"],
+		choices=INTERFACES,
 		default="text"
 	)
 	parser.add_argument(
 		"-f",
 		"--format",
 		help="Select how data from the server is transformed before  being sent to the client.",
-		choices=["normal", "tintin", "raw"],
+		choices=OUTPUT_FORMATS,
 		default="normal"
 	)
 	parser.add_argument(
@@ -102,7 +104,7 @@ if __name__ == "__main__":
 	try:
 		mapper.main.main(
 			outputFormat=args.format,
-			interface=args.interface,
+			interface=args.interface if mapper.main.pyglet is not None else "text",
 			isEmulatingOffline=args.emulation,
 			promptTerminator=b"\r\n" if args.prompt_terminator_lf else None,
 			gagPrompts=args.gag_prompts,

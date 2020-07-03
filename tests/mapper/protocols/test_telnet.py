@@ -4,46 +4,54 @@
 
 
 # Built-in Modules:
-from telnetlib import IAC, DO, WILL, SB, SE, CHARSET, GA
-import unittest
+from unittest import TestCase
 
 # Local Modules:
-from . import parseMudOutput
-from mapper.protocols.telnet import SB_ACCEPTED, SB_REQUEST, TelnetHandler
+from mapper.protocols.telnet import TelnetProtocol
+from mapper.protocols.telnet_constants import (
+	IAC,
+	# Commands:
+	GA,
+	# Line Endings:
+	CR_LF,
+	CR_NULL,
+	CR,
+	LF,
+)
 
 
-class TestTelnetHandler(unittest.TestCase):
-	def testTelnetParse(self):
-		clientReceives = bytearray()
-		mudReceives = bytearray()
-		handler = TelnetHandler(processed=clientReceives, remoteSender=mudReceives, promptTerminator=IAC + GA)
-		text = b"Hello World!"
-		self.assertEqual(parseMudOutput(handler, text), text)
+class TestTelnetProtocol(TestCase):
+	def setUp(self):
+		self.gameReceives = bytearray()
+		self.playerReceives = bytearray()
+		self.telnet = TelnetProtocol(self.gameReceives.extend, self.playerReceives.extend)
+
+	def tearDown(self):
+		self.telnet.on_connectionLost()
+		del self.telnet
+		self.gameReceives.clear()
+		self.playerReceives.clear()
+
+	def parse(self, data):
+		self.telnet.on_dataReceived(data)
+		playerReceives = bytes(self.playerReceives)
+		self.playerReceives.clear()
+		gameReceives = bytes(self.gameReceives)
+		self.gameReceives.clear()
+		state = self.telnet.state
+		self.telnet.state = "data"
+		return playerReceives, gameReceives, state
+
+	def testTelnetDataReceived(self):
+		data = b"Hello World!"
+		self.assertEqual(self.playerReceives, b"")
+		self.assertEqual(self.gameReceives, b"")
+		self.assertEqual(self.telnet.state, "data")
+		self.telnet.on_connectionMade()
+		self.assertEqual(self.parse(data), (data, b"", "data"))
+		self.assertEqual(self.parse(data + CR), (data, b"", "newline"))
+		self.assertEqual(self.parse(data + CR_LF), (data + LF, b"", "data"))
+		self.assertEqual(self.parse(data + CR_NULL), (data + CR, b"", "data"))
+		self.assertEqual(self.parse(data + CR + IAC), (data + CR, b"", "command"))
 		# Test if telnet negotiations are being properly filtered out.
-		self.assertEqual(parseMudOutput(handler, IAC + GA + text + IAC + IAC + IAC + GA), text + IAC)
-		# Test if the negotiation will be sent to the user's client.
-		self.assertEqual(clientReceives, bytearray(IAC + GA + IAC + GA))
-
-	def testCharset(self):
-		clientReceives = bytearray()
-		mudReceives = bytearray()
-		handler = TelnetHandler(processed=clientReceives, remoteSender=mudReceives, promptTerminator=IAC + GA)
-		# Tell the mud we wish to negotiate the charset.
-		handler.charset("us-ascii")
-		# Test if the mud receives our request.
-		self.assertEqual(mudReceives, bytearray(IAC + WILL + CHARSET))
-		mudReceives.clear()
-		# Mud responds: IAC + DO + CHARSET. Make sure that the user's client doesn't receive it.
-		self.assertEqual(parseMudOutput(handler, IAC + DO + CHARSET), bytearray())
-		# Test that the mud receives our desired charset.
-		self.assertEqual(mudReceives, bytearray(IAC + SB + CHARSET + SB_REQUEST + b";" + b"US-ASCII" + IAC + SE))
-		mudReceives.clear()
-		# Test that the mud responds, letting us know that the charset was accepted and will be used.
-		self.assertEqual(
-			parseMudOutput(handler, IAC + SB + CHARSET + SB_ACCEPTED + b"US-ASCII" + IAC + SE),
-			bytearray()
-		)
-		# Make sure the mud didn't receive anything else from us.
-		self.assertEqual(mudReceives, bytearray())
-		# make sure that no part of the charset negotiation was sent to the user's client.
-		self.assertEqual(clientReceives, bytearray())
+		self.assertEqual(self.parse(IAC + GA + data + IAC + IAC + IAC + GA), (data + IAC, b"", "data"))

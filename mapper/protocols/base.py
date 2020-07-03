@@ -3,54 +3,59 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Python __future__ Imports:
+from __future__ import annotations
+
 # Built-in Modules:
+from abc import ABC, abstractmethod
 import logging
-
-# Local Modules:
-from ..mapper import MUD_DATA
-from ..utils import escapeIAC, unescapeXML
+from typing import Callable
 
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
-class BaseProtocolHandler(object):
-	def __init__(
-			self,
-			processed=None,
-			remoteSender=None,
-			eventSender=None,
-			outputFormat=None,
-			promptTerminator=None
-	):
-		self._processed = bytearray() if processed is None else processed
-		self._remoteSender = bytearray() if remoteSender is None else remoteSender
-		self._eventSender = list() if eventSender is None else eventSender
-		self._outputFormat = outputFormat
-		self._promptTerminator = promptTerminator
+class BaseProtocol(ABC):
+	@abstractmethod
+	def write(self, data: bytes) -> None:
+		"""
+		Writes data to peer.
 
-	def _sendRemote(self, dataBytes, raw=False):
-		if not raw:
-			dataBytes = escapeIAC(dataBytes)
-		try:
-			self._remoteSender(dataBytes)
-		except TypeError:
-			if isinstance(self._remoteSender, (bytearray, list)):
-				self._remoteSender.extend(dataBytes)
-			else:
-				raise
+		Args:
+			data: The bytes to be written.
+		"""
 
-	def _sendEvent(self, event, data):
-		try:
-			self._eventSender((MUD_DATA, (event, unescapeXML(data, True))))
-		except TypeError:
-			if isinstance(self._eventSender, list):
-				self._eventSender.append((MUD_DATA, (event, unescapeXML(data, True))))
-			else:
-				raise
+	@abstractmethod
+	def on_connectionMade(self) -> None:
+		"""Called by `connect` when a connection to peer has been established."""
 
-	def close(self, *args, **kwargs):
+	@abstractmethod
+	def on_connectionLost(self) -> None:
+		"""Called by `disconnect` when a connection to peer has been lost."""
+
+	@abstractmethod
+	def on_dataReceived(self, data: bytes) -> None:
+		"""
+		Called by `parse` when data is received.
+
+		Args:
+			data: The received data.
+		"""
+
+
+class Protocol(BaseProtocol):
+	def __init__(self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None]) -> None:
+		self._writer: Callable[[bytes], None] = writer
+		self._receiver: Callable[[bytes], None] = receiver
+
+	def write(self, data: bytes) -> None:
+		self._writer(data)
+
+	def on_connectionMade(self) -> None:
 		pass
 
-	def parse(self, *args, **kwargs):
+	def on_connectionLost(self) -> None:
 		pass
+
+	def on_dataReceived(self, data: bytes) -> None:
+		self._receiver(data)

@@ -3,9 +3,17 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+# Built-in Modules:
 import logging
 
+# Local Modules:
 from .config import Config, config_lock
+
+
+INTERFACES = ("text", "hc", "sighted")
+OUTPUT_FORMATS = ("normal", "raw", "tintin")
+USER_DATA = 0
+MUD_DATA = 1
 
 
 with config_lock:
