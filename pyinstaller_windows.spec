@@ -39,14 +39,11 @@ for arg in sys.argv[1:]:
 		found_version = "command line"
 		break
 else:
-	if (
-		os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")))
-		and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")))
-	):
+	if os.path.exists(
+		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
+	) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
 		with codecs.open(
-			os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")),
-			"rb",
-			encoding="utf-8"
+			os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "rb", encoding="utf-8"
 		) as f:
 			match = VERSION_REGEX.search(f.read(30).strip().lower())
 			if match is not None:
@@ -57,16 +54,12 @@ else:
 				else:
 					APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "version file"
-	elif (
-		os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git")))
-		and os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git")))
+	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(
+		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))
 	):
 		try:
 			match = VERSION_REGEX.search(
-				subprocess.check_output(
-					"git describe --tags --always --long",
-					shell=True
-				).decode("utf-8").strip().lower()
+				subprocess.check_output("git describe --tags --always --long", shell=True).decode("utf-8").strip().lower()
 			)
 			if match is not None:
 				APP_VERSION = match.groups()[0]
@@ -89,9 +82,7 @@ else:
 APP_VERSION_CSV = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
 APP_DEST = os.path.normpath(
 	os.path.join(
-		ORIG_DEST,
-		os.pardir,
-		f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_")
+		ORIG_DEST, os.pardir, f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_")
 	)
 )
 if isTag:
@@ -126,7 +117,7 @@ excludes = [
 	"optparse",
 	"numpy",
 	"PIL",
-	"xml"
+	"xml",
 ]
 
 dll_excludes = TOC(  # NOQA: F821
@@ -173,7 +164,7 @@ dll_excludes = TOC(  # NOQA: F821
 		("tcl86t.dll", None, None),
 		("tk86t.dll", None, None),
 		("ucrtbase.dll", None, None),
-		("mfc140u.dll", None, None)
+		("mfc140u.dll", None, None),
 	]
 )
 
@@ -229,10 +220,9 @@ shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(APP_DEST, ignore_errors=True)
 if os.path.exists(ZIP_FILE) and not os.path.isdir(ZIP_FILE):
 	os.remove(ZIP_FILE)
-if (
-	os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
-	and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
-):
+if os.path.exists(
+	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))
+) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(VERSION_FILE, ignore_errors=True)
 
@@ -240,11 +230,9 @@ with codecs.open(VERSION_FILE, "wb", encoding="utf-8") as f:
 	f.write(version_data)
 
 with codecs.open(
-	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")),
-	"wb",
-	encoding="utf-8"
+	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "wb", encoding="utf-8"
 ) as f:
-	f.write(f"VERSION = \"{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}\"")
+	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}"')
 
 a = Analysis(  # NOQA: F821
 	["start.py"],
@@ -258,7 +246,7 @@ a = Analysis(  # NOQA: F821
 	win_no_prefer_redirects=False,
 	win_private_assemblies=False,
 	cipher=block_cipher,
-	noarchive=False
+	noarchive=False,
 )
 
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)  # NOQA: F821
@@ -275,17 +263,11 @@ exe = EXE(  # NOQA: F821
 	upx=False,  # Not using UPX for the moment, as it can raise false positives in some antivirus software.
 	runtime_tmpdir=None,
 	console=True,
-	version=VERSION_FILE
+	version=VERSION_FILE,
 )
 
 coll = COLLECT(  # NOQA: F821
-	exe,
-	a.binaries - dll_excludes,
-	a.zipfiles,
-	a.datas,
-	strip=False,
-	upx=False,
-	name=""
+	exe, a.binaries - dll_excludes, a.zipfiles, a.datas, strip=False, upx=False, name=""
 )
 
 # Remove junk.
@@ -297,10 +279,9 @@ shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True
 os.rmdir(
 	os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir))  # NOQA: F821
 )
-if (
-	os.path.exists(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
-	and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
-):
+if os.path.exists(
+	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))
+) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
 shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
@@ -319,17 +300,14 @@ include_files = [
 	(
 		[
 			os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")),
-			os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md"))
+			os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md")),
 		],
-		"."
+		".",
 	),
-	(
-		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")),
-		"speech_libs"
-	),
+	(glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")), "speech_libs"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),
-	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles")
+	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles"),
 ]
 
 for files, destination in include_files:
@@ -347,14 +325,12 @@ shutil.make_archive(
 	root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)),
 	base_dir=os.path.basename(APP_DEST),
 	owner=None,
-	group=None
+	group=None,
 )
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
-hashes = {
-	"sha256": hashlib.sha256()
-}
+hashes = {"sha256": hashlib.sha256()}
 block_size = 2 ** 16
 with open(ZIP_FILE, "rb") as f:
 	for block in iter(lambda: f.read(block_size), b""):

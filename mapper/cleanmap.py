@@ -8,9 +8,7 @@ from .mudevents import Handler
 from .world import DIRECTIONS
 
 directionsRegexp = "|".join([d.title() for d in DIRECTIONS])
-exitRegexp = re.compile(
-	r".*(?<![#(])(?P<dir>" + directionsRegexp + r")(?![#)]).* +- .*"
-)
+exitRegexp = re.compile(r".*(?<![#(])(?P<dir>" + directionsRegexp + r")(?![#)]).* +- .*")
 
 
 class ExitsCleaner(Handler):

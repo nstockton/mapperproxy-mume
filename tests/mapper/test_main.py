@@ -39,13 +39,14 @@ from mapper.protocols.telnet_constants import (
 # The initial output of MUME. Used by the server thread to detect connection success.
 INITIAL_OUTPUT = [
 	IAC + DO + TTYPE,
-	IAC + DO + NAWS
+	IAC + DO + NAWS,
 ]
 WELCOME_MESSAGE = CR_LF + b"                              ***  MUME VIII  ***" + CR_LF + CR_LF
 
 
 class TestGameThread(unittest.TestCase):
 	def testGameThread(self):
+		# fmt: off
 		initialConfiguration = (  # What the server thread sends MUME on connection success.
 			IAC + WILL + CHARSET
 			# Tell the Mume server to put IAC-GA at end of prompts.
@@ -55,6 +56,7 @@ class TestGameThread(unittest.TestCase):
 			# Turn on XML mode.
 			+ MPI_INIT + b"X2" + LF + b"3G" + LF
 		)
+		# fmt: on
 		outputToPlayer = Queue()
 		outputFromMume = Queue()
 		inputToMume = Queue()
@@ -96,7 +98,7 @@ class TestGameThread(unittest.TestCase):
 		except Empty:
 			errorMessage = (
 				"The server thread did not output the expected number of configuration parameters.",
-				f"The yet-to-be-seen configurations are: {initialConfiguration!r}"
+				f"The yet-to-be-seen configurations are: {initialConfiguration!r}",
 			)
 			raise AssertionError("\n".join(errorMessage))
 		# test nothing extra has been sent yet
@@ -104,7 +106,7 @@ class TestGameThread(unittest.TestCase):
 			remainingOutput = inputToMume.get()
 			errorMessage = (
 				"The server thread spat out at least one unexpected initial configuration.",
-				f"Remaining output: {remainingOutput!r}"
+				f"Remaining output: {remainingOutput!r}",
 			)
 			raise AssertionError("\n".join(errorMessage))
 		# test regular text is passed through to the client
@@ -181,7 +183,7 @@ class TestGameThreadThroughput(unittest.TestCase):
 			self.assertEqual(
 				res,
 				expectedOutput,
-				f"When entering {inputDescription}, the expected output did not match {expectedOutput!r}"
+				f"When entering {inputDescription}, the expected output did not match {expectedOutput!r}",
 			)
 		except Empty:
 			raise AssertionError(f"{inputDescription} data was not received by the player socket within 1 second.")
@@ -191,7 +193,7 @@ class TestGameThreadThroughput(unittest.TestCase):
 			self.assertEqual(
 				actualData[i],
 				expectedData[i],
-				f"When entering {inputDescription}, call #{i} to the mapper queue was not as expected"
+				f"When entering {inputDescription}, call #{i} to the mapper queue was not as expected",
 			)
 			i += 1
 		if i < len(actualData):
@@ -203,13 +205,12 @@ class TestGameThreadThroughput(unittest.TestCase):
 		self.runThroughput(
 			threadInput=b"<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>" + IAC + GA,
 			expectedOutput=b"\x1b[34mMana:Hot Move:Tired>\x1b[0m" + CR_LF,
-			expectedData=[
-				call((MUD_DATA, ("prompt", b"\x1b[34mMana:Hot Move:Tired>\x1b[0m")))
-			],
-			inputDescription="prompt with mana burning and moves tired"
+			expectedData=[call((MUD_DATA, ("prompt", b"\x1b[34mMana:Hot Move:Tired>\x1b[0m")))],
+			inputDescription="prompt with mana burning and moves tired",
 		)
 
 	def testProcessingEnteringRoom(self):
+		# fmt: off
 		threadInput = (
 			b"<movement dir=down/><room><name>Seagull Inn</name>" + CR_LF
 			+ b"<gratuitous><description>"
@@ -245,6 +246,7 @@ class TestGameThreadThroughput(unittest.TestCase):
 			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + LF
 			+ b"An elven lamplighter is resting here." + LF
 		)
+		# fmt: on
 		expectedData = [
 			call((MUD_DATA, ("movement", b"down"))),
 			call((MUD_DATA, ("name", b"Seagull Inn"))),

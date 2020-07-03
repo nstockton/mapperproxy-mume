@@ -44,8 +44,7 @@ class TestUtils(unittest.TestCase):
 		testFunction = lambda: None  # NOQA: E731
 		testFunction.__docstring__ = docString
 		expectedOutputIndentTwoSpace = "\n".join(
-			"  " + line.replace("\t", "  ")
-			for line in expectedOutput.splitlines()
+			"  " + line.replace("\t", "  ") for line in expectedOutput.splitlines()
 		)
 		width = 79
 		for item in (docString, testFunction):
@@ -177,11 +176,7 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.getDirectoryPath(*subdirectory), unfrozenOutput)
 
 	def test_multiReplace(self):
-		replacements = (
-			("ll", "yy"),
-			("h", "x"),
-			("o", "z")
-		)
+		replacements = (("ll", "yy"), ("h", "x"), ("o", "z"))
 		text = "hello world"
 		expectedOutput = "xeyyz wzrld"
 		for item in (replacements, dict(replacements)):
@@ -215,13 +210,13 @@ class TestUtils(unittest.TestCase):
 	@mock.patch("mapper.utils.shutil")
 	def test_page(self, mockShutil, mockPager):
 		cols, rows = 80, 24
-		mockShutil.get_terminal_size.return_value = (os.terminal_size((cols, rows)))
+		mockShutil.get_terminal_size.return_value = os.terminal_size((cols, rows))
 		lines = [
 			"This is the first line.",
 			"this is the second line.",
 			"123456789 " * 10,
 			"123\n567\n9 " * 10,
-			"This is the third and final line."
+			"This is the third and final line.",
 		]
 		lines = "\n".join(lines).splitlines()
 		utils.page(lines)

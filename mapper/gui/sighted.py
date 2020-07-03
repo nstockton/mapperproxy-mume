@@ -8,6 +8,7 @@
 import logging
 import os.path
 from re import search
+
 try:
 	from Queue import Empty as QueueEmpty
 except ImportError:
@@ -18,9 +19,9 @@ import pyglet
 from ..utils import getDirectoryPath
 
 
-pyglet.options['debug_gl'] = False
+pyglet.options["debug_gl"] = False
 logger = logging.getLogger(__name__)
-logger.setLevel('DEBUG')
+logger.setLevel("DEBUG")
 
 FPS = 40
 
@@ -66,7 +67,7 @@ TILES = {
 	"shop": pyglet.image.load(os.path.join(TILESDIR, "shop.png")),
 	"aggressive_mob": pyglet.image.load(os.path.join(TILESDIR, "smob.png")),
 	# player
-	"player": pyglet.image.load(os.path.join(TILESDIR, "player.png"))
+	"player": pyglet.image.load(os.path.join(TILESDIR, "player.png")),
 }
 
 
@@ -93,10 +94,7 @@ class Window(pyglet.window.Window):
 		self.playerRoom = None
 		self.centerRoom = None
 		# Pyglet window
-		super(Window, self).__init__(
-			self.col * self.square, self.row * self.square,
-			caption="MPM", resizable=True
-		)
+		super(Window, self).__init__(self.col * self.square, self.row * self.square, caption="MPM", resizable=True)
 		logger.info(f"Creating window {self}")
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock
@@ -155,13 +153,13 @@ class Window(pyglet.window.Window):
 		self.draw_map(currentRoom)
 
 	def on_gui_refresh(self):
-		'''This event is fired when the mapper needs to signal the GUI to clear
-		the visible rooms cache and redraw the map view.'''
+		"""This event is fired when the mapper needs to signal the GUI to clear
+		the visible rooms cache and redraw the map view."""
 		if self.centerRoom is not None:
 			self.draw_map(self.centerRoom)
-			logger.debug('GUI refreshed.')
+			logger.debug("GUI refreshed.")
 		else:
-			logger.debug('Unable to refresh the GUI. The center room is not defined.')
+			logger.debug("Unable to refresh the GUI. The center room is not defined.")
 
 	def draw_map(self, centerRoom):
 		logger.debug(f"Drawing rooms around {centerRoom}")
@@ -182,33 +180,33 @@ class Window(pyglet.window.Window):
 		# draw the terrain on layer 0
 		self.draw_tile(x, y, 0, room.terrain)
 		# draw the walls on layer 1
-		for exit in ('north', 'east', 'south', 'west'):
+		for exit in ("north", "east", "south", "west"):
 			if exit not in room.exits:
 				self.draw_tile(x, y, 1, "wall" + exit)
 		# draw the arrows for exits up and down on layer 1
-		for exit in ('up', 'down'):
+		for exit in ("up", "down"):
 			if exit in room.exits:
 				self.draw_tile(x, y, 1, "exit" + exit)
 		# draw a single load flag on layer 2
 		for flag in room.loadFlags:
-			if flag in ('attention', 'treasure', 'key', 'armour', 'weapon', 'herb'):
+			if flag in ("attention", "treasure", "key", "armour", "weapon", "herb"):
 				self.draw_tile(x, y, 2, flag)
 				break
 		# draw a single mob flag on layer 2
 		for flag in room.mobFlags:
-			if flag in ('aggressive_mob', 'rent', 'quest_mob'):
+			if flag in ("aggressive_mob", "rent", "quest_mob"):
 				self.draw_tile(x, y, 2, flag)
 				break
-			if search('shop', flag):
-				self.draw_tile(x, y, 2, 'shop')
+			if search("shop", flag):
+				self.draw_tile(x, y, 2, "shop")
 				break
-			if search('guild', flag):
-				self.draw_tile(x, y, 2, 'guild')
+			if search("guild", flag):
+				self.draw_tile(x, y, 2, "guild")
 				break
 
 	def draw_player(self):
 		if self.playerRoom is None or self.centerRoom is None:
-		    return
+			return
 		logger.debug(f"Drawing player on room vnum {self.playerRoom.vnum}")
 		# transform map coordinates to window ones
 		x = self.playerRoom.x - self.centerRoom.x + self.mcol
@@ -241,15 +239,15 @@ class Window(pyglet.window.Window):
 			return
 		# Action depends on which button the player clicked
 		if buttons == pyglet.window.mouse.LEFT:
-		    # center the map on the selected room
-		    self.draw_map(room)
+			# center the map on the selected room
+			self.draw_map(room)
 		elif buttons == pyglet.window.mouse.MIDDLE:
-		    # center the map on the player
-		    self.draw_map(self.playerRoom)
+			# center the map on the player
+			self.draw_map(self.playerRoom)
 		elif buttons == pyglet.window.mouse.RIGHT:
-		    # print the vnum
-		    self.world.output(f"Click on room {room.vnum}.")
+			# print the vnum
+			self.world.output(f"Click on room {room.vnum}.")
 
 
-Window.register_event_type('on_map_sync')
-Window.register_event_type('on_gui_refresh')
+Window.register_event_type("on_map_sync")
+Window.register_event_type("on_gui_refresh")

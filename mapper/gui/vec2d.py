@@ -67,6 +67,7 @@ class Vec2d(object):
 	2d vector class, supports vector and scalar operators, and also
 	provides some high level functions.
 	"""
+
 	__slots__ = ("x", "y")
 
 	@staticmethod
@@ -117,7 +118,7 @@ class Vec2d(object):
 
 	# String representation (for debugging)
 	def __repr__(self):
-		return 'Vec2d(%s, %s)' % (self.x, self.y)
+		return "Vec2d(%s, %s)" % (self.x, self.y)
 
 	# Comparison
 	def __eq__(self, other):
@@ -140,21 +141,21 @@ class Vec2d(object):
 		"Any two-operator operation where the left operand is a Vec2d"
 		if isinstance(other, Vec2d):
 			return Vec2d(f(self.x, other.x), f(self.y, other.y))
-		elif (hasattr(other, "__getitem__")):
+		elif hasattr(other, "__getitem__"):
 			return Vec2d(f(self.x, other[0]), f(self.y, other[1]))
 		else:
 			return Vec2d(f(self.x, other), f(self.y, other))
 
 	def _r_o2(self, other, f):
 		"Any two-operator operation where the right operand is a Vec2d"
-		if (hasattr(other, "__getitem__")):
+		if hasattr(other, "__getitem__"):
 			return Vec2d(f(other[0], self.x), f(other[1], self.y))
 		else:
 			return Vec2d(f(other, self.x), f(other, self.y))
 
 	def _io(self, other, f):
 		"inplace operator"
-		if (hasattr(other, "__getitem__")):
+		if hasattr(other, "__getitem__"):
 			self.x = f(self.x, other[0])
 			self.y = f(self.y, other[1])
 		else:
@@ -170,6 +171,7 @@ class Vec2d(object):
 			return Vec2d(self.x + other[0], self.y + other[1])
 		else:
 			return Vec2d(self.x + other, self.y + other)
+
 	__radd__ = __add__
 
 	def __iadd__(self, other):
@@ -188,7 +190,7 @@ class Vec2d(object):
 	def __sub__(self, other):
 		if isinstance(other, Vec2d):
 			return Vec2d(self.x - other.x, self.y - other.y)
-		elif (hasattr(other, "__getitem__")):
+		elif hasattr(other, "__getitem__"):
 			return Vec2d(self.x - other[0], self.y - other[1])
 		else:
 			return Vec2d(self.x - other, self.y - other)
@@ -196,7 +198,7 @@ class Vec2d(object):
 	def __rsub__(self, other):
 		if isinstance(other, Vec2d):
 			return Vec2d(other.x - self.x, other.y - self.y)
-		if (hasattr(other, "__getitem__")):
+		if hasattr(other, "__getitem__"):
 			return Vec2d(other[0] - self.x, other[1] - self.y)
 		else:
 			return Vec2d(other - self.x, other - self.y)
@@ -205,7 +207,7 @@ class Vec2d(object):
 		if isinstance(other, Vec2d):
 			self.x -= other.x
 			self.y -= other.y
-		elif (hasattr(other, "__getitem__")):
+		elif hasattr(other, "__getitem__"):
 			self.x -= other[0]
 			self.y -= other[1]
 		else:
@@ -217,17 +219,18 @@ class Vec2d(object):
 	def __mul__(self, other):
 		if isinstance(other, Vec2d):
 			return Vec2d(self.x * other.x, self.y * other.y)
-		if (hasattr(other, "__getitem__")):
+		if hasattr(other, "__getitem__"):
 			return Vec2d(self.x * other[0], self.y * other[1])
 		else:
 			return Vec2d(self.x * other, self.y * other)
+
 	__rmul__ = __mul__
 
 	def __imul__(self, other):
 		if isinstance(other, Vec2d):
 			self.x *= other.x
 			self.y *= other.y
-		elif (hasattr(other, "__getitem__")):
+		elif hasattr(other, "__getitem__"):
 			self.x *= other[0]
 			self.y *= other[1]
 		else:
@@ -384,7 +387,7 @@ class Vec2d(object):
 		return self.rotated(math.radians(angle_degrees))
 
 	def get_angle(self):
-		if (self.get_length_sqrd() == 0):
+		if self.get_length_sqrd() == 0:
 			return 0
 		return math.atan2(self.y, self.x)
 
@@ -402,9 +405,7 @@ class Vec2d(object):
 		self.__setangle(math.radians(angle_degrees))
 
 	angle_degrees = property(
-		get_angle_degrees,
-		__set_angle_degrees,
-		doc="""Gets or sets the angle (in degrees) of a vector"""
+		get_angle_degrees, __set_angle_degrees, doc="""Gets or sets the angle (in degrees) of a vector"""
 	)
 
 	def get_angle_between(self, other):

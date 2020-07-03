@@ -42,16 +42,7 @@ class MPIProtocol(Protocol):
 		pager: The program to use for viewing received read-only text.
 	"""
 
-	states: AbstractSet[str] = frozenset(
-		(
-			"data",
-			"newline",
-			"init",
-			"command",
-			"length",
-			"body",
-		)
-	)
+	states: AbstractSet[str] = frozenset(("data", "newline", "init", "command", "length", "body",))
 	"""Valid states for the state machine."""
 
 	def __init__(self, *args, **kwargs) -> None:
@@ -60,10 +51,7 @@ class MPIProtocol(Protocol):
 		self._state: str = "data"
 		self._MPIBuffer: bytes = bytearray()
 		self._MPIThreads: Sequence[threading.Thread] = []
-		self.commandMap: Mapping[bytes, Callable[[bytes], None]] = {
-			b"E": self.edit,
-			b"V": self.view
-		}
+		self.commandMap: Mapping[bytes, Callable[[bytes], None]] = {b"E": self.edit, b"V": self.view}
 		if sys.platform == "win32":
 			self.editor: str = "notepad"
 			self.pager: str = "notepad"
@@ -140,7 +128,7 @@ class MPIProtocol(Protocol):
 				if separator:
 					self.state = "newline"
 			elif self.state == "newline":
-				if MPI_INIT.startswith(data[:len(MPI_INIT)]):
+				if MPI_INIT.startswith(data[: len(MPI_INIT)]):
 					# Data starts with some or all of the MPI_INIT sequence.
 					self.state = "init"
 				else:
@@ -205,11 +193,7 @@ class MPIProtocol(Protocol):
 			logger.warning(f"Invalid MPI command {command!r}.")
 			self.on_unhandledCommand(command, data)
 		elif self.commandMap[command] is not None:
-			thread = threading.Thread(
-				target=self.commandMap[command],
-				args=(data,),
-				daemon=True
-			)
+			thread = threading.Thread(target=self.commandMap[command], args=(data,), daemon=True)
 			self._MPIThreads.append(thread)
 			thread.start()
 
@@ -231,10 +215,4 @@ class MPIProtocol(Protocol):
 			command: The MPI command, consisting of a single byte.
 			data: The payload.
 		"""
-		super().on_dataReceived(
-			MPI_INIT
-			+ command
-			+ b"%d" % len(data)
-			+ LF
-			+ data
-		)
+		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)

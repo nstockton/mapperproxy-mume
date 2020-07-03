@@ -80,9 +80,7 @@ def loadRooms():
 	errors, result = _load(SAMPLE_MAP_FILE_PATH)
 	if result is None:
 		errorMessages.append(errors)
-		errorMessages.append(
-			f"Error: neither '{MAP_FILE_PATH}' nor '{SAMPLE_MAP_FILE_PATH}' can be found."
-		)
+		errorMessages.append(f"Error: neither '{MAP_FILE_PATH}' nor '{SAMPLE_MAP_FILE_PATH}' can be found.")
 		return "\n".join(errorMessages), None
 	else:
 		return None, result
@@ -91,6 +89,6 @@ def loadRooms():
 def dumpRooms(rooms):
 	with codecs.open(MAP_FILE_PATH, "wb", encoding="utf-8") as fileObj:
 		if rapidjson is not None:
-			rapidjson.dump(rooms, fileObj, sort_keys=True, indent=2, chunk_size=2**16)
+			rapidjson.dump(rooms, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
 		else:
 			fileObj.write(json.dumps(rooms, sort_keys=True, indent=2))

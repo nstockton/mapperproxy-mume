@@ -14,6 +14,7 @@ import time
 
 # Third-party Modules:
 from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
+
 try:
 	import certifi
 except ImportError:
@@ -37,13 +38,7 @@ logger = logging.getLogger(__name__)
 
 class BufferedSSLSocket(BufferedSocket):
 	def __init__(
-			self,
-			sock,
-			timeout=_UNSET,
-			maxsize=DEFAULT_MAXSIZE,
-			recvsize=_UNSET,
-			insecure=False,
-			**sslKWArgs
+		self, sock, timeout=_UNSET, maxsize=DEFAULT_MAXSIZE, recvsize=_UNSET, insecure=False, **sslKWArgs
 	):
 		super().__init__(sock, timeout, maxsize, recvsize)
 		if not insecure and ssl is not None:
@@ -193,17 +188,17 @@ class MockedSocket(object):
 
 
 def main(
-		outputFormat,
-		interface,
-		isEmulatingOffline,
-		promptTerminator,
-		gagPrompts,
-		findFormat,
-		localHost,
-		localPort,
-		remoteHost,
-		remotePort,
-		noSsl
+	outputFormat,
+	interface,
+	isEmulatingOffline,
+	promptTerminator,
+	gagPrompts,
+	findFormat,
+	localHost,
+	localPort,
+	remoteHost,
+	remotePort,
+	noSsl,
 ):
 	# initialise client connection
 	proxySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -236,10 +231,7 @@ def main(
 		gameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 		gameSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 	gameSocket = BufferedSSLSocket(
-		gameSocket,
-		timeout=None,
-		insecure=noSsl or isEmulatingOffline,
-		server_hostname=remoteHost
+		gameSocket, timeout=None, insecure=noSsl or isEmulatingOffline, server_hostname=remoteHost
 	)
 	mapperThread = Mapper(
 		playerSocket=playerSocket,

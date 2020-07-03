@@ -35,7 +35,7 @@ TERRAIN_COSTS = {
 	"water": 50.0,
 	"rapids": 60.0,
 	"underwater": 100.0,
-	"deathtrap": 1000.0
+	"deathtrap": 1000.0,
 }
 VALID_MOB_FLAGS = [
 	"rent",
@@ -54,7 +54,7 @@ VALID_MOB_FLAGS = [
 	"quest_mob",
 	"passive_mob",
 	"elite_mob",
-	"super_mob"
+	"super_mob",
 ]
 VALID_LOAD_FLAGS = [
 	"treasure",
@@ -80,7 +80,7 @@ VALID_LOAD_FLAGS = [
 	"dark_word",
 	"equipment",
 	"coach",
-	"ferry"
+	"ferry",
 ]
 VALID_EXIT_FLAGS = [
 	"exit",
@@ -95,7 +95,7 @@ VALID_EXIT_FLAGS = [
 	"no_flee",
 	"damage",
 	"fall",
-	"guarded"
+	"guarded",
 ]
 VALID_DOOR_FLAGS = [
 	"hidden",
@@ -108,7 +108,7 @@ VALID_DOOR_FLAGS = [
 	"knockable",
 	"magic",
 	"action",  # Action controlled
-	"no_bash"
+	"no_bash",
 ]
 
 

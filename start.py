@@ -27,68 +27,39 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="The accessible Mume mapper.")
 	parser.add_argument("-v", "--version", action="version", version=VERSION)
 	parser.add_argument("-e", "--emulation", help="Start in emulation mode.", action="store_true")
-	parser.add_argument(
-		"-i",
-		"--interface",
-		help="Select a user interface.",
-		choices=INTERFACES,
-		default="text"
-	)
+	parser.add_argument("-i", "--interface", help="Select a user interface.", choices=INTERFACES, default="text")
 	parser.add_argument(
 		"-f",
 		"--format",
 		help="Select how data from the server is transformed before  being sent to the client.",
 		choices=OUTPUT_FORMATS,
-		default="normal"
+		default="normal",
 	)
 	parser.add_argument(
-		"-lh",
-		"--local-host",
-		metavar="address",
-		help="The local host address to bind to.",
-		default="127.0.0.1"
+		"-lh", "--local-host", metavar="address", help="The local host address to bind to.", default="127.0.0.1"
 	)
 	parser.add_argument(
-		"-lp",
-		"--local-port",
-		metavar="port",
-		type=int,
-		help="The local port to bind to.",
-		default=4000
+		"-lp", "--local-port", metavar="port", type=int, help="The local port to bind to.", default=4000
 	)
 	parser.add_argument(
-		"-rh",
-		"--remote-host",
-		metavar="address",
-		help="The remote host address to connect to.",
-		default="mume.org"
+		"-rh", "--remote-host", metavar="address", help="The remote host address to connect to.", default="mume.org"
 	)
 	parser.add_argument(
-		"-rp",
-		"--remote-port",
-		metavar="port",
-		type=int,
-		help="The remote port to connect to.",
-		default=4242
+		"-rp", "--remote-port", metavar="port", type=int, help="The remote port to connect to.", default=4242
 	)
 	parser.add_argument(
 		"-nssl",
 		"--no-ssl",
 		help="Disable encrypted communication between the local and remote hosts.",
-		action="store_true"
+		action="store_true",
 	)
 	parser.add_argument(
 		"-ptlf",
 		"--prompt-terminator-lf",
 		help="Terminate game prompts with return-linefeed characters (IAC + GA is default).",
-		action="store_true"
+		action="store_true",
 	)
-	parser.add_argument(
-		"-gp",
-		"--gag-prompts",
-		help="Gag emulated prompts.",
-		action="store_true"
-	)
+	parser.add_argument("-gp", "--gag-prompts", help="Gag emulated prompts.", action="store_true")
 	parser.add_argument(
 		"-ff",
 		"--find-format",
@@ -98,7 +69,7 @@ if __name__ == "__main__":
 			"{attribute}, {direction}, {clockPosition}, {distance}, {name}, {vnum}. "
 			"Where {attribute} represents the attribute on which the search is performed."
 		),
-		default="{vnum}, {name}, {attribute}"
+		default="{vnum}, {name}, {attribute}",
 	)
 	args = parser.parse_args()
 	try:
@@ -113,7 +84,7 @@ if __name__ == "__main__":
 			localPort=args.local_port,
 			remoteHost=args.remote_host,
 			remotePort=args.remote_port,
-			noSsl=args.no_ssl
+			noSsl=args.no_ssl,
 		)
 	except Exception:
 		traceback.print_exception(*sys.exc_info())

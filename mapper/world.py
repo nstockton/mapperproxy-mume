@@ -7,10 +7,7 @@ import gc
 import heapq
 import itertools
 import operator
-try:
-	from Queue import Queue
-except ImportError:
-	from queue import Queue
+from queue import Queue
 import re
 import threading
 from fuzzywuzzy import fuzz
@@ -26,29 +23,17 @@ DIRECTION_COORDINATES = {
 	"west": (-1, 0, 0),
 	"east": (1, 0, 0),
 	"up": (0, 0, 1),
-	"down": (0, 0, -1)
+	"down": (0, 0, -1),
 }
-LEAD_BEFORE_ENTERING_VNUMS = [
-	"196",
-	"3473",
-	"3474",
-	"12138",
-	"12637"
-]
-LIGHT_SYMBOLS = {
-	"@": "lit",
-	"*": "lit",
-	"!": "undefined",
-	")": "lit",
-	"o": "dark"
-}
+LEAD_BEFORE_ENTERING_VNUMS = ["196", "3473", "3474", "12138", "12637"]
+LIGHT_SYMBOLS = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
 REVERSE_DIRECTIONS = {
 	"north": "south",
 	"south": "north",
 	"east": "west",
 	"west": "east",
 	"up": "down",
-	"down": "up"
+	"down": "up",
 }
 RUN_DESTINATION_REGEX = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 TERRAIN_SYMBOLS = {
@@ -67,7 +52,7 @@ TERRAIN_SYMBOLS = {
 	"=": "tunnel",
 	"?": "undefined",
 	"U": "underwater",
-	"~": "water"
+	"~": "water",
 }
 
 
@@ -122,11 +107,7 @@ class World(object):
 		if db is None:
 			return self.output(errors)
 		self.output("Creating room objects.")
-		terrainReplacements = {
-			"random": "undefined",
-			"death": "deathtrap",
-			"shallowwater": "shallow"
-		}
+		terrainReplacements = {"random": "undefined", "death": "deathtrap", "shallowwater": "shallow"}
 		mobFlagReplacements = {
 			"any": "passive_mob",
 			"smob": "aggressive_mob",
@@ -139,17 +120,14 @@ class World(object):
 			"armourshop": "armour_shop",
 			"foodshop": "food_shop",
 			"petshop": "pet_shop",
-			"weaponshop": "weapon_shop"
+			"weaponshop": "weapon_shop",
 		}
-		loadFlagReplacements = {
-			"packhorse": "pack_horse",
-			"trainedhorse": "trained_horse"
-		}
+		loadFlagReplacements = {"packhorse": "pack_horse", "trainedhorse": "trained_horse"}
 		doorFlagReplacements = {
 			"noblock": "no_block",
 			"nobreak": "no_break",
 			"nopick": "no_pick",
-			"needkey": "need_key"
+			"needkey": "need_key",
 		}
 		for vnum, roomDict in db.items():
 			newRoom = roomdata.objects.Room(vnum)
@@ -250,9 +228,7 @@ class World(object):
 	def sortExits(self, exitsDict):
 		return sorted(
 			exitsDict.items(),
-			key=lambda direction: (
-				DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS)
-			)
+			key=lambda direction: (DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS)),
 		)
 
 	def isBidirectional(self, exitObj):
@@ -291,7 +267,7 @@ class World(object):
 				continue
 			differenceX, differenceY, differenceZ = obj.x - x, obj.y - y, obj.z - z
 			if abs(differenceX) <= radiusX and abs(differenceY) <= radiusY and abs(differenceZ) <= radiusZ:
-				yield(vnum, obj, differenceX, differenceY, differenceZ)
+				yield (vnum, obj, differenceX, differenceY, differenceZ)
 
 	def getNeighborsFromRoom(self, start=None, radius=1):
 		"""A generator which yields all rooms in the vicinity of a room object.
@@ -313,7 +289,7 @@ class World(object):
 				and abs(differenceZ) <= radiusZ
 				and obj is not start
 			):
-				yield(vnum, obj, differenceX, differenceY, differenceZ)
+				yield (vnum, obj, differenceX, differenceY, differenceZ)
 
 	def getVnum(self, roomObj=None):
 		result = None
@@ -412,11 +388,10 @@ class World(object):
 			"exitFlags",
 			"doorFlags",
 			"to",
-			"door"
+			"door",
 		)
 		kwArgs = {
-			key: value.strip().lower() for key, value in kwArgs.items()
-			if key.strip() in validArgs and value.strip()
+			key: value.strip().lower() for key, value in kwArgs.items() if key.strip() in validArgs and value.strip()
 		}
 		results = []
 		if not kwArgs:
@@ -456,14 +431,16 @@ class World(object):
 		return "\n".join(
 			findFormat.format(
 				attribute=", ".join(
-					exitDir + ": " + exitObj.door for exitDir, exitObj in roomObj.exits.items()
+					exitDir + ": " + exitObj.door
+					for exitDir, exitObj in roomObj.exits.items()
 					if args[0].strip() in exitObj.door
 				),
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj)
-			) for roomObj in reversed(results[:20])
+				**vars(roomObj),
+			)
+			for roomObj in reversed(results[:20])
 		)
 
 	def fdynamic(self, findFormat, *args):
@@ -480,8 +457,9 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj)
-			) for roomObj in reversed(results[:20])
+				**vars(roomObj),
+			)
+			for roomObj in reversed(results[:20])
 		)
 
 	def flabel(self, findFormat, *args):
@@ -492,7 +470,8 @@ class World(object):
 		else:
 			text = args[0].strip().lower()
 		results = {
-			self.rooms[vnum] for label, vnum in self.labels.items()
+			self.rooms[vnum]
+			for label, vnum in self.labels.items()
 			if text and text in label.strip().lower() or not text
 		}
 		if not results:
@@ -504,8 +483,9 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj)
-			) for roomObj in reversed(sorted(results, key=lambda r: r.manhattanDistance(currentRoom))[:20])
+				**vars(roomObj),
+			)
+			for roomObj in reversed(sorted(results, key=lambda r: r.manhattanDistance(currentRoom))[:20])
 		)
 
 	def fname(self, findFormat, *args):
@@ -522,8 +502,9 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj)
-			) for roomObj in reversed(results[:20])
+				**vars(roomObj),
+			)
+			for roomObj in reversed(results[:20])
 		)
 
 	def fnote(self, findFormat, *args):
@@ -540,8 +521,9 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj)
-			) for roomObj in reversed(results[:20])
+				**vars(roomObj),
+			)
+			for roomObj in reversed(results[:20])
 		)
 
 	def rnote(self, *args):
@@ -738,9 +720,7 @@ class World(object):
 		if direction not in self.currentRoom.exits:
 			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
-			return (
-				f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
-			)
+			return f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 				self.currentRoom.exits[direction].exitFlags.remove(matchDict["flag"])
@@ -770,9 +750,7 @@ class World(object):
 		if direction not in self.currentRoom.exits:
 			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
-			return (
-				f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
-			)
+			return f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 				self.currentRoom.exits[direction].doorFlags.remove(matchDict["flag"])
@@ -849,8 +827,7 @@ class World(object):
 					or self.rooms[matchDict["vnum"]].exits[reversedDirection].to == "undefined"
 				):
 					self.rooms[matchDict["vnum"]].exits[reversedDirection] = self.getNewExit(
-						reversedDirection,
-						self.currentRoom.vnum
+						reversedDirection, self.currentRoom.vnum
 					)
 					self.GUIRefresh()
 					return (
@@ -901,7 +878,7 @@ class World(object):
 		else:
 			match = re.match(
 				r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$",
-				args[0].strip().lower()
+				args[0].strip().lower(),
 			)
 		if not match:
 			self.output(
@@ -947,7 +924,8 @@ class World(object):
 		elif matchDict["action"] == "search":
 			results = sorted(
 				f"{name} - {self.rooms[vnum].name if vnum in self.rooms else 'VNum not in map'} - {vnum}"
-				for name, vnum in self.labels.items() if label in name
+				for name, vnum in self.labels.items()
+				if label in name
 			)
 			if not results:
 				self.output("Nothing found.")
@@ -998,6 +976,7 @@ class World(object):
 
 	def createSpeedWalk(self, directionsList):
 		"""Given a list of directions, return a string of the directions in standard speed walk format"""
+
 		def compressDirections(directionsBuffer):
 			speedWalkDirs = []
 			for direction, group in itertools.groupby(directionsBuffer):
@@ -1007,6 +986,7 @@ class World(object):
 				else:
 					speedWalkDirs.append(f"{lenGroup}{direction[0]}")
 			return speedWalkDirs
+
 		numDirections = len([d for d in directionsList if d in DIRECTIONS])
 		result = []
 		directionsBuffer = []
@@ -1052,10 +1032,7 @@ class World(object):
 			self.output("You are already there!")
 			return []
 		if flags:
-			avoidTerrains = frozenset(
-				terrain for terrain in roomdata.objects.TERRAIN_COSTS
-				if f"no{terrain}" in flags
-			)
+			avoidTerrains = frozenset(terrain for terrain in roomdata.objects.TERRAIN_COSTS if f"no{terrain}" in flags)
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
@@ -1070,12 +1047,7 @@ class World(object):
 		return self._pathFind(origin, isDestinationFunc, exitIgnoreFunc, exitCostFunc, exitDestinationFunc)
 
 	def _pathFind(
-			self,
-			origin,
-			isDestinationFunc=None,
-			exitIgnoreFunc=None,
-			exitCostFunc=None,
-			exitDestinationFunc=None
+		self, origin, isDestinationFunc=None, exitIgnoreFunc=None, exitCostFunc=None, exitDestinationFunc=None
 	):
 		# Each key-value pare that gets added to this dict will be a parent room and child room respectively.
 		parents = {origin: origin}
@@ -1106,9 +1078,7 @@ class World(object):
 				# The neighbor room cost should be the sum of all movement costs
 				# to get to the neighbor room from the origin room.
 				neighborRoomCost = (
-					currentRoomCost
-					+ neighborRoomObj.cost
-					+ exitCostFunc(exitObj, neighborRoomObj) if exitCostFunc else 0
+					currentRoomCost + neighborRoomObj.cost + exitCostFunc(exitObj, neighborRoomObj) if exitCostFunc else 0
 				)
 				# We're only interested in the neighbor room if it hasn't been encountered yet,
 				# or if the cost of moving from the current room to the neighbor room is less than
@@ -1141,9 +1111,8 @@ class World(object):
 			):
 				results.append("ride")
 			results.append(direction)
-			if (
-				currentRoomObj.exits[direction].to in LEAD_BEFORE_ENTERING_VNUMS
-				and (currentRoomObj.vnum not in LEAD_BEFORE_ENTERING_VNUMS or currentRoomObj is origin)
+			if currentRoomObj.exits[direction].to in LEAD_BEFORE_ENTERING_VNUMS and (
+				currentRoomObj.vnum not in LEAD_BEFORE_ENTERING_VNUMS or currentRoomObj is origin
 			):
 				results.append("lead")
 			if "door" in currentRoomObj.exits[direction].exitFlags:

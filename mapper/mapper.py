@@ -23,7 +23,7 @@ from .clock import (
 	NIGHT_REGEX,
 	MONTHS,
 	timeToEpoch,
-	Clock
+	Clock,
 )
 from .config import Config, config_lock
 from .delays import OneShot
@@ -34,7 +34,7 @@ from .world import (
 	LIGHT_SYMBOLS,
 	TERRAIN_SYMBOLS,
 	RUN_DESTINATION_REGEX,
-	World
+	World,
 )
 from .utils import formatDocString, stripAnsi, decodeBytes, regexFuzzy, simplified, escapeXML, escapeIAC
 
@@ -73,7 +73,7 @@ MOVEMENT_FORCED_REGEX = re.compile(
 			(
 				r"Stepping on the lizard corpses\, you use some depressions in the wall for support\, "
 				+ r"push the muddy ceiling apart and climb out of the cave\."
-			)
+			),
 		]
 	)
 )
@@ -118,7 +118,7 @@ MOVEMENT_PREVENTED_REGEX = re.compile(
 					r"A (?:pony|dales-pony|horse|warhorse|pack horse|trained horse|"
 					+ r"horse of the Rohirrim|brown donkey|mountain mule|hungry warg|brown wolf)"
 					+ r"(?: \(\w+\))? (?:is too exhausted|doesn't want you riding (?:him|her|it) anymore)\."
-				)
+				),
 			]
 		)
 	)
@@ -134,15 +134,15 @@ logger = logging.getLogger(__name__)
 
 class Mapper(threading.Thread, World):
 	def __init__(
-			self,
-			playerSocket,
-			gameSocket,
-			outputFormat,
-			interface,
-			promptTerminator,
-			gagPrompts,
-			findFormat,
-			isEmulatingOffline,
+		self,
+		playerSocket,
+		gameSocket,
+		outputFormat,
+		interface,
+		promptTerminator,
+		gagPrompts,
+		findFormat,
+		isEmulatingOffline,
 	):
 		threading.Thread.__init__(self)
 		self.name = "Mapper"
@@ -164,19 +164,22 @@ class Mapper(threading.Thread, World):
 		self.autoWalk = False
 		self.autoWalkDirections = []
 		self.userCommands = [
-			func[len("user_command_"):] for func in dir(self)
+			func[len("user_command_") :]
+			for func in dir(self)
 			if func.startswith("user_command_") and callable(getattr(self, func))
 		]
 		self.mudEventHandlers = {}
 		for legacyHandler in [
-			func[len("mud_event_"):] for func in dir(self)
+			func[len("mud_event_") :]
+			for func in dir(self)
 			if func.startswith("mud_event_") and callable(getattr(self, func))
 		]:
 			self.registerMudEventHandler(legacyHandler, getattr(self, "mud_event_" + legacyHandler))
 		self.unknownMudEvents = []
 		ExitsCleaner(self, "exits")
 		self.emulationCommands = [
-			func[len("emulation_command_"):] for func in dir(self)
+			func[len("emulation_command_") :]
+			for func in dir(self)
 			if func.startswith("emulation_command_") and callable(getattr(self, func))
 		]
 		priorityCommands = [  # commands that should have priority when matching user input to an emulation command
@@ -186,7 +189,7 @@ class Mapper(threading.Thread, World):
 			key=lambda command: (
 				# Sort emulation commands with prioritized commands at the top, alphabetically otherwise.
 				priorityCommands.index(command) if command in priorityCommands else len(priorityCommands),
-				command
+				command,
 			)
 		)
 		self.isEmulatingBriefMode = True
@@ -213,7 +216,7 @@ class Mapper(threading.Thread, World):
 			promptTerminator=promptTerminator,
 			isEmulatingOffline=isEmulatingOffline,
 			mapperCommands=[func.encode("us-ascii") for func in self.userCommands],
-			eventCaller=self.queue.put
+			eventCaller=self.queue.put,
 		)
 		self.proxy.connect()
 		World.__init__(self, interface=self.interface)
@@ -323,17 +326,17 @@ class Mapper(threading.Thread, World):
 	def emulation_command_help(self, *args):
 		"""Shows documentation for mapper's emulation commands."""
 		helpTexts = [
-			(funcName, getattr(self, "emulation_command_" + funcName).__doc__)
-			for funcName in self.emulationCommands
+			(funcName, getattr(self, "emulation_command_" + funcName).__doc__) for funcName in self.emulationCommands
 		]
 		documentedFuncs = [
-			(name, formatDocString(docString, prefix=" " * 8).strip()) for name, docString in helpTexts
+			(name, formatDocString(docString, prefix=" " * 8).strip())
+			for name, docString in helpTexts
 			if docString.strip()
 		]
 		undocumentedFuncs = [text for text in helpTexts if not text[1].strip()]
 		result = [
 			"The following commands allow you to emulate exploring the map without needing to move in game:",
-			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs)
+			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs),
 		]
 		if undocumentedFuncs:
 			result.append("The following commands have no documentation yet.")
@@ -343,9 +346,9 @@ class Mapper(threading.Thread, World):
 						", ".join(helpText[0] for helpText in undocumentedFuncs),
 						width=79,
 						break_long_words=False,
-						break_on_hyphens=False
+						break_on_hyphens=False,
 					),
-					prefix="    "
+					prefix="    ",
 				)
 			)
 		self.output("\n".join(result))
@@ -638,18 +641,18 @@ class Mapper(threading.Thread, World):
 	def user_command_maphelp(self, *args):
 		"""Shows documentation for mapper commands"""
 		helpTexts = [
-			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "")
-			for funcName in self.userCommands
+			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "") for funcName in self.userCommands
 		]
 		documentedFuncs = [
-			(name, formatDocString(docString, prefix=" " * 8).strip()) for name, docString in helpTexts
+			(name, formatDocString(docString, prefix=" " * 8).strip())
+			for name, docString in helpTexts
 			if docString.strip()
 		]
 		undocumentedFuncs = [text for text in helpTexts if not text[1].strip()]
 		result = [
 			"Mapper Commands",
 			"The following commands are used for viewing and editing map data:",
-			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs)
+			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs),
 		]
 		if undocumentedFuncs:
 			result.append("Undocumented Commands:")
@@ -659,9 +662,9 @@ class Mapper(threading.Thread, World):
 						", ".join(helpText[0] for helpText in undocumentedFuncs),
 						width=79,
 						break_long_words=False,
-						break_on_hyphens=False
+						break_on_hyphens=False,
 					),
-					prefix="    "
+					prefix="    ",
 				)
 			)
 		self.output("\n".join(result))
@@ -714,9 +717,7 @@ class Mapper(threading.Thread, World):
 			elif len(nameVnums) == 1:
 				self.currentRoom = self.rooms[nameVnums[0]]
 				self.isSynced = True
-				self.sendPlayer(
-					f"Name-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}"
-				)
+				self.sendPlayer(f"Name-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
 			else:
 				self.sendPlayer("More than one room in the database matches current room. Unable to sync.")
 		return self.isSynced
@@ -790,12 +791,11 @@ class Mapper(threading.Thread, World):
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
 				if self.autoLinking:
 					vnums = [
-						vnum for vnum, roomObj in self.rooms.items()
+						vnum
+						for vnum, roomObj in self.rooms.items()
 						if (
-							self.coordinatesAddDirection(
-								(self.currentRoom.x, self.currentRoom.y, self.currentRoom.z),
-								direction
-							) == (roomObj.x, roomObj.y, roomObj.z)
+							self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction)
+							== (roomObj.x, roomObj.y, roomObj.z)
 						)
 					]
 					if (
@@ -838,8 +838,7 @@ class Mapper(threading.Thread, World):
 		newRoom.desc = description
 		newRoom.dynamicDesc = dynamic
 		newRoom.x, newRoom.y, newRoom.z = self.coordinatesAddDirection(
-			(self.currentRoom.x, self.currentRoom.y, self.currentRoom.z),
-			movement
+			(self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), movement
 		)
 		self.rooms[vnum] = newRoom
 		if movement not in self.currentRoom.exits:
@@ -983,8 +982,7 @@ class Mapper(threading.Thread, World):
 				self.autoMapping
 				and self.movement in DIRECTIONS
 				and (
-					self.movement not in self.currentRoom.exits
-					or self.currentRoom.exits[self.movement].to not in self.rooms
+					self.movement not in self.currentRoom.exits or self.currentRoom.exits[self.movement].to not in self.rooms
 				)
 			):
 				# Player has moved in a direction that either doesn't exist in the database
@@ -1022,8 +1020,7 @@ class Mapper(threading.Thread, World):
 		if self.autoMapping and self.isSynced and self.moved:
 			if self.addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in exits:
 				self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(
-					direction=REVERSE_DIRECTIONS[self.moved],
-					to=self.addedNewRoomFrom
+					direction=REVERSE_DIRECTIONS[self.moved], to=self.addedNewRoomFrom
 				)
 			self.updateExitFlags(exits)
 		self.addedNewRoomFrom = None
@@ -1036,7 +1033,7 @@ class Mapper(threading.Thread, World):
 			self.user_command_emu(decodeBytes(data))
 		else:
 			userCommand = data.split()[0]
-			args = data[len(userCommand):].strip()
+			args = data[len(userCommand) :].strip()
 			getattr(self, f"user_command_{decodeBytes(userCommand)}")(decodeBytes(args))
 
 	def handleMudEvent(self, event, data):

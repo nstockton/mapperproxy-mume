@@ -113,13 +113,7 @@ class TestMPIProtocol(TestCase):
 	@mock.patch("mapper.protocols.mpi.input", return_value="")
 	@mock.patch("mapper.protocols.mpi.print")
 	def testMPIEdit(
-			self,
-			mockPrint,
-			mockInput,
-			mockOsPath,
-			MockNamedTemporaryFile,
-			mockSubprocess,
-			mockRemoveFile
+		self, mockPrint, mockInput, mockOsPath, MockNamedTemporaryFile, mockSubprocess, mockRemoveFile
 	):
 		session, description = b"12345" + LF, b"description" + LF
 		data = b"M" + session + description + BODY

@@ -18,15 +18,10 @@ import textwrap
 ANSI_COLOR_REGEX = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
-ESCAPE_XML_STR_ENTITIES = (
-	("&", "&amp;"),
-	("<", "&lt;"),
-	(">", "&gt;")
-)
+ESCAPE_XML_STR_ENTITIES = (("&", "&amp;"), ("<", "&lt;"), (">", "&gt;"))
 UNESCAPE_XML_STR_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_STR_ENTITIES)
 ESCAPE_XML_BYTES_ENTITIES = tuple(
-	(first.encode("us-ascii"), second.encode("us-ascii"))
-	for first, second in ESCAPE_XML_STR_ENTITIES
+	(first.encode("us-ascii"), second.encode("us-ascii")) for first, second in ESCAPE_XML_STR_ENTITIES
 )
 UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES)
 
@@ -34,19 +29,15 @@ UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_
 def iterBytes(data):
 	"""Yield each byte in a bytes-like object."""
 	for i in range(len(data)):
-		yield data[i:i + 1]
+		yield data[i : i + 1]
 
 
 def minIndent(text):
 	"""Return the white space used to indent the line with the least amount of indention."""
 	return min(
-		(
-			INDENT_REGEX.search(line).group("indent")
-			for line in text.splitlines()
-			if line.strip("\r\n")
-		),
+		(INDENT_REGEX.search(line).group("indent") for line in text.splitlines() if line.strip("\r\n")),
 		default="",
-		key=len
+		key=len,
 	)
 
 
@@ -127,11 +118,11 @@ def padList(lst, padding, count, fixed=False, left=False):
 	if left and fixed:
 		return ([padding] * (count - len(lst)) + lst)[:count]
 	elif left:
-		return ([padding] * (count - len(lst)) + lst)
+		return [padding] * (count - len(lst)) + lst
 	elif fixed:
 		return (lst + [padding] * (count - len(lst)))[:count]
 	else:
-		return (lst + [padding] * (count - len(lst)))
+		return lst + [padding] * (count - len(lst))
 
 
 def roundHalfAwayFromZero(n, decimals=0):
@@ -143,10 +134,7 @@ def roundHalfAwayFromZero(n, decimals=0):
 def humanSort(listToSort):
 	return sorted(
 		listToSort,
-		key=lambda item: [
-			int(text) if text.isdigit() else text
-			for text in re.split(r"(\d+)", item, re.UNICODE)
-		]
+		key=lambda item: [int(text) if text.isdigit() else text for text in re.split(r"(\d+)", item, re.UNICODE)],
 	)
 
 

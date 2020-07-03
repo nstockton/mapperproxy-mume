@@ -16,6 +16,7 @@ from mapper.protocols.xml import LF, MPI_INIT, XMLProtocol
 class TestXMLProtocol(TestCase):
 	def setUp(self):
 		name = b"\x1b[34mLower Flet\x1b[0m"
+		# fmt: off
 		description = (
 			b"\x1b[35mBeing close to the ground, this white platform is not encircled by any rail.\x1b[0m" + LF
 			+ b"\x1b[35mInstead, beautiful draperies and tapestries hang from the many branches that\x1b[0m" + LF
@@ -52,6 +53,7 @@ class TestXMLProtocol(TestCase):
 			+ magic + LF
 			+ b"PROMPT:" + unescapeXML(prompt, True) + b":PROMPT"
 		)
+		# fmt: on
 		self.expectedEvents = [
 			self.createEvent("name", name),
 			self.createEvent("description", description),

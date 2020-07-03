@@ -30,10 +30,7 @@ class test_exitRegexp(unittest.TestCase):
 			m = exitRegexp.match(exit)
 			self.assertTrue(m, exit + " does not match the exitRegexp.")
 			dir = m.group("dir").lower()
-			self.assertTrue(
-				dir in DIRECTIONS,
-				dir + " is not a valid direction."
-			)
+			self.assertTrue(dir in DIRECTIONS, dir + " is not a valid direction.")
 
 	def test_exitRegexp_doesNotMatch_exitsThatAreOpenOrBrokenDoors_or_autoexits(self):
 		for exit in [
@@ -41,8 +38,7 @@ class test_exitRegexp(unittest.TestCase):
 			"  (West)  - (door) a room",
 			"None",
 			"Exits: down.",
-			"Exits: north, east, south, west."
-			"Exits: none."
+			"Exits: north, east, south, west." "Exits: none.",
 		]:
 			m = exitRegexp.match(exit)
 			self.assertFalse(m, exit + " should not match the exitRegexp, but it does.")

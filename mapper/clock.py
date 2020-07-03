@@ -38,6 +38,7 @@ MINUTES_PER_YEAR = MINUTES_PER_DAY * DAYS_PER_YEAR
 DAYS_PER_MOON_CYCLE = 24
 HOURS_PER_MOON_CYCLE = HOURS_PER_DAY * DAYS_PER_MOON_CYCLE
 
+# fmt: off
 MONTHS = [
 	{
 		"name": "January",
@@ -45,7 +46,7 @@ MONTHS = [
 		"westron": "Solmath",
 		"dawn": 9,
 		"dusk": 17,
-		"season": "Winter"
+		"season": "Winter",
 	},
 	{
 		"name": "February",
@@ -53,7 +54,7 @@ MONTHS = [
 		"westron": "Rethe",
 		"dawn": 8,
 		"dusk": 18,
-		"season": "Late-Winter"
+		"season": "Late-Winter",
 	},
 	{
 		"name": "March",
@@ -61,7 +62,7 @@ MONTHS = [
 		"westron": "Astron",
 		"dawn": 7,
 		"dusk": 19,
-		"season": "Early-Spring"
+		"season": "Early-Spring",
 	},
 	{
 		"name": "April",
@@ -69,7 +70,7 @@ MONTHS = [
 		"westron": "Thrimidge",
 		"dawn": 7,
 		"dusk": 20,
-		"season": "Spring"
+		"season": "Spring",
 	},
 	{
 		"name": "May",
@@ -77,7 +78,7 @@ MONTHS = [
 		"westron": "Forelithe",
 		"dawn": 6,
 		"dusk": 20,
-		"season": "Late-Spring"
+		"season": "Late-Spring",
 	},
 	{
 		"name": "June",
@@ -85,7 +86,7 @@ MONTHS = [
 		"westron": "Afterlithe",
 		"dawn": 5,
 		"dusk": 21,
-		"season": "Early-Summer"
+		"season": "Early-Summer",
 	},
 	{
 		"name": "July",
@@ -93,7 +94,7 @@ MONTHS = [
 		"westron": "Wedmath",
 		"dawn": 4,
 		"dusk": 22,
-		"season": "Summer"
+		"season": "Summer",
 	},
 	{
 		"name": "August",
@@ -101,7 +102,7 @@ MONTHS = [
 		"westron": "Halimath",
 		"dawn": 5,
 		"dusk": 21,
-		"season": "Late-Summer"
+		"season": "Late-Summer",
 	},
 	{
 		"name": "September",
@@ -109,7 +110,7 @@ MONTHS = [
 		"westron": "Winterfilth",
 		"dawn": 6,
 		"dusk": 20,
-		"season": "Early-Autumn"
+		"season": "Early-Autumn",
 	},
 	{
 		"name": "October",
@@ -117,7 +118,7 @@ MONTHS = [
 		"westron": "Blotmath",
 		"dawn": 7,
 		"dusk": 20,
-		"season": "Autumn"
+		"season": "Autumn",
 	},
 	{
 		"name": "November",
@@ -125,7 +126,7 @@ MONTHS = [
 		"westron": "Foreyule",
 		"dawn": 7,
 		"dusk": 19,
-		"season": "Late-Autumn"
+		"season": "Late-Autumn",
 	},
 	{
 		"name": "December",
@@ -133,9 +134,10 @@ MONTHS = [
 		"westron": "Afteryule",
 		"dawn": 8,
 		"dusk": 18,
-		"season": "Early-Winter"
-	}
+		"season": "Early-Winter",
+	},
 ]
+# fmt: on
 
 WEEKDAYS = [
 	{"name": "Sunday", "sindarin": "Oranor", "westron": "Sunday"},
@@ -144,17 +146,17 @@ WEEKDAYS = [
 	{"name": "Wednesday", "sindarin": "Ormenel", "westron": "Hevensday"},
 	{"name": "Thursday", "sindarin": "Orbelain", "westron": "Mersday"},
 	{"name": "Friday", "sindarin": "Oraearon", "westron": "Highday"},
-	{"name": "Saturday", "sindarin": "Orgilion", "westron": "Sterday"}
+	{"name": "Saturday", "sindarin": "Orgilion", "westron": "Sterday"},
 ]
 
 
 def timeToEpoch(year, month, day, hour, minutes):
 	"""Returns the epoch for the given game time."""
 	epoch = int(time.time())
-	epoch -= ((year - FIRST_YEAR) * MINUTES_PER_YEAR)
-	epoch -= (month * MINUTES_PER_MONTH)
-	epoch -= ((day - 1) * MINUTES_PER_DAY)
-	epoch -= (hour * MINUTES_PER_HOUR)
+	epoch -= (year - FIRST_YEAR) * MINUTES_PER_YEAR
+	epoch -= month * MINUTES_PER_MONTH
+	epoch -= (day - 1) * MINUTES_PER_DAY
+	epoch -= hour * MINUTES_PER_HOUR
 	epoch -= minutes
 	return epoch
 
@@ -229,15 +231,15 @@ class Clock(object):
 		output.append(
 			f"Time left until {nextState} is less than {untilNextState} tick{'s' if untilNextState != 1 else '!'}"
 		)
-		nextSeasonInGameDays = ((((month + 1) // 3 * 3 + 3) - (month + 1) - 1) * DAYS_PER_MONTH)
+		nextSeasonInGameDays = (((month + 1) // 3 * 3 + 3) - (month + 1) - 1) * DAYS_PER_MONTH
 		nextSeasonInGameDays += (DAYS_PER_MONTH - day) + (1 - (hour // HOURS_PER_DAY))
-		nextSeasonInRlHours = (nextSeasonInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR)
+		nextSeasonInRlHours = nextSeasonInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR
 		output.append(
 			f"{MONTHS[month]['season'][-6:]} ends in "
 			+ f"{nextSeasonInGameDays} mume day{'s' if nextSeasonInGameDays != 1 else ''} or "
 			+ f"{nextSeasonInRlHours} real-life hour{'s' if nextSeasonInRlHours != 1 else ''}."
 		)
-		nextWinterInGameDays = ((MONTHS_PER_YEAR - (month + 1) % 12 - 1) * DAYS_PER_MONTH)
+		nextWinterInGameDays = (MONTHS_PER_YEAR - (month + 1) % 12 - 1) * DAYS_PER_MONTH
 		nextWinterInGameDays += (DAYS_PER_MONTH - day) + (1 - hour // HOURS_PER_DAY)
 		nextWinterInRlDays = nextWinterInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR // HOURS_PER_DAY
 		nextWinterInRlHours = (nextWinterInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR) % HOURS_PER_DAY

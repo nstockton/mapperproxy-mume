@@ -9,6 +9,7 @@ from collections import namedtuple
 from itertools import chain
 import logging
 import math
+
 try:
 	from Queue import Empty as QueueEmpty
 except ImportError:
@@ -16,6 +17,7 @@ except ImportError:
 
 import pyglet
 from pyglet.window import key
+
 try:
 	from speechlight import Speech
 except ImportError:
@@ -29,12 +31,7 @@ from ..world import DIRECTIONS
 FPS = 30
 DIRECTIONS_2D = set(DIRECTIONS[:-2])
 
-DIRECTIONS_VEC2D = {
-	"north": Vec2d(0, 1),
-	"east": Vec2d(1, 0),
-	"south": Vec2d(0, -1),
-	"west": Vec2d(-1, 0)
-}
+DIRECTIONS_VEC2D = {"north": Vec2d(0, 1), "east": Vec2d(1, 0), "south": Vec2d(0, -1), "west": Vec2d(-1, 0)}
 
 KEYS = {
 	(key.ESCAPE, 0): "reset_zoom",
@@ -44,7 +41,7 @@ KEYS = {
 	(key.DOWN, 0): "adjust_gap",
 	(key.F11, 0): "toggle_fullscreen",
 	(key.F12, 0): "toggle_blink",
-	(key.SPACE, 0): "toggle_continuous_view"
+	(key.SPACE, 0): "toggle_continuous_view",
 }
 
 TERRAIN_COLORS = {
@@ -64,7 +61,7 @@ TERRAIN_COLORS = {
 	"tunnel": (153, 50, 204, 255),
 	"underwater": (48, 8, 120, 255),
 	"undefined": (24, 16, 32, 255),
-	"water": (32, 64, 192, 255)
+	"water": (32, 64, 192, 255),
 }
 
 pyglet.options["debug_gl"] = False
@@ -74,6 +71,7 @@ logger = logging.getLogger(__name__)
 class Color(namedtuple("Color", ["r", "g", "b", "a"])):
 	"""Color tuple used by the debug drawing API.
 	"""
+
 	__slots__ = ()
 
 	def as_int(self):
@@ -303,7 +301,7 @@ class Window(pyglet.window.Window):
 		return (
 			int(math.ceil(self.width / self.size / space / 2)),
 			int(math.ceil(self.height / self.size / space / 2)),
-			1
+			1,
 		)
 
 	def room_offset_from_pixels(self, x, y, z=None):
@@ -311,10 +309,7 @@ class Window(pyglet.window.Window):
 		Given a pair of X-Y coordinates in pixels, return the
 		offset in room coordinates from the center room.
 		"""
-		return (
-			int((x - self.cx + self.size / 2) // self.size),
-			int((y - self.cy + self.size / 2) // self.size)
-		)
+		return (int((x - self.cx + self.size / 2) // self.size), int((y - self.cy + self.size / 2) // self.size))
 
 	def message(self, text):
 		self.say(text)
@@ -384,20 +379,10 @@ class Window(pyglet.window.Window):
 			del self.center_mark[:]
 		self.redraw()
 		self.center_mark.append(
-			self.draw_circle(
-				self.cp,
-				self.size / 2.0 / 8 * 3,
-				Color(0, 0, 0, 255),
-				self.groups[4]
-			)
+			self.draw_circle(self.cp, self.size / 2.0 / 8 * 3, Color(0, 0, 0, 255), self.groups[4])
 		)
 		self.center_mark.append(
-			self.draw_circle(
-				self.cp,
-				self.size / 2.0 / 8,
-				Color(255, 255, 255, 255),
-				self.groups[5]
-			)
+			self.draw_circle(self.cp, self.size / 2.0 / 8, Color(255, 255, 255, 255), self.groups[5])
 		)
 		logger.debug("GUI refreshed.")
 
@@ -533,11 +518,7 @@ class Window(pyglet.window.Window):
 		vertices = self.circle_vertices(cp, radius)
 		count = len(vertices) // 2
 		return self.batch.add(
-			count,
-			pyglet.gl.GL_TRIANGLE_STRIP,
-			group,
-			("v2f", vertices),
-			("c4B", color.as_int() * count)
+			count, pyglet.gl.GL_TRIANGLE_STRIP, group, ("v2f", vertices), ("c4B", color.as_int() * count)
 		)
 
 	def draw_segment(self, a, b, color, group=None):
@@ -545,13 +526,7 @@ class Window(pyglet.window.Window):
 		vecB = Vec2d(b)
 		vertices = (int(vecA.x), int(vecA.y), int(vecB.x), int(vecB.y))
 		count = len(vertices) // 2
-		return self.batch.add(
-			count,
-			pyglet.gl.GL_LINES,
-			group,
-			("v2i", vertices),
-			("c4B", color.as_int() * count)
-		)
+		return self.batch.add(count, pyglet.gl.GL_LINES, group, ("v2i", vertices), ("c4B", color.as_int() * count))
 
 	def fat_segment_vertices(self, a, b, radius):
 		vecA = Vec2d(a)
@@ -559,23 +534,14 @@ class Window(pyglet.window.Window):
 		radius = max(radius, 1)
 		tangent = -math.atan2(*(vecB - vecA))
 		delta = (math.cos(tangent) * radius, math.sin(tangent) * radius)
-		points = [
-			vecA + delta,
-			vecA - delta,
-			vecB + delta,
-			vecB - delta
-		]
+		points = [vecA + delta, vecA - delta, vecB + delta, vecB - delta]
 		return list(chain.from_iterable([*points[:3], *points[1:]]))
 
 	def draw_fat_segment(self, a, b, radius, color, group=None):
 		vertices = self.fat_segment_vertices(a, b, radius)
 		count = len(vertices) // 2
 		return self.batch.add(
-			count,
-			pyglet.gl.GL_TRIANGLES,
-			group,
-			("v2f", vertices),
-			("c4B", color.as_int() * count)
+			count, pyglet.gl.GL_TRIANGLES, group, ("v2f", vertices), ("c4B", color.as_int() * count)
 		)
 
 	def corners_2_vertices(self, points):
@@ -586,20 +552,14 @@ class Window(pyglet.window.Window):
 		mode = pyglet.gl.GL_TRIANGLE_STRIP
 		vertices = self.corners_2_vertices(points)
 		count = len(vertices) // 2
-		return self.batch.add(
-			count,
-			mode,
-			group,
-			("v2f", vertices),
-			("c4B", color.as_int() * count)
-		)
+		return self.batch.add(count, mode, group, ("v2f", vertices), ("c4B", color.as_int() * count))
 
 	def square_vertices(self, cp, radius):
 		return [
 			cp - (radius, radius),  # Bottom left.
 			cp - (radius, -radius),  # Top left.
 			cp + (radius, radius),  # Top right.
-			cp + (radius, -radius)  # Bottom right.
+			cp + (radius, -radius),  # Bottom right.
 		]
 
 	def equilateral_triangle(self, cp, radius, angleDegrees):
@@ -622,14 +582,14 @@ class Window(pyglet.window.Window):
 		b, c, angle = self.arrow_points(a, d, radius)
 		return (
 			self.fat_segment_vertices(a, b, radius),
-			self.corners_2_vertices(self.equilateral_triangle(c, radius * 3, angle))
+			self.corners_2_vertices(self.equilateral_triangle(c, radius * 3, angle)),
 		)
 
 	def draw_arrow(self, a, d, radius, color, group=None):
 		b, c, angle = self.arrow_points(a, d, radius)
 		return (
 			self.draw_fat_segment(a, b, radius, color, group=group),
-			self.draw_polygon(self.equilateral_triangle(c, radius * 3, angle), color, group=group)
+			self.draw_polygon(self.equilateral_triangle(c, radius * 3, angle), color, group=group),
 		)
 
 	def draw_room(self, room, cp, group=None):
@@ -641,11 +601,7 @@ class Window(pyglet.window.Window):
 		if group is None:
 			group = self.groups[0]
 		if room.vnum not in self.visible_rooms:
-			self.visible_rooms[room.vnum] = [
-				self.draw_polygon(vertices, color, group=group),
-				room,
-				cp
-			]
+			self.visible_rooms[room.vnum] = [self.draw_polygon(vertices, color, group=group), room, cp]
 		else:
 			roomShape = self.visible_rooms[room.vnum][0]
 			roomShape.vertices = self.corners_2_vertices(vertices)
@@ -704,7 +660,7 @@ class Window(pyglet.window.Window):
 					anchor_y="center",
 					color=exitColor2,
 					batch=self.batch,
-					group=self.groups[2]
+					group=self.groups[2],
 				)
 			else:  # Death
 				self.visible_exits[name] = pyglet.text.Label(
@@ -717,7 +673,7 @@ class Window(pyglet.window.Window):
 					anchor_y="center",
 					color=Color(255, 0, 0, 255),
 					batch=self.batch,
-					group=self.groups[2]
+					group=self.groups[2],
 				)
 		else:  # one-way, random, etc
 			vec = newCP - cp
@@ -753,13 +709,7 @@ class Window(pyglet.window.Window):
 			vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
 			vl.colors = color * (len(vl.colors) // 4)
 		else:
-			self.visible_exits[name] = self.draw_fat_segment(
-				a,
-				b,
-				self.size / radius,
-				color,
-				group=self.groups[2]
-			)
+			self.visible_exits[name] = self.draw_fat_segment(a, b, self.size / radius, color, group=self.groups[2])
 
 	def exits2d_tiled(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
 		directionVector = DIRECTIONS_VEC2D.get(direction, None)
@@ -772,11 +722,7 @@ class Window(pyglet.window.Window):
 				vl.vertices = vs
 			else:
 				self.visible_exits[name] = self.draw_fat_segment(
-					a,
-					b,
-					self.size / radius,
-					exitColor1,
-					group=self.groups[2]
+					a, b, self.size / radius, exitColor1, group=self.groups[2]
 				)
 		elif exit.to in ("undefined", "death"):
 			newCP = cp + directionVector * (self.size * 0.75)
@@ -794,7 +740,7 @@ class Window(pyglet.window.Window):
 					anchor_y="center",
 					color=exitColor1,
 					batch=self.batch,
-					group=self.groups[2]
+					group=self.groups[2],
 				)
 			else:  # Death
 				self.visible_exits[name] = pyglet.text.Label(
@@ -807,7 +753,7 @@ class Window(pyglet.window.Window):
 					anchor_y="center",
 					color=Color(255, 0, 0, 255),
 					batch=self.batch,
-					group=self.groups[2]
+					group=self.groups[2],
 				)
 		else:  # One-way, random, etc.
 			color = exitColor1
@@ -899,10 +845,10 @@ class Window(pyglet.window.Window):
 					(
 						self.cp - (self.size / 2.0),
 						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color
+						self.current_room_mark_color,
 					),
-					{"group": self.groups[5]}
-				)
+					{"group": self.groups[5]},
+				),
 			)
 		)
 		current_room_markers.append(
@@ -913,10 +859,10 @@ class Window(pyglet.window.Window):
 					(
 						self.cp - (self.size / 2.0, -self.size / 2.0),
 						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color
+						self.current_room_mark_color,
 					),
-					{"group": self.groups[5]}
-				)
+					{"group": self.groups[5]},
+				),
 			)
 		)
 		current_room_markers.append(
@@ -927,10 +873,10 @@ class Window(pyglet.window.Window):
 					(
 						self.cp + (self.size / 2.0),
 						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color
+						self.current_room_mark_color,
 					),
-					{"group": self.groups[5]}
-				)
+					{"group": self.groups[5]},
+				),
 			)
 		)
 		current_room_markers.append(
@@ -941,10 +887,10 @@ class Window(pyglet.window.Window):
 					(
 						self.cp + (self.size / 2.0, -self.size / 2.0),
 						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color
+						self.current_room_mark_color,
 					),
-					{"group": self.groups[5]}
-				)
+					{"group": self.groups[5]},
+				),
 			)
 		)
 		self.blinkers["current_room_markers"] = tuple(current_room_markers)

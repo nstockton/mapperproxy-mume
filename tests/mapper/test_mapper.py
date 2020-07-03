@@ -92,7 +92,8 @@ class TestMapper_handleMudEvent(unittest.TestCase):
 	def setUp(self):
 		Mapper.loadRooms = Mock()  # to speed execution of tests
 		self.legacyHandlerNames = [
-			handlerName for handlerName in dir(Mapper)
+			handlerName
+			for handlerName in dir(Mapper)
 			if handlerName.startswith("mud_event_") and callable(getattr(Mapper, handlerName))
 		]
 		for handlerName in self.legacyHandlerNames:
@@ -110,7 +111,7 @@ class TestMapper_handleMudEvent(unittest.TestCase):
 		self.mapper.daemon = True  # this allows unittest to quit if the mapper thread does not close properly.
 
 	def test_legacyMudEventHandlers(self):
-		events = [handlerName[len("mud_event_"):] for handlerName in self.legacyHandlerNames]
+		events = [handlerName[len("mud_event_") :] for handlerName in self.legacyHandlerNames]
 		handlers = [getattr(self.mapper, handlerName) for handlerName in self.legacyHandlerNames]
 		for event, handler in zip(events, handlers):
 			sampleInput1 = b"Helol oje"

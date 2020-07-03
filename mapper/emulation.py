@@ -16,6 +16,7 @@ from .utils import page, getDirectoryPath
 
 class EmulatedWorld(World):
 	"""The main emulated world class"""
+
 	def __init__(self, interface, findFormat):
 		self.output("Welcome to Mume Map Emulation!")
 		self.output("Loading the world database.")
@@ -241,6 +242,7 @@ class EmulatedWorld(World):
 
 	def loadConfig(self):
 		"""Load the configuration file"""
+
 		def getConfig(fileName):
 			if os.path.exists(fileName):
 				if not os.path.isdir(fileName):
@@ -258,6 +260,7 @@ class EmulatedWorld(World):
 					return {}
 			else:
 				return {}
+
 		self.config.update(getConfig(self.sampleConfigFile))
 		self.config.update(getConfig(self.configFile))
 
@@ -269,12 +272,12 @@ class EmulatedWorld(World):
 	def parseInput(self, userInput):
 		"""Parse the user input"""
 		userCommands = [
-			func[len("user_command_"):] for func in dir(self)
+			func[len("user_command_") :]
+			for func in dir(self)
 			if not func.startswith("user_command_partial_") and func.startswith("user_command_")
 		]
 		userCommandsPartial = [
-			func[len("user_command_partial_"):] for func in dir(self)
-			if func.startswith("user_command_partial_")
+			func[len("user_command_partial_") :] for func in dir(self) if func.startswith("user_command_partial_")
 		]
 		match = re.match(r"^(?P<command>\S+)(?:\s+(?P<arguments>.*))?", userInput)
 		command = match.group("command")

@@ -203,14 +203,7 @@ class TelnetProtocol(BaseTelnetProtocol):
 	"""
 
 	states: AbstractSet[str] = frozenset(
-		(
-			"data",
-			"command",
-			"newline",
-			"negotiation",
-			"subnegotiation",
-			"subnegotiation-escaped",
-		)
+		("data", "command", "newline", "negotiation", "subnegotiation", "subnegotiation-escaped",)
 	)
 	"""Valid states for the state machine."""
 
@@ -503,9 +496,9 @@ class TelnetProtocol(BaseTelnetProtocol):
 			# Peer agreed to enable an option in response to our request.
 			state.him.enabled = True
 			state.him.negotiating = False
-			assert self.on_enableRemote(option), (
-				f"enableRemote must return True in this context (for option {option!r})"
-			)
+			assert self.on_enableRemote(
+				option
+			), f"enableRemote must return True in this context (for option {option!r})"
 		elif state.him.enabled and not state.him.negotiating:
 			# Peer is unilaterally offering to enable an already-enabled option.
 			# Ignore this.
@@ -513,9 +506,9 @@ class TelnetProtocol(BaseTelnetProtocol):
 		elif state.him.enabled and state.him.negotiating:
 			# This is a bogus state.  It is here for completeness.  It will
 			# never be entered.
-			assert False, (
-				f"him.enabled and him.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
-			)
+			assert (
+				False
+			), f"him.enabled and him.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
 
 	def on_wont(self, option: bytes) -> None:
 		"""
@@ -572,9 +565,9 @@ class TelnetProtocol(BaseTelnetProtocol):
 		elif state.us.enabled and state.us.negotiating:
 			# This is a bogus state.  It is here for completeness.  It will never be
 			# entered.
-			assert False, (
-				f"us.enabled and us.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
-			)
+			assert (
+				False
+			), f"us.enabled and us.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
 
 	def on_dont(self, option: bytes) -> None:
 		"""

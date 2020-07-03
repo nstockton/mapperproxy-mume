@@ -10,6 +10,7 @@
 *.spec text eol=crlf
 *.json.sample text eol=lf
 data/config.json.sample text eol=crlf
+*.toml text eol=crlf
 *.jpg -text
 *.png -text
 *.xcf -text
