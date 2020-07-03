@@ -9,10 +9,12 @@ from __future__ import annotations
 # Built-in Modules:
 import inspect
 import logging
-from typing import Callable, Sequence, Type
+from typing import Callable, Optional, Sequence, Type
 
 # Local Modules:
 from .base import Protocol
+from .telnet_constants import CR, LF, CR_LF, CR_NULL
+from ..utils import escapeIAC
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -86,13 +88,16 @@ class Manager(object):
 		elif data:
 			self._handlers[0].on_dataReceived(data)
 
-	def write(self, data: bytes) -> None:
+	def write(self, data: bytes, escape: Optional[bool] = False) -> None:
 		"""
 		Writes data to peer.
 
 		Args:
 			data: The bytes to be written.
+			escape: If true, escapes line endings and IAC characters.
 		"""
+		if escape:
+			data = escapeIAC(data).replace(CR_LF, LF).replace(CR_NULL, CR).replace(CR, CR_NULL).replace(LF, CR_LF)
 		if not self.isConnected or not self._handlers:
 			self._writeBuffer.append(data)
 		elif self._writeBuffer:

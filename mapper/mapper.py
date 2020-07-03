@@ -285,7 +285,7 @@ class Mapper(threading.Thread, World):
 		return None
 
 	def sendGame(self, msg):
-		self.proxy.game.send(msg.encode("utf-8") + b"\r\n")
+		self.proxy.game.write(msg.encode("utf-8") + b"\r\n", escape=True)
 		return None
 
 	def emulation_command_quit(self, *args):

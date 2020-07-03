@@ -365,18 +365,6 @@ class TelnetProtocol(BaseTelnetProtocol):
 			self._options[option] = _OptionState()
 		return self._options[option]
 
-	def send(self, data: bytes) -> None:
-		"""
-		Sends data to the peer.
-
-		IAC bytes and line endings will be escaped before sending.
-
-		Args:
-			data: The data to be sent.
-		"""
-		data = data.replace(CR_LF, LF).replace(CR_NULL, CR).replace(CR, CR_NULL).replace(LF, CR_LF)
-		self.write(escapeIAC(data))
-
 	def requestNegotiation(self, option: bytes, data: bytes) -> None:
 		"""
 		Sends a subnegotiation message to the peer.
