@@ -13,7 +13,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import AbstractSet, Mapping
+from typing import AbstractSet, Callable, Mapping, Tuple, Union
 
 # Local Modules:
 from .base import Protocol
@@ -37,7 +37,7 @@ class XMLProtocol(Protocol):
 
 	states: AbstractSet[str] = frozenset(("data", "tag"))
 	"""Valid states for the state machine."""
-	modes: Mapping[bytes, bytes] = {
+	modes: Mapping[bytes, Union[bytes, None]] = {
 		b"room": b"room",
 		b"exits": b"exits",
 		b"prompt": b"prompt",
@@ -71,15 +71,17 @@ class XMLProtocol(Protocol):
 	"""A mapping of tag to replacement values for Tintin."""
 
 	def __init__(self, *args, **kwargs) -> None:
-		self.outputFormat = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
-		self.eventCaller = kwargs.pop("eventCaller") if "eventCaller" in kwargs else lambda *args: None
+		self.outputFormat: Union[str, None] = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
+		self.eventCaller: Callable[[Tuple[int, Tuple[str, bytes]]], None] = kwargs.pop(
+			"eventCaller"
+		) if "eventCaller" in kwargs else lambda *args: None
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
-		self._tagBuffer = bytearray()  # Used for start and end tag names.
-		self._textBuffer = bytearray()  # Used for the text between start and end tags.
-		self._lineBuffer = bytearray()  # Used for non-XML lines.
-		self._gratuitous = False
-		self._mode = None
+		self._tagBuffer: bytearray = bytearray()  # Used for start and end tag names.
+		self._textBuffer: bytearray = bytearray()  # Used for the text between start and end tags.
+		self._lineBuffer: bytearray = bytearray()  # Used for non-XML lines.
+		self._gratuitous: bool = False
+		self._mode: Union[bytes, None] = None
 
 	@property
 	def state(self) -> str:
@@ -146,11 +148,10 @@ class XMLProtocol(Protocol):
 						)
 				self.state = "data"
 		if appDataBuffer:
-			appDataBuffer = b"".join(appDataBuffer)
 			if outputFormat == "raw":
-				super().on_dataReceived(appDataBuffer)
+				super().on_dataReceived(b"".join(appDataBuffer))
 			else:
-				super().on_dataReceived(unescapeXML(appDataBuffer, True))
+				super().on_dataReceived(unescapeXML(b"".join(appDataBuffer), True))
 
 	def on_connectionMade(self) -> None:
 		# Turn on XML mode.

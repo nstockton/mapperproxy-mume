@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Optional, Sequence, Set, Union
+from typing import Sequence, Set, Union
 
 # Local Modules:
 from .manager import Manager
@@ -44,12 +44,12 @@ class Telnet(TelnetProtocol):
 		proxy: The proxy that spawned this object.
 	"""
 
-	def __init__(self, *args, name: Optional[str] = None, proxy: "Optional[ProtocolHandler]" = None, **kwargs):
+	def __init__(self, name: str, proxy: "ProtocolHandler", *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.name: str = name.lower()
 		if self.name not in ("player", "game"):
 			raise ValueError("Name must be 'player' or 'game'")
-		self.proxy: "Optional[ProtocolHandler]" = proxy
+		self.proxy: "ProtocolHandler" = proxy
 
 	@property
 	def supportedExtras(self) -> Set[bytes]:
@@ -70,10 +70,13 @@ class Telnet(TelnetProtocol):
 
 class Player(Telnet):
 	def __init__(self, *args, **kwargs):
-		super().__init__(*args, name="player", **kwargs)
+		super().__init__("player", *args, **kwargs)
 
 	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
-		self.proxy.game.write(IAC + command + option)
+		if option is None:
+			self.proxy.game.write(IAC + command)
+		else:
+			self.proxy.game.write(IAC + command + option)
 
 	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
 		self.proxy.game.write(IAC + SB + option + data + IAC + SE)
@@ -93,7 +96,7 @@ class Game(Telnet):
 	"""Supported character sets."""
 
 	def __init__(self, *args, **kwargs):
-		super().__init__(*args, name="game", **kwargs)
+		super().__init__("game", *args, **kwargs)
 		self.commandMap[GA] = self.on_ga
 		self.subnegotiationMap[CHARSET] = self.on_charset
 
@@ -138,9 +141,9 @@ class Game(Telnet):
 		elif status == CHARSET_REJECTED:
 			logger.warning("Peer responds: Charset rejected.")
 			if self.charset == self._oldCharset:
-				logger.warning(f"Unable to fall back to {self._oldCharset}. Old and new charsets match.")
+				logger.warning(f"Unable to fall back to {self._oldCharset!r}. Old and new charsets match.")
 			else:
-				logger.debug(f"Falling back to {self._oldCharset}.")
+				logger.debug(f"Falling back to {self._oldCharset!r}.")
 				self.charset = self._oldCharset
 		else:
 			logger.warning(f"Unknown charset negotiation response from peer: {data!r}")
@@ -158,11 +161,14 @@ class Game(Telnet):
 		# Tell the Mume server to put IAC-GA at end of prompts.
 		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
 
-	def on_unhandledCommand(self, command, argument=b""):
-		self.proxy.player.write(IAC + command + argument)
+	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
+		if option is None:
+			self.proxy.player.write(IAC + command)
+		else:
+			self.proxy.player.write(IAC + command + option)
 
-	def on_unhandledSubnegotiation(self, command, data):
-		self.proxy.player.write(IAC + SB + command + data + IAC + SE)
+	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
+		self.proxy.player.write(IAC + SB + option + data + IAC + SE)
 
 	def on_enableLocal(self, option: bytes) -> bool:
 		if option == CHARSET:
@@ -189,9 +195,9 @@ class ProtocolHandler(object):
 		self.mapperCommands = kwargs["mapperCommands"]
 		self.eventCaller = kwargs["eventCaller"]
 		self.player = Manager(playerSocket.sendall, self.on_playerReceived)
-		self.player.register(Player, proxy=self)
+		self.player.register(Player, self)
 		self.game = Manager(gameSocket.sendall, self.on_gameReceived)
-		self.game.register(Game, proxy=self)
+		self.game.register(Game, self)
 		self.game.register(MPIProtocol, outputFormat=self.outputFormat)
 		self.game.register(XMLProtocol, outputFormat=self.outputFormat, eventCaller=self.eventCaller)
 

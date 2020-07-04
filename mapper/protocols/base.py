@@ -44,7 +44,9 @@ class BaseProtocol(ABC):
 
 
 class Protocol(BaseProtocol):
-	def __init__(self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None]) -> None:
+	def __init__(
+		self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None], *args, **kwargs
+	) -> None:
 		self._writer: Callable[[bytes], None] = writer
 		self._receiver: Callable[[bytes], None] = receiver
 

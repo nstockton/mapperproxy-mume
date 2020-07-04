@@ -2,6 +2,7 @@
 .gitattributes text eol=crlf
 .gitignore text eol=crlf
 .flake8 text eol=crlf
+.mypy.ini text eol=crlf
 *.txt text eol=crlf
 *.py text eol=crlf
 *.pyw text eol=crlf

@@ -34,7 +34,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 from abc import abstractmethod
-from typing import AbstractSet, Callable, Mapping, Union
+from typing import AbstractSet, Callable, Mapping, MutableMapping, Union
 
 # Local Modules:
 from .base import Protocol
@@ -98,7 +98,7 @@ class _OptionState:
 		self.us: _Perspective = _Perspective()
 		self.him: _Perspective = _Perspective()
 
-	def __repr__(self) -> None:
+	def __repr__(self) -> str:
 		return f"<_OptionState us={self.us} him={self.him}>"
 
 
@@ -208,9 +208,9 @@ class TelnetProtocol(BaseTelnetProtocol):
 	def __init__(self, *args, **kwargs) -> None:
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
-		self._options: Mapping[bytes, _OptionState] = {}
+		self._options: MutableMapping[bytes, _OptionState] = {}
 		"""A mapping of option bytes to their current state."""
-		self.commandMap: Mapping[bytes, Callable[[bytes], None]] = {
+		self.commandMap: Mapping[bytes, Callable[[Union[bytes, None]], None]] = {
 			WILL: self.on_will,
 			WONT: self.on_wont,
 			DO: self.on_do,
@@ -475,13 +475,15 @@ class TelnetProtocol(BaseTelnetProtocol):
 		else:
 			self.on_unhandledSubnegotiation(option, data)
 
-	def on_will(self, option: bytes) -> None:
+	def on_will(self, option: Union[bytes, None]) -> None:
 		"""
 		Called when an IAC + WILL + option is received.
 
 		Args:
 			option: The received option.
 		"""
+		if option is None:
+			raise AssertionError("Option must not be None in this context.")
 		state = self.getOptionState(option)
 		if not state.him.enabled and not state.him.negotiating:
 			# Peer is unilaterally offering to enable an option.
@@ -494,9 +496,8 @@ class TelnetProtocol(BaseTelnetProtocol):
 			# Peer agreed to enable an option in response to our request.
 			state.him.enabled = True
 			state.him.negotiating = False
-			assert self.on_enableRemote(
-				option
-			), f"enableRemote must return True in this context (for option {option!r})"
+			if not self.on_enableRemote(option):
+				raise AssertionError(f"enableRemote must return True in this context (for option {option!r})")
 		elif state.him.enabled and not state.him.negotiating:
 			# Peer is unilaterally offering to enable an already-enabled option.
 			# Ignore this.
@@ -504,17 +505,19 @@ class TelnetProtocol(BaseTelnetProtocol):
 		elif state.him.enabled and state.him.negotiating:
 			# This is a bogus state.  It is here for completeness.  It will
 			# never be entered.
-			assert (
-				False
-			), f"him.enabled and him.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
+			raise AssertionError(
+				f"him.enabled and him.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
+			)
 
-	def on_wont(self, option: bytes) -> None:
+	def on_wont(self, option: Union[bytes, None]) -> None:
 		"""
 		Called when an IAC + WONT + option is received.
 
 		Args:
 			option: The received option.
 		"""
+		if option is None:
+			raise AssertionError("Option must not be None in this context.")
 		state = self.getOptionState(option)
 		if not state.him.enabled and not state.him.negotiating:
 			# Peer is unilaterally demanding that an already-disabled option be/remain disabled.
@@ -536,13 +539,15 @@ class TelnetProtocol(BaseTelnetProtocol):
 			state.him.negotiating = False
 			self.on_disableRemote(option)
 
-	def on_do(self, option: bytes) -> None:
+	def on_do(self, option: Union[bytes, None]) -> None:
 		"""
 		Called when an IAC + DO + option is received.
 
 		Args:
 			option: The received option.
 		"""
+		if option is None:
+			raise AssertionError("Option must not be None in this context.")
 		state = self.getOptionState(option)
 		if not state.us.enabled and not state.us.negotiating:
 			# Peer is unilaterally requesting that we enable an option.
@@ -563,17 +568,19 @@ class TelnetProtocol(BaseTelnetProtocol):
 		elif state.us.enabled and state.us.negotiating:
 			# This is a bogus state.  It is here for completeness.  It will never be
 			# entered.
-			assert (
-				False
-			), f"us.enabled and us.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
+			raise AssertionError(
+				f"us.enabled and us.negotiating cannot be True at the same time. state: {state!r}, option: {option!r}"
+			)
 
-	def on_dont(self, option: bytes) -> None:
+	def on_dont(self, option: Union[bytes, None]) -> None:
 		"""
 		Called when an IAC + DONT + option is received.
 
 		Args:
 			option: The received option.
 		"""
+		if option is None:
+			raise AssertionError("Option must not be None in this context.")
 		state = self.getOptionState(option)
 		if not state.us.enabled and not state.us.negotiating:
 			# Peer is unilaterally demanding us to disable an already-disabled option.

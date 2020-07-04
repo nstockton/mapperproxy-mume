@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import importlib
 import logging
 import os
 import select
@@ -14,6 +15,8 @@ import socket
 import ssl
 import threading
 import time
+from types import ModuleType
+from typing import Union
 
 # Third-party Modules:
 from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
@@ -24,11 +27,12 @@ from .utils import getDirectoryPath, removeFile, touch
 
 
 try:
-	import certifi
+	certifi: Union[ModuleType, None] = importlib.import_module("certifi")
 except ImportError:
 	certifi = None
+
 try:
-	import pyglet
+	pyglet: Union[ModuleType, None] = importlib.import_module("pyglet")
 except ImportError:
 	print("Unable to import Pyglet. GUI will be disabled.")
 	pyglet = None

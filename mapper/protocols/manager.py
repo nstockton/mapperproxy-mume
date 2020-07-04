@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import inspect
 import logging
-from typing import Callable, Optional, Sequence, Type
+from typing import Callable, MutableSequence, Type
 
 # Local Modules:
 from .base import Protocol
@@ -24,9 +24,9 @@ class Manager(object):
 	def __init__(self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None]) -> None:
 		self._writer: Callable[[bytes], None] = writer
 		self._receiver: Callable[[bytes], None] = receiver
-		self._readBuffer: Sequence[bytes] = []
-		self._writeBuffer: Sequence[bytes] = []
-		self._handlers: Sequence[bytes] = []
+		self._readBuffer: MutableSequence[bytes] = []
+		self._writeBuffer: MutableSequence[bytes] = []
+		self._handlers: MutableSequence[Protocol] = []
 
 	@property
 	def isConnected(self) -> bool:
@@ -88,7 +88,7 @@ class Manager(object):
 		elif data:
 			self._handlers[0].on_dataReceived(data)
 
-	def write(self, data: bytes, escape: Optional[bool] = False) -> None:
+	def write(self, data: bytes, escape: bool = False) -> None:
 		"""
 		Writes data to peer.
 
@@ -107,26 +107,27 @@ class Manager(object):
 		elif data:
 			self._writer(data)
 
-	def register(self, handler: Type[Protocol], **kwargs) -> None:
+	def register(self, handler: Type[Protocol], *args, **kwargs) -> None:
 		"""
 		Registers a protocol handler.
 
 		Args:
 			handler: The handler to be registered.
+			*args: Positional arguments to be passed to the handler's constructer.
 			**kwargs: Key word arguments to be passed to the handler's constructer.
 		"""
 		if not inspect.isclass(handler):
 			raise ValueError("Class required, not instance.")
-		for instance in self._handlers:
-			if isinstance(instance, handler):
+		for i in self._handlers:
+			if isinstance(i, handler):
 				raise ValueError("Already registered.")
-		instance = handler(self.write, self._receiver, **kwargs)
+		instance: Protocol = handler(*args, self.write, self._receiver, **kwargs)
 		if self._handlers:
 			self._handlers[-1]._receiver = instance.on_dataReceived
 		self._handlers.append(instance)
 		instance.on_connectionMade()
 
-	def unregister(self, instance: Callable[..., None]) -> None:
+	def unregister(self, instance: Protocol) -> None:
 		"""
 		Unregisters a protocol handler.
 

@@ -18,7 +18,7 @@ import subprocess
 import sys
 import tempfile
 import threading
-from typing import AbstractSet, Callable, Mapping, Sequence
+from typing import AbstractSet, Callable, Mapping, MutableSequence
 
 # Local Modules:
 from .base import Protocol
@@ -49,8 +49,8 @@ class MPIProtocol(Protocol):
 		self.outputFormat = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
-		self._MPIBuffer: bytes = bytearray()
-		self._MPIThreads: Sequence[threading.Thread] = []
+		self._MPIBuffer: bytearray = bytearray()
+		self._MPIThreads: MutableSequence[threading.Thread] = []
 		self.commandMap: Mapping[bytes, Callable[[bytes], None]] = {b"E": self.edit, b"V": self.view}
 		if sys.platform == "win32":
 			self.editor: str = "notepad"
@@ -60,7 +60,7 @@ class MPIProtocol(Protocol):
 			self.pager: str = os.getenv("TINTINPAGER", "less")
 
 	@property
-	def state(self) -> None:
+	def state(self) -> str:
 		"""
 		The state of the state machine.
 
