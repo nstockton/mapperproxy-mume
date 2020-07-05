@@ -47,6 +47,8 @@ class TestMPIProtocol(TestCase):
 		data = BODY
 		self.assertEqual(self.playerReceives, b"")
 		self.assertEqual(self.gameReceives, b"")
+		with self.assertRaises(ValueError):
+			self.mpi.state = "**junk**"
 		self.assertEqual(self.mpi.state, "data")
 		self.mpi.outputFormat = "normal"
 		self.mpi.on_connectionMade()
@@ -60,8 +62,17 @@ class TestMPIProtocol(TestCase):
 		# if some but not all of MPI_INIT was  received followed by data, fall back to state 'data'.
 		self.assertEqual(self.parse(LF + MPI_INIT[:1] + data), (LF + MPI_INIT[:1] + data, b"", "data"))
 		# if a line feed is followed by 1 or more bytes of MPI_INIT, but not the final byte, state becomes 'init'.
+		# If a line feed is followed by part of MPI_INIT and then junk, state becomes 'data'.
 		for i in range(1, len(MPI_INIT)):
-			self.assertEqual(self.parse(LF + MPI_INIT[:i]), (LF, b"", "init"))
+			self.mpi.on_dataReceived(LF + MPI_INIT[:i])
+			self.assertEqual((self.playerReceives, self.gameReceives, self.mpi.state), (LF, b"", "init"))
+			self.mpi.on_dataReceived(b"**junk**")
+			self.assertEqual(
+				(self.playerReceives, self.gameReceives, self.mpi.state), (LF + MPI_INIT[:i] + b"**junk**", b"", "data")
+			)
+			self.playerReceives.clear()
+			self.mpi.state = "data"
+			self.mpi._MPIBuffer.clear()
 		# If a line feed is followed by all the bytes of MPI_INIT, state becomes 'command'.
 		self.assertEqual(self.parse(LF + MPI_INIT), (LF, b"", "command"))
 		# Command is a single byte after MPI_INIT. State then becomes 'length'.

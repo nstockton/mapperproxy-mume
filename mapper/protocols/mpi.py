@@ -52,12 +52,16 @@ class MPIProtocol(Protocol):
 		self._MPIBuffer: bytearray = bytearray()
 		self._MPIThreads: MutableSequence[threading.Thread] = []
 		self.commandMap: Mapping[bytes, Callable[[bytes], None]] = {b"E": self.edit, b"V": self.view}
-		if sys.platform == "win32":
-			self.editor: str = "notepad"
-			self.pager: str = "notepad"
-		else:
-			self.editor: str = os.getenv("TINTINEDITOR", "nano -w")
-			self.pager: str = os.getenv("TINTINPAGER", "less")
+		editors: Mapping[str, str] = {
+			"win32": "notepad",
+		}
+		pagers: Mapping[str, str] = {
+			"win32": "notepad",
+		}
+		defaultEditor: str = editors.get(sys.platform, "nano")
+		defaultPager: str = pagers.get(sys.platform, "less")
+		self.editor: str = os.getenv("VISUAL", "") or os.getenv("EDITOR", defaultEditor)
+		self.pager: str = os.getenv("PAGER", defaultPager)
 
 	@property
 	def state(self) -> str:
