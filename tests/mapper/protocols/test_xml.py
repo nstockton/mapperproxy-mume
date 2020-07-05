@@ -12,7 +12,7 @@ from unittest import TestCase
 
 # Mapper Modules:
 from mapper import MUD_DATA
-from mapper.protocols.xml import LF, MPI_INIT, XMLProtocol
+from mapper.protocols.xml import LF, LT, MPI_INIT, XMLProtocol
 from mapper.utils import unescapeXML
 
 
@@ -103,11 +103,15 @@ class TestXMLProtocol(TestCase):
 		data = b"Hello World!" + LF
 		self.assertEqual(self.playerReceives, b"")
 		self.assertEqual(self.gameReceives, b"")
+		with self.assertRaises(ValueError):
+			self.xml.state = "**junk**"
 		self.assertEqual(self.xml.state, "data")
 		self.xml.outputFormat = "normal"
 		self.xml.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"X2" + LF + b"3G" + LF, "data"))
 		self.assertEqual(self.getEvents(), [self.createEvent("line", data.rstrip(LF))])
+		self.assertEqual(self.parse(LT + b"IncompleteTag"), (b"", b"", "tag"))
+		self.assertTrue(self.eventQueue.empty())
 		self.assertEqual(self.parse(self.rawData), (self.normalData, b"", "data"))
 		self.assertEqual(self.getEvents(), self.expectedEvents)
 		self.xml.outputFormat = "tintin"

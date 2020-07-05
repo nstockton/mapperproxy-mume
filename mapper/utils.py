@@ -99,8 +99,6 @@ def removeFile(toRemove):
 		os.remove(toRemove.name)
 	except AttributeError:
 		os.remove(toRemove)
-	except Exception:
-		pass
 
 
 def touch(name, times=None):

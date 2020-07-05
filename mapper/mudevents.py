@@ -35,4 +35,3 @@ class Handler(ABC):
 	@abstractmethod
 	def handle(self, data):
 		"""the method called when the event is dispatched"""
-		pass

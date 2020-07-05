@@ -86,7 +86,6 @@ class TestMPIProtocol(TestCase):
 	@mock.patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
 	@mock.patch("mapper.protocols.mpi.print")
 	def testMPIView(self, mockPrint, MockNamedTemporaryFile, mockSubprocess, mockRemoveFile):
-		message = b"%d%b%b" % (len(BODY), LF, BODY)
 		tempFileName = "temp_file_name"
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
 		self.assertEqual(self.playerReceives, b"")
@@ -96,13 +95,15 @@ class TestMPIProtocol(TestCase):
 		self.assertEqual(self.parse(b""), (b"", MPI_INIT + b"I" + LF, "data"))
 		# Test outputFormat is 'tintin'.
 		self.mpi.outputFormat = "tintin"
-		self.assertEqual(self.parse(LF + MPI_INIT + b"V" + message), (LF, b"", "data"))
+		self.mpi.view(b"V" + BODY + LF)
+		self.assertEqual((b"", b"", "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_viewing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.pager} {tempFileName}:MPICOMMAND")
 		MockNamedTemporaryFile.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
-		self.assertEqual(self.parse(LF + MPI_INIT + b"V" + message), (LF, b"", "data"))
+		self.mpi.view(b"V" + BODY + LF)
+		self.assertEqual((b"", b"", "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_viewing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.pager.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
@@ -118,9 +119,8 @@ class TestMPIProtocol(TestCase):
 	def testMPIEdit(
 		self, mockPrint, mockInput, mockOsPath, MockNamedTemporaryFile, mockSubprocess, mockRemoveFile
 	):
-		session, description = b"12345" + LF, b"description" + LF
-		data = b"M" + session + description + BODY
-		message = b"%d%b%b" % (len(data), LF, data)
+		session = b"12345" + LF
+		description = b"description" + LF
 		tempFileName = "temp_file_name"
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
 		# Make sure we are in the default state.
@@ -130,12 +130,14 @@ class TestMPIProtocol(TestCase):
 		self.mpi.on_connectionMade()
 		self.assertEqual(self.parse(b""), (b"", MPI_INIT + b"I" + LF, "data"))
 		# Test a canceled session.
+		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"C" + session) + LF + b"C" + session
 		# Same modified time means the file was *not* modified.
 		mockOsPath.getmtime.return_value = 1.0
 		# Test outputFormat is 'tintin'.
 		self.mpi.outputFormat = "tintin"
-		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"C" + session) + LF + b"C" + session
-		self.assertEqual(self.parse(LF + MPI_INIT + b"E" + message), (LF, expectedSent, "data"))
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.editor} {tempFileName}:MPICOMMAND")
 		mockInput.assert_called_once_with("Continue:")
@@ -146,8 +148,9 @@ class TestMPIProtocol(TestCase):
 		mockRemoveFile.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
-		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"C" + session) + LF + b"C" + session
-		self.assertEqual(self.parse(LF + MPI_INIT + b"E" + message), (LF, expectedSent, "data"))
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
@@ -156,14 +159,16 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.reset_mock()
 		mockSubprocess.return_value.wait.reset_mock()
 		mockRemoveFile.reset_mock()
-		# Test remote editing.
-		# Different modified time means the file was modified.
 		mockOsPath.reset_mock(return_value=True)
+		# Test remote editing.
+		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"E" + session + BODY + LF) + LF + b"E" + session + BODY + LF
+		# Different modified time means the file was modified.
 		mockOsPath.getmtime.side_effect = lambda *args: uuid4()
 		# Test outputFormat is 'tintin'.
 		self.mpi.outputFormat = "tintin"
-		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"E" + session + BODY + LF) + LF + b"E" + session + BODY + LF
-		self.assertEqual(self.parse(LF + MPI_INIT + b"E" + message), (LF, expectedSent, "data"))
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.editor} {tempFileName}:MPICOMMAND")
 		mockInput.assert_called_once_with("Continue:")
@@ -174,8 +179,9 @@ class TestMPIProtocol(TestCase):
 		mockRemoveFile.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
-		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"E" + session + BODY + LF) + LF + b"E" + session + BODY + LF
-		self.assertEqual(self.parse(LF + MPI_INIT + b"E" + message), (LF, expectedSent, "data"))
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
