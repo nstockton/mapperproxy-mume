@@ -60,6 +60,7 @@ target/
 
 # Misc
 mpm_version.py
+Pipfile.lock
 *.ignore
 Mapper_Proxy_V*/
 Mapper_Proxy_V*.zip*

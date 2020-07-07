@@ -17,12 +17,20 @@ The tiles of the GUI for sighted players are distributed under the [CC-BY-SA 3.0
 Mume-mapperproxy is distributed as part of
 [MUSHclient-MUME](https://github.com/nstockton/mushclient-mume/blob/master/README.md), and [tintin-MUME](https://github.com/nstockton/tintin-mume), which also provide scripts to play Mume more easily. Refer to these projects for an installation guide.
 
-### Standalone Installation
-If you only need the mapperproxy, install the [Python interpreter,](https://python.org "Python Home Page") and make sure it's in your path before running this package.
+### Running From Source
+Install the [Python interpreter,](https://python.org "Python Home Page") and make sure it's in your path before running this package.
 
-After Python is installed, execute the following command from the top level directory of this repository to install the module dependencies.
+After Python is installed, execute the following commands from the top level directory of this repository to install the module dependencies.
 ```
-pip install -U -r requirements.txt
+pip install pipenv
+pipenv install --skip-lock
+```
+
+If you wish to contribute to this project, install the development dependencies with the following commands.
+```
+pipenv install --skip-lock --dev
+pipenv run pre-commit install -t pre-commit
+pipenv run pre-commit install -t pre-push
 ```
 
 ## Mapper Proxy Usage

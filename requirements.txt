@@ -4,5 +4,4 @@ fuzzywuzzy
 pyglet
 python-Levenshtein
 python-rapidjson
-#git+https://github.com/nstockton/speechlight.git
-https://github.com/nstockton/speechlight/archive/master.zip
+git+https://github.com/nstockton/speechlight.git#egg=speechlight
