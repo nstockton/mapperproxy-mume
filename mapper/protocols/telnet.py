@@ -384,6 +384,9 @@ class TelnetProtocol(BaseTelnetProtocol):
 					# Escaped IAC.
 					appDataBuffer.append(byte)
 					self.state = "data"
+				elif byte == SE:
+					self.state = "data"
+					logger.warning("IAC SE received outside of subnegotiation.")
 				elif byte == SB:
 					self.state = "subnegotiation"
 					self._commands = []
@@ -397,7 +400,8 @@ class TelnetProtocol(BaseTelnetProtocol):
 					self.state = "negotiation"
 					self._command = byte
 				else:
-					raise ValueError(f"Stumped {byte!r}")
+					self.state = "data"
+					logger.warning(f"Unknown Telnet command received {byte!r}.")
 			elif self.state == "negotiation":
 				self.state = "data"
 				command = self._command
@@ -445,7 +449,9 @@ class TelnetProtocol(BaseTelnetProtocol):
 					self.state = "subnegotiation"
 					self._commands.append(byte)
 			else:
-				raise ValueError("Invalid Telnet state. How'd you do this?")
+				logger.warning(f"Invalid Telnet state {self.state!r}. How'd you do this?")
+				appDataBuffer.append(byte)
+				self.state = "data"
 		if appDataBuffer:
 			super().on_dataReceived(b"".join(appDataBuffer))
 

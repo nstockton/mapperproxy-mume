@@ -99,13 +99,12 @@ class TestXMLProtocol(TestCase):
 	def createEvent(self, name, data):
 		return (MUD_DATA, (name, data))
 
-	def testXMLDataReceived(self):
-		data = b"Hello World!" + LF
-		self.assertEqual(self.playerReceives, b"")
-		self.assertEqual(self.gameReceives, b"")
+	def testXMLState(self):
 		with self.assertRaises(ValueError):
 			self.xml.state = "**junk**"
-		self.assertEqual(self.xml.state, "data")
+
+	def testXMLOn_dataReceived(self):
+		data = b"Hello World!" + LF
 		self.xml.outputFormat = "normal"
 		self.xml.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"X2" + LF + b"3G" + LF, "data"))

@@ -17,6 +17,7 @@
 		"raise AssertionError",
 		"raise NotImplementedError",
 		"def __repr__",
+		"def __str__",
 		"if __name__ == .__main__.:",
 	]
 

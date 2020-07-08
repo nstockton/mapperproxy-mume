@@ -40,16 +40,15 @@ class TestMPIProtocol(TestCase):
 		self.mpi._MPIBuffer.clear()
 		return playerReceives, gameReceives, state
 
+	def testMPIState(self):
+		with self.assertRaises(ValueError):
+			self.mpi.state = "**junk**"
+
 	# Mock the logger so warnings won't be printed to the console.
 	@mock.patch("mapper.protocols.mpi.logger", mock.Mock())
 	@mock.patch("mapper.protocols.mpi.threading")
-	def testMPIDataReceived(self, mockThreading):
+	def testMPIOn_dataReceived(self, mockThreading):
 		data = BODY
-		self.assertEqual(self.playerReceives, b"")
-		self.assertEqual(self.gameReceives, b"")
-		with self.assertRaises(ValueError):
-			self.mpi.state = "**junk**"
-		self.assertEqual(self.mpi.state, "data")
 		self.mpi.outputFormat = "normal"
 		self.mpi.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"I" + LF, "data"))
@@ -68,7 +67,8 @@ class TestMPIProtocol(TestCase):
 			self.assertEqual((self.playerReceives, self.gameReceives, self.mpi.state), (LF, b"", "init"))
 			self.mpi.on_dataReceived(b"**junk**")
 			self.assertEqual(
-				(self.playerReceives, self.gameReceives, self.mpi.state), (LF + MPI_INIT[:i] + b"**junk**", b"", "data")
+				(self.playerReceives, self.gameReceives, self.mpi.state),
+				(LF + MPI_INIT[:i] + b"**junk**", b"", "data"),
 			)
 			self.playerReceives.clear()
 			self.mpi.state = "data"
@@ -80,17 +80,23 @@ class TestMPIProtocol(TestCase):
 		# Length is the length of the message body as one or more digits, terminated by a line feed.
 		# Verify that an empty length or length containing non-digits is properly handled.
 		self.assertEqual(self.parse(LF + MPI_INIT + b"V" + LF), (LF + MPI_INIT + b"V" + LF, b"", "newline"))
-		self.assertEqual(self.parse(LF + MPI_INIT + b"V1t" + LF), (LF + MPI_INIT + b"V1t" + LF, b"", "newline"))
+		self.assertEqual(
+			self.parse(LF + MPI_INIT + b"V1t" + LF), (LF + MPI_INIT + b"V1t" + LF, b"", "newline")
+		)
 		# If length is valid, state becomes 'body'.
 		# The body consists of the bytes following length and the line feed.
 		# Once <length> bytes are received, state becomes 'data' and the appropriate
 		# method is called to handle the MPI message.
 		message = b"%d%b%b" % (len(data), LF, data)
 		# Test invalid MPI commands are handled.
-		self.assertEqual(self.parse(LF + MPI_INIT + b"A" + message), (LF + MPI_INIT + b"A" + message, b"", "data"))
+		self.assertEqual(
+			self.parse(LF + MPI_INIT + b"A" + message), (LF + MPI_INIT + b"A" + message, b"", "data")
+		)
 		# test valid MPI commands are handled.
 		self.assertEqual(self.parse(LF + MPI_INIT + b"V" + message), (LF, b"", "data"))
-		mockThreading.Thread.assert_called_once_with(target=self.mpi.commandMap[b"V"], args=(data,), daemon=True)
+		mockThreading.Thread.assert_called_once_with(
+			target=self.mpi.commandMap[b"V"], args=(data,), daemon=True
+		)
 
 	@mock.patch("mapper.protocols.mpi.removeFile")
 	@mock.patch("mapper.protocols.mpi.subprocess.Popen")
@@ -147,7 +153,9 @@ class TestMPIProtocol(TestCase):
 		# Test outputFormat is 'tintin'.
 		self.mpi.outputFormat = "tintin"
 		self.mpi.edit(b"E" + session + description + BODY + LF)
-		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.assertEqual(
+			(b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state)
+		)
 		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.editor} {tempFileName}:MPICOMMAND")
@@ -160,7 +168,9 @@ class TestMPIProtocol(TestCase):
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
 		self.mpi.edit(b"E" + session + description + BODY + LF)
-		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.assertEqual(
+			(b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state)
+		)
 		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
@@ -172,13 +182,17 @@ class TestMPIProtocol(TestCase):
 		mockRemoveFile.reset_mock()
 		mockOsPath.reset_mock(return_value=True)
 		# Test remote editing.
-		expectedSent = MPI_INIT + b"E" + b"%d" % len(b"E" + session + BODY + LF) + LF + b"E" + session + BODY + LF
+		expectedSent = (
+			MPI_INIT + b"E" + b"%d" % len(b"E" + session + BODY + LF) + LF + b"E" + session + BODY + LF
+		)
 		# Different modified time means the file was modified.
 		mockOsPath.getmtime.side_effect = lambda *args: uuid4()
 		# Test outputFormat is 'tintin'.
 		self.mpi.outputFormat = "tintin"
 		self.mpi.edit(b"E" + session + description + BODY + LF)
-		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.assertEqual(
+			(b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state)
+		)
 		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.editor} {tempFileName}:MPICOMMAND")
@@ -191,7 +205,9 @@ class TestMPIProtocol(TestCase):
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
 		self.mpi.edit(b"E" + session + description + BODY + LF)
-		self.assertEqual((b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state))
+		self.assertEqual(
+			(b"", expectedSent, "data"), (self.playerReceives, self.gameReceives, self.mpi.state)
+		)
 		self.gameReceives.clear()
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
