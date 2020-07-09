@@ -34,6 +34,7 @@ class Manager(object):
 		return getattr(self, "_isConnected", False)
 
 	def __enter__(self):
+		self.connect()
 		return self
 
 	def __exit__(self, excType, excValue, excTraceback):
@@ -97,7 +98,13 @@ class Manager(object):
 			escape: If true, escapes line endings and IAC characters.
 		"""
 		if escape:
-			data = escapeIAC(data).replace(CR_LF, LF).replace(CR_NULL, CR).replace(CR, CR_NULL).replace(LF, CR_LF)
+			data = (
+				escapeIAC(data)
+				.replace(CR_LF, LF)
+				.replace(CR_NULL, CR)
+				.replace(CR, CR_NULL)
+				.replace(LF, CR_LF)
+			)
 		if not self.isConnected or not self._handlers:
 			self._writeBuffer.append(data)
 		elif self._writeBuffer:
