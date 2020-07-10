@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 # Built-in Modules:
-from queue import Empty, Queue
 from unittest import TestCase
 
 # Mapper Modules:
@@ -68,8 +67,8 @@ class TestXMLProtocol(TestCase):
 		self.gameReceives = bytearray()
 		self.playerReceives = bytearray()
 		self.xml = XMLProtocol(self.gameReceives.extend, self.playerReceives.extend)
-		self.eventQueue = Queue()
-		self.xml.eventCaller = self.eventQueue.put
+		self.mapperEvents = []
+		self.xml.eventCaller = self.mapperEvents.append
 
 	def tearDown(self):
 		self.xml.on_connectionLost()
@@ -87,15 +86,6 @@ class TestXMLProtocol(TestCase):
 		self.xml.state = "data"
 		return playerReceives, gameReceives, state
 
-	def getEvents(self):
-		events = []
-		while not self.eventQueue.empty():
-			try:
-				events.append(self.eventQueue.get(timeout=1))
-			except Empty:
-				raise AssertionError("Event was not received from the mapper queue within 1 second.")
-		return events
-
 	def createEvent(self, name, data):
 		return (MUD_DATA, (name, data))
 
@@ -108,14 +98,17 @@ class TestXMLProtocol(TestCase):
 		self.xml.outputFormat = "normal"
 		self.xml.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"X2" + LF + b"3G" + LF, "data"))
-		self.assertEqual(self.getEvents(), [self.createEvent("line", data.rstrip(LF))])
+		self.assertEqual(self.mapperEvents, [self.createEvent("line", data.rstrip(LF))])
+		self.mapperEvents.clear()
 		self.assertEqual(self.parse(LT + b"IncompleteTag"), (b"", b"", "tag"))
-		self.assertTrue(self.eventQueue.empty())
+		self.assertFalse(self.mapperEvents)
 		self.assertEqual(self.parse(self.rawData), (self.normalData, b"", "data"))
-		self.assertEqual(self.getEvents(), self.expectedEvents)
+		self.assertEqual(self.mapperEvents, self.expectedEvents)
+		self.mapperEvents.clear()
 		self.xml.outputFormat = "tintin"
 		self.assertEqual(self.parse(self.rawData), (self.tintinData, b"", "data"))
-		self.assertEqual(self.getEvents(), self.expectedEvents)
+		self.assertEqual(self.mapperEvents, self.expectedEvents)
+		self.mapperEvents.clear()
 		self.xml.outputFormat = "raw"
 		self.assertEqual(self.parse(self.rawData), (self.rawData, b"", "data"))
-		self.assertEqual(self.getEvents(), self.expectedEvents)
+		self.assertEqual(self.mapperEvents, self.expectedEvents)
