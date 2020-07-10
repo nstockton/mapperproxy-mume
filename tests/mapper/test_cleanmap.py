@@ -73,7 +73,10 @@ class TestExitsCleaner(unittest.TestCase):
 			(self.createRoom(("south", True)), "None\r\n"),
 			(self.createRoom(), "  (West)   - The Grand Hallway\r\n"),
 			(self.createRoom(("up", False)), "  #Up#   - Private Stair\r\n"),
-			(self.createRoom(("down", True)), "  [east]   - A closed 'EastDoorWhereYouThoughtThereWasADownExit\r\n"),
+			(
+				self.createRoom(("down", True)),
+				"  [east]   - A closed 'EastDoorWhereYouThoughtThereWasADownExit\r\n",
+			),
 			(self.createRoom(), "  [North]   - A closed 'Northdoor'\r\n"),
 			(self.createRoom(("east", False)), "  {East}   - You see something strange.\r\n"),
 			(self.createRoom(), "  /West\\   - Western Slope\r\n"),

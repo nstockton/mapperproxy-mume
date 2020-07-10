@@ -41,7 +41,9 @@ class TestHandler(unittest.TestCase):
 			findFormat=None,
 			isEmulatingOffline=None,
 		)
-		self.mapper.daemon = True  # this allows unittest to quit if the mapper thread does not close properly.
+		self.mapper.daemon = (
+			True  # this allows unittest to quit if the mapper thread does not close properly.
+		)
 
 	def testMapper_handle(self):
 		queue = self.mapper.queue

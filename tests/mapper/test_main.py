@@ -77,7 +77,9 @@ class TestGameThread(unittest.TestCase):
 		proxy.connect()
 		mapperThread.proxy = proxy
 		gameThread = Game(mumeSocket, mapperThread)
-		gameThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
+		gameThread.daemon = (
+			True  # otherwise if this does not terminate, it prevents unittest from terminating
+		)
 		gameThread.start()
 		# test initial telnet negotiations were passed to the client
 		try:
@@ -165,7 +167,9 @@ class TestGameThreadThroughput(unittest.TestCase):
 		proxy.connect()
 		mapperThread.proxy = proxy
 		self.gameThread = Game(mumeSocket, mapperThread)
-		self.gameThread.daemon = True  # otherwise if this does not terminate, it prevents unittest from terminating
+		self.gameThread.daemon = (
+			True  # otherwise if this does not terminate, it prevents unittest from terminating
+		)
 		self.gameThread.start()
 
 	def tearDown(self):
@@ -184,7 +188,9 @@ class TestGameThreadThroughput(unittest.TestCase):
 				f"When entering {inputDescription}, the expected output did not match {expectedOutput!r}",
 			)
 		except Empty:
-			raise AssertionError(f"{inputDescription} data was not received by the player socket within 1 second.")
+			raise AssertionError(
+				f"{inputDescription} data was not received by the player socket within 1 second."
+			)
 		actualData = self.gameThread.mapper.queue.put.mock_calls
 		i = 0
 		while len(actualData) > i < len(expectedData):
@@ -197,7 +203,9 @@ class TestGameThreadThroughput(unittest.TestCase):
 		if i < len(actualData):
 			raise AssertionError("The mapper queue received the unexpected data: " + str(actualData[i]))
 		if i < len(expectedData):
-			raise AssertionError("The mapper queue did not receive the expected data: " + str(expectedData[i]))
+			raise AssertionError(
+				"The mapper queue did not receive the expected data: " + str(expectedData[i])
+			)
 
 	def testProcessingPrompt(self):
 		self.runThroughput(

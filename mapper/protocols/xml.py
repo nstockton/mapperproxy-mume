@@ -144,7 +144,8 @@ class XMLProtocol(Protocol):
 					self._mode = self.modes[tag]
 					if tag.startswith(b"/"):
 						self.on_mapperEvent(
-							"dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"), unescapeXML(text, True)
+							"dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"),
+							unescapeXML(text, True),
 						)
 				self.state = "data"
 		if appDataBuffer:

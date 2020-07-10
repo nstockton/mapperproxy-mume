@@ -31,7 +31,9 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="The accessible Mume mapper.")
 	parser.add_argument("-v", "--version", action="version", version=VERSION)
 	parser.add_argument("-e", "--emulation", help="Start in emulation mode.", action="store_true")
-	parser.add_argument("-i", "--interface", help="Select a user interface.", choices=INTERFACES, default="text")
+	parser.add_argument(
+		"-i", "--interface", help="Select a user interface.", choices=INTERFACES, default="text"
+	)
 	parser.add_argument(
 		"-f",
 		"--format",
@@ -40,13 +42,21 @@ if __name__ == "__main__":
 		default="normal",
 	)
 	parser.add_argument(
-		"-lh", "--local-host", metavar="address", help="The local host address to bind to.", default="127.0.0.1"
+		"-lh",
+		"--local-host",
+		metavar="address",
+		help="The local host address to bind to.",
+		default="127.0.0.1",
 	)
 	parser.add_argument(
 		"-lp", "--local-port", metavar="port", type=int, help="The local port to bind to.", default=4000
 	)
 	parser.add_argument(
-		"-rh", "--remote-host", metavar="address", help="The remote host address to connect to.", default="mume.org"
+		"-rh",
+		"--remote-host",
+		metavar="address",
+		help="The remote host address to connect to.",
+		default="mume.org",
 	)
 	parser.add_argument(
 		"-rp", "--remote-port", metavar="port", type=int, help="The remote port to connect to.", default=4242

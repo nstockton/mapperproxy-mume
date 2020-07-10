@@ -329,7 +329,8 @@ class Mapper(threading.Thread, World):
 	def emulation_command_help(self, *args):
 		"""Shows documentation for mapper's emulation commands."""
 		helpTexts = [
-			(funcName, getattr(self, "emulation_command_" + funcName).__doc__) for funcName in self.emulationCommands
+			(funcName, getattr(self, "emulation_command_" + funcName).__doc__)
+			for funcName in self.emulationCommands
 		]
 		documentedFuncs = [
 			(name, formatDocString(docString, prefix=" " * 8).strip())
@@ -644,7 +645,8 @@ class Mapper(threading.Thread, World):
 	def user_command_maphelp(self, *args):
 		"""Shows documentation for mapper commands"""
 		helpTexts = [
-			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "") for funcName in self.userCommands
+			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "")
+			for funcName in self.userCommands
 		]
 		documentedFuncs = [
 			(name, formatDocString(docString, prefix=" " * 8).strip())
@@ -720,7 +722,9 @@ class Mapper(threading.Thread, World):
 			elif len(nameVnums) == 1:
 				self.currentRoom = self.rooms[nameVnums[0]]
 				self.isSynced = True
-				self.sendPlayer(f"Name-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
+				self.sendPlayer(
+					f"Name-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}"
+				)
 			else:
 				self.sendPlayer("More than one room in the database matches current room. Unable to sync.")
 		return self.isSynced
@@ -797,7 +801,9 @@ class Mapper(threading.Thread, World):
 						vnum
 						for vnum, roomObj in self.rooms.items()
 						if (
-							self.coordinatesAddDirection((self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction)
+							self.coordinatesAddDirection(
+								(self.currentRoom.x, self.currentRoom.y, self.currentRoom.z), direction
+							)
 							== (roomObj.x, roomObj.y, roomObj.z)
 						)
 					]
@@ -985,13 +991,16 @@ class Mapper(threading.Thread, World):
 				self.autoMapping
 				and self.movement in DIRECTIONS
 				and (
-					self.movement not in self.currentRoom.exits or self.currentRoom.exits[self.movement].to not in self.rooms
+					self.movement not in self.currentRoom.exits
+					or self.currentRoom.exits[self.movement].to not in self.rooms
 				)
 			):
 				# Player has moved in a direction that either doesn't exist in the database
 				# or links to an invalid vnum (E.G. undefined).
 				if self.autoMerging and self.roomName and self.description:
-					duplicateRooms = self.searchRooms(exactMatch=True, name=self.roomName, desc=self.description)
+					duplicateRooms = self.searchRooms(
+						exactMatch=True, name=self.roomName, desc=self.description
+					)
 				else:
 					duplicateRooms = None
 				if not self.roomName:

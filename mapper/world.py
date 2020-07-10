@@ -235,7 +235,9 @@ class World(object):
 	def sortExits(self, exitsDict):
 		return sorted(
 			exitsDict.items(),
-			key=lambda direction: (DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS)),
+			key=lambda direction: (
+				DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS)
+			),
 		)
 
 	def isBidirectional(self, exitObj):
@@ -328,7 +330,9 @@ class World(object):
 		if not args or not args[0]:
 			match = None
 		else:
-			match = re.match(r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", args[0].strip().lower())
+			match = re.match(
+				r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", args[0].strip().lower()
+			)
 		if not match:
 			self.output("Syntax: 'revnum [Origin VNum] [Destination VNum]'.")
 			return None
@@ -398,7 +402,9 @@ class World(object):
 			"door",
 		)
 		kwArgs = {
-			key: value.strip().lower() for key, value in kwArgs.items() if key.strip() in validArgs and value.strip()
+			key: value.strip().lower()
+			for key, value in kwArgs.items()
+			if key.strip() in validArgs and value.strip()
 		}
 		results = []
 		if not kwArgs:
@@ -727,7 +733,9 @@ class World(object):
 		if direction not in self.currentRoom.exits:
 			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
-			return f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
+			return (
+				f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
+			)
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 				self.currentRoom.exits[direction].exitFlags.remove(matchDict["flag"])
@@ -757,7 +765,9 @@ class World(object):
 		if direction not in self.currentRoom.exits:
 			return f"Exit {direction} does not exist."
 		elif not matchDict["mode"]:
-			return f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
+			return (
+				f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
+			)
 		elif "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 				self.currentRoom.exits[direction].doorFlags.remove(matchDict["flag"])
@@ -862,7 +872,9 @@ class World(object):
 				toName = self.rooms[self.currentRoom.exits[direction].to].name
 			else:
 				toName = ""
-			return f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' with name '{toName}'."
+			return (
+				f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' with name '{toName}'."
+			)
 		elif "remove".startswith(matchDict["mode"]):
 			del self.currentRoom.exits[direction]
 			self.GUIRefresh()
@@ -1039,7 +1051,9 @@ class World(object):
 			self.output("You are already there!")
 			return []
 		if flags:
-			avoidTerrains = frozenset(terrain for terrain in roomdata.objects.TERRAIN_COSTS if f"no{terrain}" in flags)
+			avoidTerrains = frozenset(
+				terrain for terrain in roomdata.objects.TERRAIN_COSTS if f"no{terrain}" in flags
+			)
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
@@ -1085,7 +1099,9 @@ class World(object):
 				# The neighbor room cost should be the sum of all movement costs
 				# to get to the neighbor room from the origin room.
 				neighborRoomCost = (
-					currentRoomCost + neighborRoomObj.cost + exitCostFunc(exitObj, neighborRoomObj) if exitCostFunc else 0
+					currentRoomCost + neighborRoomObj.cost + exitCostFunc(exitObj, neighborRoomObj)
+					if exitCostFunc
+					else 0
 				)
 				# We're only interested in the neighbor room if it hasn't been encountered yet,
 				# or if the cost of moving from the current room to the neighbor room is less than

@@ -65,7 +65,10 @@ else:
 	):
 		try:
 			match = VERSION_REGEX.search(
-				subprocess.check_output("git describe --tags --always --long", shell=True).decode("utf-8").strip().lower()
+				subprocess.check_output("git describe --tags --always --long", shell=True)
+				.decode("utf-8")
+				.strip()
+				.lower()
 			)
 			if match is not None:
 				APP_VERSION = match.groups()[0]
@@ -88,7 +91,9 @@ else:
 APP_VERSION_CSV = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
 APP_DEST = os.path.normpath(
 	os.path.join(
-		ORIG_DEST, os.pardir, f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_")
+		ORIG_DEST,
+		os.pardir,
+		f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_"),
 	)
 )
 if isTag:
@@ -310,7 +315,10 @@ include_files = [
 		],
 		".",
 	),
-	(glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")), "speech_libs"),
+	(
+		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")),
+		"speech_libs",
+	),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles"),

@@ -160,7 +160,9 @@ class Window(pyglet.window.Window):
 		self.center_mark = []
 		self.highlight = None
 		self.current_room = None
-		super(Window, self).__init__(caption="MPM", resizable=True, vsync=False, fullscreen=self._cfg["fullscreen"])
+		super(Window, self).__init__(
+			caption="MPM", resizable=True, vsync=False, fullscreen=self._cfg["fullscreen"]
+		)
 		logger.info(f"Created window {self}")
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 		if self.blink:
@@ -266,7 +268,9 @@ class Window(pyglet.window.Window):
 		except KeyError:
 			self._cfg["current_room_mark_radius"] = 10
 		except ValueError:
-			logger.warning(f"Invalid value for current_room_mark_radius: {self._cfg['current_room_mark_radius']}")
+			logger.warning(
+				f"Invalid value for current_room_mark_radius: {self._cfg['current_room_mark_radius']}"
+			)
 			self._cfg["current_room_mark_radius"] = 10
 		return int(self._cfg["current_room_mark_radius"])
 
@@ -312,7 +316,10 @@ class Window(pyglet.window.Window):
 		Given a pair of X-Y coordinates in pixels, return the
 		offset in room coordinates from the center room.
 		"""
-		return (int((x - self.cx + self.size / 2) // self.size), int((y - self.cy + self.size / 2) // self.size))
+		return (
+			int((x - self.cx + self.size / 2) // self.size),
+			int((y - self.cy + self.size / 2) // self.size),
+		)
 
 	def message(self, text):
 		self.say(text)
@@ -513,7 +520,9 @@ class Window(pyglet.window.Window):
 			x = x * radialFactor - y * sine
 			y = y * radialFactor + tangent * sine
 		vertices = points[0:1] * 2  # The first point, twice.
-		vertices.extend(chain.from_iterable((points[i], points[-i]) for i in range(1, (len(points) + 1) // 2)))
+		vertices.extend(
+			chain.from_iterable((points[i], points[-i]) for i in range(1, (len(points) + 1) // 2))
+		)
 		vertices.append(vertices[-1])
 		return list(chain.from_iterable(vertices))
 
@@ -529,7 +538,9 @@ class Window(pyglet.window.Window):
 		vecB = Vec2d(b)
 		vertices = (int(vecA.x), int(vecA.y), int(vecB.x), int(vecB.y))
 		count = len(vertices) // 2
-		return self.batch.add(count, pyglet.gl.GL_LINES, group, ("v2i", vertices), ("c4B", color.as_int() * count))
+		return self.batch.add(
+			count, pyglet.gl.GL_LINES, group, ("v2i", vertices), ("c4B", color.as_int() * count)
+		)
 
 	def fat_segment_vertices(self, a, b, radius):
 		vecA = Vec2d(a)
@@ -712,7 +723,9 @@ class Window(pyglet.window.Window):
 			vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
 			vl.colors = color * (len(vl.colors) // 4)
 		else:
-			self.visible_exits[name] = self.draw_fat_segment(a, b, self.size / radius, color, group=self.groups[2])
+			self.visible_exits[name] = self.draw_fat_segment(
+				a, b, self.size / radius, color, group=self.groups[2]
+			)
 
 	def exits2d_tiled(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
 		directionVector = DIRECTIONS_VEC2D.get(direction, None)

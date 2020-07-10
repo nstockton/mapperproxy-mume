@@ -50,7 +50,9 @@ def formatDocString(functionOrString, width=79, prefix=""):
 		docString = functionOrString.__docstring__ if functionOrString.__docstring__ is not None else ""
 	else:  # It's a string.
 		docString = functionOrString
-	docString = docString.lstrip("\r\n")  # Remove any empty lines from the beginning, while keeping indention.
+	docString = docString.lstrip(
+		"\r\n"
+	)  # Remove any empty lines from the beginning, while keeping indention.
 	if not INDENT_REGEX.search(docString).group("indent"):
 		# The first line was not indented.
 		# Prefix the first line with the white space from the subsequent, non-empty
@@ -71,7 +73,9 @@ def formatDocString(functionOrString, width=79, prefix=""):
 			indentLevel -= 1
 		lastIndent = indent
 		linePrefix = prefix * indentLevel if prefix else indent
-		lines = textwrap.wrap(text, width=width - len(linePrefix), break_long_words=False, break_on_hyphens=False)
+		lines = textwrap.wrap(
+			text, width=width - len(linePrefix), break_long_words=False, break_on_hyphens=False
+		)
 		wrappedLines.append(linePrefix + f"\n{linePrefix}".join(lines))
 	docString = "\n".join(wrappedLines)
 	docString = textwrap.indent(docString, prefix=prefix)  # Indent docstring lines with the prefix.
@@ -135,7 +139,9 @@ def roundHalfAwayFromZero(n, decimals=0):
 def humanSort(listToSort):
 	return sorted(
 		listToSort,
-		key=lambda item: [int(text) if text.isdigit() else text for text in re.split(r"(\d+)", item, re.UNICODE)],
+		key=lambda item: [
+			int(text) if text.isdigit() else text for text in re.split(r"(\d+)", item, re.UNICODE)
+		],
 	)
 
 

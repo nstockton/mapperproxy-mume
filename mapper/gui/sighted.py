@@ -97,7 +97,9 @@ class Window(pyglet.window.Window):
 		self.playerRoom = None
 		self.centerRoom = None
 		# Pyglet window
-		super(Window, self).__init__(self.col * self.square, self.row * self.square, caption="MPM", resizable=True)
+		super(Window, self).__init__(
+			self.col * self.square, self.row * self.square, caption="MPM", resizable=True
+		)
 		logger.info(f"Creating window {self}")
 		self._gui_queue = world._gui_queue
 		self._gui_queue_lock = world._gui_queue_lock

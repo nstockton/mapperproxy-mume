@@ -29,7 +29,9 @@ class TestMapper(unittest.TestCase):
 			findFormat=None,
 			isEmulatingOffline=None,
 		)
-		self.mapper.daemon = True  # this allows unittest to quit if the mapper thread does not close properly.
+		self.mapper.daemon = (
+			True  # this allows unittest to quit if the mapper thread does not close properly.
+		)
 
 	def testMapper_run(self):
 		self.mapper.handleUserData = Mock()
@@ -60,9 +62,15 @@ class TestMapper(unittest.TestCase):
 		userCalls = self.mapper.handleUserData.mock_calls
 		self.assertEqual(len(userCalls), 4)
 		self.assertEqual(userCalls[0], call(b"rinfo"), "First call to handleUserData was not as expected.")
-		self.assertEqual(userCalls[1], call(b"emu go lorien"), "Second call to handleUserData was not as expected.")
-		self.assertEqual(userCalls[2], call(b"not_a_user_command"), "Third handleUserData was not as expected.")
-		self.assertEqual(userCalls[3], call(b"run ingrove"), "Fourth call to handleUserData was not as expected.")
+		self.assertEqual(
+			userCalls[1], call(b"emu go lorien"), "Second call to handleUserData was not as expected."
+		)
+		self.assertEqual(
+			userCalls[2], call(b"not_a_user_command"), "Third handleUserData was not as expected."
+		)
+		self.assertEqual(
+			userCalls[3], call(b"run ingrove"), "Fourth call to handleUserData was not as expected."
+		)
 
 		# validate calls to handleMudEvent
 		serverCalls = self.mapper.handleMudEvent.mock_calls
@@ -113,7 +121,9 @@ class TestMapper_handleMudEvent(unittest.TestCase):
 			findFormat=None,
 			isEmulatingOffline=None,
 		)
-		self.mapper.daemon = True  # this allows unittest to quit if the mapper thread does not close properly.
+		self.mapper.daemon = (
+			True  # this allows unittest to quit if the mapper thread does not close properly.
+		)
 
 	def test_legacyMudEventHandlers(self):
 		events = [handlerName[len("mud_event_") :] for handlerName in self.legacyHandlerNames]
