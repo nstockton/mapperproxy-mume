@@ -16,7 +16,7 @@ from unittest.mock import Mock, call
 from mapper import MUD_DATA
 from mapper.main import Game
 from mapper.protocols.mpi import MPI_INIT
-from mapper.protocols.proxy import ProtocolHandler
+from mapper.protocols.proxy import ProxyHandler
 from mapper.protocols.telnet_constants import (
 	CHARSET,
 	CHARSET_ACCEPTED,
@@ -65,7 +65,7 @@ class TestGameThread(unittest.TestCase):
 		clientSocket.sendall.side_effect = lambda data: outputToPlayer.put(data)
 		mapperThread = Mock()
 		mapperThread.interface = "text"
-		proxy = ProtocolHandler(
+		proxy = ProxyHandler(
 			clientSocket,
 			mumeSocket,
 			outputFormat="normal",
@@ -155,7 +155,7 @@ class TestGameThreadThroughput(unittest.TestCase):
 		mumeSocket.sendall.side_effect = lambda data: self.inputToMume.put(data)
 		mapperThread = Mock()
 		mapperThread.interface = "text"
-		proxy = ProtocolHandler(
+		proxy = ProxyHandler(
 			playerSocket,
 			mumeSocket,
 			outputFormat="normal",

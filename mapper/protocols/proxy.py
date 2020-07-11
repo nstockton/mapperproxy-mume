@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Sequence, Set, Union
+from typing import Sequence, Union
 
 # Local Modules:
 from .manager import Manager
@@ -44,25 +44,17 @@ class Telnet(TelnetProtocol):
 		proxy: The proxy that spawned this object.
 	"""
 
-	def __init__(self, name: str, proxy: "ProtocolHandler", *args, **kwargs):
+	def __init__(self, name: str, proxy: "ProxyHandler", *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.name: str = name.lower()
 		if self.name not in ("player", "game"):
 			raise ValueError("Name must be 'player' or 'game'")
-		self.proxy: "ProtocolHandler" = proxy
-
-	@property
-	def supportedExtras(self) -> Set[bytes]:
-		"""
-		Retrieves handled commands/options, except for WILL/WONT/DO/DONT.
-
-		Returns:
-			The handled command/option bytes, except for negotiation bytes.
-		"""
-		return set(self.commandMap).union(self.subnegotiationMap).difference(NEGOTIATION_BYTES)
+		self.proxy: "ProxyHandler" = proxy
 
 	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
-		if command in NEGOTIATION_BYTES and option not in self.supportedExtras:
+		if command in NEGOTIATION_BYTES and option not in self.subnegotiationMap:
+			# Treat any unhandled negotiation options the same as unhandled commands, so
+			# they are forwarded to the other end of the proxy.
 			self.on_unhandledCommand(command, option)
 		else:
 			super().on_command(command, option)
@@ -82,7 +74,7 @@ class Player(Telnet):
 		self.proxy.game.write(IAC + SB + option + data + IAC + SE)
 
 	def on_enableLocal(self, option: bytes) -> bool:
-		if option in self.proxy.game._handlers[0].supportedExtras:
+		if option in self.proxy.game._handlers[0].subnegotiationMap:
 			return False
 		return super().on_enableLocal(option)
 
@@ -151,7 +143,8 @@ class Game(Telnet):
 			self.wont(CHARSET)
 		del self._oldCharset
 
-	def on_ga(self, argument):
+	def on_ga(self, *args) -> None:
+		"""Called when a Go Ahead command is received."""
 		self.proxy.player.write(self.proxy.promptTerminator)
 
 	def on_connectionMade(self):
@@ -183,12 +176,10 @@ class Game(Telnet):
 		super().on_disableLocal(option)
 
 
-class ProtocolHandler(object):
+class ProxyHandler(object):
 	def __init__(self, playerSocket, gameSocket, **kwargs):
 		self.outputFormat = kwargs["outputFormat"]
-		self.promptTerminator = kwargs["promptTerminator"]
-		if self.promptTerminator is None:
-			self.promptTerminator = IAC + GA
+		self.promptTerminator = kwargs["promptTerminator"] or IAC + GA
 		self.promptTerminator = self.promptTerminator.replace(CR_LF, LF).replace(CR_NULL, CR)
 		self.promptTerminator = self.promptTerminator.replace(CR_NULL, CR).replace(LF, CR_LF)
 		self.isEmulatingOffline = kwargs["isEmulatingOffline"]

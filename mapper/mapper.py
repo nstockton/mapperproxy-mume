@@ -30,7 +30,7 @@ from .clock import (
 )
 from .config import Config, config_lock
 from .delays import OneShot
-from .protocols.proxy import ProtocolHandler
+from .protocols.proxy import ProxyHandler
 from .utils import decodeBytes, escapeIAC, escapeXML, formatDocString, regexFuzzy, simplified, stripAnsi
 from .world import (
 	DIRECTIONS,
@@ -212,7 +212,7 @@ class Mapper(threading.Thread, World):
 		self.parsedHour = 0
 		self.parsedMinutes = 0
 		self.timeSynchronized = False
-		self.proxy = ProtocolHandler(
+		self.proxy = ProxyHandler(
 			playerSocket,
 			gameSocket,
 			outputFormat=outputFormat,
