@@ -136,8 +136,7 @@ class Game(threading.Thread):
 				continue
 		if self.mapper.interface != "text":
 			# Shutdown the gui
-			with self.mapper._gui_queue_lock:
-				self.mapper._gui_queue.put(None)
+			self.mapper._gui_queue.put(None)
 
 
 class MockedSocketEmpty(Exception):

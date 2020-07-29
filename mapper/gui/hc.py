@@ -123,7 +123,6 @@ class Window(pyglet.window.Window):
 	def __init__(self, world):
 		self.world = world
 		self._gui_queue = world._gui_queue
-		self._gui_queue_lock = world._gui_queue_lock
 		if Speech is not None:
 			self._speech = Speech()
 			self.say = self._speech.say
@@ -326,15 +325,14 @@ class Window(pyglet.window.Window):
 		self.world.output(text)
 
 	def queue_observer(self, dt):
-		with self._gui_queue_lock:
-			while not self._gui_queue.empty():
-				try:
-					event = self._gui_queue.get_nowait()
-					if event is None:
-						event = ("on_close",)
-					self.dispatch_event(event[0], *event[1:])
-				except QueueEmpty:
-					break
+		while not self._gui_queue.empty():
+			try:
+				event = self._gui_queue.get_nowait()
+				if event is None:
+					event = ("on_close",)
+				self.dispatch_event(event[0], *event[1:])
+			except QueueEmpty:
+				continue
 
 	def blinker(self, dt):
 		for _, marker in self.blinkers.items():

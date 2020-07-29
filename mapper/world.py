@@ -12,8 +12,7 @@ import heapq
 import itertools
 import operator
 import re
-import threading
-from queue import Queue
+from queue import SimpleQueue
 
 # Third-party Modules:
 from fuzzywuzzy import fuzz
@@ -70,8 +69,7 @@ class World(object):
 		self.labels = {}
 		self._interface = interface
 		if interface != "text":
-			self._gui_queue = Queue()
-			self._gui_queue_lock = threading.RLock()
+			self._gui_queue = SimpleQueue()
 			if interface == "hc":
 				from .gui.hc import Window
 			elif interface == "sighted":
@@ -89,8 +87,7 @@ class World(object):
 	def currentRoom(self, value):
 		self._currentRoom = value
 		if self._interface != "text":
-			with self._gui_queue_lock:
-				self._gui_queue.put(("on_map_sync", value))
+			self._gui_queue.put(("on_map_sync", value))
 
 	@currentRoom.deleter
 	def currentRoom(self):
@@ -99,8 +96,7 @@ class World(object):
 	def GUIRefresh(self):
 		"""Trigger the clearing and redrawing of rooms by the GUI"""
 		if self._interface != "text":
-			with self._gui_queue_lock:
-				self._gui_queue.put(("on_gui_refresh",))
+			self._gui_queue.put(("on_gui_refresh",))
 
 	def output(self, text):
 		print(text)

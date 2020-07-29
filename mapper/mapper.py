@@ -11,7 +11,7 @@ import logging
 import re
 import textwrap
 import threading
-from queue import Queue
+from queue import SimpleQueue
 from timeit import default_timer
 
 # Local Modules:
@@ -156,7 +156,7 @@ class Mapper(threading.Thread, World):
 		self.gagPrompts = gagPrompts
 		self.findFormat = findFormat
 		self.isEmulatingOffline = isEmulatingOffline
-		self.queue = Queue()
+		self.queue = SimpleQueue()
 		with config_lock:
 			cfg = Config()
 			self._autoUpdateRooms = cfg.get("autoUpdateRooms", False)

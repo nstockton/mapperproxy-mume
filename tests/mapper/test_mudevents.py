@@ -46,8 +46,8 @@ class TestHandler(unittest.TestCase):
 		)
 
 	def testMapper_handle(self):
+		self.mapper.queue = Mock()
 		queue = self.mapper.queue
-		queue.put = Mock()
 		dummieHandler = DummieHandler(self.mapper)
 
 		self.mapper.handleMudEvent(dummieHandler.event, b"Hello world")
