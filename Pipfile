@@ -14,6 +14,7 @@ mkdocstrings = "*"
 mypy = "*"
 pre-commit = "*"
 PyInstaller = "*"
+pytkdocs = {git = "https://github.com/nstockton/pytkdocs.git", ref = "tab-indentation-parser"}
 tan = {git = "https://github.com/nstockton/tan.git"}
 
 [packages]
