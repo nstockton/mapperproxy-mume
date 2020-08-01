@@ -5,38 +5,38 @@ repos:
         name: UnitTest
         stages: [commit]
         language: system
-        entry: "pipenv run python -B -m coverage run -m unittest"
+        entry: "python -B -m coverage run -m unittest"
         types: [python]
         pass_filenames: false
       - id: isort
         name: ISort
         stages: [commit]
         language: system
-        entry: "pipenv run python -B -m isort"
+        entry: "python -B -m isort"
         types: [python]
       - id: tan
         name: Tan
         stages: [commit]
         language: system
-        entry: "pipenv run python -B -m black"
+        entry: "python -B -m black"
         types: [python]
       - id: flake8
         name: Flake8
         stages: [commit]
         language: system
-        entry: "pipenv run python -B -m flake8"
+        entry: "python -B -m flake8"
         types: [python]
       - id: mypy
         name: MyPy
         stages: [commit]
         language: system
-        entry: "pipenv run python -B -m mypy"
+        entry: "python -B -m mypy"
         types: [python]
         pass_filenames: false
       - id: coverage
         name: Coverage
         stages: [push]
         language: system
-        entry: "pipenv run python -B -m coverage report"
+        entry: "python -B -m coverage report"
         types: [python]
         pass_filenames: false
