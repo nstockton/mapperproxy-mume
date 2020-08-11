@@ -12,7 +12,7 @@ repos:
         name: ISort
         stages: [commit]
         language: system
-        entry: "python -B -m isort"
+        entry: "python -B -W ignore -m isort"
         types: [python]
       - id: tan
         name: Tan
