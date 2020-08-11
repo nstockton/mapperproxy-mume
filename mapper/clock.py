@@ -511,7 +511,7 @@ class Clock(object):
 		delta = timeToDelta(year, month, day, hour, minutes)
 		self.epoch = int(time.time()) - delta
 
-	def time(self, action: Optional[str] = None):
+	def time(self, action: Optional[str] = None) -> str:
 		"""
 		Outputs information about the current Mume time.
 
