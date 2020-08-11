@@ -17,17 +17,7 @@ from timeit import default_timer
 # Local Modules:
 from . import INTERFACES, MUD_DATA, OUTPUT_FORMATS, USER_DATA, roomdata
 from .cleanmap import ExitsCleaner
-from .clock import (
-	CLOCK_REGEX,
-	DAWN_REGEX,
-	DAY_REGEX,
-	DUSK_REGEX,
-	MONTHS,
-	NIGHT_REGEX,
-	TIME_REGEX,
-	Clock,
-	timeToEpoch,
-)
+from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config, config_lock
 from .delays import OneShot
 from .protocols.proxy import ProxyHandler
@@ -948,7 +938,7 @@ class Mapper(threading.Thread, World):
 			if self.timeEvent == "dawn" or self.timeEvent == "dusk":
 				self.parsedHour = MONTHS[month][self.timeEvent] + self.timeEventOffset
 				self.parsedMinutes = 0
-			self.clock.epoch = timeToEpoch(year, month, day, self.parsedHour, self.parsedMinutes)
+			self.clock.setTime(year, month, day, self.parsedHour, self.parsedMinutes)
 			self.timeEvent = None
 			self.timeEventOffset = 0
 			self.timeSynchronized = True

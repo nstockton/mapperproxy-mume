@@ -9,6 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import re
 import time
+from typing import Mapping, Optional, Sequence, Tuple, Union
 
 # Local Modules:
 from .config import Config, config_lock
@@ -19,7 +20,7 @@ CLOCK_REGEX = re.compile(
 )
 TIME_REGEX = re.compile(
 	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2]) (?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
-	r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
+	+ r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
 )
 DAWN_REGEX = re.compile(r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$")
 DAY_REGEX = re.compile(
@@ -28,23 +29,34 @@ DAY_REGEX = re.compile(
 DUSK_REGEX = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
 NIGHT_REGEX = re.compile(
 	r"^The last ray of light fades\, and all is swallowed up in darkness\.$|"
-	r"^(?:It seems as if )?[Tt]he night has begun\.(?: You feel stronger in the dark\!)?$"
+	+ r"^(?:It seems as if )?[Tt]he night has begun\.(?: You feel stronger in the dark\!)?$"
 )
 
 FIRST_YEAR = 2850
 MINUTES_PER_HOUR = 60
 HOURS_PER_DAY = 24
+DAYS_PER_WEEK = 7
 DAYS_PER_MONTH = 30
 MONTHS_PER_YEAR = 12
+SEASONS_PER_YEAR = 4
+MONTHS_PER_SEASON = MONTHS_PER_YEAR // SEASONS_PER_YEAR
+DAYS_PER_SEASON = DAYS_PER_MONTH * MONTHS_PER_SEASON
 DAYS_PER_YEAR = DAYS_PER_MONTH * MONTHS_PER_YEAR
 MINUTES_PER_DAY = MINUTES_PER_HOUR * HOURS_PER_DAY
 MINUTES_PER_MONTH = MINUTES_PER_DAY * DAYS_PER_MONTH
 MINUTES_PER_YEAR = MINUTES_PER_DAY * DAYS_PER_YEAR
 DAYS_PER_MOON_CYCLE = 24
 HOURS_PER_MOON_CYCLE = HOURS_PER_DAY * DAYS_PER_MOON_CYCLE
+HOURS_PER_MOON_RISE = HOURS_PER_DAY + 1
+FIRST_FULL_MOON_DAY = 7  # First full moon is on January 7.
+FULL_MOON_HOUR = 18  # Full moon always rises at 6 PM.
+FULL_MOON_OFFSET = 14  # Full moon day is always 14 days after the moon cycle starts.
+FIRST_MOON_CYCLE_DAY = (FIRST_FULL_MOON_DAY - FULL_MOON_OFFSET) % DAYS_PER_MOON_CYCLE
+FIRST_MOON_CYCLE_HOUR = (FULL_MOON_HOUR - FULL_MOON_OFFSET) % HOURS_PER_DAY
+DK_OPEN_DURATION = 3  # The number of hours DK stays open.
 
 # fmt: off
-MONTHS = [
+MONTHS: Sequence[Mapping[str, Union[str, int]]] = [
 	{
 		"name": "January",
 		"sindarin": "Ninui",
@@ -144,7 +156,7 @@ MONTHS = [
 ]
 # fmt: on
 
-WEEKDAYS = [
+WEEKDAYS: Sequence[Mapping[str, str]] = [
 	{"name": "Sunday", "sindarin": "Oranor", "westron": "Sunday"},
 	{"name": "Monday", "sindarin": "Orithil", "westron": "Monday"},
 	{"name": "Tuesday", "sindarin": "Orgaladhad", "westron": "Trewsday"},
@@ -155,146 +167,297 @@ WEEKDAYS = [
 ]
 
 
-def timeToEpoch(year, month, day, hour, minutes):
-	"""Returns the epoch for the given game time."""
-	epoch = int(time.time())
-	epoch -= (year - FIRST_YEAR) * MINUTES_PER_YEAR
-	epoch -= month * MINUTES_PER_MONTH
-	epoch -= (day - 1) * MINUTES_PER_DAY
-	epoch -= hour * MINUTES_PER_HOUR
-	epoch -= minutes
-	return epoch
+def timeToDelta(year: int, month: int, day: int, hour: int, minutes: int) -> int:
+	"""
+	Calculates the delta of a given Mume time.
+
+	The delta is the difference (in real seconds) between the last reset of Mume time and the given Mume time.
+
+	Args:
+		year: The year.
+		month: Month of the year (0 - 11).
+		day: Day of the month (1 - 30).
+		hour: Hour of day (0 - 23).
+		minutes: Minutes of the hour (0 - 59).
+
+	Returns:
+		The delta.
+	"""
+	return (
+		(year - FIRST_YEAR) * MINUTES_PER_YEAR
+		+ month * MINUTES_PER_MONTH
+		+ (day - 1) * MINUTES_PER_DAY
+		+ hour * MINUTES_PER_HOUR
+		+ minutes
+	)
 
 
-class Clock(object):
-	def __init__(self):
-		self._epoch = None
+def deltaToTime(delta: int) -> Tuple[int, int, int, int, int]:
+	"""
+	Calculates the Mume time of a given delta.
+
+	The delta is the difference (in real seconds) between the last reset of Mume time and the given Mume time.
+
+	Args:
+		delta: The delta.
+
+	Returns:
+		A tuple containing the Mume year, month, day, hour, and minutes.
+	"""
+	year = delta // MINUTES_PER_YEAR + FIRST_YEAR
+	delta %= MINUTES_PER_YEAR
+	month = delta // MINUTES_PER_MONTH  # 0 - 11.
+	delta %= MINUTES_PER_MONTH
+	day = delta // MINUTES_PER_DAY + 1  # 1 - 30.
+	delta %= MINUTES_PER_DAY
+	hour = delta // MINUTES_PER_HOUR  # 0 - 23.
+	delta %= MINUTES_PER_HOUR
+	minutes = delta  # 0 - 59.
+	return year, month, day, hour, minutes
+
+
+class MumeTime(object):
+	def __init__(self, delta: int) -> None:
+		self._year, self._month, self._day, self._hour, self._minutes = deltaToTime(delta)
 
 	@property
-	def epoch(self):
-		if self._epoch is not None:
-			return self._epoch
-		with config_lock:
-			cfg = Config()
-			epoch = cfg.get("mume_epoch", 1517486489)
-			del cfg
-		return epoch
+	def year(self) -> int:
+		"""The year."""
+		return self._year
 
-	@epoch.setter
-	def epoch(self, value):
-		self._epoch = value
-		with config_lock:
-			cfg = Config()
-			cfg["mume_epoch"] = value
-			cfg.save()
-			del cfg
+	@property
+	def month(self) -> int:
+		"""The month of the year (0 or more)."""
+		return self._month
 
-	def time(self, action=None):
-		output = []
-		minutes = int(time.time()) - self.epoch
-		year = minutes // MINUTES_PER_YEAR + FIRST_YEAR
-		minutes %= MINUTES_PER_YEAR
-		month = minutes // MINUTES_PER_MONTH
-		minutes %= MINUTES_PER_MONTH
-		day = minutes // MINUTES_PER_DAY + 1
-		minutes %= MINUTES_PER_DAY
-		dayOfYear = month * DAYS_PER_MONTH + day
-		hour = minutes // MINUTES_PER_HOUR
-		minutes %= MINUTES_PER_HOUR
-		ap = "am" if hour < 12 else "pm"
-		output.append(
-			f"Game time {hour % 12 or 12}:{minutes:02d} {ap}: "
-			+ f"Dawn: {MONTHS[month]['dawn']} am, "
-			+ f"Dusk: {MONTHS[month]['dusk'] - 12} pm."
-		)
-		if action == "pull":
-			return f"pull lever {day}\npull lever {MONTHS[month]['westron']}"
-		elif action is not None:
-			return f"{action} {output[0]}"
-		weekday = WEEKDAYS[(dayOfYear + (year - FIRST_YEAR) * DAYS_PER_YEAR) % 7]["name"]
-		if hour < MONTHS[month]["dawn"]:
+	@property
+	def day(self) -> int:
+		"""The day of the month (1 or more)."""
+		return self._day
+
+	@property
+	def hour(self) -> int:
+		"""The hour of the day (0 or more)."""
+		return self._hour
+
+	@property
+	def minutes(self) -> int:
+		"""The minutes of the hour (0 or more)."""
+		return self._minutes
+
+	@property
+	def delta(self) -> int:
+		"""The time as a delta."""
+		return timeToDelta(self.year, self.month, self.day, self.hour, self.minutes)
+
+	@property
+	def amPm(self) -> str:
+		"""The AM - PM value."""
+		return "am" if self.hour < 12 else "pm"
+
+	@property
+	def dayOfYear(self) -> int:
+		"""The day of the year (1 or more)."""
+		return self.month * DAYS_PER_MONTH + self.day
+
+	@property
+	def hourOfYear(self) -> int:
+		"""The hour of the year (0 or more)."""
+		return (self.dayOfYear - 1) * HOURS_PER_DAY + self.hour
+
+	@property
+	def overallDay(self) -> int:
+		"""The sum of all the elapsed years in days and the day of year (1 or more)."""
+		return (self.year - FIRST_YEAR) * DAYS_PER_YEAR + self.dayOfYear
+
+	@property
+	def weekday(self) -> str:
+		"""The name of the weekday."""
+		return WEEKDAYS[self.overallDay % DAYS_PER_WEEK]["name"]
+
+	@property
+	def dawn(self) -> int:
+		"""The hour of dawn."""
+		return int(MONTHS[self.month]["dawn"])
+
+	@property
+	def dusk(self) -> int:
+		"""The hour of dusk."""
+		return int(MONTHS[self.month]["dusk"])
+
+	@property
+	def season(self) -> str:
+		"""The name of the season."""
+		return str(MONTHS[self.month]["season"])
+
+	@property
+	def monthName(self) -> str:
+		"""The name of the month."""
+		return str(MONTHS[self.month]["name"])
+
+	@property
+	def monthWestron(self) -> str:
+		"""The name of the month in Westron."""
+		return str(MONTHS[self.month]["westron"])
+
+	@property
+	def monthSindarin(self) -> str:
+		"""The name of the month in Sindarin."""
+		return str(MONTHS[self.month]["sindarin"])
+
+	@property
+	def dawnDuskState(self) -> Tuple[str, str, int]:
+		"""A tuple containing the current state name, the next state name, and the game hours until next state."""
+		if self.hour < self.dawn:
 			state = "NIGHT"
 			nextState = "DAY"
-			untilNextState = MONTHS[month]["dawn"] - hour + 1
-		elif hour >= MONTHS[month]["dusk"]:
+			untilNextState = self.dawn - self.hour + 1
+		elif self.hour >= self.dusk:
 			state = "NIGHT"
 			nextState = "DAY"
-			untilNextState = 25 + MONTHS[month]["dawn"] - hour
-		elif hour > MONTHS[month]["dawn"] and hour < MONTHS[month]["dusk"]:
+			untilNextState = HOURS_PER_DAY + self.dawn - self.hour + 1
+		elif self.hour > self.dawn and self.hour < self.dusk:
 			state = "DAY"
 			nextState = "NIGHT"
-			untilNextState = MONTHS[month]["dusk"] - hour
-		elif hour == MONTHS[month]["dawn"]:
+			untilNextState = self.dusk - self.hour
+		elif self.hour == self.dawn:
 			state = "DAWN"
 			nextState = "DAY"
 			untilNextState = 1
+		return state, nextState, untilNextState
+
+	@property
+	def daysUntilSeason(self) -> int:
+		"""The days until next season (1 or more)."""
+		monthsSinceLastSeason = (self.month + 1) % MONTHS_PER_SEASON
+		daysSinceLastSeason = monthsSinceLastSeason * DAYS_PER_MONTH + (self.day - 1)
+		return DAYS_PER_SEASON - daysSinceLastSeason
+
+	@property
+	def rlHoursUntilSeason(self) -> int:
+		"""The real life hours until next season (1 or more)."""
+		return self.daysUntilSeason * HOURS_PER_DAY // MINUTES_PER_HOUR
+
+	@property
+	def daysUntilWinter(self) -> int:
+		"""The days until next winter (1 or more)."""
+		monthsSinceLastWinter = (self.month + 1) % MONTHS_PER_YEAR
+		daysSinceLastWinter = monthsSinceLastWinter * DAYS_PER_MONTH + (self.day - 1)
+		return DAYS_PER_YEAR - daysSinceLastWinter
+
+	@property
+	def rlHoursUntilWinter(self) -> int:
+		"""The real life hours until next winter (0 or more)."""
+		return self.daysUntilWinter * HOURS_PER_DAY // MINUTES_PER_HOUR
+
+	@property
+	def daysSinceMoonCycle(self) -> int:
+		"""The days since last moon cycle (0 or more)."""
+		return (self.dayOfYear - FIRST_MOON_CYCLE_DAY) % DAYS_PER_MOON_CYCLE
+
+	@property
+	def daysUntilMoonCycle(self) -> int:
+		"""The days until next moon cycle (1 or more)."""
+		return DAYS_PER_MOON_CYCLE - self.daysSinceMoonCycle
+
+	@property
+	def hourOfMoonRise(self) -> int:
+		"""The hour of day when the moon will rise (0 or more)."""
+		return (FIRST_MOON_CYCLE_HOUR + self.daysSinceMoonCycle) % HOURS_PER_DAY
+
+	@property
+	def daysSinceFullMoon(self) -> int:
+		"""The days since last full moon (0 or more)."""
+		return (self.dayOfYear - FIRST_FULL_MOON_DAY) % DAYS_PER_MOON_CYCLE
+
+	@property
+	def daysUntilFullMoon(self) -> int:
+		"""The days until next full moon (1 or more)."""
+		return DAYS_PER_MOON_CYCLE - self.daysSinceFullMoon
+
+	@property
+	def hoursSinceFullMoon(self) -> int:
+		"""The hours since last full moon (0 or more)."""
+		return (self.daysSinceFullMoon * HOURS_PER_DAY + self.hour - FULL_MOON_HOUR) % HOURS_PER_MOON_CYCLE
+
+	@property
+	def hoursUntilFullMoon(self) -> int:
+		"""The hours Until full moon (1 or more)."""
+		return HOURS_PER_MOON_CYCLE - self.hoursSinceFullMoon
+
+	@property
+	def info(self) -> str:  # pragma: no cover
+		"""A summery of information about this moment in Mume time."""
+		output = []
 		output.append(
-			f"It is currently {state}, on {weekday}, {MONTHS[month]['name']} {day} "
-			+ f"({MONTHS[month]['westron']} / {MONTHS[month]['sindarin']}), "
-			+ f"({MONTHS[month]['season']}), year {year} of the third age."
+			f"Game time {self.hour % 12 or 12}:{self.minutes:02d} {self.amPm}: "
+			+ f"Dawn: {self.dawn} am, Dusk: {self.dusk - 12} pm."
+		)
+		state, nextState, untilNextState = self.dawnDuskState
+		output.append(
+			f"It is currently {state}, on {self.weekday}, {self.monthName} {self.day} "
+			+ f"({self.monthWestron} / {self.monthSindarin}), ({self.season}), year {self.year} of the third age."
 		)
 		output.append(
 			f"Time left until {nextState} is less than {untilNextState} tick{'s' if untilNextState != 1 else '!'}"
 		)
-		nextSeasonInGameDays = (((month + 1) // 3 * 3 + 3) - (month + 1) - 1) * DAYS_PER_MONTH
-		nextSeasonInGameDays += (DAYS_PER_MONTH - day) + (1 - (hour // HOURS_PER_DAY))
-		nextSeasonInRlHours = nextSeasonInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR
 		output.append(
-			f"{MONTHS[month]['season'][-6:]} ends in "
-			+ f"{nextSeasonInGameDays} mume day{'s' if nextSeasonInGameDays != 1 else ''} or "
-			+ f"{nextSeasonInRlHours} real-life hour{'s' if nextSeasonInRlHours != 1 else ''}."
+			f"{self.season[-6:]} ends in "
+			+ f"{self.daysUntilSeason} mume day{'s' if self.daysUntilSeason != 1 else ''} or "
+			+ f"{self.rlHoursUntilSeason} real-life hour{'s' if self.rlHoursUntilSeason != 1 else ''}."
 		)
-		nextWinterInGameDays = (MONTHS_PER_YEAR - (month + 1) % 12 - 1) * DAYS_PER_MONTH
-		nextWinterInGameDays += (DAYS_PER_MONTH - day) + (1 - hour // HOURS_PER_DAY)
-		nextWinterInRlDays = nextWinterInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR // HOURS_PER_DAY
-		nextWinterInRlHours = (nextWinterInGameDays * HOURS_PER_DAY // MINUTES_PER_HOUR) % HOURS_PER_DAY
+		rlDaysUntilWinter = self.rlHoursUntilWinter // HOURS_PER_DAY
+		rlHoursUntilWinter = self.rlHoursUntilWinter % HOURS_PER_DAY
 		output.append(
-			f"Next winter starts in {nextWinterInRlDays} real-life day{'s' if nextWinterInRlDays != 1 else ''} "
-			+ f"and {nextWinterInRlHours} hour{'s' if nextWinterInRlHours != 1 else ''}."
+			f"Next winter starts in {rlDaysUntilWinter} real-life day{'s' if rlDaysUntilWinter != 1 else ''} "
+			+ f"and {rlHoursUntilWinter} hour{'s' if rlHoursUntilWinter != 1 else ''}."
 		)
-		moonRiseOffset = 11
-		moonRiseHour = (dayOfYear + moonRiseOffset) % DAYS_PER_MOON_CYCLE
-		if hour == moonRiseHour:
+		hourOfMoonRise = self.hourOfMoonRise
+		if self.hour == hourOfMoonRise:
 			output.append("Moon is up now!")
 		else:
-			if hour > moonRiseHour:
-				moonRiseHour = (dayOfYear + moonRiseOffset + 1) % DAYS_PER_MOON_CYCLE
-				moonRiseDay = "tomorrow"
+			if self.hour > hourOfMoonRise:
+				hourOfMoonRise = (hourOfMoonRise + 1) % HOURS_PER_DAY
+				dayOfMoonRise = "tomorrow"
 			else:
-				moonRiseDay = "today"
+				dayOfMoonRise = "today"
 			output.append(
-				f"Next moon rise {moonRiseDay} at {moonRiseHour % 12 or 12}:00 "
-				+ f"{'am' if moonRiseHour < 12 else 'pm'} (game time)."
+				f"Next moon rise {dayOfMoonRise} at {hourOfMoonRise % 12 or 12}:00 "
+				+ f"{'am' if hourOfMoonRise < 12 else 'pm'} (game time)."
 			)
-		fullMoonOffset = DAYS_PER_MOON_CYCLE - 7  # First full moon rises on the 7th day of the year.
-		fullMoonHour = (dayOfYear + fullMoonOffset) % DAYS_PER_MOON_CYCLE * HOURS_PER_DAY + hour
-		if fullMoonHour < 31:
-			ticksUntilFullMoon = 18 - fullMoonHour if fullMoonHour <= 18 else 0
-		else:
-			ticksUntilFullMoon = HOURS_PER_MOON_CYCLE - fullMoonHour + 18
-		nextFullMoonInRlHours = ticksUntilFullMoon // MINUTES_PER_HOUR
-		nextFullMoonInRlMinutes = ticksUntilFullMoon % MINUTES_PER_HOUR
-		if not ticksUntilFullMoon:
+		nextFullMoonRlHours = self.hoursUntilFullMoon // MINUTES_PER_HOUR
+		nextFullMoonRlMinutes = self.hoursUntilFullMoon % MINUTES_PER_HOUR
+		if self.hoursSinceFullMoon < 13:
 			output.append("Full moon is up now!")
 		else:
 			output.append(
 				"Next full moon rises in "
-				+ f"{nextFullMoonInRlHours} real-life hour{'s' if nextFullMoonInRlHours != 1 else ''} "
-				+ f"and {nextFullMoonInRlMinutes} minute{'s' if nextFullMoonInRlMinutes != 1 else ''}."
+				+ f"{nextFullMoonRlHours} real-life hour{'s' if nextFullMoonRlHours != 1 else ''} "
+				+ f"and {nextFullMoonRlMinutes} minute{'s' if nextFullMoonRlMinutes != 1 else ''}."
 			)
-		dkMoonOffset = DAYS_PER_MOON_CYCLE - 6  # First DK moon rises on the 6th day of the year.
-		dkHour = (dayOfYear + dkMoonOffset) % DAYS_PER_MOON_CYCLE * HOURS_PER_DAY + hour
-		nextDkDay = 1
-		if dkHour < 20:
-			ticksUntilDk = 17 - dkHour if dkHour <= 17 else 0
-		elif dkHour < HOURS_PER_DAY + 21:
-			ticksUntilDk = HOURS_PER_DAY + 18 - dkHour if dkHour <= HOURS_PER_DAY + 18 else 0
+		if (
+			self.hoursUntilFullMoon > HOURS_PER_MOON_RISE - DK_OPEN_DURATION
+			and self.hoursSinceFullMoon >= HOURS_PER_MOON_RISE + DK_OPEN_DURATION
+		):
+			nextDkDay = 1
+			ticksUntilDk = (
+				self.hoursUntilFullMoon - HOURS_PER_MOON_RISE
+				if self.hoursUntilFullMoon > HOURS_PER_MOON_RISE
+				else 0
+			)
+		elif (
+			self.hoursUntilFullMoon <= HOURS_PER_MOON_RISE - DK_OPEN_DURATION
+			or self.hoursSinceFullMoon < DK_OPEN_DURATION
+		):
 			nextDkDay = 2
-		elif dkHour < HOURS_PER_DAY * 2 + 22:
-			ticksUntilDk = HOURS_PER_DAY * 2 + 19 - dkHour if dkHour <= HOURS_PER_DAY * 2 + 19 else 0
-			nextDkDay = 3
+			ticksUntilDk = 0 if self.hoursSinceFullMoon < DK_OPEN_DURATION else self.hoursUntilFullMoon
 		else:
-			ticksUntilDk = HOURS_PER_MOON_CYCLE - dkHour + 17
+			nextDkDay = 3
+			ticksUntilDk = (
+				HOURS_PER_MOON_RISE - self.hoursSinceFullMoon
+				if self.hoursSinceFullMoon < HOURS_PER_MOON_RISE
+				else 0
+			)
 		nextDkInRlHours = ticksUntilDk // MINUTES_PER_HOUR
 		nextDkInRlMinutes = ticksUntilDk % MINUTES_PER_HOUR
 		if not ticksUntilDk:
@@ -305,3 +468,65 @@ class Clock(object):
 				+ f"{nextDkInRlMinutes} minute{'s' if nextDkInRlMinutes != 1 else ''} (day {nextDkDay} of 3)."
 			)
 		return "\n".join(output)
+
+
+class Clock(object):
+	def __init__(self) -> None:
+		self._epoch: Optional[int] = None
+
+	@property
+	def epoch(self) -> int:  # pragma: no cover
+		"""
+		The Mume epoch.
+
+		The Mume epoch is the real life time (in seconds) when Mume time was last reset.
+		"""
+		if self._epoch is None:
+			with config_lock:
+				cfg = Config()
+				self._epoch = int(cfg.get("mume_epoch", 1517486451))
+				del cfg
+		return self._epoch
+
+	@epoch.setter
+	def epoch(self, value: int) -> None:  # pragma: no cover
+		self._epoch = value
+		with config_lock:
+			cfg = Config()
+			cfg["mume_epoch"] = int(value)
+			cfg.save()
+			del cfg
+
+	def setTime(self, year: int, month: int, day: int, hour: int, minutes: int) -> None:
+		"""
+		Sets the Mume epoch from the current Mume time.
+
+		Args:
+			year: The year.
+			month: Month of the year (0 - 11).
+			day: Day of the month (1 - 30).
+			hour: Hour of day (0 - 23).
+			minutes: Minutes of the hour (0 - 59).
+		"""
+		delta = timeToDelta(year, month, day, hour, minutes)
+		self.epoch = int(time.time()) - delta
+
+	def time(self, action: Optional[str] = None):
+		"""
+		Outputs information about the current Mume time.
+
+		Args:
+			action: An action to perform.
+				If 'pull', output commands for looting mystical.
+				If not None, output first line of output, preceded by the action.
+				Otherwise, output the full information.
+
+		Returns:
+			The requested output.
+		"""
+		mt = MumeTime(int(time.time()) - self.epoch)
+		if action == "pull":
+			return f"pull lever {mt.day}\npull lever {mt.monthWestron}"
+		elif action is not None:
+			return f"{action} {mt.info.splitlines()[0]}"
+		return mt.info
