@@ -1,0 +1,9 @@
+# Protocols
+
+Mapper Proxy supports several protocols for communicating with Mume.
+See the documentation for
+[`TelnetProtocol`][mapper.protocols.telnet.TelnetProtocol],
+
+## Available handlers
+
+- [Telnet][mapper.protocols.telnet]

@@ -1,0 +1,2324 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Mapper Proxy Project Page" name="description"/>
+<link href="https://nstockton.github.io/mapperproxy-mume/api/mapper/" rel="canonical"/>
+<meta content="Nick Stockton" name="author"/>
+<link href="../../assets/images/favicon.png" rel="shortcut icon"/>
+<meta content="mkdocs-1.1.2, mkdocs-material-5.5.5" name="generator"/>
+<title>mapper.py - Mapper Proxy</title>
+<link href="../../assets/stylesheets/main.63b94e9e.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&amp;display=fallback" rel="stylesheet"/>
+<style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#mapper.mapper">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header-nav md-grid">
+<a aria-label="Mapper Proxy" class="md-header-nav__button md-logo" href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
+</a>
+<label class="md-header-nav__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"></path></svg>
+</label>
+<div class="md-header-nav__title" data-md-component="header-title">
+<div class="md-header-nav__ellipsis">
+<span class="md-header-nav__topic md-ellipsis">
+            Mapper Proxy
+          </span>
+<span class="md-header-nav__topic md-ellipsis">
+            
+              mapper.py
+            
+          </span>
+</div>
+</div>
+<label class="md-header-nav__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</label>
+<button aria-label="Clear" class="md-search__icon md-icon" data-md-component="search-reset" tabindex="-1" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header-nav__source">
+<a class="md-source" href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    nstockton/mapperproxy-mume
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Mapper Proxy" class="md-nav__button md-logo" href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
+</a>
+    Mapper Proxy
+  </label>
+<div class="md-nav__source">
+<a class="md-source" href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    nstockton/mapperproxy-mume
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../.." title="Home">
+      Home
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../" title="API Index">
+      API Index
+    </a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/>
+<label class="md-nav__link" for="nav-3">
+      API Navigation
+      <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"></path></svg>
+</span>
+</label>
+<nav aria-label="API Navigation" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="nav-3">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+        API Navigation
+      </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" id="nav-3-1" type="checkbox"/>
+<label class="md-nav__link" for="nav-3-1">
+      gui
+      <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"></path></svg>
+</span>
+</label>
+<nav aria-label="gui" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="nav-3-1">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+        gui
+      </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../gui/vec2d/" title="vec2d.py">
+      vec2d.py
+    </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" id="nav-3-2" type="checkbox"/>
+<label class="md-nav__link" for="nav-3-2">
+      protocols
+      <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"></path></svg>
+</span>
+</label>
+<nav aria-label="protocols" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="nav-3-2">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+        protocols
+      </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/base/" title="base.py">
+      base.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/manager/" title="manager.py">
+      manager.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/mpi/" title="mpi.py">
+      mpi.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/proxy/" title="proxy.py">
+      proxy.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/telnet/" title="telnet.py">
+      telnet.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/telnet_constants/" title="telnet_constants.py">
+      telnet_constants.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../protocols/xml/" title="xml.py">
+      xml.py
+    </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-3" id="nav-3-3" type="checkbox"/>
+<label class="md-nav__link" for="nav-3-3">
+      roomdata
+      <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"></path></svg>
+</span>
+</label>
+<nav aria-label="roomdata" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="nav-3-3">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+        roomdata
+      </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../roomdata/database/" title="database.py">
+      database.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../roomdata/objects/" title="objects.py">
+      objects.py
+    </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../cleanmap/" title="cleanmap.py">
+      cleanmap.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../clock/" title="clock.py">
+      clock.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../config/" title="config.py">
+      config.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../delays/" title="delays.py">
+      delays.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../main/" title="main.py">
+      main.py
+    </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+        mapper.py
+        <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"></path></svg>
+</span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./" title="mapper.py">
+      mapper.py
+    </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper">
+    mapper
+  </a>
+<nav aria-label="mapper" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper">
+    Mapper
+  </a>
+<nav aria-label="Mapper" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.daemon">
+    daemon
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.ident">
+    ident
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.name">
+    name
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.createSpeedWalk">
+    createSpeedWalk()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.deregisterMudEventHandler">
+    deregisterMudEventHandler()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulate_leave">
+    emulate_leave()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_brief">
+    emulation_command_brief()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_examine">
+    emulation_command_examine()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_exits">
+    emulation_command_exits()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_go">
+    emulation_command_go()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_help">
+    emulation_command_help()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_look">
+    emulation_command_look()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_quit">
+    emulation_command_quit()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_return">
+    emulation_command_return()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_sync">
+    emulation_command_sync()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.getNeighborsFromCoordinates">
+    getNeighborsFromCoordinates()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.getNeighborsFromRoom">
+    getNeighborsFromRoom()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.getRoomFromLabel">
+    getRoomFromLabel()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.GUIRefresh">
+    GUIRefresh()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.is_alive">
+    is_alive()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.isAlive">
+    isAlive()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.isBidirectional">
+    isBidirectional()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.join">
+    join()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.pathFind">
+    pathFind()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.registerMudEventHandler">
+    registerMudEventHandler()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.run">
+    run()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.start">
+    start()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.user_command_maphelp">
+    user_command_maphelp()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.user_command_tvnum">
+    user_command_tvnum()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.user_command_vnum">
+    user_command_vnum()
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mudevents/" title="mudevents.py">
+      mudevents.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../utils/" title="utils.py">
+      utils.py
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../world/" title="world.py">
+      world.py
+    </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../license/" title="License">
+      License
+    </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper">
+    mapper
+  </a>
+<nav aria-label="mapper" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper">
+    Mapper
+  </a>
+<nav aria-label="Mapper" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.daemon">
+    daemon
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.ident">
+    ident
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.name">
+    name
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.createSpeedWalk">
+    createSpeedWalk()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.deregisterMudEventHandler">
+    deregisterMudEventHandler()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulate_leave">
+    emulate_leave()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_brief">
+    emulation_command_brief()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_examine">
+    emulation_command_examine()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_exits">
+    emulation_command_exits()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_go">
+    emulation_command_go()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_help">
+    emulation_command_help()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_look">
+    emulation_command_look()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_quit">
+    emulation_command_quit()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_return">
+    emulation_command_return()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.emulation_command_sync">
+    emulation_command_sync()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.getNeighborsFromCoordinates">
+    getNeighborsFromCoordinates()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.getNeighborsFromRoom">
+    getNeighborsFromRoom()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.getRoomFromLabel">
+    getRoomFromLabel()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.GUIRefresh">
+    GUIRefresh()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.is_alive">
+    is_alive()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.isAlive">
+    isAlive()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.isBidirectional">
+    isBidirectional()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.join">
+    join()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.pathFind">
+    pathFind()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.registerMudEventHandler">
+    registerMudEventHandler()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.run">
+    run()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.start">
+    start()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.user_command_maphelp">
+    user_command_maphelp()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.user_command_tvnum">
+    user_command_tvnum()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.mapper.Mapper.user_command_vnum">
+    user_command_vnum()
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="doc doc-object doc-module">
+<h1 class="doc doc-heading" id="mapper.mapper">
+<span class="doc doc-types"><small class="doc doc-type doc-type-module"><code>Module</code></small></span>
+<code>mapper.mapper</code>
+<a class="headerlink" href="#mapper.mapper" title="Permanent link">¶</a></h1>
+<div class="doc doc-contents first">
+<div class="doc doc-children">
+<div class="doc doc-object doc-class">
+<h2 class="doc doc-heading" id="mapper.mapper.Mapper">
+<span class="doc doc-types"><small class="doc doc-type doc-type-class"><code>Class</code></small></span>
+<code>Mapper</code>
+<a class="headerlink" href="#mapper.mapper.Mapper" title="Permanent link">¶</a></h2>
+<div class="doc doc-contents">
+<div class="doc doc-children">
+<div class="doc doc-object doc-attribute">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.daemon">
+<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
+<code class="highlight">daemon        </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+<small class="doc doc-property doc-property-property"><code>property</code></small>
+<small class="doc doc-property doc-property-writable"><code>writable</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.daemon" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>A boolean value indicating whether this thread is a daemon thread.</p>
+<p>This must be set before start() is called, otherwise RuntimeError is
+raised. Its initial value is inherited from the creating thread; the
+main thread is not a daemon thread and therefore all threads created in
+the main thread default to daemon = False.</p>
+<p>The entire Python program exits when only daemon threads are left.</p>
+</div>
+</div>
+<div class="doc doc-object doc-attribute">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.ident">
+<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
+<code class="highlight">ident        </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+<small class="doc doc-property doc-property-property"><code>property</code></small>
+<small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.ident" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Thread identifier of this thread or None if it has not been started.</p>
+<p>This is a nonzero integer. See the get_ident() function. Thread
+identifiers may be recycled when a thread exits and another thread is
+created. The identifier is available even after the thread has exited.</p>
+</div>
+</div>
+<div class="doc doc-object doc-attribute">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.name">
+<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
+<code class="highlight">name        </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+<small class="doc doc-property doc-property-property"><code>property</code></small>
+<small class="doc doc-property doc-property-writable"><code>writable</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.name" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>A string used for identification purposes only.</p>
+<p>It has no semantics. Multiple threads may be given the same name. The
+initial name is set by the constructor.</p>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.createSpeedWalk">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">createSpeedWalk<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directionsList</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.createSpeedWalk" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Given a list of directions, return a string of the directions in standard speed walk format</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span> 992
+ 993
+ 994
+ 995
+ 996
+ 997
+ 998
+ 999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">createSpeedWalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directionsList</span><span class="p">):</span>
+	<span class="sd">"""Given a list of directions, return a string of the directions in standard speed walk format"""</span>
+
+	<span class="k">def</span> <span class="nf">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">):</span>
+		<span class="n">speedWalkDirs</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">direction</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">):</span>
+			<span class="n">lenGroup</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">lenGroup</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">speedWalkDirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">speedWalkDirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">lenGroup</span><span class="si">}{</span><span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">speedWalkDirs</span>
+
+	<span class="n">numDirections</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directionsList</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span><span class="p">])</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">directionsBuffer</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">while</span> <span class="n">directionsList</span><span class="p">:</span>
+		<span class="n">item</span> <span class="o">=</span> <span class="n">directionsList</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span><span class="p">:</span>
+			<span class="n">directionsBuffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># The item is not a direction, so process the directions buffer, clear the buffer,</span>
+			<span class="c1"># and add the resulting list plus the item to the result.</span>
+			<span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">))</span>
+			<span class="n">directionsBuffer</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+	<span class="c1"># Process any remaining items in the directions buffer.</span>
+	<span class="k">if</span> <span class="n">directionsBuffer</span><span class="p">:</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">))</span>
+	<span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">numDirections</span><span class="si">}</span><span class="s2"> rooms. </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.deregisterMudEventHandler">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">deregisterMudEventHandler<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.deregisterMudEventHandler" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Deregisters mud event handlers.
+params: same as registerMudEventHandler.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1061
+1062
+1063
+1064
+1065
+1066</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+	<span class="sd">"""Deregisters mud event handlers.</span>
+<span class="sd">	params: same as registerMudEventHandler.</span>
+<span class="sd">	"""</span>
+	<span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span> <span class="ow">and</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulate_leave">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulate_leave<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulate_leave" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>emulates leaving the room into a neighbouring room</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulate_leave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+	<span class="sd">"""emulates leaving the room into a neighbouring room"""</span>
+	<span class="k">if</span> <span class="n">direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"Alas, you cannot go that way..."</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">direction</span><span class="p">]</span><span class="o">.</span><span class="n">to</span>
+	<span class="k">if</span> <span class="s2">"death"</span> <span class="o">==</span> <span class="n">room</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"deathtrap!"</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="s2">"undefined"</span> <span class="o">==</span> <span class="n">room</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"undefined"</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="n">room</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_brief">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_brief<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_brief" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>toggles brief mode.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>291
+292
+293
+294</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_brief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""toggles brief mode."""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Brief mode </span><span class="si">{</span><span class="s1">'on'</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="k">else</span> <span class="s1">'off'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_examine">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_examine<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_examine" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>shows the room's description.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>296
+297
+298</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_examine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""shows the room's description."""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_exits">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_exits<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_exits" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>shows the exits in the room.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>300
+301
+302
+303</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""shows the exits in the room."""</span>
+	<span class="n">exits</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exits: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exits</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_go">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_go<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_go" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>mimic the /go command that the ainur use.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="sd">"""mimic the /go command that the ainur use."""</span>
+	<span class="n">room</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span> <span class="o">=</span> <span class="n">room</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_look</span><span class="p">()</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_exits</span><span class="p">()</span>
+	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingOffline</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span>
+	<span class="k">if</span> <span class="n">isJump</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span> <span class="o">=</span> <span class="n">room</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_help">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_help<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_help" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Shows documentation for mapper's emulation commands.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""Shows documentation for mapper's emulation commands."""</span>
+	<span class="n">helpTexts</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"emulation_command_"</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationCommands</span>
+	<span class="p">]</span>
+	<span class="n">documentedFuncs</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">docString</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">" "</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+		<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">docString</span> <span class="ow">in</span> <span class="n">helpTexts</span>
+		<span class="k">if</span> <span class="n">docString</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="p">]</span>
+	<span class="n">undocumentedFuncs</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">helpTexts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="s2">"The following commands allow you to emulate exploring the map without needing to move in game:"</span><span class="p">,</span>
+		<span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"    </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">helpText</span><span class="p">)</span> <span class="k">for</span> <span class="n">helpText</span> <span class="ow">in</span> <span class="n">documentedFuncs</span><span class="p">),</span>
+	<span class="p">]</span>
+	<span class="k">if</span> <span class="n">undocumentedFuncs</span><span class="p">:</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"The following commands have no documentation yet."</span><span class="p">)</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+			<span class="n">textwrap</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span>
+				<span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span>
+					<span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">helpText</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">helpText</span> <span class="ow">in</span> <span class="n">undocumentedFuncs</span><span class="p">),</span>
+					<span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span>
+					<span class="n">break_long_words</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+					<span class="n">break_on_hyphens</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+				<span class="p">),</span>
+				<span class="n">prefix</span><span class="o">=</span><span class="s2">"    "</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_look">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_look<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_look" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>looks at the room.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>350
+351
+352
+353
+354
+355
+356
+357</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""looks at the room."""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">dynamicDesc</span><span class="p">)</span>
+	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">note</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Note: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">note</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_quit">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_quit<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_quit" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Exits the program.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>287
+288
+289</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""Exits the program."""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">"quit"</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_return">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_return<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_return" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>returns to the last room jumped to with the go command.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>359
+360
+361
+362
+363
+364</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""returns to the last room jumped to with the go command."""</span>
+	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"Cannot return anywhere until the go command has been used at least once."</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_sync">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">emulation_command_sync<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_sync" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>When emulating while connected to the mud, syncs the emulated location with the in-game location.
+When running in offline mode, is equivalent to the return command.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>366
+367
+368
+369
+370
+371
+372
+373
+374</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""</span>
+<span class="sd">	When emulating while connected to the mud, syncs the emulated location with the in-game location.</span>
+<span class="sd">	When running in offline mode, is equivalent to the return command.</span>
+<span class="sd">	"""</span>
+	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingOffline</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_return</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getNeighborsFromCoordinates">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">getNeighborsFromCoordinates<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.getNeighborsFromCoordinates" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.
+Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+	<span class="sd">"""A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.</span>
+<span class="sd">	Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="nb">iter</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+	<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+		<span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="nb">iter</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+	<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+		<span class="n">radiusX</span> <span class="o">=</span> <span class="n">radiusY</span> <span class="o">=</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
+	<span class="k">for</span> <span class="n">vnum</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="n">z</span><span class="p">:</span>
+			<span class="k">continue</span>
+		<span class="n">differenceX</span><span class="p">,</span> <span class="n">differenceY</span><span class="p">,</span> <span class="n">differenceZ</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">z</span>
+		<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceX</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radiusX</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceY</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radiusY</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceZ</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radiusZ</span><span class="p">:</span>
+			<span class="k">yield</span> <span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">differenceX</span><span class="p">,</span> <span class="n">differenceY</span><span class="p">,</span> <span class="n">differenceZ</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getNeighborsFromRoom">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">getNeighborsFromRoom<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.getNeighborsFromRoom" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>A generator which yields all rooms in the vicinity of a room object.
+Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromRoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+	<span class="sd">"""A generator which yields all rooms in the vicinity of a room object.</span>
+<span class="sd">	Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""</span>
+	<span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span>
+	<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">z</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="nb">iter</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+	<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+		<span class="n">radiusX</span> <span class="o">=</span> <span class="n">radiusY</span> <span class="o">=</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
+	<span class="k">for</span> <span class="n">vnum</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="n">differenceX</span><span class="p">,</span> <span class="n">differenceY</span><span class="p">,</span> <span class="n">differenceZ</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">z</span>
+		<span class="k">if</span> <span class="p">(</span>
+			<span class="nb">abs</span><span class="p">(</span><span class="n">differenceX</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radiusX</span>
+			<span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceY</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radiusY</span>
+			<span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceZ</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radiusZ</span>
+			<span class="ow">and</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">start</span>
+		<span class="p">):</span>
+			<span class="k">yield</span> <span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">differenceX</span><span class="p">,</span> <span class="n">differenceY</span><span class="p">,</span> <span class="n">differenceZ</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getRoomFromLabel">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">getRoomFromLabel<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.getRoomFromLabel" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Takes a single argument, and returns a tuple of length 2.
+If successful, the first element returned is a room object, and the second element is none.
+Otherwise, the first element returned is None, and the second element is a human-readable error message.
+If the given argument is a room object, it is returned as is.
+If the given argument is a room vnum corresponding to an extant room, the corresponding room is returned.
+If the given argument is the label of a room, that room is returned.
+Otherwise, None is returned with a helpful error message for the user.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1144
+1145
+1146
+1147
+1148
+1149
+1150
+1151
+1152
+1153
+1154
+1155
+1156
+1157
+1158
+1159
+1160
+1161
+1162
+1163
+1164
+1165
+1166
+1167
+1168
+1169
+1170
+1171
+1172
+1173</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">getRoomFromLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+	<span class="sd">"""Takes a single argument, and returns a tuple of length 2.</span>
+<span class="sd">	If successful, the first element returned is a room object, and the second element is none.</span>
+<span class="sd">	Otherwise, the first element returned is None, and the second element is a human-readable error message.</span>
+<span class="sd">	If the given argument is a room object, it is returned as is.</span>
+<span class="sd">	If the given argument is a room vnum corresponding to an extant room, the corresponding room is returned.</span>
+<span class="sd">	If the given argument is the label of a room, that room is returned.</span>
+<span class="sd">	Otherwise, None is returned with a helpful error message for the user.</span>
+<span class="sd">	"""</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">roomdata</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">Room</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">label</span><span class="p">,</span> <span class="kc">None</span>
+	<span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"No label or room vnum specified."</span>
+	<span class="k">elif</span> <span class="n">label</span><span class="o">.</span><span class="n">isdecimal</span><span class="p">():</span>
+		<span class="n">vnum</span> <span class="o">=</span> <span class="n">label</span>
+		<span class="k">if</span> <span class="n">vnum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">vnum</span><span class="p">],</span> <span class="kc">None</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"No room with vnum "</span> <span class="o">+</span> <span class="n">vnum</span>
+	<span class="k">elif</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+		<span class="n">vnum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">vnum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">vnum</span><span class="p">],</span> <span class="kc">None</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> is set to vnum </span><span class="si">{</span><span class="n">vnum</span><span class="si">}</span><span class="s2">, but there is no room with that vnum"</span>
+	<span class="k">else</span><span class="p">:</span>  <span class="c1"># The label is neither a vnum nor an existing label</span>
+		<span class="n">similarLabels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+		<span class="n">similarLabels</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Unknown label. Did you mean </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">similarLabels</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span><span class="si">}</span><span class="s2">?"</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.GUIRefresh">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">GUIRefresh<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.GUIRefresh" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Trigger the clearing and redrawing of rooms by the GUI</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>96
+97
+98
+99</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">GUIRefresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="sd">"""Trigger the clearing and redrawing of rooms by the GUI"""</span>
+	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="o">!=</span> <span class="s2">"text"</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_gui_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">"on_gui_refresh"</span><span class="p">,))</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.is_alive">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">is_alive<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.is_alive" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Return whether the thread is alive.</p>
+<p>This method returns True just before the run() method starts until just
+after the run() method terminates. The module function enumerate()
+returns a list of all alive threads.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1092
+1093
+1094
+1095
+1096
+1097
+1098
+1099
+1100
+1101
+1102
+1103
+1104</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""Return whether the thread is alive.</span>
+
+<span class="sd">    This method returns True just before the run() method starts until just</span>
+<span class="sd">    after the run() method terminates. The module function enumerate()</span>
+<span class="sd">    returns a list of all alive threads.</span>
+
+<span class="sd">    """</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">"Thread.__init__() not called"</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.isAlive">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">isAlive<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.isAlive" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Return whether the thread is alive.</p>
+<p>This method is deprecated, use is_alive() instead.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1106
+1107
+1108
+1109
+1110
+1111
+1112
+1113
+1114</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""Return whether the thread is alive.</span>
+
+<span class="sd">    This method is deprecated, use is_alive() instead.</span>
+<span class="sd">    """</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'isAlive() is deprecated, use is_alive() instead'</span><span class="p">,</span>
+                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.isBidirectional">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">isBidirectional<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitObj</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.isBidirectional" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Returns True if an exit is bidirectional, False if unidirectional.
+I.E. True if moving in a given direction then moving back in the direction
+you just came from would put you back where you started, False otherwise.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">isBidirectional</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitObj</span><span class="p">):</span>
+	<span class="sd">"""</span>
+<span class="sd">	Returns True if an exit is bidirectional, False if unidirectional.</span>
+<span class="sd">	I.E. True if moving in a given direction then moving back in the direction</span>
+<span class="sd">	you just came from would put you back where you started, False otherwise.</span>
+<span class="sd">	"""</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span><span class="p">]</span>
+	<span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">False</span>
+	<span class="n">revdir</span> <span class="o">=</span> <span class="n">REVERSE_DIRECTIONS</span><span class="p">[</span><span class="n">exitObj</span><span class="o">.</span><span class="n">direction</span><span class="p">]</span>
+	<span class="k">if</span> <span class="n">revdir</span> <span class="ow">in</span> <span class="n">dest</span><span class="o">.</span><span class="n">exits</span> <span class="ow">and</span> <span class="n">dest</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">revdir</span><span class="p">]</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">True</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">False</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.join">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">join<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.join" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Wait until the thread terminates.</p>
+<p>This blocks the calling thread until the thread whose join() method is
+called terminates -- either normally or through an unhandled exception
+or until the optional timeout occurs.</p>
+<p>When the timeout argument is present and not None, it should be a
+floating point number specifying a timeout for the operation in seconds
+(or fractions thereof). As join() always returns None, you must call
+is_alive() after join() to decide whether a timeout happened -- if the
+thread is still alive, the join() call timed out.</p>
+<p>When the timeout argument is not present or None, the operation will
+block until the thread terminates.</p>
+<p>A thread can be join()ed many times.</p>
+<p>join() raises a RuntimeError if an attempt is made to join the current
+thread as that would cause a deadlock. It is also an error to join() a
+thread before it has been started and attempts to do so raises the same
+exception.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+1023
+1024
+1025
+1026
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">"""Wait until the thread terminates.</span>
+
+<span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
+<span class="sd">    called terminates -- either normally or through an unhandled exception</span>
+<span class="sd">    or until the optional timeout occurs.</span>
+
+<span class="sd">    When the timeout argument is present and not None, it should be a</span>
+<span class="sd">    floating point number specifying a timeout for the operation in seconds</span>
+<span class="sd">    (or fractions thereof). As join() always returns None, you must call</span>
+<span class="sd">    is_alive() after join() to decide whether a timeout happened -- if the</span>
+<span class="sd">    thread is still alive, the join() call timed out.</span>
+
+<span class="sd">    When the timeout argument is not present or None, the operation will</span>
+<span class="sd">    block until the thread terminates.</span>
+
+<span class="sd">    A thread can be join()ed many times.</span>
+
+<span class="sd">    join() raises a RuntimeError if an attempt is made to join the current</span>
+<span class="sd">    thread as that would cause a deadlock. It is also an error to join() a</span>
+<span class="sd">    thread before it has been started and attempts to do so raises the same</span>
+<span class="sd">    exception.</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Thread.__init__() not called"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join thread before it is started"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">current_thread</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join current thread"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># the behavior of a negative timeout isn't documented, but</span>
+        <span class="c1"># historically .join(timeout=x) for x&lt;0 has acted as if timeout=0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.pathFind">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">pathFind<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.pathFind" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Find the path</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+1063
+1064</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">pathFind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">"""Find the path"""</span>
+	<span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">origin</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"Error! The mapper has no location. Please use the sync command then try again."</span><span class="p">)</span>
+	<span class="n">destinationRoom</span><span class="p">,</span> <span class="n">errorFindingDestination</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">errorFindingDestination</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">errorFindingDestination</span><span class="p">)</span>
+		<span class="k">return</span> <span class="kc">None</span>
+	<span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="n">destinationRoom</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"You are already there!"</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">[]</span>
+	<span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
+		<span class="n">avoidTerrains</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+			<span class="n">terrain</span> <span class="k">for</span> <span class="n">terrain</span> <span class="ow">in</span> <span class="n">roomdata</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">TERRAIN_COSTS</span> <span class="k">if</span> <span class="sa">f</span><span class="s2">"no</span><span class="si">{</span><span class="n">terrain</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">flags</span>
+		<span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">avoidTerrains</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
+	<span class="n">ignoreVnums</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">"undefined"</span><span class="p">,</span> <span class="s2">"death"</span><span class="p">))</span>
+	<span class="n">isDestinationFunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">currentRoomObj</span><span class="p">:</span> <span class="n">currentRoomObj</span> <span class="ow">is</span> <span class="n">destinationRoom</span>  <span class="c1"># NOQA: E731</span>
+	<span class="n">exitIgnoreFunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exitObj</span><span class="p">:</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="ow">in</span> <span class="n">ignoreVnums</span>  <span class="c1"># NOQA: E731</span>
+	<span class="n">exitCostFunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exitObj</span><span class="p">,</span> <span class="n">neighborRoomObj</span><span class="p">:</span> <span class="p">(</span>  <span class="c1"># NOQA: E731</span>
+		<span class="p">(</span><span class="mi">5</span> <span class="k">if</span> <span class="s2">"door"</span> <span class="ow">in</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">exitFlags</span> <span class="ow">or</span> <span class="s2">"climb"</span> <span class="ow">in</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">exitFlags</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="o">+</span> <span class="p">(</span><span class="mi">1000</span> <span class="k">if</span> <span class="s2">"avoid"</span> <span class="ow">in</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">exitFlags</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="o">+</span> <span class="p">(</span><span class="mi">10</span> <span class="k">if</span> <span class="n">neighborRoomObj</span><span class="o">.</span><span class="n">terrain</span> <span class="ow">in</span> <span class="n">avoidTerrains</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">)</span>
+	<span class="n">exitDestinationFunc</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pathFind</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">isDestinationFunc</span><span class="p">,</span> <span class="n">exitIgnoreFunc</span><span class="p">,</span> <span class="n">exitCostFunc</span><span class="p">,</span> <span class="n">exitDestinationFunc</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.registerMudEventHandler">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">registerMudEventHandler<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.registerMudEventHandler" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Registers a method to handle mud events of a given type.
+Params: event, handler
+where event is the name of the event type, typically corresponding to the XML tag of the incoming data,
+and handler is a method that takes a single argument, data, which is the text received from the mud.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+	<span class="sd">"""Registers a method to handle mud events of a given type.</span>
+<span class="sd">	Params: event, handler</span>
+<span class="sd">	where event is the name of the event type, typically corresponding to the XML tag of the incoming data,</span>
+<span class="sd">	and handler is a method that takes a single argument, data, which is the text received from the mud.</span>
+<span class="sd">	"""</span>
+	<span class="k">if</span> <span class="n">event</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.run">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">run<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.run" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Method representing the thread's activity.</p>
+<p>You may override this method in a subclass. The standard run() method
+invokes the callable object passed to the object's constructor as the
+target argument, if any, with sequential and keyword arguments taken
+from the args and kwargs arguments, respectively.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>1068
+1069
+1070
+1071
+1072
+1073
+1074
+1075
+1076
+1077
+1078
+1079
+1080
+1081
+1082
+1083
+1084</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">dataType</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+			<span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">USER_DATA</span><span class="p">:</span>
+				<span class="c1"># The data was a valid mapper command, sent from the user's mud client.</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">handleUserData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">MUD_DATA</span><span class="p">:</span>
+				<span class="c1"># The data was from the mud server.</span>
+				<span class="n">event</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"map error"</span><span class="p">)</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">"error "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">"Exiting mapper thread."</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.start">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">start<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+</span>
+<a class="headerlink" href="#mapper.mapper.Mapper.start" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Start the thread's activity.</p>
+<p>It must be called at most once per thread object. It arranges for the
+object's run() method to be invoked in a separate thread of control.</p>
+<p>This method will raise a RuntimeError if called more than once on the
+same thread object.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""Start the thread's activity.</span>
+
+<span class="sd">    It must be called at most once per thread object. It arranges for the</span>
+<span class="sd">    object's run() method to be invoked in a separate thread of control.</span>
+
+<span class="sd">    This method will raise a RuntimeError if called more than once on the</span>
+<span class="sd">    same thread object.</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"thread.__init__() not called"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"threads can only be started once"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
+        <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_start_new_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap</span><span class="p">,</span> <span class="p">())</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+        <span class="k">raise</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.user_command_maphelp">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">user_command_maphelp<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.user_command_maphelp" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Shows documentation for mapper commands</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_maphelp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""Shows documentation for mapper commands"""</span>
+	<span class="n">helpTexts</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"user_command_"</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userCommands</span>
+	<span class="p">]</span>
+	<span class="n">documentedFuncs</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">docString</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">" "</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+		<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">docString</span> <span class="ow">in</span> <span class="n">helpTexts</span>
+		<span class="k">if</span> <span class="n">docString</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="p">]</span>
+	<span class="n">undocumentedFuncs</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">helpTexts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="s2">"Mapper Commands"</span><span class="p">,</span>
+		<span class="s2">"The following commands are used for viewing and editing map data:"</span><span class="p">,</span>
+		<span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"    </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">helpText</span><span class="p">)</span> <span class="k">for</span> <span class="n">helpText</span> <span class="ow">in</span> <span class="n">documentedFuncs</span><span class="p">),</span>
+	<span class="p">]</span>
+	<span class="k">if</span> <span class="n">undocumentedFuncs</span><span class="p">:</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Undocumented Commands:"</span><span class="p">)</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+			<span class="n">textwrap</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span>
+				<span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span>
+					<span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">helpText</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">helpText</span> <span class="ow">in</span> <span class="n">undocumentedFuncs</span><span class="p">),</span>
+					<span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span>
+					<span class="n">break_long_words</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+					<span class="n">break_on_hyphens</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+				<span class="p">),</span>
+				<span class="n">prefix</span><span class="o">=</span><span class="s2">"    "</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.user_command_tvnum">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">user_command_tvnum<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.user_command_tvnum" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>tells a given char the vnum of your room</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>543
+544
+545
+546
+547
+548</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_tvnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""tells a given char the vnum of your room"""</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">"Tell VNum to who?"</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendGame</span><span class="p">(</span><span class="sa">f</span><span class="s2">"tell </span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.user_command_vnum">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">user_command_vnum<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.mapper.Mapper.user_command_vnum" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>states the vnum of the current room</p>
+<details class="quote">
+<summary>Source code in <code>mapper\mapper.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>539
+540
+541</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_vnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+	<span class="sd">"""states the vnum of the current room"""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Vnum: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+<div class="md-footer-copyright__highlight">
+            Copyright © 2020 Nick Stockton
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+          Material for MkDocs
+        </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<script src="../../assets/javascripts/vendor.d1f5a259.min.js"></script>
+<script src="../../assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+<script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.fae956e7.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+<script src="../../search/main.js"></script>
+</body>
+</html>
