@@ -1,0 +1,93 @@
+# mkdocs.yml
+site_name: "Mapper Proxy"
+site_author: "Nick Stockton"
+site_description: "Mapper Proxy Main Page"
+site_url: "https://nstockton.github.io/mapperproxy-mume"
+repo_name: "nstockton/mapperproxy-mume"
+repo_url: "https://github.com/nstockton/mapperproxy-mume"
+edit_uri: ""
+copyright: "Copyright \xa9 2020 Nick Stockton"
+docs_dir: "docs"
+site_dir: "site"
+
+nav:
+  - Home: index.md
+  - API Index: api/index.md
+  - API Navigation:
+      - protocols:
+          - base.py: api/protocols/base.md
+          - manager.py: api/protocols/manager.md
+          - mpi.py: api/protocols/mpi.md
+          - proxy.py: api/protocols/proxy.md
+          - telnet.py: api/protocols/telnet.md
+          - telnet_constants.py: api/protocols/telnet_constants.md
+          - xml.py: api/protocols/xml.md
+      - roomdata:
+          - database.py: api/roomdata/database.md
+          - objects.py: api/roomdata/objects.md
+      - cleanmap.py: api/cleanmap.md
+      - clock.py: api/clock.md
+      - config.py: api/config.md
+      - delays.py: api/delays.md
+      - main.py: api/main.md
+      - mapper.py: api/mapper.md
+      - mudevents.py: api/mudevents.md
+      - utils.py: api/utils.md
+      - world.py: api/world.md
+  - License: license.md
+
+theme:
+  name: "material"
+  custom_dir: "material_theme/"
+  include_search_page: false
+  search_index_only: false
+  highlightjs: true
+  hljs_languages:
+    - python
+  hljs_style: github
+  navigation_depth: 2
+  #nav_style: "dark"
+  shortcuts:
+    help: 191    # ?
+    next: 78     # n
+    previous: 80 # p
+    search: 83   # s
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: false
+  - pymdownx.superfences
+  - pymdownx.tasklist
+  - pymdownx.tabbed
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          setup_commands:
+            - import sys
+            - from unittest.mock import MagicMock as mock
+            - sys.modules["pyglet"] = mock()
+            - sys.path.insert(0, "docs")
+          rendering:
+            show_root_heading: true
+            heading_level: 1
+            group_by_category: true
+            show_source: true
+          selection:
+            docstring_style: google
+            inherited_members: true
+            docstring_options:
+              replace_admonitions: yes
+            filters:
+              - "!^_"  # Private items.
+              - "^__init__$"  # Except for __init__.
+      custom_templates: "mkdocstrings_templates"
+      watch:
+        - "mapper"
