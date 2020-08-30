@@ -22,7 +22,7 @@ from pyglet.window import key
 
 # Local Modules:
 from .vec2d import Vec2d
-from ..config import Config, config_lock
+from ..config import Config
 from ..world import DIRECTIONS
 
 
@@ -135,14 +135,13 @@ class Window(pyglet.window.Window):
 			self.message(msg)
 			logger.warning(msg)
 		self._cfg = {}
-		with config_lock:
-			cfg = Config()
-			if "gui" in cfg:
-				self._cfg.update(cfg["gui"])
-			else:
-				cfg["gui"] = {}
-				cfg.save()
-			del cfg
+		cfg = Config()
+		if "gui" in cfg:
+			self._cfg.update(cfg["gui"])
+		else:
+			cfg["gui"] = {}
+			cfg.save()
+		del cfg
 		if "fullscreen" not in self._cfg:
 			self._cfg["fullscreen"] = False
 		terrain_colors = {}
@@ -344,11 +343,10 @@ class Window(pyglet.window.Window):
 
 	def on_close(self):
 		logger.debug(f"Closing window {self}")
-		with config_lock:
-			cfg = Config()
-			cfg["gui"].update(self._cfg)
-			cfg.save()
-			del cfg
+		cfg = Config()
+		cfg["gui"].update(self._cfg)
+		cfg.save()
+		del cfg
 		super(Window, self).on_close()
 
 	def on_draw(self):

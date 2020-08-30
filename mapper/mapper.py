@@ -18,7 +18,7 @@ from timeit import default_timer
 from . import INTERFACES, MUD_DATA, OUTPUT_FORMATS, USER_DATA, roomdata
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
-from .config import Config, config_lock
+from .config import Config
 from .delays import OneShot
 from .protocols.proxy import ProxyHandler
 from .utils import decodeBytes, escapeIAC, escapeXML, formatDocString, regexFuzzy, simplified, stripAnsi
@@ -147,10 +147,9 @@ class Mapper(threading.Thread, World):
 		self.findFormat = findFormat
 		self.isEmulatingOffline = isEmulatingOffline
 		self.queue = SimpleQueue()
-		with config_lock:
-			cfg = Config()
-			self._autoUpdateRooms = cfg.get("autoUpdateRooms", False)
-			del cfg
+		cfg = Config()
+		self._autoUpdateRooms = cfg.get("autoUpdateRooms", False)
+		del cfg
 		self.autoMapping = False
 		self.autoMerging = True
 		self.autoLinking = True
@@ -245,11 +244,10 @@ class Mapper(threading.Thread, World):
 	@autoUpdateRooms.setter
 	def autoUpdateRooms(self, value):
 		self._autoUpdateRooms = bool(value)
-		with config_lock:
-			cfg = Config()
-			cfg["autoUpdateRooms"] = self._autoUpdateRooms
-			cfg.save()
-			del cfg
+		cfg = Config()
+		cfg["autoUpdateRooms"] = self._autoUpdateRooms
+		cfg.save()
+		del cfg
 
 	def output(self, *args, **kwargs):
 		# Override World.output.

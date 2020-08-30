@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 
 # Local Modules:
-from .config import Config, config_lock
+from .config import Config
 
 
 INTERFACES = ("text", "hc", "sighted")
@@ -19,25 +19,24 @@ USER_DATA = 0
 MUD_DATA = 1
 
 
-with config_lock:
-	cfg = Config()
-	debugLevel = cfg.get("debug_level")
-	if isinstance(debugLevel, int):
-		if debugLevel < 0 or debugLevel > 50:
-			debugLevel = None
-		elif debugLevel <= 5:
-			debugLevel *= 10
-		else:
-			debugLevel -= debugLevel % 10
-	elif isinstance(debugLevel, str):
-		if not isinstance(logging.getLevelName(debugLevel.upper()), int):
-			debugLevel = None
-	else:
+cfg = Config()
+debugLevel = cfg.get("debug_level")
+if isinstance(debugLevel, int):
+	if debugLevel < 0 or debugLevel > 50:
 		debugLevel = None
-	if debugLevel is None and cfg.get("debug_level") is not None:  # Invalid value in the configuration file.
-		cfg["debug_level"] = debugLevel
-		cfg.save()
-	del cfg
+	elif debugLevel <= 5:
+		debugLevel *= 10
+	else:
+		debugLevel -= debugLevel % 10
+elif isinstance(debugLevel, str):
+	if not isinstance(logging.getLevelName(debugLevel.upper()), int):
+		debugLevel = None
+else:
+	debugLevel = None
+if debugLevel is None and cfg.get("debug_level") is not None:  # Invalid value in the configuration file.
+	cfg["debug_level"] = debugLevel
+	cfg.save()
+del cfg
 
 
 if debugLevel is not None:
