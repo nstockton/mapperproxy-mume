@@ -19,7 +19,6 @@ from .utils import getDirectoryPath
 
 
 DATA_DIRECTORY = getDirectoryPath("data")
-CONFIG_LOCK = threading.RLock()
 
 
 class ConfigError(Exception):
@@ -30,6 +29,8 @@ class Config(collections.abc.MutableMapping):
 	"""
 	Implements loading and saving of program configuration.
 	"""
+
+	_configLock = threading.RLock()
 
 	def __init__(self, name: str = "config") -> None:
 		"""
@@ -58,7 +59,7 @@ class Config(collections.abc.MutableMapping):
 			return {}
 		elif os.path.isdir(filename):
 			raise ConfigError(f"'{filename}' is a directory, not a file.")
-		with CONFIG_LOCK:
+		with self._configLock:
 			try:
 				with codecs.open(filename, "rb", encoding="utf-8") as fileObj:
 					return json.load(fileObj)
@@ -76,7 +77,7 @@ class Config(collections.abc.MutableMapping):
 	def save(self) -> None:
 		"""Saves the configuration to disc."""
 		filename = os.path.join(DATA_DIRECTORY, f"{self._name}.json")
-		with CONFIG_LOCK:
+		with self._configLock:
 			with codecs.open(filename, "wb", encoding="utf-8") as fileObj:
 				# Configuration should be stored using Windows style line endings (\r\n)
 				# so the file can be viewed in Notepad.
