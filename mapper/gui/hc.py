@@ -606,7 +606,7 @@ class Window(pyglet.window.Window):
 		if self.highlight is not None and self.highlight == room.vnum:
 			color = Color(*self.terrain_colors.get("highlight", "undefined"))
 		else:
-			color = Color(*self.terrain_colors.get(room.terrain, "undefined"))
+			color = Color(*self.terrain_colors.get("deathtrap" if room.avoid else room.terrain, "undefined"))
 		vertices = self.square_vertices(cp, self.size / 2.0)
 		if group is None:
 			group = self.groups[0]
