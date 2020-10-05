@@ -8,45 +8,90 @@ from __future__ import annotations
 
 # Built-in Modules:
 import threading
+from typing import Any, Callable, MutableSequence, Union
 
 
-_delays = []
+class BaseDelay(threading.Thread):
+	"""
+	Implements the base delay class.
+	"""
 
+	_delays: MutableSequence[threading.Thread] = []
 
-class Delay(threading.Thread):
-	def __init__(self, _interval, _iterations, _function, *args, **kwargs):
+	def __init__(
+		self, duration: int, count: Union[int, None], function: Callable[..., Any], *args, **kwargs
+	) -> None:
+		"""
+		Args:
+			duration: The amount of time (in seconds) to delay between iterations.
+			count: The number of iterations to delay, or None to repeat indefinitely.
+			function: The function to be called at each iteration.
+				Any remaining positional or keyword arguments will be passed to this function.
+		"""
+		if count is not None and count < 0:
+			raise ValueError("count must be a positive number or None.")
 		super().__init__()
 		self.daemon = True
-		self._interval = _interval
-		self._iterations = _iterations
-		self._function = _function
+		self._duration = duration
+		self._count = count
+		self._function = function
 		self._args = args
 		self._kwargs = kwargs
 		self._finished = threading.Event()
-		self.start()
 
-	def stop(self):
+	def stop(self) -> None:
+		"""Stops an active delay."""
 		self._finished.set()
 
-	def run(self):
+	def run(self) -> None:
 		try:
-			_delays.append(self)
-			while not self._finished.is_set() and (self._iterations is None or self._iterations > 0):
-				self._finished.wait(self._interval)
+			self._delays.append(self)
+			while not self._finished.is_set() and self._count != 0:
+				self._finished.wait(self._duration)
 				if not self._finished.is_set():
 					self._function(*self._args, **self._kwargs)
-				if self._iterations is not None:
-					self._iterations -= 1
+				if self._count is not None:
+					self._count -= 1
 		finally:
 			del self._function, self._args, self._kwargs
-			_delays.remove(self)
+			self._delays.remove(self)
+
+
+class Delay(BaseDelay):
+	"""
+	Implements a delay which automatically starts upon creation.
+	"""
+
+	def __init__(self, *args, **kwargs) -> None:
+		super().__init__(*args, **kwargs)
+		self.start()
 
 
 class OneShot(Delay):
-	def __init__(self, _interval, _function, *args, **kwargs):
-		super().__init__(_interval, 1, _function, *args, **kwargs)
+	"""
+	Implements a delay which is run only once.
+	"""
+
+	def __init__(self, duration: int, function: Callable[..., Any], *args, **kwargs) -> None:
+		"""
+		Args:
+			duration: The amount of time (in seconds) to delay.
+			function: The function to be called when the delay completes.
+				Any remaining positional or keyword arguments will be passed to this function.
+		"""
+		super().__init__(duration, 1, function, *args, **kwargs)
 
 
 class Repeating(Delay):
-	def __init__(self, _interval, _function, *args, **kwargs):
-		super().__init__(_interval, None, _function, *args, **kwargs)
+	"""
+	Implements a delay which runs indefinitely.
+	"""
+
+	def __init__(self, duration: int, function: Callable[..., Any], *args, **kwargs) -> None:
+		"""
+		Args:
+			duration: The amount of time (in seconds) to delay between iterations.
+			function: The function to be called at each iteration.
+				Any remaining positional or keyword arguments will be passed to this function.
+		"""
+		super().__init__(duration, None, function, *args, **kwargs)
