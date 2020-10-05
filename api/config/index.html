@@ -262,6 +262,16 @@
 <nav aria-label="Config" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.name">
+    name
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.__init__">
+    __init__()
+  </a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#mapper.config.Config.clear">
     clear()
   </a>
@@ -292,6 +302,16 @@
   </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.reload">
+    reload()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.save">
+    save()
+  </a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#mapper.config.Config.setdefault">
     setdefault()
   </a>
@@ -308,6 +328,11 @@
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.ConfigError">
+    ConfigError
+  </a>
 </li>
 </ul>
 </nav>
@@ -382,6 +407,16 @@
 <nav aria-label="Config" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.name">
+    name
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.__init__">
+    __init__()
+  </a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#mapper.config.Config.clear">
     clear()
   </a>
@@ -412,6 +447,16 @@
   </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.reload">
+    reload()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.Config.save">
+    save()
+  </a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#mapper.config.Config.setdefault">
     setdefault()
   </a>
@@ -428,6 +473,11 @@
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mapper.config.ConfigError">
+    ConfigError
+  </a>
 </li>
 </ul>
 </nav>
@@ -452,7 +502,92 @@
 <code>Config</code>
 <a class="headerlink" href="#mapper.config.Config" title="Permanent link">¶</a></h2>
 <div class="doc doc-contents">
+<p>Implements loading and saving of program configuration.</p>
 <div class="doc doc-children">
+<div class="doc doc-object doc-attribute">
+<h3 class="doc doc-heading" id="mapper.config.Config.name">
+<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
+<code class="highlight">name: <span class="nb">str</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-property"><code>property</code></small>
+<small class="doc doc-property doc-property-writable"><code>writable</code></small>
+</span>
+<a class="headerlink" href="#mapper.config.Config.name" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>The name of the configuration.</p>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.config.Config.__init__">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">__init__<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'config'</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-special"><code>special</code></small>
+</span>
+<a class="headerlink" href="#mapper.config.Config.__init__" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Defines the constructor for the object.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>str</code></td>
+<td>
+<p>The name of the configuration.</p>
+</td>
+<td><code>'config'</code></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>mapper\config.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"config"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Defines the constructor for the object.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		name: The name of the configuration.</span>
+<span class="sd">	"""</span>
+	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">:</span> <span class="n">MutableMapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.config.Config.clear">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
@@ -606,7 +741,7 @@
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.config.Config.pop">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">pop<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x005230A8</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">pop<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x002F30A8</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -701,6 +836,92 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
     <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.config.Config.reload">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">reload<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.config.Config.reload" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Reloads the configuration from disc.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\config.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>71
+72
+73
+74
+75</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">reload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""Reloads the configuration from disc."""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">.json.sample"</span><span class="p">))</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">.json"</span><span class="p">))</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.config.Config.save">
+<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
+<code class="highlight language-python">save<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+<a class="headerlink" href="#mapper.config.Config.save" title="Permanent link">¶</a></h3>
+<div class="doc doc-contents">
+<p>Saves the configuration to disc.</p>
+<details class="quote">
+<summary>Source code in <code>mapper\config.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""Saves the configuration to disc."""</span>
+	<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIRECTORY</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span>
+	<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configLock</span><span class="p">:</span>
+		<span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fileObj</span><span class="p">:</span>
+			<span class="c1"># Configuration should be stored using Windows style line endings (\r\n)</span>
+			<span class="c1"># so the file can be viewed in Notepad.</span>
+			<span class="c1"># However, codecs.open forces opening files in binary mode, which</span>
+			<span class="c1"># prevents the use of the newline flag to force a particular delimiter for new lines.</span>
+			<span class="c1"># The json data must therefore be modified to replace Unix line endings</span>
+			<span class="c1"># with Windows line endings before it is written.</span>
+			<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+			<span class="n">fileObj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">))</span>
 </code></pre>
 </div>
 </td>
@@ -869,6 +1090,15 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="doc doc-object doc-class">
+<h2 class="doc doc-heading" id="mapper.config.ConfigError">
+<span class="doc doc-types"><small class="doc doc-type doc-type-class"><code>Class</code></small></span>
+<code>ConfigError</code>
+<a class="headerlink" href="#mapper.config.ConfigError" title="Permanent link">¶</a></h2>
+<div class="doc doc-contents">
+<p>Implements the base class for Config exceptions.</p>
 </div>
 </div>
 </div>
