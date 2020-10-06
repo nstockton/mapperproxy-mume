@@ -33,22 +33,24 @@ Install the [Python interpreter,](https://python.org "Python Home Page") and mak
 
 After Python is installed, execute the following commands from the top level directory of this repository to install the module dependencies.
 ```
-pip install pipenv
-pipenv install --skip-lock
+python -m venv venv
+venv\Scripts\activate.bat
+pip install -Ur requirements.txt
 ```
 
 If you wish to contribute to this project, install the development dependencies with the following commands.
 ```
-pipenv install --skip-lock --dev
-pipenv run pre-commit install -t pre-commit
-pipenv run pre-commit install -t pre-push
+venv\Scripts\activate.bat
+pip install -Ur requirements-dev.txt
+pre-commit install -t pre-commit
+pre-commit install -t pre-push
 ```
 
 ## Mapper Proxy Usage
 
 ### Manual Startup
 
-To start Mapper Proxy, run `python start.py` from the root directory of this project. It accepts the following arguments:
+To start Mapper Proxy, activate the virtual environment by running `venv\Scripts\activate.bat`, and then run `python start.py` from the root directory of this project. It accepts the following arguments:
 
 - `-h`, `--help` Show program's help and exit.
 - `-v`, `--version` Show program's version number and exit.
