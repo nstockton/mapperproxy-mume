@@ -830,17 +830,19 @@ They are a modified version of <a href="https://opengameart.org/content/32x32-fa
 <h3 id="running-from-source">Running From Source<a class="headerlink" href="#running-from-source" title="Permanent link">&para;</a></h3>
 <p>Install the <a href="https://python.org" title="Python Home Page">Python interpreter,</a> and make sure it's in your path before running this package.</p>
 <p>After Python is installed, execute the following commands from the top level directory of this repository to install the module dependencies.
-<div class="highlight"><pre><span></span><code>pip install pipenv
-pipenv install --skip-lock
+<div class="highlight"><pre><span></span><code>python -m venv venv
+venv\Scripts\activate.bat
+pip install -Ur requirements.txt
 </code></pre></div></p>
 <p>If you wish to contribute to this project, install the development dependencies with the following commands.
-<div class="highlight"><pre><span></span><code>pipenv install --skip-lock --dev
-pipenv run pre-commit install -t pre-commit
-pipenv run pre-commit install -t pre-push
+<div class="highlight"><pre><span></span><code>venv\Scripts\activate.bat
+pip install -Ur requirements-dev.txt
+pre-commit install -t pre-commit
+pre-commit install -t pre-push
 </code></pre></div></p>
 <h2 id="mapper-proxy-usage">Mapper Proxy Usage<a class="headerlink" href="#mapper-proxy-usage" title="Permanent link">&para;</a></h2>
 <h3 id="manual-startup">Manual Startup<a class="headerlink" href="#manual-startup" title="Permanent link">&para;</a></h3>
-<p>To start Mapper Proxy, run <code>python start.py</code> from the root directory of this project. It accepts the following arguments:</p>
+<p>To start Mapper Proxy, activate the virtual environment by running <code>venv\Scripts\activate.bat</code>, and then run <code>python start.py</code> from the root directory of this project. It accepts the following arguments:</p>
 <ul>
 <li><code>-h</code>, <code>--help</code> Show program's help and exit.</li>
 <li><code>-v</code>, <code>--version</code> Show program's version number and exit.</li>
