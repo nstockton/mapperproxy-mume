@@ -18,7 +18,16 @@ from queue import SimpleQueue
 from fuzzywuzzy import fuzz
 
 # Local Modules:
-from . import roomdata
+from .roomdata.database import dumpLabels, dumpRooms, loadLabels, loadRooms
+from .roomdata.objects import (
+	TERRAIN_COSTS,
+	VALID_DOOR_FLAGS,
+	VALID_EXIT_FLAGS,
+	VALID_LOAD_FLAGS,
+	VALID_MOB_FLAGS,
+	Exit,
+	Room,
+)
 from .utils import regexFuzzy
 
 
@@ -106,7 +115,7 @@ class World(object):
 		if gc.isenabled():
 			gc.disable()
 		self.output("Loading the database file.")
-		errors, db = roomdata.database.loadRooms()
+		errors, db = loadRooms()
 		if db is None:
 			return self.output(errors)
 		self.output("Creating room objects.")
@@ -133,7 +142,7 @@ class World(object):
 			"needkey": "need_key",
 		}
 		for vnum, roomDict in db.items():
-			newRoom = roomdata.objects.Room(vnum)
+			newRoom = Room(vnum)
 			newRoom.name = roomDict["name"]
 			newRoom.desc = roomDict["desc"]
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
@@ -203,14 +212,14 @@ class World(object):
 				newRoom["exits"][direction] = newExit
 			db[vnum] = newRoom
 		self.output("Saving the database.")
-		roomdata.database.dumpRooms(db)
+		dumpRooms(db)
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
 		self.output("Map Database saved.")
 
 	def loadLabels(self):
-		errors, labels = roomdata.database.loadLabels()
+		errors, labels = loadLabels()
 		if labels is None:
 			return self.output(errors)
 		self.labels.update(labels)
@@ -219,10 +228,10 @@ class World(object):
 			del self.labels[label]
 
 	def saveLabels(self):
-		roomdata.database.dumpLabels(self.labels)
+		dumpLabels(self.labels)
 
 	def getNewExit(self, direction, to="undefined", parent=None):
-		newExit = roomdata.objects.Exit()
+		newExit = Exit()
 		newExit.direction = direction
 		newExit.to = to
 		newExit.vnum = self.currentRoom.vnum if parent is None else parent
@@ -666,14 +675,14 @@ class World(object):
 	def rmobflags(self, *args):
 		regex = re.compile(
 			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
-			+ fr"\s+(?P<flag>{'|'.join(roomdata.objects.VALID_MOB_FLAGS)})"
+			+ fr"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
 				f"Mob flags set to '{', '.join(self.currentRoom.mobFlags)}'. "
-				+ f"Use 'rmobflags [add | remove] [{' | '.join(roomdata.objects.VALID_MOB_FLAGS)}]' to change them."
+				+ f"Use 'rmobflags [add | remove] [{' | '.join(VALID_MOB_FLAGS)}]' to change them."
 			)
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.mobFlags:
@@ -691,14 +700,14 @@ class World(object):
 	def rloadflags(self, *args):
 		regex = re.compile(
 			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
-			+ fr"\s+(?P<flag>{'|'.join(roomdata.objects.VALID_LOAD_FLAGS)})"
+			+ fr"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
 				f"Load flags set to '{', '.join(self.currentRoom.loadFlags)}'. "
-				+ f"Use 'rloadflags [add | remove] [{' | '.join(roomdata.objects.VALID_LOAD_FLAGS)}]' to change them."
+				+ f"Use 'rloadflags [add | remove] [{' | '.join(VALID_LOAD_FLAGS)}]' to change them."
 			)
 		if "remove".startswith(matchDict["mode"]):
 			if matchDict["flag"] in self.currentRoom.loadFlags:
@@ -716,13 +725,13 @@ class World(object):
 	def exitflags(self, *args):
 		regex = re.compile(
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ fr"((?P<flag>{'|'.join(roomdata.objects.VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			+ fr"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
-				f"Syntax: 'exitflags [add | remove] [{' | '.join(roomdata.objects.VALID_EXIT_FLAGS)}] "
+				f"Syntax: 'exitflags [add | remove] [{' | '.join(VALID_EXIT_FLAGS)}] "
 				+ f"[{' | '.join(DIRECTIONS)}]'."
 			)
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -748,13 +757,13 @@ class World(object):
 	def doorflags(self, *args):
 		regex = re.compile(
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ fr"((?P<flag>{'|'.join(roomdata.objects.VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			+ fr"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		try:
 			matchDict = regex.match(args[0].strip().lower()).groupdict()
 		except (NameError, IndexError, AttributeError):
 			return (
-				f"Syntax: 'doorflags [add | remove] [{' | '.join(roomdata.objects.VALID_DOOR_FLAGS)}] "
+				f"Syntax: 'doorflags [add | remove] [{' | '.join(VALID_DOOR_FLAGS)}] "
 				+ f"[{' | '.join(DIRECTIONS)}]'."
 			)
 		direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -1047,9 +1056,7 @@ class World(object):
 			self.output("You are already there!")
 			return []
 		if flags:
-			avoidTerrains = frozenset(
-				terrain for terrain in roomdata.objects.TERRAIN_COSTS if f"no{terrain}" in flags
-			)
+			avoidTerrains = frozenset(terrain for terrain in TERRAIN_COSTS if f"no{terrain}" in flags)
 		else:
 			avoidTerrains = frozenset()
 		ignoreVnums = frozenset(("undefined", "death"))
@@ -1150,7 +1157,7 @@ class World(object):
 		If the given argument is the label of a room, that room is returned.
 		Otherwise, None is returned with a helpful error message for the user.
 		"""
-		if isinstance(label, roomdata.objects.Room):
+		if isinstance(label, Room):
 			return label, None
 		label = label.strip().lower()
 		if not label:

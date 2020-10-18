@@ -15,12 +15,13 @@ from queue import SimpleQueue
 from timeit import default_timer
 
 # Local Modules:
-from . import INTERFACES, MUD_DATA, OUTPUT_FORMATS, USER_DATA, roomdata
+from . import INTERFACES, MUD_DATA, OUTPUT_FORMATS, USER_DATA
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config
 from .delays import OneShot
 from .protocols.proxy import ProxyHandler
+from .roomdata.objects import Room
 from .utils import decodeBytes, escapeIAC, escapeXML, formatDocString, regexFuzzy, simplified, stripAnsi
 from .world import (
 	DIRECTIONS,
@@ -830,7 +831,7 @@ class Mapper(threading.Thread, World):
 
 	def addNewRoom(self, movement, name, description, dynamic):
 		vnum = self.getNewVnum()
-		newRoom = roomdata.objects.Room(vnum)
+		newRoom = Room(vnum)
 		newRoom.name = name
 		newRoom.desc = description
 		newRoom.dynamicDesc = dynamic
