@@ -58,6 +58,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# Python venv
+venv/
+
 # Misc
 mpm_version.py
 Pipfile.lock
