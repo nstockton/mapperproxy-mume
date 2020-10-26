@@ -57,7 +57,8 @@ class TestExitsCleaner(unittest.TestCase):
 		self.exitsCleaner = ExitsCleaner(self.mapper)
 
 	def createRoom(self, *exits):
-		room = Room("0")
+		room = Room()
+		room.vnum = "0"
 		for dir, isHidden in exits:
 			if dir not in DIRECTIONS:
 				raise ValueError("Invalid direction " + dir + ". Cannot create room.")

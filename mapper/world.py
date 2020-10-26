@@ -20,6 +20,9 @@ from fuzzywuzzy import fuzz
 # Local Modules:
 from .roomdata.database import dumpLabels, dumpRooms, loadLabels, loadRooms
 from .roomdata.objects import (
+	DIRECTION_COORDINATES,
+	DIRECTIONS,
+	REVERSE_DIRECTIONS,
 	TERRAIN_COSTS,
 	VALID_DOOR_FLAGS,
 	VALID_EXIT_FLAGS,
@@ -31,25 +34,8 @@ from .roomdata.objects import (
 from .utils import regexFuzzy
 
 
-DIRECTIONS = ["north", "east", "south", "west", "up", "down"]
-DIRECTION_COORDINATES = {
-	"north": (0, 1, 0),
-	"south": (0, -1, 0),
-	"west": (-1, 0, 0),
-	"east": (1, 0, 0),
-	"up": (0, 0, 1),
-	"down": (0, 0, -1),
-}
 LEAD_BEFORE_ENTERING_VNUMS = ["196", "3473", "3474", "12138", "12637"]
 LIGHT_SYMBOLS = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
-REVERSE_DIRECTIONS = {
-	"north": "south",
-	"south": "north",
-	"east": "west",
-	"west": "east",
-	"up": "down",
-	"down": "up",
-}
 RUN_DESTINATION_REGEX = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 TERRAIN_SYMBOLS = {
 	":": "brush",
@@ -142,7 +128,8 @@ class World(object):
 			"needkey": "need_key",
 		}
 		for vnum, roomDict in db.items():
-			newRoom = Room(vnum)
+			newRoom = Room()
+			newRoom.vnum = vnum
 			newRoom.name = roomDict["name"]
 			newRoom.desc = roomDict["desc"]
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
@@ -236,14 +223,6 @@ class World(object):
 		newExit.to = to
 		newExit.vnum = self.currentRoom.vnum if parent is None else parent
 		return newExit
-
-	def sortExits(self, exitsDict):
-		return sorted(
-			exitsDict.items(),
-			key=lambda direction: (
-				DIRECTIONS.index(direction[0]) if direction[0] in DIRECTIONS else len(DIRECTIONS)
-			),
-		)
 
 	def isBidirectional(self, exitObj):
 		"""
@@ -963,40 +942,9 @@ class World(object):
 			vnum = args[0].strip().lower()
 		if vnum in self.labels:
 			vnum = self.labels[vnum]
-		if vnum in self.rooms:
-			room = self.rooms[vnum]
-		else:
-			return [f"Error: No such vnum or label, '{vnum}'"]
-		info = []
-		info.append(f"vnum: '{room.vnum}'")
-		info.append(f"Name: '{room.name}'")
-		info.append("Description:")
-		info.append("-----")
-		info.extend(room.desc.splitlines())
-		info.append("-----")
-		info.append("Dynamic Desc:")
-		info.append("-----")
-		info.extend(room.dynamicDesc.splitlines())
-		info.append("-----")
-		info.append(f"Note: '{room.note}'")
-		info.append(f"Terrain: '{room.terrain}'")
-		info.append(f"Cost: '{room.cost}'")
-		info.append(f"Light: '{room.light}'")
-		info.append(f"Align: '{room.align}'")
-		info.append(f"Portable: '{room.portable}'")
-		info.append(f"Ridable: '{room.ridable}'")
-		info.append(f"Mob Flags: '{', '.join(room.mobFlags)}'")
-		info.append(f"Load Flags: '{', '.join(room.loadFlags)}'")
-		info.append(f"Coordinates (X, Y, Z): '{room.x}', '{room.y}', '{room.z}'")
-		info.append("Exits:")
-		for direction, exitcls in self.sortExits(room.exits):
-			info.append("-----")
-			info.append(f"Direction: '{direction}'")
-			info.append(f"To: '{exitcls.to}'")
-			info.append(f"Exit Flags: '{', '.join(exitcls.exitFlags)}'")
-			info.append(f"Door Name: '{exitcls.door}'")
-			info.append(f"Door Flags: '{', '.join(exitcls.doorFlags)}'")
-		return info
+		if vnum not in self.rooms:
+			return f"Error: No such vnum or label, '{vnum}'"
+		return self.rooms[vnum].info
 
 	def createSpeedWalk(self, directionsList):
 		"""Given a list of directions, return a string of the directions in standard speed walk format"""

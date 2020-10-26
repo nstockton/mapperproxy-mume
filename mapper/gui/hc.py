@@ -23,7 +23,7 @@ from pyglet.window import key
 # Local Modules:
 from .vec2d import Vec2d
 from ..config import Config
-from ..world import DIRECTIONS
+from ..roomdata.objects import DIRECTIONS
 
 
 try:

@@ -21,16 +21,9 @@ from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT
 from .config import Config
 from .delays import OneShot
 from .protocols.proxy import ProxyHandler
-from .roomdata.objects import Room
+from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Room
 from .utils import decodeBytes, escapeIAC, escapeXML, formatDocString, regexFuzzy, simplified, stripAnsi
-from .world import (
-	DIRECTIONS,
-	LIGHT_SYMBOLS,
-	REVERSE_DIRECTIONS,
-	RUN_DESTINATION_REGEX,
-	TERRAIN_SYMBOLS,
-	World,
-)
+from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 
 EXIT_TAGS_REGEX = re.compile(
@@ -393,7 +386,7 @@ class Mapper(threading.Thread, World):
 			self.output("What command do you want to emulate?")
 			return
 		# get the full name of the user's command
-		for command in DIRECTIONS + self.emulationCommands:
+		for command in [*DIRECTIONS, *self.emulationCommands]:
 			if command.startswith(userCommand):
 				if command in DIRECTIONS:
 					self.emulate_leave(command)
@@ -533,7 +526,7 @@ class Mapper(threading.Thread, World):
 		self.sendPlayer(self.rlink(*args))
 
 	def user_command_rinfo(self, *args):
-		self.sendPlayer("\n".join(self.rinfo(*args)))
+		self.sendPlayer(self.rinfo(*args))
 
 	def user_command_vnum(self, *args):
 		"""states the vnum of the current room"""
@@ -831,7 +824,8 @@ class Mapper(threading.Thread, World):
 
 	def addNewRoom(self, movement, name, description, dynamic):
 		vnum = self.getNewVnum()
-		newRoom = Room(vnum)
+		newRoom = Room()
+		newRoom.vnum = vnum
 		newRoom.name = name
 		newRoom.desc = description
 		newRoom.dynamicDesc = dynamic

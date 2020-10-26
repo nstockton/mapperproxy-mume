@@ -11,7 +11,7 @@ import re
 
 # Local Modules:
 from .mudevents import Handler
-from .world import DIRECTIONS
+from .roomdata.objects import DIRECTIONS
 
 
 directionsRegexp = "|".join([d.title() for d in DIRECTIONS])
