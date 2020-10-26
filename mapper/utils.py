@@ -14,6 +14,7 @@ import re
 import shutil
 import sys
 import textwrap
+from collections.abc import Sequence
 from pydoc import pager
 from telnetlib import IAC
 
@@ -150,7 +151,7 @@ def regexFuzzy(data):
 		return ""
 	elif isinstance(data, str):
 		return "(".join(list(data)) + ")?" * (len(data) - 1)
-	elif isinstance(data, list):
+	elif isinstance(data, Sequence):
 		return "|".join("(".join(list(item)) + ")?" * (len(item) - 1) for item in data)
 
 

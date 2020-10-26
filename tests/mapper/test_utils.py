@@ -137,8 +137,10 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.regexFuzzy(["", ""]), "|")
 		self.assertEqual(utils.regexFuzzy("east"), "e(a(s(t)?)?)?")
 		self.assertEqual(utils.regexFuzzy(["east"]), "e(a(s(t)?)?)?")
+		self.assertEqual(utils.regexFuzzy(("east")), "e(a(s(t)?)?)?")
 		expectedOutput = "e(a(s(t)?)?)?|w(e(s(t)?)?)?"
 		self.assertEqual(utils.regexFuzzy(["east", "west"]), expectedOutput)
+		self.assertEqual(utils.regexFuzzy(("east", "west")), expectedOutput)
 
 	@mock.patch("mapper.utils._imp")
 	@mock.patch("mapper.utils.sys")
