@@ -15,7 +15,7 @@
         <meta name="author" content="Nick Stockton">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.2">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.38780c08.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bc7e593a.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f72e892.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab28b872.min.css">
         
       
     
@@ -71,7 +71,9 @@
       
     </div>
     
-      <header class="md-header" data-md-component="header">
+      
+
+<header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
     <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
       
@@ -156,7 +158,9 @@
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
       
@@ -900,25 +904,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"config"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Defines the constructor for the object.</span>
@@ -932,9 +918,6 @@
 	<span class="bp">self</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -954,21 +937,7 @@
 <p>D.clear() -&gt; None.  Remove all items from D.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>816
-817
-818
-819
-820
-821
-822</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s1">'D.clear() -&gt; None.  Remove all items from D.'</span>
     <span class="k">try</span><span class="p">:</span>
@@ -978,9 +947,6 @@
         <span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1000,20 +966,7 @@
 <p>D.get(k[,d]) -&gt; D[k] if k in D, else d.  d defaults to None.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>657
-658
-659
-660
-661
-662</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="s1">'D.get(k[,d]) -&gt; D[k] if k in D, else d.  d defaults to None.'</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1022,9 +975,6 @@
         <span class="k">return</span> <span class="n">default</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1044,25 +994,12 @@
 <p>D.items() -&gt; a set-like object providing a view on D's items</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>676
-677
-678</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"D.items() -&gt; a set-like object providing a view on D's items"</span>
     <span class="k">return</span> <span class="n">ItemsView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1082,25 +1019,12 @@
 <p>D.keys() -&gt; a set-like object providing a view on D's keys</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>672
-673
-674</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"D.keys() -&gt; a set-like object providing a view on D's keys"</span>
     <span class="k">return</span> <span class="n">KeysView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1109,7 +1033,7 @@
 
         <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
 
-        <code class="highlight language-python">pop<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x005130A8</span><span class="o">&gt;</span><span class="p">)</span>        </code>
+        <code class="highlight language-python">pop<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A30A8</span><span class="o">&gt;</span><span class="p">)</span>        </code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1121,27 +1045,7 @@
 If key is not found, d is returned if given, otherwise KeyError is raised.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>790
-791
-792
-793
-794
-795
-796
-797
-798
-799
-800
-801
-802</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">__marker</span><span class="p">):</span>
     <span class="sd">'''D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
 <span class="sd">      If key is not found, d is returned if given, otherwise KeyError is raised.</span>
@@ -1157,9 +1061,6 @@ If key is not found, d is returned if given, otherwise KeyError is raised.</p>
         <span class="k">return</span> <span class="n">value</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1180,25 +1081,7 @@ If key is not found, d is returned if given, otherwise KeyError is raised.</p>
 as a 2-tuple; but raise KeyError if D is empty.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>804
-805
-806
-807
-808
-809
-810
-811
-812
-813
-814</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">'''D.popitem() -&gt; (k, v), remove and return some (key, value) pair</span>
 <span class="sd">       as a 2-tuple; but raise KeyError if D is empty.</span>
@@ -1212,9 +1095,6 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
     <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1231,19 +1111,7 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
 <p>Reloads the configuration from disc.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>71
-72
-73
-74
-75</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">reload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Reloads the configuration from disc."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -1251,9 +1119,6 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">.json"</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1270,27 +1135,7 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
 <p>Saves the configuration to disc.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Saves the configuration to disc."""</span>
 	<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIRECTORY</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span>
@@ -1306,9 +1151,6 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
 			<span class="n">fileObj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1328,21 +1170,7 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
 <p>D.setdefault(k[,d]) -&gt; D.get(k,d), also set D[k]=d if k not in D</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>851
-852
-853
-854
-855
-856
-857</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="s1">'D.setdefault(k[,d]) -&gt; D.get(k,d), also set D[k]=d if k not in D'</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1352,9 +1180,6 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
     <span class="k">return</span> <span class="n">default</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1377,40 +1202,7 @@ If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
 In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>824
-825
-826
-827
-828
-829
-830
-831
-832
-833
-834
-835
-836
-837
-838
-839
-840
-841
-842
-843
-844
-845
-846
-847
-848
-849</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
     <span class="sd">''' D.update([E, ]**F) -&gt; None.  Update D from mapping/iterable E and F.</span>
 <span class="sd">        If E present and has a .keys() method, does:     for k in E: D[k] = E[k]</span>
@@ -1439,9 +1231,6 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
         <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1461,25 +1250,12 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 <p>D.values() -&gt; an object providing a view on D's values</p>
 <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>680
-681
-682</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"D.values() -&gt; an object providing a view on D's values"</span>
     <span class="k">return</span> <span class="n">ValuesView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1538,8 +1314,8 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
       
     </div>
     
-      <script src="../../assets/javascripts/vendor.77e55a48.min.js"></script>
-      <script src="../../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../../assets/javascripts/vendor.6a3d08fc.min.js"></script>
+      <script src="../../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({

@@ -15,7 +15,7 @@
         <meta name="author" content="Nick Stockton">
       
       <link rel="shortcut icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.2">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.38780c08.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bc7e593a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f72e892.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab28b872.min.css">
         
       
     
@@ -71,7 +71,9 @@
       
     </div>
     
-      <header class="md-header" data-md-component="header">
+      
+
+<header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
     <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
       
@@ -156,7 +158,9 @@
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
       
@@ -1883,32 +1887,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Requests that the peer enable an option.</span>
@@ -1929,9 +1908,6 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1972,32 +1948,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">dont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Requests that the peer disable an option.</span>
@@ -2018,9 +1969,6 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_dont</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2057,24 +2005,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>348
-349
-350
-351
-352
-353
-354
-355
-356
-357</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getOptionState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_OptionState</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Gets the state of a Telnet option.</span>
@@ -2087,9 +2018,6 @@
 	<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2127,30 +2055,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">negotiateCharset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Negotiates changing the character set.</span>
@@ -2169,9 +2074,6 @@
 	<span class="bp">self</span><span class="o">.</span><span class="n">requestNegotiation</span><span class="p">(</span><span class="n">CHARSET</span><span class="p">,</span> <span class="n">CHARSET_REQUEST</span> <span class="o">+</span> <span class="n">separator</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2209,36 +2111,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_charset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when a charset subnegotiation is received.</span>
@@ -2263,9 +2136,6 @@
 	<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oldCharset</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2314,21 +2184,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>54
-55
-56
-57
-58
-59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">NEGOTIATION_BYTES</span> <span class="ow">and</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnegotiationMap</span><span class="p">:</span>
 		<span class="c1"># Treat any unhandled negotiation options the same as unhandled commands, so</span>
@@ -2338,9 +2194,6 @@
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2360,23 +2213,11 @@
 <p>Called by <code>disconnect</code> when a connection to peer has been lost.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2393,20 +2234,7 @@
 <p>Called by <code>connect</code> when a connection to peer has been established.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>150
-151
-152
-153
-154
-155</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_connectionMade</span><span class="p">()</span>
 	<span class="c1"># Offer to handle charset.</span>
@@ -2415,9 +2243,6 @@
 	<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">MPI_INIT</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"P2"</span> <span class="o">+</span> <span class="n">LF</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"G"</span> <span class="o">+</span> <span class="n">LF</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2458,102 +2283,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427
-428
-429
-430
-431
-432
-433
-434
-435
-436
-437
-438
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dataReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># NOQA: C901</span>
 	<span class="n">appDataBuffer</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">while</span> <span class="n">data</span><span class="p">:</span>
@@ -2644,9 +2374,6 @@
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2689,27 +2416,13 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>173
-174
-175
-176</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_disableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">option</span> <span class="o">==</span> <span class="n">CHARSET</span><span class="p">:</span>
 		<span class="k">return</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_disableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2756,23 +2469,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>625
-626</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_disableRemote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Don't know how to disable local Telnet option </span><span class="si">{</span><span class="n">option</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2813,46 +2514,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>548
-549
-550
-551
-552
-553
-554
-555
-556
-557
-558
-559
-560
-561
-562
-563
-564
-565
-566
-567
-568
-569
-570
-571
-572
-573
-574
-575
-576
-577
-578
-579</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + DO + option is received.</span>
@@ -2887,9 +2549,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2930,42 +2589,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>581
-582
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595
-596
-597
-598
-599
-600
-601
-602
-603
-604
-605
-606
-607
-608</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + DONT + option is received.</span>
@@ -2996,9 +2620,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_disableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3053,20 +2674,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>166
-167
-168
-169
-170
-171</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">option</span> <span class="o">==</span> <span class="n">CHARSET</span><span class="p">:</span>
 		<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Peer acknowledges our request and tells us to begin charset sub-negotiation."</span><span class="p">)</span>
@@ -3075,9 +2683,6 @@ in order to perform any necessary cleanup on our end.</p>
 	<span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_enableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3135,23 +2740,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>619
-620</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableRemote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Reject all options by default.</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3168,25 +2761,12 @@ in order to perform any necessary cleanup on our end.</p>
 <p>Called when a Go Ahead command is received.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>146
-147
-148</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_ga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Called when a Go Ahead command is received."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">promptTerminator</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3235,26 +2815,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>471
-472
-473
-474
-475
-476
-477
-478
-479
-480
-481
-482</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_subnegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when a subnegotiation is received.</span>
@@ -3269,9 +2830,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_unhandledSubnegotiation</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3317,19 +2875,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>157
-158
-159
-160
-161</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_unhandledCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">option</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">command</span><span class="p">)</span>
@@ -3337,9 +2883,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">command</span> <span class="o">+</span> <span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3385,23 +2928,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>163
-164</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_unhandledSubnegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">SB</span> <span class="o">+</span> <span class="n">option</span> <span class="o">+</span> <span class="n">data</span> <span class="o">+</span> <span class="n">IAC</span> <span class="o">+</span> <span class="n">SE</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3442,47 +2973,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>484
-485
-486
-487
-488
-489
-490
-491
-492
-493
-494
-495
-496
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507
-508
-509
-510
-511
-512
-513
-514
-515
-516</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_will</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + WILL + option is received.</span>
@@ -3518,9 +3009,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3561,43 +3049,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544
-545
-546</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_wont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + WONT + option is received.</span>
@@ -3629,9 +3081,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_disableRemote</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3680,23 +3129,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>359
-360
-361
-362
-363
-364
-365
-366
-367</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">requestNegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Sends a subnegotiation message to the peer.</span>
@@ -3708,9 +3141,6 @@ in order to perform any necessary cleanup on our end.</p>
 	<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">SB</span> <span class="o">+</span> <span class="n">option</span> <span class="o">+</span> <span class="n">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="n">IAC</span> <span class="o">+</span> <span class="n">SE</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3751,32 +3181,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">will</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Indicates our willingness to enable an option.</span>
@@ -3797,9 +3202,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_will</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3840,32 +3242,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">wont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Indicates we are not willing to enable an option.</span>
@@ -3886,9 +3263,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_wont</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3929,23 +3303,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>53
-54</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4035,32 +3397,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Requests that the peer enable an option.</span>
@@ -4081,9 +3418,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4124,32 +3458,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">dont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Requests that the peer disable an option.</span>
@@ -4170,9 +3479,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_dont</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4209,24 +3515,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>348
-349
-350
-351
-352
-353
-354
-355
-356
-357</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getOptionState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_OptionState</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Gets the state of a Telnet option.</span>
@@ -4239,9 +3528,6 @@ in order to perform any necessary cleanup on our end.</p>
 	<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4290,21 +3576,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>54
-55
-56
-57
-58
-59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">NEGOTIATION_BYTES</span> <span class="ow">and</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnegotiationMap</span><span class="p">:</span>
 		<span class="c1"># Treat any unhandled negotiation options the same as unhandled commands, so</span>
@@ -4314,9 +3586,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4336,23 +3605,11 @@ in order to perform any necessary cleanup on our end.</p>
 <p>Called by <code>disconnect</code> when a connection to peer has been lost.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4372,23 +3629,11 @@ in order to perform any necessary cleanup on our end.</p>
 <p>Called by <code>connect</code> when a connection to peer has been established.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>56
-57</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4429,102 +3674,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427
-428
-429
-430
-431
-432
-433
-434
-435
-436
-437
-438
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dataReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># NOQA: C901</span>
 	<span class="n">appDataBuffer</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">while</span> <span class="n">data</span><span class="p">:</span>
@@ -4615,9 +3765,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4663,23 +3810,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>622
-623</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_disableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Don't know how to disable local Telnet option </span><span class="si">{</span><span class="n">option</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4726,23 +3861,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>625
-626</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_disableRemote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Don't know how to disable local Telnet option </span><span class="si">{</span><span class="n">option</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4783,46 +3906,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>548
-549
-550
-551
-552
-553
-554
-555
-556
-557
-558
-559
-560
-561
-562
-563
-564
-565
-566
-567
-568
-569
-570
-571
-572
-573
-574
-575
-576
-577
-578
-579</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + DO + option is received.</span>
@@ -4857,9 +3941,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -4900,42 +3981,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>581
-582
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595
-596
-597
-598
-599
-600
-601
-602
-603
-604
-605
-606
-607
-608</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + DONT + option is received.</span>
@@ -4966,9 +4012,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_disableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5023,27 +4066,13 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>76
-77
-78
-79</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">option</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">_handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subnegotiationMap</span><span class="p">:</span>
 		<span class="k">return</span> <span class="kc">False</span>
 	<span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_enableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5101,23 +4130,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>619
-620</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableRemote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Reject all options by default.</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5166,26 +4183,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>471
-472
-473
-474
-475
-476
-477
-478
-479
-480
-481
-482</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_subnegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when a subnegotiation is received.</span>
@@ -5200,9 +4198,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_unhandledSubnegotiation</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5248,19 +4243,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>67
-68
-69
-70
-71</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_unhandledCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">option</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">command</span><span class="p">)</span>
@@ -5268,9 +4251,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">command</span> <span class="o">+</span> <span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5316,23 +4296,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>73
-74</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_unhandledSubnegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">SB</span> <span class="o">+</span> <span class="n">option</span> <span class="o">+</span> <span class="n">data</span> <span class="o">+</span> <span class="n">IAC</span> <span class="o">+</span> <span class="n">SE</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5373,47 +4341,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>484
-485
-486
-487
-488
-489
-490
-491
-492
-493
-494
-495
-496
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507
-508
-509
-510
-511
-512
-513
-514
-515
-516</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_will</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + WILL + option is received.</span>
@@ -5449,9 +4377,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5492,43 +4417,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544
-545
-546</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_wont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + WONT + option is received.</span>
@@ -5560,9 +4449,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_disableRemote</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5611,23 +4497,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>359
-360
-361
-362
-363
-364
-365
-366
-367</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">requestNegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Sends a subnegotiation message to the peer.</span>
@@ -5639,9 +4509,6 @@ in order to perform any necessary cleanup on our end.</p>
 	<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">SB</span> <span class="o">+</span> <span class="n">option</span> <span class="o">+</span> <span class="n">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="n">IAC</span> <span class="o">+</span> <span class="n">SE</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5682,32 +4549,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">will</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Indicates our willingness to enable an option.</span>
@@ -5728,9 +4570,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_will</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5771,32 +4610,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">wont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Indicates we are not willing to enable an option.</span>
@@ -5817,9 +4631,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_wont</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5860,23 +4671,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>53
-54</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -5992,32 +4791,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Requests that the peer enable an option.</span>
@@ -6038,9 +4812,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6081,32 +4852,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">dont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Requests that the peer disable an option.</span>
@@ -6127,9 +4873,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_dont</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6166,24 +4909,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>348
-349
-350
-351
-352
-353
-354
-355
-356
-357</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getOptionState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_OptionState</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Gets the state of a Telnet option.</span>
@@ -6196,9 +4922,6 @@ in order to perform any necessary cleanup on our end.</p>
 	<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6244,21 +4967,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>54
-55
-56
-57
-58
-59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">if</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">NEGOTIATION_BYTES</span> <span class="ow">and</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnegotiationMap</span><span class="p">:</span>
 		<span class="c1"># Treat any unhandled negotiation options the same as unhandled commands, so</span>
@@ -6268,9 +4977,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6290,23 +4996,11 @@ in order to perform any necessary cleanup on our end.</p>
 <p>Called by <code>disconnect</code> when a connection to peer has been lost.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6326,23 +5020,11 @@ in order to perform any necessary cleanup on our end.</p>
 <p>Called by <code>connect</code> when a connection to peer has been established.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>56
-57</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6383,102 +5065,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427
-428
-429
-430
-431
-432
-433
-434
-435
-436
-437
-438
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dataReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># NOQA: C901</span>
 	<span class="n">appDataBuffer</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">while</span> <span class="n">data</span><span class="p">:</span>
@@ -6569,9 +5156,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6617,23 +5201,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>622
-623</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_disableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Don't know how to disable local Telnet option </span><span class="si">{</span><span class="n">option</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6680,23 +5252,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>625
-626</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_disableRemote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Don't know how to disable local Telnet option </span><span class="si">{</span><span class="n">option</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6737,46 +5297,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>548
-549
-550
-551
-552
-553
-554
-555
-556
-557
-558
-559
-560
-561
-562
-563
-564
-565
-566
-567
-568
-569
-570
-571
-572
-573
-574
-575
-576
-577
-578
-579</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + DO + option is received.</span>
@@ -6811,9 +5332,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6854,42 +5372,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>581
-582
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595
-596
-597
-598
-599
-600
-601
-602
-603
-604
-605
-606
-607
-608</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + DONT + option is received.</span>
@@ -6920,9 +5403,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_disableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -6980,23 +5460,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>616
-617</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Reject all options by default.</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7054,23 +5522,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>619
-620</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableRemote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Reject all options by default.</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7119,26 +5575,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>471
-472
-473
-474
-475
-476
-477
-478
-479
-480
-481
-482</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_subnegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when a subnegotiation is received.</span>
@@ -7153,9 +5590,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_unhandledSubnegotiation</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7204,23 +5638,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>610
-611</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_unhandledCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7269,23 +5691,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>613
-614</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_unhandledSubnegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7326,47 +5736,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>484
-485
-486
-487
-488
-489
-490
-491
-492
-493
-494
-495
-496
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507
-508
-509
-510
-511
-512
-513
-514
-515
-516</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_will</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + WILL + option is received.</span>
@@ -7402,9 +5772,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7445,43 +5812,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544
-545
-546</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_wont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Called when an IAC + WONT + option is received.</span>
@@ -7513,9 +5844,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_disableRemote</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7564,23 +5892,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>359
-360
-361
-362
-363
-364
-365
-366
-367</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">requestNegotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Sends a subnegotiation message to the peer.</span>
@@ -7592,9 +5904,6 @@ in order to perform any necessary cleanup on our end.</p>
 	<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">IAC</span> <span class="o">+</span> <span class="n">SB</span> <span class="o">+</span> <span class="n">option</span> <span class="o">+</span> <span class="n">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="n">IAC</span> <span class="o">+</span> <span class="n">SE</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7635,32 +5944,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">will</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Indicates our willingness to enable an option.</span>
@@ -7681,9 +5965,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_will</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7724,32 +6005,7 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">wont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Indicates we are not willing to enable an option.</span>
@@ -7770,9 +6026,6 @@ in order to perform any necessary cleanup on our end.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_wont</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7813,23 +6066,11 @@ in order to perform any necessary cleanup on our end.</p>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>53
-54</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -7875,8 +6116,8 @@ in order to perform any necessary cleanup on our end.</p>
       
     </div>
     
-      <script src="../../../assets/javascripts/vendor.77e55a48.min.js"></script>
-      <script src="../../../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../../../assets/javascripts/vendor.6a3d08fc.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({

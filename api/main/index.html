@@ -9,10 +9,10 @@
 <link href="https://nstockton.github.io/mapperproxy-mume/api/main/" rel="canonical"/>
 <meta content="Nick Stockton" name="author"/>
 <link href="../../assets/images/favicon.png" rel="shortcut icon"/>
-<meta content="mkdocs-1.1.2, mkdocs-material-6.0.2" name="generator"/>
+<meta content="mkdocs-1.1.2, mkdocs-material-6.1.0" name="generator"/>
 <title>main.py - Mapper Proxy</title>
-<link href="../../assets/stylesheets/main.38780c08.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.3f72e892.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/main.bc7e593a.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab28b872.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&amp;display=fallback" rel="stylesheet"/>
 <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
@@ -836,18 +836,6 @@ only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
 <p>Buffer <em>data</em> bytes for the next send operation.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>448
-449
-450
-451
-452</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="s2">"Buffer *data* bytes for the next send operation."</span>
@@ -856,9 +844,6 @@ only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
     <span class="k">return</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -879,28 +864,6 @@ method. After calling this method, future socket operations
 will raise :exc:<code>socket.error</code>.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Closes the wrapped socket, and empties the internal buffers. The</span>
@@ -919,9 +882,6 @@ will raise :exc:<code>socket.error</code>.</p>
     <span class="k">return</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -943,24 +903,6 @@ about data in BufferedSocket's internal buffer. Exercise
 discipline with calling <code>recv*</code> functions.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Returns the file descriptor of the wrapped socket. -1 if it has</span>
@@ -975,9 +917,6 @@ discipline with calling <code>recv*</code> functions.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -993,18 +932,6 @@ discipline with calling <code>recv*</code> functions.</p>
 <p>Send the contents of the internal send buffer.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>442
-443
-444
-445
-446</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"Send the contents of the internal send buffer."</span>
@@ -1013,9 +940,6 @@ discipline with calling <code>recv*</code> functions.</p>
     <span class="k">return</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1033,19 +957,6 @@ wrapped socket is connected.  See :meth:<code>socket.getpeername</code>
 for more details.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>464
-465
-466
-467
-468
-469</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Convenience function to return the remote address to which the</span>
@@ -1055,9 +966,6 @@ for more details.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1073,17 +981,6 @@ for more details.</p>
 <p>Returns the receive buffer bytestring (rbuf).</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>158
-159
-160
-161</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"Returns the receive buffer bytestring (rbuf)."</span>
@@ -1091,9 +988,6 @@ for more details.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1109,17 +1003,6 @@ for more details.</p>
 <p>Returns a copy of the send buffer list.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>163
-164
-165
-166</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"Returns a copy of the send buffer list."</span>
@@ -1127,9 +1010,6 @@ for more details.</p>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1146,18 +1026,6 @@ for more details.</p>
 See :meth:<code>socket.getsockname</code> for more details.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>458
-459
-460
-461
-462</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Convenience function to return the wrapped socket's own address.</span>
@@ -1166,9 +1034,6 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1185,21 +1050,6 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
 :meth:<code>socket.getsockopt</code>.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>471
-472
-473
-474
-475
-476
-477
-478</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Convenience function passing through to the wrapped socket's</span>
@@ -1211,16 +1061,13 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getsockopt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.peek">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">peek<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">peek<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -1256,7 +1103,7 @@ see bytes in the recv buffer, use :meth:<code>getrecvbuffer</code>.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00513C48&gt;</code></td>
+<td><code>&lt;object object at 0x003A3BF0&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1266,35 +1113,6 @@ buffer and socket before <em>timeout</em> expires, then a
 :exc:<code>ConnectionClosed</code> will be raised.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Returns *size* bytes from the socket and/or internal buffer. Bytes</span>
@@ -1320,16 +1138,13 @@ buffer and socket before <em>timeout</em> expires, then a
     <span class="k">return</span> <span class="n">data</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">recv<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -1374,7 +1189,7 @@ the default, <code>0</code>, is valid.</p>
 timeout. Defaults to the value set in the constructor
 of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00513C48&gt;</code></td>
+<td><code>&lt;object object at 0x003A3BF0&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1385,52 +1200,6 @@ then the socket is closed and recv buffer is empty. Further
 calls to recv will raise :exc:<code>socket.error</code>.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Returns **up to** *size* bytes, using the internal buffer before</span>
@@ -1473,16 +1242,13 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
     <span class="k">return</span> <span class="n">data</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv_close">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv_close<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">recv_close<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -1492,36 +1258,6 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
 more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong</code>.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251
-252
-253</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Receive until the connection is closed, up to *maxsize* bytes. If</span>
@@ -1548,16 +1284,13 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
     <span class="k">return</span> <span class="n">ret</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv_size">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv_size<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">recv_size<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -1592,7 +1325,7 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00513C48&gt;</code></td>
+<td><code>&lt;object object at 0x003A3BF0&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1602,67 +1335,6 @@ buffer and socket before <em>timeout</em> expires, then a
 :exc:<code>ConnectionClosed</code> will be raised.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363
-364
-365
-366
-367
-368
-369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Read off of the internal buffer, then off the socket, until</span>
@@ -1720,16 +1392,13 @@ buffer and socket before <em>timeout</em> expires, then a
     <span class="k">return</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv_until">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv_until<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </code>
+<code class="highlight language-python">recv_until<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -1765,7 +1434,7 @@ in the socket stream.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00513C48&gt;</code></td>
+<td><code>&lt;object object at 0x003A3BF0&gt;</code></td>
 </tr>
 <tr>
 <td><code>maxsize</code></td>
@@ -1774,7 +1443,7 @@ set in the constructor of BufferedSocket.</p>
 <p>The maximum size for the internal buffer.
 Defaults to the value set in the constructor.</p>
 </td>
-<td><code>&lt;object object at 0x00513C48&gt;</code></td>
+<td><code>&lt;object object at 0x003A3BF0&gt;</code></td>
 </tr>
 <tr>
 <td><code>with_delimiter</code></td>
@@ -1802,94 +1471,6 @@ forwarding the messages.</p>
 </ul>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>255
-256
-257
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span>
                <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1974,16 +1555,13 @@ forwarding the messages.</p>
     <span class="k">return</span> <span class="n">val</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.send">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">send<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">send<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -2029,7 +1607,7 @@ the default 0 is valid.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00513C48&gt;</code></td>
+<td><code>&lt;object object at 0x003A3BF0&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -2039,56 +1617,6 @@ complete before <em>timeout</em>. In the event of an exception, use
 unsent.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427
-428
-429
-430
-431
-432
-433
-434</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Send the contents of the internal send buffer, as well as *data*,</span>
@@ -2135,16 +1663,13 @@ unsent.</p>
     <span class="k">return</span> <span class="n">total_sent</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.sendall">
 <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">sendall<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00513C48</span><span class="o">&gt;</span><span class="p">)</span> </code>
+<code class="highlight language-python">sendall<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x003A3BF0</span><span class="o">&gt;</span><span class="p">)</span> </code>
 <span class="doc doc-properties">
 <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
 </span>
@@ -2154,18 +1679,6 @@ unsent.</p>
 parallelism to the :class:<code>socket.socket</code> API.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>436
-437
-438
-439
-440</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""A passthrough to :meth:`~BufferedSocket.send`, retained for</span>
@@ -2174,9 +1687,6 @@ parallelism to the :class:<code>socket.socket</code> API.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2193,18 +1703,6 @@ parallelism to the :class:<code>socket.socket</code> API.</p>
 operations, in bytes. Does not truncate the current buffer.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>152
-153
-154
-155
-156</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
     <span class="sd">"""Set the default maximum buffer size *maxsize* for future</span>
@@ -2213,9 +1711,6 @@ operations, in bytes. Does not truncate the current buffer.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">=</span> <span class="n">maxsize</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2232,18 +1727,6 @@ operations, in bytes. Does not truncate the current buffer.</p>
 :meth:<code>socket.setsockopt</code>.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>480
-481
-482
-483
-484</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">"""Convenience function passing through to the wrapped socket's</span>
@@ -2252,9 +1735,6 @@ operations, in bytes. Does not truncate the current buffer.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2270,25 +1750,12 @@ operations, in bytes. Does not truncate the current buffer.</p>
 <p>Set the default <em>timeout</em> for future operations, in seconds.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>142
-143
-144</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
     <span class="s2">"Set the default *timeout* for future operations, in seconds."</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2311,28 +1778,6 @@ support, please open <code>an issue</code>_.</p>
 <p>.. _an issue: https://github.com/mahmoud/boltons/issues</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>546
-547
-548
-549
-550
-551
-552
-553
-554
-555
-556
-557
-558
-559
-560</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
     <span class="sd">"""Convenience method which passes through to the wrapped socket's</span>
@@ -2351,9 +1796,6 @@ support, please open <code>an issue</code>_.</p>
     <span class="k">return</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2434,26 +1876,6 @@ after the run() method terminates. The module function enumerate()
 returns a list of all alive threads.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>1092
-1093
-1094
-1095
-1096
-1097
-1098
-1099
-1100
-1101
-1102
-1103
-1104</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
@@ -2470,9 +1892,6 @@ returns a list of all alive threads.</p>
     <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2489,22 +1908,6 @@ returns a list of all alive threads.</p>
 <p>This method is deprecated, use is_alive() instead.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>1106
-1107
-1108
-1109
-1110
-1111
-1112
-1113
-1114</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
@@ -2517,9 +1920,6 @@ returns a list of all alive threads.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2550,50 +1950,6 @@ thread before it has been started and attempts to do so raises the same
 exception.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>1012
-1013
-1014
-1015
-1016
-1017
-1018
-1019
-1020
-1021
-1022
-1023
-1024
-1025
-1026
-1027
-1028
-1029
-1030
-1031
-1032
-1033
-1034
-1035
-1036
-1037
-1038
-1039
-1040
-1041
-1042
-1043
-1044
-1045
-1046
-1047
-1048</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Wait until the thread terminates.</span>
@@ -2634,9 +1990,6 @@ exception.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2653,29 +2006,6 @@ target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 	<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">isSet</span><span class="p">():</span>
@@ -2695,9 +2025,6 @@ from the args and kwargs arguments, respectively.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">_gui_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2717,37 +2044,6 @@ object's run() method to be invoked in a separate thread of control.</p>
 same thread object.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>834
-835
-836
-837
-838
-839
-840
-841
-842
-843
-844
-845
-846
-847
-848
-849
-850
-851
-852
-853
-854
-855
-856
-857</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Start the thread's activity.</span>
@@ -2775,9 +2071,6 @@ same thread object.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2858,26 +2151,6 @@ after the run() method terminates. The module function enumerate()
 returns a list of all alive threads.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>1092
-1093
-1094
-1095
-1096
-1097
-1098
-1099
-1100
-1101
-1102
-1103
-1104</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
@@ -2894,9 +2167,6 @@ returns a list of all alive threads.</p>
     <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2913,22 +2183,6 @@ returns a list of all alive threads.</p>
 <p>This method is deprecated, use is_alive() instead.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>1106
-1107
-1108
-1109
-1110
-1111
-1112
-1113
-1114</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
@@ -2941,9 +2195,6 @@ returns a list of all alive threads.</p>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -2974,50 +2225,6 @@ thread before it has been started and attempts to do so raises the same
 exception.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>1012
-1013
-1014
-1015
-1016
-1017
-1018
-1019
-1020
-1021
-1022
-1023
-1024
-1025
-1026
-1027
-1028
-1029
-1030
-1031
-1032
-1033
-1034
-1035
-1036
-1037
-1038
-1039
-1040
-1041
-1042
-1043
-1044
-1045
-1046
-1047
-1048</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Wait until the thread terminates.</span>
@@ -3058,9 +2265,6 @@ exception.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3077,28 +2281,6 @@ target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span> 96
- 97
- 98
- 99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 	<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">isSet</span><span class="p">():</span>
@@ -3117,9 +2299,6 @@ from the args and kwargs arguments, respectively.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">"quit"</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3139,37 +2318,6 @@ object's run() method to be invoked in a separate thread of control.</p>
 same thread object.</p>
 <details class="quote">
 <summary>Source code in <code>mapper\main.py</code></summary>
-<table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>834
-835
-836
-837
-838
-839
-840
-841
-842
-843
-844
-845
-846
-847
-848
-849
-850
-851
-852
-853
-854
-855
-856
-857</pre>
-</div>
-</td>
-<td class="code">
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Start the thread's activity.</span>
@@ -3197,9 +2345,6 @@ same thread object.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -3230,8 +2375,8 @@ same thread object.</p>
 </div>
 </footer>
 </div>
-<script src="../../assets/javascripts/vendor.77e55a48.min.js"></script>
-<script src="../../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+<script src="../../assets/javascripts/vendor.6a3d08fc.min.js"></script>
+<script src="../../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
 <script>
         app = initialize({
           base: "../..",

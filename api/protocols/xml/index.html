@@ -15,7 +15,7 @@
         <meta name="author" content="Nick Stockton">
       
       <link rel="shortcut icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.2">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.38780c08.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bc7e593a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f72e892.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab28b872.min.css">
         
       
     
@@ -71,7 +71,9 @@
       
     </div>
     
-      <header class="md-header" data-md-component="header">
+      
+
+<header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
     <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
       
@@ -156,7 +158,9 @@
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
       
@@ -852,23 +856,11 @@
 <p>Called by <code>disconnect</code> when a connection to peer has been lost.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>59
-60</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">pass</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -885,19 +877,7 @@
 <p>Called by <code>connect</code> when a connection to peer has been established.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>157
-158
-159
-160
-161</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="c1"># Turn on XML mode.</span>
 	<span class="c1"># Mode "3" tells MUME to enable XML output without sending an initial "&lt;xml&gt;" tag.</span>
@@ -905,9 +885,6 @@
 	<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">MPI_INIT</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"X2"</span> <span class="o">+</span> <span class="n">LF</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"3G"</span> <span class="o">+</span> <span class="n">LF</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -945,69 +922,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_dataReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># NOQA: C901</span>
 	<span class="n">outputFormat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputFormat</span>
 	<span class="n">appDataBuffer</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1024,7 +939,7 @@
 					<span class="bp">self</span><span class="o">.</span><span class="n">_lineBuffer</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
 				<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">CR_LF</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
 				<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">on_mapperEvent</span><span class="p">(</span><span class="s2">"line"</span><span class="p">,</span> <span class="n">unescapeXML</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">on_mapperEvent</span><span class="p">(</span><span class="s2">"line"</span><span class="p">,</span> <span class="n">unescapeXMLBytes</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
 			<span class="k">else</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_textBuffer</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">appData</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">separator</span><span class="p">:</span>
@@ -1045,7 +960,7 @@
 			<span class="k">elif</span> <span class="n">outputFormat</span> <span class="o">==</span> <span class="s2">"tintin"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gratuitous</span><span class="p">:</span>
 				<span class="n">appDataBuffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tintinReplacements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="sa">b</span><span class="s2">""</span><span class="p">))</span>
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">"movement"</span><span class="p">):</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">on_mapperEvent</span><span class="p">(</span><span class="s2">"movement"</span><span class="p">,</span> <span class="n">unescapeXML</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="kc">True</span><span class="p">))</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">on_mapperEvent</span><span class="p">(</span><span class="s2">"movement"</span><span class="p">,</span> <span class="n">unescapeXMLBytes</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 			<span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"gratuitous"</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_gratuitous</span> <span class="o">=</span> <span class="kc">True</span>
 			<span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"/gratuitous"</span><span class="p">:</span>
@@ -1055,19 +970,16 @@
 				<span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">"/"</span><span class="p">):</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">on_mapperEvent</span><span class="p">(</span>
 						<span class="s2">"dynamic"</span> <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"/room"</span> <span class="k">else</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"us-ascii"</span><span class="p">),</span>
-						<span class="n">unescapeXML</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+						<span class="n">unescapeXMLBytes</span><span class="p">(</span><span class="n">text</span><span class="p">),</span>
 					<span class="p">)</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">"data"</span>
 	<span class="k">if</span> <span class="n">appDataBuffer</span><span class="p">:</span>
 		<span class="k">if</span> <span class="n">outputFormat</span> <span class="o">==</span> <span class="s2">"raw"</span><span class="p">:</span>
 			<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">))</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="n">unescapeXML</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">),</span> <span class="kc">True</span><span class="p">))</span>
+			<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="n">unescapeXMLBytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">)))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1113,23 +1025,7 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>163
-164
-165
-166
-167
-168
-169
-170
-171</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_mapperEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Sends an event to the mapper thread.</span>
@@ -1141,9 +1037,6 @@
 	<span class="bp">self</span><span class="o">.</span><span class="n">eventCaller</span><span class="p">((</span><span class="n">MUD_DATA</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">)))</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1184,23 +1077,11 @@
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
-          <table class="highlighttable">
-<tr>
-<td class="linenos">
-<div class="linenodiv">
-<pre><span></span>53
-54</pre>
-</div>
-</td>
-<td class="code">
-<div class="highlight">
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
-</td>
-</tr>
-</table>
 </details>
 </div>
 </div>
@@ -1246,8 +1127,8 @@
       
     </div>
     
-      <script src="../../../assets/javascripts/vendor.77e55a48.min.js"></script>
-      <script src="../../../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../../../assets/javascripts/vendor.6a3d08fc.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
