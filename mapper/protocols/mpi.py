@@ -23,7 +23,6 @@ from typing import AbstractSet, Callable, Mapping, MutableSequence
 # Local Modules:
 from .base import Protocol
 from .telnet_constants import CR, CR_LF, LF
-from ..utils import removeFile
 
 
 MPI_INIT: bytes = b"~$#E"
@@ -103,7 +102,7 @@ class MPIProtocol(Protocol):
 			with open(fileName, "rb") as fileObj:
 				response = b"E" + session + LF + fileObj.read()
 		response = response.replace(CR, b"").strip() + LF
-		removeFile(fileName)
+		os.remove(fileName)
 		self.write(MPI_INIT + b"E" + b"%d" % len(response) + LF + response)
 
 	def view(self, data: bytes) -> None:
@@ -121,7 +120,7 @@ class MPIProtocol(Protocol):
 		else:
 			pagerProcess = subprocess.Popen((*self.pager.split(), fileName))
 			pagerProcess.wait()
-			removeFile(fileName)
+			os.remove(fileName)
 
 	def on_dataReceived(self, data: bytes) -> None:  # NOQA: C901
 		appDataBuffer = []

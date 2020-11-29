@@ -14,47 +14,82 @@ import re
 import shutil
 import sys
 import textwrap
-from collections.abc import Sequence
+from collections.abc import ByteString
 from pydoc import pager
 from telnetlib import IAC
+from typing import Any, Callable, Generator, List, Optional, Pattern, Sequence, Tuple, Union
 
 
-ANSI_COLOR_REGEX = re.compile(r"\x1b\[[\d;]+m")
-WHITE_SPACE_REGEX = re.compile(r"\s+", flags=re.UNICODE)
-INDENT_REGEX = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
-ESCAPE_XML_STR_ENTITIES = (("&", "&amp;"), ("<", "&lt;"), (">", "&gt;"))
-UNESCAPE_XML_STR_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_STR_ENTITIES)
-ESCAPE_XML_BYTES_ENTITIES = tuple(
+ANSI_COLOR_REGEX: Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
+WHITE_SPACE_REGEX: Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
+INDENT_REGEX: Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
+ESCAPE_XML_STR_ENTITIES: Tuple[Sequence[str], ...] = (("&", "&amp;"), ("<", "&lt;"), (">", "&gt;"))
+UNESCAPE_XML_STR_ENTITIES: Tuple[Sequence[str], ...] = tuple(
+	(second, first) for first, second in ESCAPE_XML_STR_ENTITIES
+)
+ESCAPE_XML_BYTES_ENTITIES: Tuple[Sequence[bytes], ...] = tuple(
 	(first.encode("us-ascii"), second.encode("us-ascii")) for first, second in ESCAPE_XML_STR_ENTITIES
 )
-UNESCAPE_XML_BYTES_ENTITIES = tuple((second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES)
+UNESCAPE_XML_BYTES_ENTITIES: Tuple[Sequence[bytes], ...] = tuple(
+	(second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES
+)
 
 
-def iterBytes(data):
-	"""Yield each byte in a bytes-like object."""
+def iterBytes(data: bytes) -> Generator[bytes, None, None]:
+	"""
+	A generator which yields each byte of a bytes-like object.
+
+	Args:
+		data: The data to process.
+
+	Yields:
+		Each byte of data as a bytes object.
+	"""
 	for i in range(len(data)):
 		yield data[i : i + 1]
 
 
-def minIndent(text):
-	"""Return the white space used to indent the line with the least amount of indention."""
-	return min(
-		(INDENT_REGEX.search(line).group("indent") for line in text.splitlines() if line.strip("\r\n")),
-		default="",
-		key=len,
-	)
+def minIndent(text: str) -> str:
+	"""
+	Retrieves the indention characters from the line with the least indention.
+
+	Args:
+		text: the text to process.
+
+	Returns:
+		The indention characters of the line with the least amount of indention.
+	"""
+	lines = []
+	for line in text.splitlines():
+		if line.strip("\r\n"):
+			match = INDENT_REGEX.search(line)
+			if match is not None:
+				lines.append(match.group("indent"))
+	return min(lines, default="", key=len)
 
 
-def formatDocString(functionOrString, width=79, prefix=""):
-	"""Format a docstring for displaying."""
+def formatDocString(
+	functionOrString: Union[str, Callable], width: int = 79, prefix: Optional[str] = None
+) -> str:
+	"""
+	Formats a docstring for displaying.
+
+	Args:
+		functionOrString: The function containing the docstring, or the docstring its self.
+		width: The number of characters to word wrap each line to.
+		prefix: One or more characters to use for indention.
+
+	Returns:
+		The formatted docstring.
+	"""
 	if callable(functionOrString):  # It's a function.
-		docString = functionOrString.__docstring__ if functionOrString.__docstring__ is not None else ""
+		docString = getattr(functionOrString, "__doc__") or ""
 	else:  # It's a string.
 		docString = functionOrString
-	docString = docString.lstrip(
-		"\r\n"
-	)  # Remove any empty lines from the beginning, while keeping indention.
-	if not INDENT_REGEX.search(docString).group("indent"):
+	# Remove any empty lines from the beginning, while keeping indention.
+	docString = docString.lstrip("\r\n")
+	match = INDENT_REGEX.search(docString)
+	if match is not None and not match.group("indent"):
 		# The first line was not indented.
 		# Prefix the first line with the white space from the subsequent, non-empty
 		# line with the least amount of indention.
@@ -67,7 +102,10 @@ def formatDocString(functionOrString, width=79, prefix=""):
 	indentLevel = 0
 	lastIndent = ""
 	for line in docString.splitlines():
-		indent, text = INDENT_REGEX.search(line).groups()
+		match = INDENT_REGEX.search(line)
+		if match is None:  # pragma: no cover
+			continue
+		indent, text = match.groups()
 		if len(indent) > len(lastIndent):
 			indentLevel += 1
 		elif len(indent) < len(lastIndent):
@@ -79,85 +117,168 @@ def formatDocString(functionOrString, width=79, prefix=""):
 		)
 		wrappedLines.append(linePrefix + f"\n{linePrefix}".join(lines))
 	docString = "\n".join(wrappedLines)
-	docString = textwrap.indent(docString, prefix=prefix)  # Indent docstring lines with the prefix.
+	docString = textwrap.indent(
+		docString, prefix=prefix if prefix is not None else ""
+	)  # Indent docstring lines with the prefix.
 	return docString
 
 
-def escapeIAC(dataBytes):
-	"""Double IAC characters in a bytes or bytearray object to escape them."""
-	return dataBytes.replace(IAC, IAC + IAC)
+def escapeIAC(data: bytes) -> bytes:
+	"""
+	Escapes IAC bytes of a bytes-like object.
+
+	Args:
+		data: The data to be escaped.
+
+	Returns:
+		The data with IAC bytes escaped.
+	"""
+	return data.replace(IAC, IAC + IAC)
 
 
-def stripAnsi(data):
-	return ANSI_COLOR_REGEX.sub("", data)
+def stripAnsi(text: str) -> str:
+	"""
+	Strips ANSI escape sequences from text.
+
+	Args:
+		text: The text to strip ANSI sequences from.
+
+	Returns:
+		The text with ANSI escape sequences stripped.
+	"""
+	return ANSI_COLOR_REGEX.sub("", text)
 
 
-def simplified(data):
-	return WHITE_SPACE_REGEX.sub(" ", data).strip()
+def simplified(text: str) -> str:
+	"""
+	Replaces one or more consecutive white space characters with a single space.
+
+	Args:
+		text: The text to process.
+
+	Returns:
+		The simplified version of the text.
+	"""
+	return WHITE_SPACE_REGEX.sub(" ", text).strip()
 
 
-def removeFile(toRemove):
-	"""Remove a file, ignoring any errors."""
-	try:
-		if not toRemove.closed:
-			toRemove.close()
-		os.remove(toRemove.name)
-	except AttributeError:
-		os.remove(toRemove)
-
-
-def touch(name, times=None):
+def touch(name: str) -> None:
 	"""
 	Touches a file.
+
 	I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does.
+
+	Args:
+		name: the file name to touch.
 	"""
 	with open(name, "a"):
-		os.utime(name, times)
+		os.utime(name, None)
 
 
-def padList(lst, padding, count, fixed=False, left=False):
+def padList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -> List[Any]:
 	"""
-	Pad a list with the value of 'padding' so that the list is *at least* 'count' number of items.
-	If 'fixed' is True, the number of items in the returned list will be *restricted* to 'count'.
-	If 'left' is True, the list will be padded at the left (top), rather than the right (bottom).
+	Pad the right side of a list.
+
+	Args:
+		lst: The list to be padded.
+		padding: The item to use for padding.
+		count: The minimum size of the returned list.
+		fixed: True if the maximum size of the returned list should be restricted to count, False otherwise.
+
+	Returns:
+		A padded copy of the list.
 	"""
-	if left and fixed:
-		return ([padding] * (count - len(lst)) + lst)[:count]
-	elif left:
-		return [padding] * (count - len(lst)) + lst
-	elif fixed:
-		return (lst + [padding] * (count - len(lst)))[:count]
+	if fixed:
+		return [*lst, *[padding] * (count - len(lst))][:count]
 	else:
-		return lst + [padding] * (count - len(lst))
+		return [*lst, *[padding] * (count - len(lst))]
 
 
-def roundHalfAwayFromZero(n, decimals=0):
-	# https://realpython.com/python-rounding
+def lpadList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -> List[Any]:
+	"""
+	Pad the left side of a list.
+
+	Args:
+		lst: The list to be padded.
+		padding: The item to use for padding.
+		count: The minimum size of the returned list.
+		fixed: True if the maximum size of the returned list should be restricted to count, False otherwise.
+
+	Returns:
+		A padded copy of the list.
+	"""
+	if fixed:
+		return [*[padding] * (count - len(lst)), *lst][:count]
+	else:
+		return [*[padding] * (count - len(lst)), *lst]
+
+
+def roundHalfAwayFromZero(number: float, decimals: int = 0) -> float:
+	"""
+	Rounds a float away from 0 if the fractional is 5 or more.
+
+	Note:
+		https://realpython.com/python-rounding
+
+	Args:
+		number: The number to round.
+		decimals: The number of fractional decimal places to round to.
+
+	Returns:
+		The number after rounding.
+	"""
 	multiplier = 10 ** decimals
-	return math.copysign(math.floor(abs(n) * multiplier + 0.5) / multiplier, n)
+	return math.copysign(math.floor(abs(number) * multiplier + 0.5) / multiplier, number)
 
 
-def humanSort(listToSort):
+def humanSort(lst: Sequence[str]) -> List[str]:
+	"""
+	Sorts a list of strings, with numbers sorted according to their numeric value.
+
+	Args:
+		lst: The list of strings to be sorted.
+
+	Returns:
+		The items of the list, with strings containing numbers sorted according to their numeric value.
+	"""
 	return sorted(
-		listToSort,
+		lst,
 		key=lambda item: [
 			int(text) if text.isdigit() else text for text in re.split(r"(\d+)", item, re.UNICODE)
 		],
 	)
 
 
-def regexFuzzy(data):
-	if not data:
+def regexFuzzy(text: Union[str, Sequence[str]]) -> str:
+	"""
+	Creates a regular expression matching all or part of a string or sequence.
+
+	Args:
+		text: The text to be converted.
+
+	Returns:
+		A regular expression string matching all or part of the text.
+	"""
+	if not isinstance(text, (str, Sequence)):
+		raise TypeError("Text must be either a string or sequence of strings.")
+	elif not text:
 		return ""
-	elif isinstance(data, str):
-		return "(".join(list(data)) + ")?" * (len(data) - 1)
-	elif isinstance(data, Sequence):
-		return "|".join("(".join(list(item)) + ")?" * (len(item) - 1) for item in data)
+	elif isinstance(text, str):
+		return "(".join(list(text)) + ")?" * (len(text) - 1)
+	else:
+		return "|".join("(".join(list(item)) + ")?" * (len(item) - 1) for item in text)
 
 
-def getFreezer():
-	"""Return the name of the package used to freeze the running code or None."""
-	# https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py
+def getFreezer() -> Union[str, None]:
+	"""
+	Determines the name of the library used to freeze the code.
+
+	Note:
+		https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py
+
+	Returns:
+		The name of the library or None.
+	"""
 	frozen = getattr(sys, "frozen", None)
 	if frozen and hasattr(sys, "_MEIPASS"):
 		return "pyinstaller"
@@ -174,49 +295,102 @@ def getFreezer():
 	return frozen
 
 
-def isFrozen():
+def isFrozen() -> bool:
+	"""
+	Determines whether the program is running from a frozen copy or from source.
+
+	Returns:
+		True if frozen, False otherwise.
+	"""
 	return bool(getFreezer())
 
 
-def getDirectoryPath(*subdirectory):
-	"""Return the location where the program is running."""
+def getDirectoryPath(*args: str) -> str:
+	"""
+	Retrieves the path of the directory where the program is located.
+
+	Args:
+		*args: Positional arguments to be passed to os.join after the directory path.
+
+	Returns:
+		The path.
+	"""
 	if isFrozen():
 		path = os.path.dirname(sys.executable)
 	else:
 		path = os.path.join(os.path.dirname(__file__), os.path.pardir)
-	return os.path.realpath(os.path.join(path, *subdirectory))
+	return os.path.realpath(os.path.join(path, *args))
 
 
-def multiReplace(data, replacements):
-	try:
-		replacements = replacements.items()
-	except AttributeError:
-		# replacements is a list of tuples.
-		pass
-	for pattern, substitution in replacements:
-		data = data.replace(pattern, substitution)
+def multiReplace(
+	data: Union[str, bytes], replacements: Union[Tuple[Sequence[bytes], ...], Tuple[Sequence[str], ...]]
+) -> Any:
+	"""
+	Performs multiple replacement operations on a string or bytes-like object.
+
+	Args:
+		data: The text to perform the replacements on.
+		replacements: A sequence of tuples, each containing the text to match and the replacement.
+
+	Returns:
+		The text with all the replacements applied.
+	"""
+	for item in replacements:
+		data = data.replace(*item)
 	return data
 
 
-def escapeXML(data, isbytes=False):
-	return multiReplace(data, ESCAPE_XML_BYTES_ENTITIES if isbytes else ESCAPE_XML_STR_ENTITIES)
+def escapeXMLString(text: str) -> str:
+	"""
+	Escapes XML entities in a string.
+
+	Args:
+		text: The string to escape.
+
+	Returns:
+		A copy of the string with XML entities escaped.
+	"""
+	return multiReplace(text, ESCAPE_XML_STR_ENTITIES)
 
 
-def unescapeXML(data, isbytes=False):
-	return multiReplace(data, UNESCAPE_XML_BYTES_ENTITIES if isbytes else UNESCAPE_XML_STR_ENTITIES)
+def unescapeXMLBytes(data: bytes) -> bytes:
+	"""
+	Unescapes XML entities in a bytes-like object.
+
+	Args:
+		data: The data to unescape.
+
+	Returns:
+		A copy of the data with XML entities unescaped.
+	"""
+	return multiReplace(data, UNESCAPE_XML_BYTES_ENTITIES)
 
 
-def decodeBytes(data):
+def decodeBytes(data: bytes) -> str:
+	"""
+	Decodes UTF-8 or Latin-1 bytes into a string.
+
+	Args:
+		data: The data to be decoded.
+
+	Returns:
+		The decoded string.
+	"""
+	if not isinstance(data, ByteString):
+		raise TypeError("Data must be a bytes-like object.")
 	try:
 		return data.decode("utf-8")
 	except UnicodeDecodeError:
 		return data.decode("latin-1")
-	except AttributeError:
-		return ""
 
 
-def page(lines):
-	"""Output word wrapped lines using the 'more' shell command if necessary."""
+def page(lines: Sequence[str]) -> None:
+	"""
+	Displays lines using the pager if necessary.
+
+	Args:
+		lines: The lines to be displayed.
+	"""
 	# This is necessary in order for lines with embedded new line characters to be properly handled.
 	lines = "\n".join(lines).splitlines()
 	width, height = shutil.get_terminal_size()

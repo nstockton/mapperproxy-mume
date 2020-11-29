@@ -171,5 +171,5 @@ class TestMapper_handleMudEvent(unittest.TestCase):
 			"room",
 			"<interesting-tag-<in>-a-tag>",
 		]:
-			self.mapper.handleMudEvent(unknownEvent, "meaningless input")
+			self.mapper.handleMudEvent(unknownEvent, b"meaningless input")
 			# simply require this to execute without raising an exception

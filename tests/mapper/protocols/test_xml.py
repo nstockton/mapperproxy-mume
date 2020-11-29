@@ -12,7 +12,7 @@ from unittest import TestCase
 # Mapper Modules:
 from mapper import MUD_DATA
 from mapper.protocols.xml import LF, LT, MPI_INIT, XMLProtocol
-from mapper.utils import unescapeXML
+from mapper.utils import unescapeXMLBytes
 
 
 class TestXMLProtocol(TestCase):
@@ -46,14 +46,14 @@ class TestXMLProtocol(TestCase):
 			+ dynamic
 			+ exits + LF
 			+ magic + LF
-			+ unescapeXML(prompt, True)
+			+ unescapeXMLBytes(prompt)
 		)
 		self.tintinData = (
 			b"NAME:" + name + b":NAME" + LF
 			+ dynamic
 			+ exits + LF
 			+ magic + LF
-			+ b"PROMPT:" + unescapeXML(prompt, True) + b":PROMPT"
+			+ b"PROMPT:" + unescapeXMLBytes(prompt) + b":PROMPT"
 		)
 		# fmt: on
 		self.expectedEvents = [
@@ -62,7 +62,7 @@ class TestXMLProtocol(TestCase):
 			self.createEvent("dynamic", dynamic),
 			self.createEvent("exits", exits),
 			self.createEvent("line", magic),
-			self.createEvent("prompt", unescapeXML(prompt, True)),
+			self.createEvent("prompt", unescapeXMLBytes(prompt)),
 		]
 		self.gameReceives = bytearray()
 		self.playerReceives = bytearray()

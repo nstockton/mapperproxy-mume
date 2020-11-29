@@ -20,7 +20,7 @@ from .base import Protocol
 from .mpi import MPI_INIT
 from .telnet_constants import CR_LF, LF
 from .. import MUD_DATA
-from ..utils import unescapeXML
+from ..utils import unescapeXMLBytes
 
 
 LT: bytes = b"<"
@@ -114,7 +114,7 @@ class XMLProtocol(Protocol):
 						self._lineBuffer.extend(lines.pop())
 					lines = [line.rstrip(CR_LF) for line in lines if line.strip()]
 					for line in lines:
-						self.on_mapperEvent("line", unescapeXML(line, True))
+						self.on_mapperEvent("line", unescapeXMLBytes(line))
 				else:
 					self._textBuffer.extend(appData)
 				if separator:
@@ -135,7 +135,7 @@ class XMLProtocol(Protocol):
 				elif outputFormat == "tintin" and not self._gratuitous:
 					appDataBuffer.append(self.tintinReplacements.get(tag, b""))
 				if self._mode is None and tag.startswith(b"movement"):
-					self.on_mapperEvent("movement", unescapeXML(tag[13:-1], True))
+					self.on_mapperEvent("movement", unescapeXMLBytes(tag[13:-1]))
 				elif tag == b"gratuitous":
 					self._gratuitous = True
 				elif tag == b"/gratuitous":
@@ -145,14 +145,14 @@ class XMLProtocol(Protocol):
 					if tag.startswith(b"/"):
 						self.on_mapperEvent(
 							"dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"),
-							unescapeXML(text, True),
+							unescapeXMLBytes(text),
 						)
 				self.state = "data"
 		if appDataBuffer:
 			if outputFormat == "raw":
 				super().on_dataReceived(b"".join(appDataBuffer))
 			else:
-				super().on_dataReceived(unescapeXML(b"".join(appDataBuffer), True))
+				super().on_dataReceived(unescapeXMLBytes(b"".join(appDataBuffer)))
 
 	def on_connectionMade(self) -> None:
 		# Turn on XML mode.

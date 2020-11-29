@@ -11,7 +11,6 @@ import os
 import sys
 import textwrap
 import unittest
-from io import StringIO
 from unittest import mock
 
 # Mapper Modules:
@@ -45,12 +44,13 @@ class TestUtils(unittest.TestCase):
 			+ "This is the final line, which should be at indention level 0."
 		)
 		testFunction = lambda: None  # NOQA: E731
-		testFunction.__docstring__ = docString
+		testFunction.__doc__ = docString
 		expectedOutputIndentTwoSpace = "\n".join(
 			"  " + line.replace("\t", "  ") for line in expectedOutput.splitlines()
 		)
 		width = 79
 		for item in (docString, testFunction):
+			self.assertEqual(utils.formatDocString(item, width), expectedOutput)
 			self.assertEqual(utils.formatDocString(item, width, prefix=""), expectedOutput)
 			self.assertEqual(utils.formatDocString(item, width, prefix="  "), expectedOutputIndentTwoSpace)
 
@@ -75,23 +75,10 @@ class TestUtils(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			utils.simplified(sent.encode("us-ascii"))
 
-	@mock.patch("mapper.utils.os")
-	def test_removeFile(self, mockOs):
-		# Argument can be a file name as a string.
-		utils.removeFile("path_1")
-		mockOs.remove.assert_called_with("path_1")
-		# Argument can also be a file object.
-		fileObj = StringIO()
-		fileObj.name = "path_2"
-		self.assertFalse(fileObj.closed)
-		utils.removeFile(fileObj)
-		mockOs.remove.assert_called_with("path_2")
-		self.assertTrue(fileObj.closed)
-
 	@mock.patch("mapper.utils.open", mock.mock_open(read_data="data"))
 	@mock.patch("mapper.utils.os")
 	def test_touch(self, mockOs):
-		utils.touch("path_1", None)
+		utils.touch("path_1")
 		mockOs.utime.assert_called_once_with("path_1", None)
 
 	def test_padList(self):
@@ -99,24 +86,28 @@ class TestUtils(unittest.TestCase):
 		padding = 0
 		# Non-fixed padding with 0's on the right.
 		# Returned list will be of length >= *count*.
-		self.assertEqual(utils.padList([], padding, count=12, fixed=False, left=False), [0] * 12)
-		self.assertEqual(utils.padList(lst, padding, count=12, fixed=False, left=False), lst + [0] * 3)
-		self.assertEqual(utils.padList(lst, padding, count=5, fixed=False, left=False), lst)
-		# Non-fixed padding with 0's on the left.
-		# Returned list will be of length >= *count*.
-		self.assertEqual(utils.padList([], padding, count=12, fixed=False, left=True), [0] * 12)
-		self.assertEqual(utils.padList(lst, padding, count=12, fixed=False, left=True), [0] * 3 + lst)
-		self.assertEqual(utils.padList(lst, padding, count=5, fixed=False, left=True), lst)
+		self.assertEqual(utils.padList([], padding, count=12, fixed=False), [0] * 12)
+		self.assertEqual(utils.padList(lst, padding, count=12, fixed=False), lst + [0] * 3)
+		self.assertEqual(utils.padList(lst, padding, count=5, fixed=False), lst)
 		# Fixed padding with 0's on the right.
 		# Returned list will be of length == *count*.
-		self.assertEqual(utils.padList([], padding, count=12, fixed=True, left=False), [0] * 12)
-		self.assertEqual(utils.padList(lst, padding, count=12, fixed=True, left=False), lst + [0] * 3)
-		self.assertEqual(utils.padList(lst, padding, count=5, fixed=True, left=False), lst[:5])
+		self.assertEqual(utils.padList([], padding, count=12, fixed=True), [0] * 12)
+		self.assertEqual(utils.padList(lst, padding, count=12, fixed=True), lst + [0] * 3)
+		self.assertEqual(utils.padList(lst, padding, count=5, fixed=True), lst[:5])
+
+	def test_lpadList(self):
+		lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+		padding = 0
+		# Non-fixed padding with 0's on the left.
+		# Returned list will be of length >= *count*.
+		self.assertEqual(utils.lpadList([], padding, count=12, fixed=False), [0] * 12)
+		self.assertEqual(utils.lpadList(lst, padding, count=12, fixed=False), [0] * 3 + lst)
+		self.assertEqual(utils.lpadList(lst, padding, count=5, fixed=False), lst)
 		# Fixed padding with 0's on the left.
 		# Returned list will be of length == *count*.
-		self.assertEqual(utils.padList([], padding, count=12, fixed=True, left=True), [0] * 12)
-		self.assertEqual(utils.padList(lst, padding, count=12, fixed=True, left=True), [0] * 3 + lst)
-		self.assertEqual(utils.padList(lst, padding, count=5, fixed=True, left=True), lst[:5])
+		self.assertEqual(utils.lpadList([], padding, count=12, fixed=True), [0] * 12)
+		self.assertEqual(utils.lpadList(lst, padding, count=12, fixed=True), [0] * 3 + lst)
+		self.assertEqual(utils.lpadList(lst, padding, count=5, fixed=True), lst[:5])
 
 	def test_roundHalfAwayFromZero(self):
 		self.assertEqual(utils.roundHalfAwayFromZero(5.4), 5.0)
@@ -131,6 +122,8 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.humanSort(badlySorted), expectedOutput)
 
 	def test_regexFuzzy(self):
+		with self.assertRaises(TypeError):
+			utils.regexFuzzy(None)
 		self.assertEqual(utils.regexFuzzy(""), "")
 		self.assertEqual(utils.regexFuzzy([]), "")
 		self.assertEqual(utils.regexFuzzy([""]), "")
@@ -184,32 +177,25 @@ class TestUtils(unittest.TestCase):
 		replacements = (("ll", "yy"), ("h", "x"), ("o", "z"))
 		text = "hello world"
 		expectedOutput = "xeyyz wzrld"
-		for item in (replacements, dict(replacements)):
-			self.assertEqual(utils.multiReplace(text, item), expectedOutput)
-		for item in ((), {}):
-			self.assertEqual(utils.multiReplace(text, item), text)
+		self.assertEqual(utils.multiReplace(text, replacements), expectedOutput)
+		self.assertEqual(utils.multiReplace(text, ()), text)
 
-	def test_escapeXML(self):
+	def test_escapeXMLString(self):
 		originalString = "<one&two>three"
 		expectedString = "&lt;one&amp;two&gt;three"
-		originalBytes = b"<one&two>three"
-		expectedBytes = b"&lt;one&amp;two&gt;three"
-		self.assertEqual(utils.escapeXML(originalString, False), expectedString)
-		self.assertEqual(utils.escapeXML(originalBytes, True), expectedBytes)
+		self.assertEqual(utils.escapeXMLString(originalString), expectedString)
 
-	def test_unescapeXML(self):
-		originalString = "&lt;one&amp;two&gt;three"
-		expectedString = "<one&two>three"
+	def test_unescapeXMLBytes(self):
 		originalBytes = b"&lt;one&amp;two&gt;three"
 		expectedBytes = b"<one&two>three"
-		self.assertEqual(utils.unescapeXML(originalString, False), expectedString)
-		self.assertEqual(utils.unescapeXML(originalBytes, True), expectedBytes)
+		self.assertEqual(utils.unescapeXMLBytes(originalBytes), expectedBytes)
 
 	def test_decodeBytes(self):
 		characters = "".join(chr(i) for i in range(256))
-		self.assertEqual(utils.decodeBytes(characters.encode("latin-1")), characters)
+		with self.assertRaises(TypeError):
+			utils.decodeBytes(characters)
 		self.assertEqual(utils.decodeBytes(characters.encode("utf-8")), characters)
-		self.assertEqual(utils.decodeBytes(characters), "")
+		self.assertEqual(utils.decodeBytes(characters.encode("latin-1")), characters)
 
 	@mock.patch("mapper.utils.pager")
 	@mock.patch("mapper.utils.shutil")

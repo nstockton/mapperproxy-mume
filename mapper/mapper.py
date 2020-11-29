@@ -22,7 +22,7 @@ from .config import Config
 from .delays import OneShot
 from .protocols.proxy import ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Room
-from .utils import decodeBytes, escapeIAC, escapeXML, formatDocString, regexFuzzy, simplified, stripAnsi
+from .utils import decodeBytes, escapeIAC, escapeXMLString, formatDocString, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 
@@ -251,10 +251,10 @@ class Mapper(threading.Thread, World):
 		msg = msg.replace("\r\n", "\n").replace("\r", "\r\0").replace("\n", "\r\n")
 		if self.outputFormat == "raw":
 			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{escapeXML(msg)}\r\n<prompt>{escapeXML(self.prompt)}</prompt>"
+				msg = f"{escapeXMLString(msg)}\r\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
 				self.proxy.player.write(escapeIAC(msg.encode("utf-8")) + self.proxy.promptTerminator)
 			else:
-				msg = f"\r\n{escapeXML(msg)}\r\n"
+				msg = f"\r\n{escapeXMLString(msg)}\r\n"
 				self.proxy.player.write(escapeIAC(msg.encode("utf-8")))
 		elif self.outputFormat == "tintin":
 			if showPrompt and self.prompt and not self.gagPrompts:

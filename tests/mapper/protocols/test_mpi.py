@@ -98,11 +98,11 @@ class TestMPIProtocol(TestCase):
 			target=self.mpi.commandMap[b"V"], args=(data,), daemon=True
 		)
 
-	@mock.patch("mapper.protocols.mpi.removeFile")
+	@mock.patch("mapper.protocols.mpi.os.remove")
 	@mock.patch("mapper.protocols.mpi.subprocess.Popen")
 	@mock.patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
 	@mock.patch("mapper.protocols.mpi.print")
-	def testMPIView(self, mockPrint, MockNamedTemporaryFile, mockSubprocess, mockRemoveFile):
+	def testMPIView(self, mockPrint, MockNamedTemporaryFile, mockSubprocess, mockRemove):
 		tempFileName = "temp_file_name"
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
 		self.assertEqual(self.playerReceives, b"")
@@ -124,17 +124,17 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_viewing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.pager.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
-		mockRemoveFile.assert_called_once_with(tempFileName)
+		mockRemove.assert_called_once_with(tempFileName)
 
 	@mock.patch("mapper.protocols.mpi.open", mock.mock_open(read_data=BODY))
-	@mock.patch("mapper.protocols.mpi.removeFile")
+	@mock.patch("mapper.protocols.mpi.os.remove")
 	@mock.patch("mapper.protocols.mpi.subprocess.Popen")
 	@mock.patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
 	@mock.patch("mapper.protocols.mpi.os.path")
 	@mock.patch("mapper.protocols.mpi.input", return_value="")
 	@mock.patch("mapper.protocols.mpi.print")
 	def testMPIEdit(
-		self, mockPrint, mockInput, mockOsPath, MockNamedTemporaryFile, mockSubprocess, mockRemoveFile
+		self, mockPrint, mockInput, mockOsPath, MockNamedTemporaryFile, mockSubprocess, mockRemove
 	):
 		session = b"12345" + LF
 		description = b"description" + LF
@@ -160,11 +160,11 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.editor} {tempFileName}:MPICOMMAND")
 		mockInput.assert_called_once_with("Continue:")
-		mockRemoveFile.assert_called_once_with(tempFileName)
+		mockRemove.assert_called_once_with(tempFileName)
 		MockNamedTemporaryFile.reset_mock()
 		mockPrint.reset_mock()
 		mockInput.reset_mock()
-		mockRemoveFile.reset_mock()
+		mockRemove.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
 		self.mpi.edit(b"E" + session + description + BODY + LF)
@@ -175,11 +175,11 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
-		mockRemoveFile.assert_called_once_with(tempFileName)
+		mockRemove.assert_called_once_with(tempFileName)
 		MockNamedTemporaryFile.reset_mock()
 		mockSubprocess.reset_mock()
 		mockSubprocess.return_value.wait.reset_mock()
-		mockRemoveFile.reset_mock()
+		mockRemove.reset_mock()
 		mockOsPath.reset_mock(return_value=True)
 		# Test remote editing.
 		expectedSent = (
@@ -197,11 +197,11 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockPrint.assert_called_once_with(f"MPICOMMAND:{self.mpi.editor} {tempFileName}:MPICOMMAND")
 		mockInput.assert_called_once_with("Continue:")
-		mockRemoveFile.assert_called_once_with(tempFileName)
+		mockRemove.assert_called_once_with(tempFileName)
 		MockNamedTemporaryFile.reset_mock()
 		mockPrint.reset_mock()
 		mockInput.reset_mock()
-		mockRemoveFile.reset_mock()
+		mockRemove.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.mpi.outputFormat = "normal"
 		self.mpi.edit(b"E" + session + description + BODY + LF)
@@ -212,4 +212,4 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile.assert_called_once_with(prefix="mume_editing_", suffix=".txt", delete=False)
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
-		mockRemoveFile.assert_called_once_with(tempFileName)
+		mockRemove.assert_called_once_with(tempFileName)

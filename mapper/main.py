@@ -23,7 +23,7 @@ from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
 
 # Local Modules:
 from .mapper import Mapper
-from .utils import getDirectoryPath, removeFile, touch
+from .utils import getDirectoryPath, touch
 
 
 try:
@@ -232,7 +232,7 @@ def main(
 			pass
 		finally:
 			playerSocket.close()
-			removeFile(LISTENING_STATUS_FILE)
+			os.remove(LISTENING_STATUS_FILE)
 			return
 	else:
 		gameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
@@ -274,4 +274,4 @@ def main(
 	mapperThread.proxy.close()
 	gameSocket.close()
 	playerSocket.close()
-	removeFile(LISTENING_STATUS_FILE)
+	os.remove(LISTENING_STATUS_FILE)
