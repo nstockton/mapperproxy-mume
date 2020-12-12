@@ -10,8 +10,10 @@ from __future__ import annotations
 import codecs
 import json
 import os.path
+from typing import Any, Dict, List, Mapping, Tuple, Union
 
 # Local Modules:
+from .objects import Room
 from ..utils import getDirectoryPath
 
 
@@ -21,19 +23,19 @@ except ImportError:
 	rapidjson = None
 
 
-DATA_DIRECTORY = getDirectoryPath("data")
-LABELS_FILE = "room_labels.json"
-SAMPLE_LABELS_FILE = "room_labels.json.sample"
-LABELS_FILE_PATH = os.path.join(DATA_DIRECTORY, LABELS_FILE)
-SAMPLE_LABELS_FILE_PATH = os.path.join(DATA_DIRECTORY, SAMPLE_LABELS_FILE)
-MAP_FILE = "arda.json"
-SAMPLE_MAP_FILE = "arda.json.sample"
-MAP_DIRECTORY = getDirectoryPath("maps")
-MAP_FILE_PATH = os.path.join(MAP_DIRECTORY, MAP_FILE)
-SAMPLE_MAP_FILE_PATH = os.path.join(MAP_DIRECTORY, SAMPLE_MAP_FILE)
+DATA_DIRECTORY: str = getDirectoryPath("data")
+LABELS_FILE: str = "room_labels.json"
+SAMPLE_LABELS_FILE: str = "room_labels.json.sample"
+LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_FILE)
+SAMPLE_LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_LABELS_FILE)
+MAP_FILE: str = "arda.json"
+SAMPLE_MAP_FILE: str = "arda.json.sample"
+MAP_DIRECTORY: str = getDirectoryPath("maps")
+MAP_FILE_PATH: str = os.path.join(MAP_DIRECTORY, MAP_FILE)
+SAMPLE_MAP_FILE_PATH: str = os.path.join(MAP_DIRECTORY, SAMPLE_MAP_FILE)
 
 
-def _load(filePath):
+def _load(filePath: str) -> Tuple[Union[str, None], Union[Dict[str, Any], None]]:
 	if os.path.exists(filePath):
 		if not os.path.isdir(filePath):
 			try:
@@ -49,50 +51,48 @@ def _load(filePath):
 		return f"Error: '{filePath}' doesn't exist.", None
 
 
-def loadLabels():
-	errorMessages = []
-	labels = {}
+def loadLabels() -> Tuple[Union[str, None], Union[Dict[str, str], None]]:
+	errorMessages: List[str] = []
+	labels: Dict[str, str] = {}
+	loaded: bool = False
+	# First load the sample labels.
 	errors, result = _load(SAMPLE_LABELS_FILE_PATH)
 	if result is None:
-		errorMessages.append(errors)
-		labels = None
+		errorMessages.append(f"While loading sample labels: {errors}")
 	else:
 		labels.update(result)
+		loaded = True
+	# Merge any new or modified labels from the user.
 	errors, result = _load(LABELS_FILE_PATH)
 	if result is None:
-		errorMessages.append(errors)
-	elif labels is None:
-		labels = result
+		errorMessages.append(f"While loading user labels: {errors}")
 	else:
 		labels.update(result)
-	if errorMessages:
-		return "\n".join(errorMessages), labels
-	else:
-		return None, labels
+		loaded = True
+	return "\n".join(errorMessages) if errorMessages else None, labels if loaded else None
 
 
-def dumpLabels(labels):
+def dumpLabels(labels: Mapping[str, str]) -> None:
 	with codecs.open(LABELS_FILE_PATH, "wb", encoding="utf-8") as fileObj:
 		json.dump(labels, fileObj, sort_keys=True, indent=2, separators=(",", ": "))
 
 
-def loadRooms():
-	errorMessages = []
+def loadRooms() -> Tuple[Union[str, None], Union[Dict[str, Dict], None]]:
+	errorMessages: List[str] = []
 	errors, result = _load(MAP_FILE_PATH)
 	if result is None:
-		errorMessages.append(errors)
+		errorMessages.append(f"While loading user map: {errors}")
 	else:
 		return None, result
 	errors, result = _load(SAMPLE_MAP_FILE_PATH)
 	if result is None:
-		errorMessages.append(errors)
-		errorMessages.append(f"Error: neither '{MAP_FILE_PATH}' nor '{SAMPLE_MAP_FILE_PATH}' can be found.")
+		errorMessages.append(f"While loading sample map: {errors}")
 		return "\n".join(errorMessages), None
 	else:
 		return None, result
 
 
-def dumpRooms(rooms):
+def dumpRooms(rooms: Mapping[str, Room]) -> None:
 	with codecs.open(MAP_FILE_PATH, "wb", encoding="utf-8") as fileObj:
 		if rapidjson is not None:
 			rapidjson.dump(rooms, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
