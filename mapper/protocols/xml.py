@@ -13,7 +13,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import AbstractSet, Callable, Mapping, Tuple, Union
+from typing import Callable, Dict, FrozenSet, Tuple, Union
 
 # Local Modules:
 from .base import Protocol
@@ -35,9 +35,9 @@ class XMLProtocol(Protocol):
 	Implements the Mume XML protocol.
 	"""
 
-	states: AbstractSet[str] = frozenset(("data", "tag"))
+	states: FrozenSet[str] = frozenset(("data", "tag"))
 	"""Valid states for the state machine."""
-	modes: Mapping[bytes, Union[bytes, None]] = {
+	modes: Dict[bytes, Union[bytes, None]] = {
 		b"room": b"room",
 		b"exits": b"exits",
 		b"prompt": b"prompt",
@@ -52,7 +52,7 @@ class XMLProtocol(Protocol):
 		b"/terrain": b"room",
 	}
 	"""A mapping of XML mode to new XML mode values."""
-	tintinReplacements: Mapping[bytes, bytes] = {
+	tintinReplacements: Dict[bytes, bytes] = {
 		b"prompt": b"PROMPT:",
 		b"/prompt": b":PROMPT",
 		b"name": b"NAME:",

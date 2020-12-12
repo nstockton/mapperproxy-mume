@@ -34,7 +34,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 from abc import abstractmethod
-from typing import AbstractSet, Callable, Mapping, MutableMapping, Union
+from typing import Callable, Dict, FrozenSet, Union
 
 # Local Modules:
 from .base import Protocol
@@ -200,7 +200,7 @@ class TelnetProtocol(BaseTelnetProtocol):
 			handled.
 	"""
 
-	states: AbstractSet[str] = frozenset(
+	states: FrozenSet[str] = frozenset(
 		("data", "command", "newline", "negotiation", "subnegotiation", "subnegotiation-escaped")
 	)
 	"""Valid states for the state machine."""
@@ -208,15 +208,15 @@ class TelnetProtocol(BaseTelnetProtocol):
 	def __init__(self, *args, **kwargs) -> None:
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
-		self._options: MutableMapping[bytes, _OptionState] = {}
+		self._options: Dict[bytes, _OptionState] = {}
 		"""A mapping of option bytes to their current state."""
-		self.commandMap: Mapping[bytes, Callable[[Union[bytes, None]], None]] = {
+		self.commandMap: Dict[bytes, Callable[[Union[bytes, None]], None]] = {
 			WILL: self.on_will,
 			WONT: self.on_wont,
 			DO: self.on_do,
 			DONT: self.on_dont,
 		}
-		self.subnegotiationMap: Mapping[bytes, Callable[[bytes], None]] = {}
+		self.subnegotiationMap: Dict[bytes, Callable[[bytes], None]] = {}
 
 	@property
 	def state(self) -> str:

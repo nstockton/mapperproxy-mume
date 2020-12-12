@@ -76,7 +76,7 @@ Attributes:
 from __future__ import annotations
 
 # Built-in Modules:
-from typing import AbstractSet
+from typing import FrozenSet
 
 
 # Protocol specifications.
@@ -126,8 +126,8 @@ WONT: bytes = bytes([252])
 DO: bytes = bytes([253])
 DONT: bytes = bytes([254])
 IAC: bytes = bytes([255])
-COMMAND_BYTES: AbstractSet[bytes] = frozenset((XEOF, SUSP, ABORT, EOR, NOP, DM, BRK, IP, AO, AYT, EC, EL, GA))
-NEGOTIATION_BYTES: AbstractSet[bytes] = frozenset((WILL, WONT, DO, DONT))
+COMMAND_BYTES: FrozenSet[bytes] = frozenset((XEOF, SUSP, ABORT, EOR, NOP, DM, BRK, IP, AO, AYT, EC, EL, GA))
+NEGOTIATION_BYTES: FrozenSet[bytes] = frozenset((WILL, WONT, DO, DONT))
 
 # Telnet Options.
 TRANSMIT_BINARY: bytes = bytes([0])  # RFC 856.

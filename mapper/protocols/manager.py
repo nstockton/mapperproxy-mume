@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import inspect
 import logging
-from typing import Callable, MutableSequence, Type
+from typing import Callable, List, Type
 
 # Local Modules:
 from .base import Protocol
@@ -24,9 +24,9 @@ class Manager(object):
 	def __init__(self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None]) -> None:
 		self._writer: Callable[[bytes], None] = writer
 		self._receiver: Callable[[bytes], None] = receiver
-		self._readBuffer: MutableSequence[bytes] = []
-		self._writeBuffer: MutableSequence[bytes] = []
-		self._handlers: MutableSequence[Protocol] = []
+		self._readBuffer: List[bytes] = []
+		self._writeBuffer: List[bytes] = []
+		self._handlers: List[Protocol] = []
 
 	@property
 	def isConnected(self) -> bool:

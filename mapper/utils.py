@@ -17,20 +17,20 @@ import textwrap
 from collections.abc import ByteString
 from pydoc import pager
 from telnetlib import IAC
-from typing import Any, Callable, Generator, List, Optional, Pattern, Sequence, Tuple, Union
+from typing import Any, AnyStr, Callable, Generator, List, Optional, Pattern, Sequence, Tuple, Union
 
 
 ANSI_COLOR_REGEX: Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
-ESCAPE_XML_STR_ENTITIES: Tuple[Sequence[str], ...] = (("&", "&amp;"), ("<", "&lt;"), (">", "&gt;"))
-UNESCAPE_XML_STR_ENTITIES: Tuple[Sequence[str], ...] = tuple(
+ESCAPE_XML_STR_ENTITIES: Tuple[Tuple[str, str], ...] = (("&", "&amp;"), ("<", "&lt;"), (">", "&gt;"))
+UNESCAPE_XML_STR_ENTITIES: Tuple[Tuple[str, str], ...] = tuple(
 	(second, first) for first, second in ESCAPE_XML_STR_ENTITIES
 )
-ESCAPE_XML_BYTES_ENTITIES: Tuple[Sequence[bytes], ...] = tuple(
+ESCAPE_XML_BYTES_ENTITIES: Tuple[Tuple[bytes, bytes], ...] = tuple(
 	(first.encode("us-ascii"), second.encode("us-ascii")) for first, second in ESCAPE_XML_STR_ENTITIES
 )
-UNESCAPE_XML_BYTES_ENTITIES: Tuple[Sequence[bytes], ...] = tuple(
+UNESCAPE_XML_BYTES_ENTITIES: Tuple[Tuple[bytes, bytes], ...] = tuple(
 	(second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES
 )
 
@@ -323,8 +323,8 @@ def getDirectoryPath(*args: str) -> str:
 
 
 def multiReplace(
-	data: Union[str, bytes], replacements: Union[Tuple[Sequence[bytes], ...], Tuple[Sequence[str], ...]]
-) -> Any:
+	data: AnyStr, replacements: Union[Sequence[Sequence[bytes]], Sequence[Sequence[str]]]
+) -> AnyStr:
 	"""
 	Performs multiple replacement operations on a string or bytes-like object.
 

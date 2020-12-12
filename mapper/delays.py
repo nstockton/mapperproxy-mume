@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import threading
-from typing import Any, Callable, MutableSequence, Union
+from typing import Any, Callable, List, Union
 
 
 class BaseDelay(threading.Thread):
@@ -16,7 +16,7 @@ class BaseDelay(threading.Thread):
 	Implements the base delay class.
 	"""
 
-	_delays: MutableSequence[threading.Thread] = []
+	_delays: List[threading.Thread] = []
 
 	def __init__(
 		self, duration: int, count: Union[int, None], function: Callable[..., Any], *args, **kwargs

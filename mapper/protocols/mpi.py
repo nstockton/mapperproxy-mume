@@ -18,7 +18,7 @@ import subprocess
 import sys
 import tempfile
 import threading
-from typing import AbstractSet, Callable, Mapping, MutableSequence
+from typing import Callable, Dict, FrozenSet, List
 
 # Local Modules:
 from .base import Protocol
@@ -41,7 +41,7 @@ class MPIProtocol(Protocol):
 		pager: The program to use for viewing received read-only text.
 	"""
 
-	states: AbstractSet[str] = frozenset(("data", "newline", "init", "command", "length", "body"))
+	states: FrozenSet[str] = frozenset(("data", "newline", "init", "command", "length", "body"))
 	"""Valid states for the state machine."""
 
 	def __init__(self, *args, **kwargs) -> None:
@@ -49,12 +49,12 @@ class MPIProtocol(Protocol):
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
 		self._MPIBuffer: bytearray = bytearray()
-		self._MPIThreads: MutableSequence[threading.Thread] = []
-		self.commandMap: Mapping[bytes, Callable[[bytes], None]] = {b"E": self.edit, b"V": self.view}
-		editors: Mapping[str, str] = {
+		self._MPIThreads: List[threading.Thread] = []
+		self.commandMap: Dict[bytes, Callable[[bytes], None]] = {b"E": self.edit, b"V": self.view}
+		editors: Dict[str, str] = {
 			"win32": "notepad",
 		}
-		pagers: Mapping[str, str] = {
+		pagers: Dict[str, str] = {
 			"win32": "notepad",
 		}
 		defaultEditor: str = editors.get(sys.platform, "nano")

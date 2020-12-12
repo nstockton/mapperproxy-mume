@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Sequence, Union
+from typing import Tuple, Union
 
 # Local Modules:
 from .manager import Manager
@@ -80,7 +80,7 @@ class Player(Telnet):
 
 
 class Game(Telnet):
-	charsets: Sequence[bytes] = (
+	charsets: Tuple[bytes, ...] = (
 		b"US-ASCII",
 		b"ISO-8859-1",
 		b"UTF-8",

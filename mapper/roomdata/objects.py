@@ -8,13 +8,13 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
-from typing import List, Mapping, MutableMapping, MutableSet, Pattern, Sequence, Tuple, Union
+from typing import Dict, List, Pattern, Set, Tuple, Union
 
 # Local Modules:
 from ..gui.vec2d import Vec2d
 
 
-DIRECTIONS: Sequence[str] = (
+DIRECTIONS: Tuple[str, ...] = (
 	"north",
 	"east",
 	"south",
@@ -22,7 +22,7 @@ DIRECTIONS: Sequence[str] = (
 	"up",
 	"down",
 )
-REVERSE_DIRECTIONS: Mapping[str, str] = {
+REVERSE_DIRECTIONS: Dict[str, str] = {
 	"north": "south",
 	"south": "north",
 	"east": "west",
@@ -30,7 +30,7 @@ REVERSE_DIRECTIONS: Mapping[str, str] = {
 	"up": "down",
 	"down": "up",
 }
-DIRECTION_COORDINATES: Mapping[str, Sequence[int]] = {
+DIRECTION_COORDINATES: Dict[str, Tuple[int, ...]] = {
 	"north": (0, 1, 0),
 	"south": (0, -1, 0),
 	"west": (-1, 0, 0),
@@ -38,7 +38,7 @@ DIRECTION_COORDINATES: Mapping[str, Sequence[int]] = {
 	"up": (0, 0, 1),
 	"down": (0, 0, -1),
 }
-COMPASS_DIRECTIONS: Sequence[str] = (
+COMPASS_DIRECTIONS: Tuple[str, ...] = (
 	"north",
 	"northeast",
 	"east",
@@ -58,7 +58,7 @@ AVOID_DYNAMIC_DESC_REGEX: Pattern[str] = re.compile(
 	r"Massive roots shift uneasily all around you\.|"
 	r"rattlesnake"
 )
-TERRAIN_COSTS: Mapping[str, float] = {
+TERRAIN_COSTS: Dict[str, float] = {
 	"cavern": 0.75,
 	"city": 0.75,
 	"indoors": 0.75,
@@ -76,7 +76,7 @@ TERRAIN_COSTS: Mapping[str, float] = {
 	"underwater": 100.0,
 	"deathtrap": 1000.0,
 }
-VALID_MOB_FLAGS: Sequence[str] = (
+VALID_MOB_FLAGS: Tuple[str, ...] = (
 	"rent",
 	"shop",
 	"weapon_shop",
@@ -95,7 +95,7 @@ VALID_MOB_FLAGS: Sequence[str] = (
 	"elite_mob",
 	"super_mob",
 )
-VALID_LOAD_FLAGS: Sequence[str] = (
+VALID_LOAD_FLAGS: Tuple[str, ...] = (
 	"treasure",
 	"armour",
 	"weapon",
@@ -121,7 +121,7 @@ VALID_LOAD_FLAGS: Sequence[str] = (
 	"coach",
 	"ferry",
 )
-VALID_EXIT_FLAGS: Sequence[str] = (
+VALID_EXIT_FLAGS: Tuple[str, ...] = (
 	"exit",
 	"door",
 	"road",
@@ -136,7 +136,7 @@ VALID_EXIT_FLAGS: Sequence[str] = (
 	"fall",
 	"guarded",
 )
-VALID_DOOR_FLAGS: Sequence[str] = (
+VALID_DOOR_FLAGS: Tuple[str, ...] = (
 	"hidden",
 	"need_key",
 	"no_block",
@@ -160,9 +160,9 @@ class Exit(object):
 		self.direction: Union[None, str] = None
 		self.vnum: Union[None, str] = None
 		self.to: str = "undefined"
-		self.exitFlags: MutableSet[str] = set(["exit"])
+		self.exitFlags: Set[str] = set(["exit"])
 		self.door: str = ""
-		self.doorFlags: MutableSet[str] = set()
+		self.doorFlags: Set[str] = set()
 
 
 class Room(object):
@@ -183,12 +183,12 @@ class Room(object):
 		self.portable: str = "undefined"
 		self.ridable: str = "undefined"
 		self.avoid: bool = False
-		self.mobFlags: MutableSet[str] = set()
-		self.loadFlags: MutableSet[str] = set()
+		self.mobFlags: Set[str] = set()
+		self.loadFlags: Set[str] = set()
 		self.x: int = 0
 		self.y: int = 0
 		self.z: int = 0
-		self.exits: MutableMapping[str, Exit] = {}
+		self.exits: Dict[str, Exit] = {}
 
 	def __lt__(self, other: Room) -> bool:
 		# Unlike in Python 2 where most objects are sortable by default, our

@@ -12,7 +12,7 @@ import collections.abc
 import json
 import os.path
 import threading
-from typing import Dict, MutableMapping
+from typing import Dict
 
 # Local Modules:
 from .utils import getDirectoryPath
@@ -41,7 +41,7 @@ class Config(collections.abc.MutableMapping):
 		"""
 		super().__init__()
 		self.name = name
-		self._config: MutableMapping = dict()
+		self._config: Dict = dict()
 		self.reload()
 
 	@property

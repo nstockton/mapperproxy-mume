@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import re
 import time
-from typing import Mapping, Optional, Sequence, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 # Local Modules:
 from .config import Config
@@ -56,7 +56,7 @@ FIRST_MOON_CYCLE_HOUR = (FULL_MOON_HOUR - FULL_MOON_OFFSET) % HOURS_PER_DAY
 DK_OPEN_DURATION = 3  # The number of hours DK stays open.
 
 # fmt: off
-MONTHS: Sequence[Mapping[str, Union[str, int]]] = [
+MONTHS: List[Dict[str, Union[str, int]]] = [
 	{
 		"name": "January",
 		"sindarin": "Ninui",
@@ -156,7 +156,7 @@ MONTHS: Sequence[Mapping[str, Union[str, int]]] = [
 ]
 # fmt: on
 
-WEEKDAYS: Sequence[Mapping[str, str]] = [
+WEEKDAYS: List[Dict[str, str]] = [
 	{"name": "Sunday", "sindarin": "Oranor", "westron": "Sunday"},
 	{"name": "Monday", "sindarin": "Orithil", "westron": "Monday"},
 	{"name": "Tuesday", "sindarin": "Orgaladhad", "westron": "Trewsday"},
