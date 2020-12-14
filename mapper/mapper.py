@@ -155,13 +155,13 @@ class Mapper(threading.Thread, World):
 			if func.startswith("user_command_") and callable(getattr(self, func))
 		]
 		self.mudEventHandlers = {}
+		self.unknownMudEvents = []
 		for legacyHandler in [
 			func[len("mud_event_") :]
 			for func in dir(self)
 			if func.startswith("mud_event_") and callable(getattr(self, func))
 		]:
 			self.registerMudEventHandler(legacyHandler, getattr(self, "mud_event_" + legacyHandler))
-		self.unknownMudEvents = []
 		ExitsCleaner(self, "exits")
 		self.emulationCommands = [
 			func[len("emulation_command_") :]
@@ -1049,6 +1049,8 @@ class Mapper(threading.Thread, World):
 		"""
 		if event not in self.mudEventHandlers:
 			self.mudEventHandlers[event] = set()
+		if event in self.unknownMudEvents:
+			self.unknownMudEvents.remove(event)
 		self.mudEventHandlers[event].add(handler)
 
 	def deregisterMudEventHandler(self, event, handler):
@@ -1057,6 +1059,8 @@ class Mapper(threading.Thread, World):
 		"""
 		if event in self.mudEventHandlers and handler in self.mudEventHandlers[event]:
 			self.mudEventHandlers[event].remove(handler)
+			if not self.mudEventHandlers[event]:
+				del self.mudEventHandlers[event]
 
 	def run(self):
 		while True:
