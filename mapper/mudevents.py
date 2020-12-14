@@ -8,30 +8,38 @@ from __future__ import annotations
 
 # Built-in Modules:
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Optional
+
+
+if TYPE_CHECKING:  # pragma: no cover
+	# Prevent cyclic import.
+	from .mapper import Mapper
 
 
 class Handler(ABC):
-	def __init__(self, mapper, event=None):
-		"""Initialises a mud event handler in the given mapper class.
-		params: mapper, event
-		where mapper is the mapper instance that will be dispatching events,
-		and event is an optional event name.
-		The event name may be omitted if the subclass is defined with an event attribute.
+	def __init__(self, mapper: Mapper, event: Optional[str] = None) -> None:
+		"""
+		Initialises a mud event handler in the given mapper instance.
+
+		Args:
+			mapper: An instance of mapper.mapper.Mapper that dispatches events.
+			event: The event name. May be omitted if the subclass defines an event attribute.
 		"""
 		self.mapper = mapper
-		try:
-			self.event = event or self.event
-		except AttributeError as e:
+		if event:
+			self.event = event
+		elif not getattr(self, "event", None):
 			raise ValueError(
 				"Tried to initialise handler without an event type."
-				" Either pass event=MyEventType when initialising, or declare self.event in the class definition."
-			) from e
+				+ " Either pass event=MyEventType when initialising, or declare self.event in the class definition."
+			)
 		self.mapper.registerMudEventHandler(self.event, self.handle)
 
-	def __del__(self):
+	def __del__(self) -> None:
+		"""Deregisters the event handler after the object is deleted and garbage collected."""
 		if hasattr(self, "event"):
 			self.mapper.deregisterMudEventHandler(self.event, self.handle)
 
 	@abstractmethod
-	def handle(self, data):
-		"""the method called when the event is dispatched"""
+	def handle(self, text: str) -> None:
+		"""Called when the event is dispatched."""

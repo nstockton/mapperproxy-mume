@@ -8,30 +8,45 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
+from typing import Match, Pattern, Union
 
 # Local Modules:
 from .mudevents import Handler
-from .roomdata.objects import DIRECTIONS
+from .roomdata.objects import DIRECTIONS, Room
 
 
-directionsRegexp = "|".join([d.title() for d in DIRECTIONS])
-exitRegexp = re.compile(r".*(?<![#(])(?P<dir>" + directionsRegexp + r")(?![#)]).* +- .*")
+DIRECTION_TITLES: str = "|".join(d.title() for d in DIRECTIONS)
+EXIT_REGEX: Pattern[str] = re.compile(fr".*?(?<![#(])(?P<dir>{DIRECTION_TITLES})(?![#)]).*?[ ]+[-] .+")
 
 
 class ExitsCleaner(Handler):
-	event = "exits"
+	"""
+	Implements an event handler that cleans erroneously hidden exits.
 
-	def handle(self, data):
-		"""Receives the output from the exit command in Mume.
-		Checks if the output indicates any exits that are definitely not hidden despite being flagged as so,
-		then removes any such secret exit from the map.
+	This handler uses the output of the 'exits' command in MUME to Check
+	if any visible exits are erroneously marked as hidden in the map database.
+	Any exits which are found to be erroneously marked as hidden are then cleaned (marked as visible).
+	"""
+
+	event: str = "exits"
+
+	def handle(self, text: str) -> None:
 		"""
-		if not self.mapper.autoUpdateRooms or data.startswith("Exits:"):
-			return
-		for line in data.split("\r\n"):
-			m = exitRegexp.match(line)
-			if m:
-				room = self.mapper.currentRoom
-				dir = m.group("dir").lower()
-				if self.mapper.isSynced and dir in room.exits and "hidden" in room.exits[dir].doorFlags:
-					self.mapper.user_command_secret("remove " + dir)
+		Handles the incoming text from MUME.
+
+		Args:
+			text: The received text from the game.
+		"""
+		if not self.mapper.autoUpdateRooms or text.startswith("Exits:"):
+			return None
+		for line in text.splitlines():
+			match: Union[Match[str], None] = EXIT_REGEX.match(line)
+			if match is not None:
+				room: Room = self.mapper.currentRoom
+				direction: str = match.group("dir").lower()
+				if (
+					self.mapper.isSynced
+					and direction in room.exits
+					and "hidden" in room.exits[direction].doorFlags
+				):
+					self.mapper.user_command_secret(f"remove {direction}")

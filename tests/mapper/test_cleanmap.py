@@ -10,13 +10,13 @@ import unittest
 from unittest.mock import Mock
 
 # Mapper Modules:
-from mapper.cleanmap import DIRECTIONS, ExitsCleaner, exitRegexp
+from mapper.cleanmap import DIRECTIONS, EXIT_REGEX, ExitsCleaner
 from mapper.mapper import Mapper
 from mapper.roomdata.objects import Exit, Room
 
 
-class test_exitRegexp(unittest.TestCase):
-	def test_exitsCommandRegexp_matches_allExitsThatAreNeitherOpenNorBrokenDoors(self):
+class test_exitRegex(unittest.TestCase):
+	def test_exitsCommandRegex_matches_allExitsThatAreNeitherOpenNorBrokenDoors(self):
 		for exit in [
 			"[North]  - A closed 'stabledoor'",
 			"South   - The Path over the Bruinen",
@@ -32,12 +32,12 @@ class test_exitRegexp(unittest.TestCase):
 			" ~[Up]~   - A closed 'DooMDoor'",
 			" ~[Down]~   - A closed 'azZeuZjoec'",
 		]:
-			m = exitRegexp.match(exit)
-			self.assertTrue(m, exit + " does not match the exitRegexp.")
+			m = EXIT_REGEX.match(exit)
+			self.assertTrue(m, exit + " does not match EXIT_REGEX.")
 			dir = m.group("dir").lower()
 			self.assertTrue(dir in DIRECTIONS, dir + " is not a valid direction.")
 
-	def test_exitRegexp_doesNotMatch_exitsThatAreOpenOrBrokenDoors_or_autoexits(self):
+	def test_exitRegex_doesNotMatch_exitsThatAreOpenOrBrokenDoors_or_autoexits(self):
 		for exit in [
 			"#South#  - (archedfence) The Summer Terrace",
 			"  (West)  - (door) a room",
@@ -45,8 +45,8 @@ class test_exitRegexp(unittest.TestCase):
 			"Exits: down.",
 			"Exits: north, east, south, west." "Exits: none.",
 		]:
-			m = exitRegexp.match(exit)
-			self.assertFalse(m, exit + " should not match the exitRegexp, but it does.")
+			m = EXIT_REGEX.match(exit)
+			self.assertFalse(m, exit + " should not match EXIT_REGEX, but it does.")
 
 
 class TestExitsCleaner(unittest.TestCase):
@@ -94,7 +94,7 @@ class TestExitsCleaner(unittest.TestCase):
 			(self.createRoom(("down", True)), "  *=Down=*   - Public Courtyard\r\n"),
 		]:
 			self.mapper.currentRoom = room
-			dir = exitRegexp.match(exit).group("dir").lower()
+			dir = EXIT_REGEX.match(exit).group("dir").lower()
 			self.exitsCleaner.handle(exit)
 			self.mapper.user_command_secret.assert_called_once_with("remove " + dir)
 			self.mapper.user_command_secret.reset_mock()
