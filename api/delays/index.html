@@ -1386,10 +1386,25 @@ initial name is set by the constructor.</p>
 <td><code>function</code></td>
 <td><code>Callable[..., Any]</code></td>
 <td>
-<p>The function to be called at each iteration.
-Any remaining positional or keyword arguments will be passed to this function.</p>
+<p>The function to be called at each iteration.</p>
 </td>
 <td><em>required</em></td>
+</tr>
+<tr>
+<td><code>*args</code></td>
+<td><code>Any</code></td>
+<td>
+<p>Positional arguments to be passed to the called function.</p>
+</td>
+<td><code>()</code></td>
+</tr>
+<tr>
+<td><code>**args</code></td>
+<td><code>Any</code></td>
+<td>
+<p>Key-word only arguments to be passed to the called function.</p>
+</td>
+<td><code>()</code></td>
 </tr>
 </tbody>
 </table>
@@ -1397,14 +1412,15 @@ Any remaining positional or keyword arguments will be passed to this function.</
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-	<span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Args:</span>
 <span class="sd">		duration: The amount of time (in seconds) to delay between iterations.</span>
 <span class="sd">		count: The number of iterations to delay, or None to repeat indefinitely.</span>
 <span class="sd">		function: The function to be called at each iteration.</span>
-<span class="sd">			Any remaining positional or keyword arguments will be passed to this function.</span>
+<span class="sd">		*args: Positional arguments to be passed to the called function.</span>
+<span class="sd">		**args: Key-word only arguments to be passed to the called function.</span>
 <span class="sd">	"""</span>
 	<span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
 		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"count must be a positive number or None."</span><span class="p">)</span>
@@ -2123,22 +2139,38 @@ initial name is set by the constructor.</p>
 <td><code>function</code></td>
 <td><code>Callable[..., Any]</code></td>
 <td>
-<p>The function to be called when the delay completes.
-Any remaining positional or keyword arguments will be passed to this function.</p>
+<p>The function to be called when the delay completes.</p>
 </td>
 <td><em>required</em></td>
+</tr>
+<tr>
+<td><code>*args</code></td>
+<td><code>Any</code></td>
+<td>
+<p>Positional arguments to be passed to the called function.</p>
+</td>
+<td><code>()</code></td>
+</tr>
+<tr>
+<td><code>**args</code></td>
+<td><code>Any</code></td>
+<td>
+<p>Key-word only arguments to be passed to the called function.</p>
+</td>
+<td><code>()</code></td>
 </tr>
 </tbody>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Args:</span>
 <span class="sd">		duration: The amount of time (in seconds) to delay.</span>
 <span class="sd">		function: The function to be called when the delay completes.</span>
-<span class="sd">			Any remaining positional or keyword arguments will be passed to this function.</span>
+<span class="sd">		*args: Positional arguments to be passed to the called function.</span>
+<span class="sd">		**args: Key-word only arguments to be passed to the called function.</span>
 <span class="sd">	"""</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre>
@@ -2518,22 +2550,38 @@ initial name is set by the constructor.</p>
 <td><code>function</code></td>
 <td><code>Callable[..., Any]</code></td>
 <td>
-<p>The function to be called at each iteration.
-Any remaining positional or keyword arguments will be passed to this function.</p>
+<p>The function to be called at each iteration.</p>
 </td>
 <td><em>required</em></td>
+</tr>
+<tr>
+<td><code>*args</code></td>
+<td><code>Any</code></td>
+<td>
+<p>Positional arguments to be passed to the called function.</p>
+</td>
+<td><code>()</code></td>
+</tr>
+<tr>
+<td><code>**args</code></td>
+<td><code>Any</code></td>
+<td>
+<p>Key-word only arguments to be passed to the called function.</p>
+</td>
+<td><code>()</code></td>
 </tr>
 </tbody>
 </table>
 <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Args:</span>
 <span class="sd">		duration: The amount of time (in seconds) to delay between iterations.</span>
 <span class="sd">		function: The function to be called at each iteration.</span>
-<span class="sd">			Any remaining positional or keyword arguments will be passed to this function.</span>
+<span class="sd">		*args: Positional arguments to be passed to the called function.</span>
+<span class="sd">		**args: Key-word only arguments to be passed to the called function.</span>
 <span class="sd">	"""</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre>

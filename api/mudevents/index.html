@@ -694,29 +694,55 @@
 
       <a class="headerlink" href="#mapper.mudevents.Handler.__init__" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
-<p>Initialises a mud event handler in the given mapper class.
-params: mapper, event
-where mapper is the mapper instance that will be dispatching events,
-and event is an optional event name.
-The event name may be omitted if the subclass is defined with an event attribute.</p>
+<p>Initialises a mud event handler in the given mapper instance.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mapper</code></td>
+<td><code>Mapper</code></td>
+<td>
+<p>An instance of mapper.mapper.Mapper that dispatches events.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td><code>Optional[str]</code></td>
+<td>
+<p>The event name. May be omitted if the subclass defines an event attribute.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
 <details class="quote">
           <summary>Source code in <code>mapper\mudevents.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">"""Initialises a mud event handler in the given mapper class.</span>
-<span class="sd">	params: mapper, event</span>
-<span class="sd">	where mapper is the mapper instance that will be dispatching events,</span>
-<span class="sd">	and event is an optional event name.</span>
-<span class="sd">	The event name may be omitted if the subclass is defined with an event attribute.</span>
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Initialises a mud event handler in the given mapper instance.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		mapper: An instance of mapper.mapper.Mapper that dispatches events.</span>
+<span class="sd">		event: The event name. May be omitted if the subclass defines an event attribute.</span>
 <span class="sd">	"""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span>
-	<span class="k">try</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">event</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span>
-	<span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">event</span>
+	<span class="k">elif</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"event"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
 		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 			<span class="s2">"Tried to initialise handler without an event type."</span>
-			<span class="s2">" Either pass event=MyEventType when initialising, or declare self.event in the class definition."</span>
-		<span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+			<span class="o">+</span> <span class="s2">" Either pass event=MyEventType when initialising, or declare self.event in the class definition."</span>
+		<span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span>
 </code></pre>
 </div>
@@ -728,18 +754,18 @@ The event name may be omitted if the subclass is defined with an event attribute
 
         <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
 
-        <code class="highlight language-python">handle<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>        </code>
+        <code class="highlight language-python">handle<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>        </code>
 
 
       <a class="headerlink" href="#mapper.mudevents.Handler.handle" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
-<p>the method called when the event is dispatched</p>
+<p>Called when the event is dispatched.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mudevents.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="nd">@abstractmethod</span>
-<span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-	<span class="sd">"""the method called when the event is dispatched"""</span>
+<span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""Called when the event is dispatched."""</span>
 </code></pre>
 </div>
 </details>

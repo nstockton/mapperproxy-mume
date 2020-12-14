@@ -1,87 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/base/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/manager/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/mpi/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/proxy/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/telnet/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/telnet_constants/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/protocols/xml/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/roomdata/database/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/roomdata/objects/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/cleanmap/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/clock/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/config/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/delays/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/main/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/mapper/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/mudevents/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/utils/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/api/world/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://nstockton.github.io/mapperproxy-mume/license/</loc>
-     <lastmod>2020-11-29</lastmod>
+     <lastmod>2020-12-14</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

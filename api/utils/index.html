@@ -1313,7 +1313,7 @@
 <tbody>
 <tr>
 <td><code>data</code></td>
-<td><code>Union[str, bytes]</code></td>
+<td><code>AnyStr</code></td>
 <td>
 <p>The text to perform the replacements on.</p>
 </td>
@@ -1321,7 +1321,7 @@
 </tr>
 <tr>
 <td><code>replacements</code></td>
-<td><code>Union[Tuple[Sequence[bytes], ...], Tuple[Sequence[str], ...]]</code></td>
+<td><code>Union[Sequence[Sequence[bytes]], Sequence[Sequence[str]]]</code></td>
 <td>
 <p>A sequence of tuples, each containing the text to match and the replacement.</p>
 </td>
@@ -1339,7 +1339,7 @@
 </thead>
 <tbody>
 <tr>
-<td><code>Any</code></td>
+<td><code>AnyStr</code></td>
 <td>
 <p>The text with all the replacements applied.</p>
 </td>
@@ -1350,8 +1350,8 @@
 <summary>Source code in <code>mapper\utils.py</code></summary>
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">multiReplace</span><span class="p">(</span>
-	<span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">replacements</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+	<span class="n">data</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">replacements</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]],</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyStr</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Performs multiple replacement operations on a string or bytes-like object.</span>
 

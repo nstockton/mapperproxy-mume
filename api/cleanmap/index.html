@@ -666,37 +666,66 @@
 
       <a class="headerlink" href="#mapper.cleanmap.ExitsCleaner" title="Permanent link">&para;</a></h2>
 <div class="doc doc-contents ">
+<p>Implements an event handler that cleans erroneously hidden exits.</p>
+<p>This handler uses the output of the 'exits' command in MUME to Check
+if any visible exits are erroneously marked as hidden in the map database.
+Any exits which are found to be erroneously marked as hidden are then cleaned (marked as visible).</p>
 <div class="doc doc-children">
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.cleanmap.ExitsCleaner.handle">
 
         <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
 
-        <code class="highlight language-python">handle<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>        </code>
+        <code class="highlight language-python">handle<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>        </code>
 
 
       <a class="headerlink" href="#mapper.cleanmap.ExitsCleaner.handle" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
-<p>Receives the output from the exit command in Mume.
-Checks if the output indicates any exits that are definitely not hidden despite being flagged as so,
-then removes any such secret exit from the map.</p>
+<p>Handles the incoming text from MUME.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>
+<p>The received text from the game.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
 <details class="quote">
           <summary>Source code in <code>mapper\cleanmap.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-	<span class="sd">"""Receives the output from the exit command in Mume.</span>
-<span class="sd">	Checks if the output indicates any exits that are definitely not hidden despite being flagged as so,</span>
-<span class="sd">	then removes any such secret exit from the map.</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Handles the incoming text from MUME.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The received text from the game.</span>
 <span class="sd">	"""</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">autoUpdateRooms</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Exits:"</span><span class="p">):</span>
-		<span class="k">return</span>
-	<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">):</span>
-		<span class="n">m</span> <span class="o">=</span> <span class="n">exitRegexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-			<span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">currentRoom</span>
-			<span class="nb">dir</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"dir"</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">isSynced</span> <span class="ow">and</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">exits</span> <span class="ow">and</span> <span class="s2">"hidden"</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span><span class="o">.</span><span class="n">doorFlags</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">user_command_secret</span><span class="p">(</span><span class="s2">"remove "</span> <span class="o">+</span> <span class="nb">dir</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">autoUpdateRooms</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Exits:"</span><span class="p">):</span>
+		<span class="k">return</span> <span class="kc">None</span>
+	<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+		<span class="n">match</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">EXIT_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">room</span><span class="p">:</span> <span class="n">Room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">currentRoom</span>
+			<span class="n">direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"dir"</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+			<span class="k">if</span> <span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">isSynced</span>
+				<span class="ow">and</span> <span class="n">direction</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">exits</span>
+				<span class="ow">and</span> <span class="s2">"hidden"</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">direction</span><span class="p">]</span><span class="o">.</span><span class="n">doorFlags</span>
+			<span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">user_command_secret</span><span class="p">(</span><span class="sa">f</span><span class="s2">"remove </span><span class="si">{</span><span class="n">direction</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre>
 </div>
 </details>
