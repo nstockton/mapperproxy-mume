@@ -12,13 +12,13 @@ import collections.abc
 import json
 import os.path
 import threading
-from typing import Dict
+from typing import Any, Dict, Iterator
 
 # Local Modules:
 from .utils import getDirectoryPath
 
 
-DATA_DIRECTORY = getDirectoryPath("data")
+DATA_DIRECTORY: str = getDirectoryPath("data")
 
 
 class ConfigError(Exception):
@@ -30,7 +30,7 @@ class Config(collections.abc.MutableMapping):
 	Implements loading and saving of program configuration.
 	"""
 
-	_configLock = threading.RLock()
+	_configLock: threading.RLock = threading.RLock()
 
 	def __init__(self, name: str = "config") -> None:
 		"""
@@ -40,8 +40,8 @@ class Config(collections.abc.MutableMapping):
 			name: The name of the configuration.
 		"""
 		super().__init__()
-		self.name = name
-		self._config: Dict = dict()
+		self._name: str = name
+		self._config: Dict[str, Any] = dict()
 		self.reload()
 
 	@property
@@ -49,11 +49,7 @@ class Config(collections.abc.MutableMapping):
 		"""The name of the configuration."""
 		return self._name
 
-	@name.setter
-	def name(self, value: str) -> None:
-		self._name = value
-
-	def _parse(self, filename: str) -> Dict:
+	def _parse(self, filename: str) -> Dict[str, Any]:
 		filename = os.path.join(DATA_DIRECTORY, filename)
 		if not os.path.exists(filename):
 			return {}
@@ -71,12 +67,12 @@ class Config(collections.abc.MutableMapping):
 	def reload(self) -> None:
 		"""Reloads the configuration from disc."""
 		self._config.clear()
-		self._config.update(self._parse(f"{self._name}.json.sample"))
-		self._config.update(self._parse(f"{self._name}.json"))
+		self._config.update(self._parse(f"{self.name}.json.sample"))
+		self._config.update(self._parse(f"{self.name}.json"))
 
 	def save(self) -> None:
 		"""Saves the configuration to disc."""
-		filename = os.path.join(DATA_DIRECTORY, f"{self._name}.json")
+		filename = os.path.join(DATA_DIRECTORY, f"{self.name}.json")
 		with self._configLock:
 			with codecs.open(filename, "wb", encoding="utf-8") as fileObj:
 				# Configuration should be stored using Windows style line endings (\r\n)
@@ -88,17 +84,17 @@ class Config(collections.abc.MutableMapping):
 				data = json.dumps(self._config, sort_keys=True, indent=2)
 				fileObj.write(data.replace("\n", "\r\n"))
 
-	def __getitem__(self, key):
+	def __getitem__(self, key: str) -> Any:
 		return self._config[key]
 
-	def __setitem__(self, key, value):
+	def __setitem__(self, key: str, value: Any) -> None:
 		self._config[key] = value
 
-	def __delitem__(self, key):
+	def __delitem__(self, key: str) -> None:
 		del self._config[key]
 
-	def __iter__(self):
+	def __iter__(self) -> Iterator[str]:
 		return iter(self._config)
 
-	def __len__(self):
+	def __len__(self) -> int:
 		return len(self._config)

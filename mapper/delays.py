@@ -19,14 +19,15 @@ class BaseDelay(threading.Thread):
 	_delays: List[threading.Thread] = []
 
 	def __init__(
-		self, duration: int, count: Union[int, None], function: Callable[..., Any], *args, **kwargs
+		self, duration: int, count: Union[int, None], function: Callable[..., Any], *args: Any, **kwargs: Any
 	) -> None:
 		"""
 		Args:
 			duration: The amount of time (in seconds) to delay between iterations.
 			count: The number of iterations to delay, or None to repeat indefinitely.
 			function: The function to be called at each iteration.
-				Any remaining positional or keyword arguments will be passed to this function.
+			*args: Positional arguments to be passed to the called function.
+			**args: Key-word only arguments to be passed to the called function.
 		"""
 		if count is not None and count < 0:
 			raise ValueError("count must be a positive number or None.")
@@ -72,12 +73,13 @@ class OneShot(Delay):
 	Implements a delay which is run only once.
 	"""
 
-	def __init__(self, duration: int, function: Callable[..., Any], *args, **kwargs) -> None:
+	def __init__(self, duration: int, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
 		"""
 		Args:
 			duration: The amount of time (in seconds) to delay.
 			function: The function to be called when the delay completes.
-				Any remaining positional or keyword arguments will be passed to this function.
+			*args: Positional arguments to be passed to the called function.
+			**args: Key-word only arguments to be passed to the called function.
 		"""
 		super().__init__(duration, 1, function, *args, **kwargs)
 
@@ -87,11 +89,12 @@ class Repeating(Delay):
 	Implements a delay which runs indefinitely.
 	"""
 
-	def __init__(self, duration: int, function: Callable[..., Any], *args, **kwargs) -> None:
+	def __init__(self, duration: int, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
 		"""
 		Args:
 			duration: The amount of time (in seconds) to delay between iterations.
 			function: The function to be called at each iteration.
-				Any remaining positional or keyword arguments will be passed to this function.
+			*args: Positional arguments to be passed to the called function.
+			**args: Key-word only arguments to be passed to the called function.
 		"""
 		super().__init__(duration, None, function, *args, **kwargs)

@@ -9,51 +9,53 @@ from __future__ import annotations
 # Built-in Modules:
 import re
 import time
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Pattern, Tuple, Union
 
 # Local Modules:
 from .config import Config
 
 
-CLOCK_REGEX = re.compile(
+CLOCK_REGEX: Pattern[str] = re.compile(
 	r"^The current time is (?P<hour>[1-9]|1[0-2])\:(?P<minutes>[0-5]\d) (?P<am_pm>[ap]m)\.$"
 )
-TIME_REGEX = re.compile(
+TIME_REGEX: Pattern[str] = re.compile(
 	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2]) (?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
 	+ r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
 )
-DAWN_REGEX = re.compile(r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$")
-DAY_REGEX = re.compile(
+DAWN_REGEX: Pattern[str] = re.compile(
+	r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$"
+)
+DAY_REGEX: Pattern[str] = re.compile(
 	r"^(?:It seems as if )?[Tt]he day has begun\.(?: You feel so weak under the cruel light\!)?$"
 )
-DUSK_REGEX = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
-NIGHT_REGEX = re.compile(
+DUSK_REGEX: Pattern[str] = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
+NIGHT_REGEX: Pattern[str] = re.compile(
 	r"^The last ray of light fades\, and all is swallowed up in darkness\.$|"
 	+ r"^(?:It seems as if )?[Tt]he night has begun\.(?: You feel stronger in the dark\!)?$"
 )
 
-FIRST_YEAR = 2850
-MINUTES_PER_HOUR = 60
-HOURS_PER_DAY = 24
-DAYS_PER_WEEK = 7
-DAYS_PER_MONTH = 30
-MONTHS_PER_YEAR = 12
-SEASONS_PER_YEAR = 4
-MONTHS_PER_SEASON = MONTHS_PER_YEAR // SEASONS_PER_YEAR
-DAYS_PER_SEASON = DAYS_PER_MONTH * MONTHS_PER_SEASON
-DAYS_PER_YEAR = DAYS_PER_MONTH * MONTHS_PER_YEAR
-MINUTES_PER_DAY = MINUTES_PER_HOUR * HOURS_PER_DAY
-MINUTES_PER_MONTH = MINUTES_PER_DAY * DAYS_PER_MONTH
-MINUTES_PER_YEAR = MINUTES_PER_DAY * DAYS_PER_YEAR
-DAYS_PER_MOON_CYCLE = 24
-HOURS_PER_MOON_CYCLE = HOURS_PER_DAY * DAYS_PER_MOON_CYCLE
-HOURS_PER_MOON_RISE = HOURS_PER_DAY + 1
-FIRST_FULL_MOON_DAY = 7  # First full moon is on January 7.
-FULL_MOON_HOUR = 18  # Full moon always rises at 6 PM.
-FULL_MOON_OFFSET = 14  # Full moon day is always 14 days after the moon cycle starts.
-FIRST_MOON_CYCLE_DAY = (FIRST_FULL_MOON_DAY - FULL_MOON_OFFSET) % DAYS_PER_MOON_CYCLE
-FIRST_MOON_CYCLE_HOUR = (FULL_MOON_HOUR - FULL_MOON_OFFSET) % HOURS_PER_DAY
-DK_OPEN_DURATION = 3  # The number of hours DK stays open.
+FIRST_YEAR: int = 2850
+MINUTES_PER_HOUR: int = 60
+HOURS_PER_DAY: int = 24
+DAYS_PER_WEEK: int = 7
+DAYS_PER_MONTH: int = 30
+MONTHS_PER_YEAR: int = 12
+SEASONS_PER_YEAR: int = 4
+MONTHS_PER_SEASON: int = MONTHS_PER_YEAR // SEASONS_PER_YEAR
+DAYS_PER_SEASON: int = DAYS_PER_MONTH * MONTHS_PER_SEASON
+DAYS_PER_YEAR: int = DAYS_PER_MONTH * MONTHS_PER_YEAR
+MINUTES_PER_DAY: int = MINUTES_PER_HOUR * HOURS_PER_DAY
+MINUTES_PER_MONTH: int = MINUTES_PER_DAY * DAYS_PER_MONTH
+MINUTES_PER_YEAR: int = MINUTES_PER_DAY * DAYS_PER_YEAR
+DAYS_PER_MOON_CYCLE: int = 24
+HOURS_PER_MOON_CYCLE: int = HOURS_PER_DAY * DAYS_PER_MOON_CYCLE
+HOURS_PER_MOON_RISE: int = HOURS_PER_DAY + 1
+FIRST_FULL_MOON_DAY: int = 7  # First full moon is on January 7.
+FULL_MOON_HOUR: int = 18  # Full moon always rises at 6 PM.
+FULL_MOON_OFFSET: int = 14  # Full moon day is always 14 days after the moon cycle starts.
+FIRST_MOON_CYCLE_DAY: int = (FIRST_FULL_MOON_DAY - FULL_MOON_OFFSET) % DAYS_PER_MOON_CYCLE
+FIRST_MOON_CYCLE_HOUR: int = (FULL_MOON_HOUR - FULL_MOON_OFFSET) % HOURS_PER_DAY
+DK_OPEN_DURATION: int = 3  # The number of hours DK stays open.
 
 # fmt: off
 MONTHS: List[Dict[str, Union[str, int]]] = [
