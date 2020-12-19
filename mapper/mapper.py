@@ -296,9 +296,8 @@ class Mapper(threading.Thread, World):
 
 	def emulation_command_go(self, label, isJump=True):
 		"""mimic the /go command that the ainur use."""
-		room, error = self.getRoomFromLabel(label)
-		if error:
-			self.output(error)
+		room = self.getRoomFromLabel(label)
+		if room is None:
 			return
 		self.emulationRoom = room
 		self.emulation_command_look()
@@ -416,11 +415,11 @@ class Mapper(threading.Thread, World):
 			self.sendGame(self.clock.time(args[0].strip().lower()))
 
 	def user_command_secretaction(self, *args):
-		regex = re.compile(fr"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$")
-		try:
-			matchDict = regex.match(args[0].strip().lower()).groupdict()
-		except (NameError, IndexError, AttributeError):
+		matchPattern = fr"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$"
+		match = re.match(matchPattern, args[0].strip().lower())
+		if match is None:
 			return self.sendPlayer(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")
+		matchDict = match.groupdict()
 		if matchDict["direction"]:
 			direction = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 		else:
@@ -540,9 +539,7 @@ class Mapper(threading.Thread, World):
 			self.sendGame(f"tell {args[0].strip()} {self.currentRoom.vnum}")
 
 	def user_command_rlabel(self, *args):
-		result = self.rlabel(*args)
-		if result:
-			self.sendPlayer("\r\n".join(result))
+		self.rlabel(*args)
 
 	def user_command_getlabel(self, *args):
 		self.sendPlayer(self.getlabel(*args))
@@ -612,9 +609,7 @@ class Mapper(threading.Thread, World):
 		self.sendPlayer(self.stopRun())
 
 	def user_command_path(self, *args):
-		result = self.path(*args)
-		if result is not None:
-			self.sendPlayer(result)
+		self.path(*args)
 
 	def user_command_sync(self, *args):
 		if not args or not args[0]:

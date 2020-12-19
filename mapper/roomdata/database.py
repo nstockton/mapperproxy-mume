@@ -13,7 +13,6 @@ import os.path
 from typing import Any, Dict, List, Mapping, Tuple, Union
 
 # Local Modules:
-from .objects import Room
 from ..utils import getDirectoryPath
 
 
@@ -77,7 +76,7 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 		json.dump(labels, fileObj, sort_keys=True, indent=2, separators=(",", ": "))
 
 
-def loadRooms() -> Tuple[Union[str, None], Union[Dict[str, Dict], None]]:
+def loadRooms() -> Tuple[Union[str, None], Union[Dict[str, Dict[str, Any]], None]]:
 	errorMessages: List[str] = []
 	errors, result = _load(MAP_FILE_PATH)
 	if result is None:
@@ -92,7 +91,7 @@ def loadRooms() -> Tuple[Union[str, None], Union[Dict[str, Dict], None]]:
 		return None, result
 
 
-def dumpRooms(rooms: Mapping[str, Room]) -> None:
+def dumpRooms(rooms: Mapping[str, Mapping[str, Any]]) -> None:
 	with codecs.open(MAP_FILE_PATH, "wb", encoding="utf-8") as fileObj:
 		if rapidjson is not None:
 			rapidjson.dump(rooms, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)

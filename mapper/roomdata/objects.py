@@ -30,7 +30,7 @@ REVERSE_DIRECTIONS: Dict[str, str] = {
 	"up": "down",
 	"down": "up",
 }
-DIRECTION_COORDINATES: Dict[str, Tuple[int, ...]] = {
+DIRECTION_COORDINATES: Dict[str, Tuple[int, int, int]] = {
 	"north": (0, 1, 0),
 	"south": (0, -1, 0),
 	"west": (-1, 0, 0),
@@ -157,12 +157,25 @@ class Exit(object):
 	"""
 
 	def __init__(self) -> None:
-		self.direction: Union[None, str] = None
-		self.vnum: Union[None, str] = None
+		self._direction: str = ""
+		self.vnum: Union[str, None] = None
 		self.to: str = "undefined"
 		self.exitFlags: Set[str] = set(["exit"])
 		self.door: str = ""
 		self.doorFlags: Set[str] = set()
+
+	@property
+	def direction(self) -> str:
+		"""The direction of movement."""
+		if not self._direction:
+			raise ValueError("Direction undefined.")
+		return self._direction
+
+	@direction.setter
+	def direction(self, value: str) -> None:
+		if value not in DIRECTIONS:
+			raise ValueError(f"Direction must be one of {DIRECTIONS}.")
+		self._direction = value
 
 
 class Room(object):

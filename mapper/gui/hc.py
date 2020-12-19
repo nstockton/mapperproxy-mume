@@ -445,9 +445,7 @@ class Window(pyglet.window.Window):
 						# print the vnum
 						self.world.output(f"{vnum}, {room.name}")
 					else:
-						result = self.world.path(vnum)
-						if result is not None:
-							self.world.output(result)
+						self.world.path(vnum)
 				elif buttons == pyglet.window.mouse.RIGHT:
 					self.world.currentRoom = room
 					self.world.output(f"Current room now set to '{room.name}' with vnum {vnum}")
