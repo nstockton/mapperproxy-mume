@@ -1090,9 +1090,9 @@ class World(object):
 				# The neighbor room cost should be the sum of all movement costs
 				# to get to the neighbor room from the origin room.
 				neighborRoomCost = (
-					currentRoomCost + neighborRoomObj.cost + exitCostFunc(exitObj, neighborRoomObj)
-					if exitCostFunc
-					else 0
+					currentRoomCost
+					+ neighborRoomObj.cost
+					+ (exitCostFunc(exitObj, neighborRoomObj) if exitCostFunc else 0)
 				)
 				# We're only interested in the neighbor room if it hasn't been encountered yet,
 				# or if the cost of moving from the current room to the neighbor room is less than
