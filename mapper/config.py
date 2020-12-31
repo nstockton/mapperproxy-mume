@@ -72,7 +72,7 @@ class Config(collections.abc.MutableMapping):
 
 	def save(self) -> None:
 		"""Saves the configuration to disc."""
-		filename = os.path.join(DATA_DIRECTORY, f"{self.name}.json")
+		filename: str = os.path.join(DATA_DIRECTORY, f"{self.name}.json")
 		with self._configLock:
 			with codecs.open(filename, "wb", encoding="utf-8") as fileObj:
 				# Configuration should be stored using Windows style line endings (\r\n)
@@ -81,7 +81,7 @@ class Config(collections.abc.MutableMapping):
 				# prevents the use of the newline flag to force a particular delimiter for new lines.
 				# The json data must therefore be modified to replace Unix line endings
 				# with Windows line endings before it is written.
-				data = json.dumps(self._config, sort_keys=True, indent=2)
+				data: str = json.dumps(self._config, sort_keys=True, indent=2)
 				fileObj.write(data.replace("\n", "\r\n"))
 
 	def __getitem__(self, key: str) -> Any:
