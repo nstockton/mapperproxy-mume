@@ -193,8 +193,6 @@ class World(object):
 			roomDict.clear()
 			del roomDict
 		self.currentRoom = self.rooms["0"]
-		self.emulationRoom = self.rooms["0"]
-		self.lastEmulatedJump = None
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
@@ -333,16 +331,10 @@ class World(object):
 	def coordinatesAdd(self, first: Sequence[int], second: Sequence[int]) -> Tuple[int, ...]:
 		return tuple(map(operator.add, first, second))
 
-	def coordinatesAddDirection(self, first: str, second: str) -> Tuple[int, ...]:
-		if first in DIRECTIONS:
-			firstCoords: Tuple[int, int, int] = DIRECTION_COORDINATES[first]
-		else:
-			raise ValueError(f"First must be one of {DIRECTIONS}.")
-		if second in DIRECTIONS:
-			secondCoords: Tuple[int, int, int] = DIRECTION_COORDINATES[second]
-		else:
-			raise ValueError(f"Second must be one of {DIRECTIONS}.")
-		return self.coordinatesAdd(firstCoords, secondCoords)
+	def coordinatesAddDirection(self, coordinates: Sequence[int], direction: str) -> Tuple[int, ...]:
+		if direction not in DIRECTIONS:
+			raise ValueError(f"Direction must be one of {DIRECTIONS}.")
+		return self.coordinatesAdd(coordinates, DIRECTION_COORDINATES[direction])
 
 	def getNewVnum(self) -> str:
 		return str(max(int(i) for i in self.rooms) + 1)
@@ -398,8 +390,7 @@ class World(object):
 		self.GUIRefresh()
 		return output
 
-	def searchRooms(self, **kwargs: str) -> List[Room]:
-		exactMatch = bool(kwargs.get("exactMatch"))
+	def searchRooms(self, exactMatch: bool = False, **kwargs: str) -> List[Room]:
 		validArgs: Tuple[str, ...] = (
 			"name",
 			"desc",
@@ -1136,25 +1127,22 @@ class World(object):
 				)
 		return results
 
-	def getRoomFromLabel(self, label: str) -> Union[Room, None]:
-		label = label.strip().lower()
+	def getRoomFromLabel(self, text: str) -> Union[Room, None]:
+		text = text.strip().lower()
 		vnum: str
-		if not label:
+		if not text:
 			self.output("No label or room vnum specified.")
-			return None
-		elif label.isdecimal():
-			vnum = label
-			if vnum not in self.rooms:
-				self.output(f"No room with vnum {vnum}.")
-				return None
-			return self.rooms[vnum]
-		elif label in self.labels:
-			vnum = self.labels[label]
-			if vnum not in self.rooms:
-				self.output(f"{label} is set to vnum {vnum}, but there is no room with that vnum")
-				return None
-			return self.rooms[vnum]
-		else:  # The label is neither a vnum nor an existing label.
-			similarLabels: List[str] = sorted(self.labels, key=lambda l: fuzz.ratio(l, label), reverse=True)
+		elif text.isdecimal():  # The text is a vnum.
+			vnum = text
+			if vnum in self.rooms:
+				return self.rooms[vnum]
+			self.output(f"No room with vnum {vnum}.")
+		elif text in self.labels:  # The text is an existing label.
+			vnum = self.labels[text]
+			if vnum in self.rooms:
+				return self.rooms[vnum]
+			self.output(f"{text} is set to vnum {vnum}, but there is no room with that vnum")
+		else:  # The text is *not* an existing label.
+			similarLabels: List[str] = sorted(self.labels, key=lambda l: fuzz.ratio(l, text), reverse=True)
 			self.output(f"Unknown label. Did you mean {', '.join(similarLabels[0:4])}?")
-			return None
+		return None

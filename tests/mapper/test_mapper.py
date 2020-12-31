@@ -22,12 +22,12 @@ class TestMapper(unittest.TestCase):
 		self.mapper = Mapper(
 			playerSocket=Mock(spec=socket.socket),
 			gameSocket=Mock(spec=socket.socket),
-			outputFormat=None,
+			outputFormat="normal",
 			interface="text",
 			promptTerminator=None,
-			gagPrompts=None,
-			findFormat=None,
-			isEmulatingOffline=None,
+			gagPrompts=False,
+			findFormat="",
+			isEmulatingOffline=False,
 		)
 		self.mapper.daemon = (
 			True  # this allows unittest to quit if the mapper thread does not close properly.
@@ -114,12 +114,12 @@ class TestMapper_handleMudEvent(unittest.TestCase):
 		self.mapper = Mapper(
 			playerSocket=Mock(spec=socket.socket),
 			gameSocket=Mock(spec=socket.socket),
-			outputFormat=None,
+			outputFormat="normal",
 			interface="text",
 			promptTerminator=None,
-			gagPrompts=None,
-			findFormat=None,
-			isEmulatingOffline=None,
+			gagPrompts=False,
+			findFormat="",
+			isEmulatingOffline=False,
 		)
 		self.mapper.daemon = (
 			True  # this allows unittest to quit if the mapper thread does not close properly.

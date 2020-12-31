@@ -28,7 +28,7 @@ class Handler(ABC):
 		self.mapper = mapper
 		if event:
 			self.event = event
-		elif not getattr(self, "event", None):
+		elif not hasattr(self, "event"):
 			raise ValueError(
 				"Tried to initialise handler without an event type."
 				+ " Either pass event=MyEventType when initialising, or declare self.event in the class definition."

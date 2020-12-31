@@ -19,7 +19,12 @@ class BaseDelay(threading.Thread):
 	_delays: List[threading.Thread] = []
 
 	def __init__(
-		self, duration: int, count: Union[int, None], function: Callable[..., Any], *args: Any, **kwargs: Any
+		self,
+		duration: float,
+		count: Union[int, None],
+		function: Callable[..., Any],
+		*args: Any,
+		**kwargs: Any,
 	) -> None:
 		"""
 		Args:
@@ -73,7 +78,7 @@ class OneShot(Delay):
 	Implements a delay which is run only once.
 	"""
 
-	def __init__(self, duration: int, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
+	def __init__(self, duration: float, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
 		"""
 		Args:
 			duration: The amount of time (in seconds) to delay.
@@ -89,7 +94,7 @@ class Repeating(Delay):
 	Implements a delay which runs indefinitely.
 	"""
 
-	def __init__(self, duration: int, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
+	def __init__(self, duration: float, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
 		"""
 		Args:
 			duration: The amount of time (in seconds) to delay between iterations.
