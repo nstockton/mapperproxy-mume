@@ -417,10 +417,10 @@ class Window(pyglet.window.Window):
 			vl, room, cp = item
 			if self.room_offset_from_pixels(*cp) == self.room_offset_from_pixels(x, y):
 				if vnum is None or vnum not in self.world.rooms:
-					return
+					return None
 				elif self.highlight == vnum:
 					# Room already highlighted.
-					return
+					return None
 				self.highlight = vnum
 				self.say(f"{room.name}, {vnum}", True)
 				break
@@ -432,14 +432,14 @@ class Window(pyglet.window.Window):
 		logger.debug(f"Mouse press on {x} {y}, buttons: {buttons}, modifiers: {modifiers}")
 		if buttons == pyglet.window.mouse.MIDDLE:
 			self.do_reset_zoom(key.ESCAPE, 0)
-			return
+			return None
 		# check if the player clicked on a room
 		for vnum, item in self.visible_rooms.items():
 			vl, room, cp = item
 			if self.room_offset_from_pixels(*cp) == self.room_offset_from_pixels(x, y):
 				# Action depends on which button the player clicked
 				if vnum is None or vnum not in self.world.rooms:
-					return
+					return None
 				elif buttons == pyglet.window.mouse.LEFT:
 					if modifiers & key.MOD_SHIFT:
 						# print the vnum
@@ -845,7 +845,7 @@ class Window(pyglet.window.Window):
 
 	def enable_current_room_markers(self):
 		if "current_room_markers" in self.blinkers:
-			return
+			return None
 		current_room_markers = []
 		current_room_markers.append(
 			Blinker(

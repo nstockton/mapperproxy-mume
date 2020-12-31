@@ -55,7 +55,7 @@ class BufferedSSLSocket(BufferedSocket):
 	def wrapSSL(self, **kwargs):
 		if not certifi:
 			print("Error: cannot encrypt connection. Certifi not found.")
-			return
+			return None
 		kwargs["do_handshake_on_connect"] = False  # This needs to always be set to False.
 		with self._recv_lock:
 			with self._send_lock:
@@ -233,7 +233,7 @@ def main(
 		finally:
 			playerSocket.close()
 			os.remove(LISTENING_STATUS_FILE)
-			return
+			return None
 	else:
 		gameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 		gameSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)

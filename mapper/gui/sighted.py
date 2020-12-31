@@ -209,7 +209,7 @@ class Window(pyglet.window.Window):
 
 	def draw_player(self):
 		if self.playerRoom is None or self.centerRoom is None:
-			return
+			return None
 		logger.debug(f"Drawing player on room vnum {self.playerRoom.vnum}")
 		# transform map coordinates to window ones
 		x = self.playerRoom.x - self.centerRoom.x + self.mcol
@@ -239,7 +239,7 @@ class Window(pyglet.window.Window):
 		try:
 			room = self.visibleRooms[x, y]
 		except KeyError:
-			return
+			return None
 		# Action depends on which button the player clicked
 		if buttons == pyglet.window.mouse.LEFT:
 			# center the map on the selected room

@@ -172,7 +172,7 @@ class Game(Telnet):
 
 	def on_disableLocal(self, option: bytes) -> None:
 		if option == CHARSET:
-			return
+			return None
 		super().on_disableLocal(option)
 
 
