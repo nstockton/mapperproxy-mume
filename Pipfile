@@ -24,4 +24,5 @@ fuzzywuzzy = "*"
 pyglet = "*"
 python-Levenshtein = "*"
 python-rapidjson = "*"
+typed-argument-parser = "*"
 speechlight = {git = "https://github.com/nstockton/speechlight.git"}

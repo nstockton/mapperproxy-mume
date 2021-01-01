@@ -3,7 +3,7 @@ flake8
 flake8-tabs
 isort[pyproject,requirements,pipfile]==4.3.21
 mkdocs
-mkdocs_material
+mkdocs-material
 mkdocstrings
 mypy
 pre-commit
