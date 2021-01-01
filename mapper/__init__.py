@@ -8,19 +8,20 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
+from typing import Tuple, Union
 
 # Local Modules:
 from .config import Config
 
 
-INTERFACES = ("text", "hc", "sighted")
-OUTPUT_FORMATS = ("normal", "raw", "tintin")
-USER_DATA = 0
-MUD_DATA = 1
+INTERFACES: Tuple[str, str, str] = ("text", "hc", "sighted")
+OUTPUT_FORMATS: Tuple[str, str, str] = ("normal", "raw", "tintin")
+USER_DATA: int = 0
+MUD_DATA: int = 1
 
 
-cfg = Config()
-debugLevel = cfg.get("debug_level")
+cfg: Config = Config()
+debugLevel: Union[str, int, None] = cfg.get("debug_level")
 if isinstance(debugLevel, int):
 	if debugLevel < 0 or debugLevel > 50:
 		debugLevel = None
