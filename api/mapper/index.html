@@ -9,13 +9,14 @@
         <meta name="description" content="Mapper Proxy Main Page">
       
       
-        <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/mapper/">
-      
       
         <meta name="author" content="Nick Stockton">
       
+      
+        <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/mapper/">
+      
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
     
     
       
@@ -23,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.bc7e593a.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3b61ea93.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab28b872.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
         
       
     
@@ -34,7 +35,7 @@
     
       
         
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
@@ -56,6 +57,7 @@
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
       
   
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
@@ -85,18 +87,20 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
     <div class="md-header-nav__title" data-md-component="header-title">
-      
-        <div class="md-header-nav__ellipsis">
-          <span class="md-header-nav__topic md-ellipsis">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             Mapper Proxy
           </span>
-          <span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             
               mapper.py
             
           </span>
         </div>
-      
+      </div>
     </div>
     
       <label class="md-header-nav__button md-icon" for="__search">
@@ -107,7 +111,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
@@ -155,10 +159,14 @@
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
+
+
+
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
@@ -191,6 +199,7 @@
       
 
 
+
   <li class="md-nav__item">
     <a href="../.." class="md-nav__link">
       Home
@@ -201,6 +210,7 @@
       
       
       
+
 
 
   <li class="md-nav__item">
@@ -214,10 +224,13 @@
       
       
 
+
   
 
 
+  
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
     
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
@@ -238,9 +251,12 @@
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
     
     <label class="md-nav__link" for="nav-3-1">
       protocols
@@ -259,6 +275,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../protocols/base/" class="md-nav__link">
       base.py
@@ -269,6 +286,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -283,6 +301,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../protocols/mpi/" class="md-nav__link">
       mpi.py
@@ -293,6 +312,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -307,6 +327,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../protocols/telnet/" class="md-nav__link">
       telnet.py
@@ -319,6 +340,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../protocols/telnet_constants/" class="md-nav__link">
       telnet_constants.py
@@ -329,6 +351,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -348,9 +371,12 @@
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
     
     <label class="md-nav__link" for="nav-3-2">
       roomdata
@@ -369,6 +395,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../roomdata/database/" class="md-nav__link">
       database.py
@@ -379,6 +406,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -398,6 +426,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../cleanmap/" class="md-nav__link">
       cleanmap.py
@@ -408,6 +437,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -422,6 +452,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../config/" class="md-nav__link">
       config.py
@@ -432,6 +463,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -446,6 +478,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../main/" class="md-nav__link">
       main.py
@@ -456,6 +489,7 @@
           
           
           
+
 
   
 
@@ -621,8 +655,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.mapper.Mapper.getRoomFromLabel" class="md-nav__link">
-    getRoomFromLabel()
+  <a href="#mapper.mapper.Mapper.getNewExit" class="md-nav__link">
+    getNewExit()
   </a>
   
 </li>
@@ -733,6 +767,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../mudevents/" class="md-nav__link">
       mudevents.py
@@ -745,6 +780,7 @@
           
 
 
+
   <li class="md-nav__item">
     <a href="../utils/" class="md-nav__link">
       utils.py
@@ -755,6 +791,7 @@
           
           
           
+
 
 
   <li class="md-nav__item">
@@ -774,6 +811,7 @@
       
 
 
+
   <li class="md-nav__item">
     <a href="../../license/" class="md-nav__link">
       License
@@ -788,7 +826,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -938,8 +977,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.mapper.Mapper.getRoomFromLabel" class="md-nav__link">
-    getRoomFromLabel()
+  <a href="#mapper.mapper.Mapper.getNewExit" class="md-nav__link">
+    getNewExit()
   </a>
   
 </li>
@@ -1154,31 +1193,31 @@ initial name is set by the constructor.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">createSpeedWalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directionsList</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">createSpeedWalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directionsList</span><span class="p">:</span> <span class="n">MutableSequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""Given a list of directions, return a string of the directions in standard speed walk format"""</span>
 
-	<span class="k">def</span> <span class="nf">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">):</span>
-		<span class="n">speedWalkDirs</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">def</span> <span class="nf">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+		<span class="n">speedWalkDirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="k">for</span> <span class="n">direction</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">):</span>
-			<span class="n">lenGroup</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+			<span class="n">lenGroup</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
 			<span class="k">if</span> <span class="n">lenGroup</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 				<span class="n">speedWalkDirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 			<span class="k">else</span><span class="p">:</span>
 				<span class="n">speedWalkDirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">lenGroup</span><span class="si">}{</span><span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">speedWalkDirs</span>
 
-	<span class="n">numDirections</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directionsList</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span><span class="p">])</span>
-	<span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-	<span class="n">directionsBuffer</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">numDirections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directionsList</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span><span class="p">])</span>
+	<span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">directionsBuffer</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">while</span> <span class="n">directionsList</span><span class="p">:</span>
-		<span class="n">item</span> <span class="o">=</span> <span class="n">directionsList</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+		<span class="n">item</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">directionsList</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 		<span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span><span class="p">:</span>
 			<span class="n">directionsBuffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="c1"># The item is not a direction, so process the directions buffer, clear the buffer,</span>
 			<span class="c1"># and add the resulting list plus the item to the result.</span>
 			<span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">))</span>
-			<span class="n">directionsBuffer</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">directionsBuffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 			<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 	<span class="c1"># Process any remaining items in the directions buffer.</span>
 	<span class="k">if</span> <span class="n">directionsBuffer</span><span class="p">:</span>
@@ -1204,7 +1243,7 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Deregisters mud event handlers.</span>
 <span class="sd">	params: same as registerMudEventHandler.</span>
 <span class="sd">	"""</span>
@@ -1231,18 +1270,18 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulate_leave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulate_leave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""emulates leaving the room into a neighbouring room"""</span>
 	<span class="k">if</span> <span class="n">direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"Alas, you cannot go that way..."</span><span class="p">)</span>
-		<span class="k">return</span>
-	<span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">direction</span><span class="p">]</span><span class="o">.</span><span class="n">to</span>
-	<span class="k">if</span> <span class="s2">"death"</span> <span class="o">==</span> <span class="n">room</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">None</span>
+	<span class="n">vnum</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">direction</span><span class="p">]</span><span class="o">.</span><span class="n">to</span>
+	<span class="k">if</span> <span class="n">vnum</span> <span class="o">==</span> <span class="s2">"death"</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"deathtrap!"</span><span class="p">)</span>
-	<span class="k">elif</span> <span class="s2">"undefined"</span> <span class="o">==</span> <span class="n">room</span><span class="p">:</span>
+	<span class="k">elif</span> <span class="n">vnum</span> <span class="o">==</span> <span class="s2">"undefined"</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"undefined"</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="n">room</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="n">vnum</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre>
 </div>
 </details>
@@ -1262,7 +1301,7 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_brief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_brief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""toggles brief mode."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Brief mode </span><span class="si">{</span><span class="s1">'on'</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="k">else</span> <span class="s1">'off'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -1285,7 +1324,7 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_examine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_examine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""shows the room's description."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
 </code></pre>
@@ -1307,9 +1346,9 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""shows the exits in the room."""</span>
-	<span class="n">exits</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+	<span class="n">exits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exits: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exits</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 </code></pre>
 </div>
@@ -1330,12 +1369,11 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Room</span><span class="p">],</span> <span class="n">isJump</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""mimic the /go command that the ainur use."""</span>
-	<span class="n">room</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">error</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-		<span class="k">return</span>
+	<span class="n">room</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Room</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">Room</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">room</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">None</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span> <span class="o">=</span> <span class="n">room</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_look</span><span class="p">()</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_exits</span><span class="p">()</span>
@@ -1362,19 +1400,19 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Shows documentation for mapper's emulation commands."""</span>
-	<span class="n">helpTexts</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">helpTexts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"emulation_command_"</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationCommands</span>
 	<span class="p">]</span>
-	<span class="n">documentedFuncs</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">documentedFuncs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">docString</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">" "</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 		<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">docString</span> <span class="ow">in</span> <span class="n">helpTexts</span>
 		<span class="k">if</span> <span class="n">docString</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="p">]</span>
-	<span class="n">undocumentedFuncs</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">helpTexts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-	<span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">undocumentedFuncs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">helpTexts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+	<span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="s2">"The following commands allow you to emulate exploring the map without needing to move in game:"</span><span class="p">,</span>
 		<span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"    </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">helpText</span><span class="p">)</span> <span class="k">for</span> <span class="n">helpText</span> <span class="ow">in</span> <span class="n">documentedFuncs</span><span class="p">),</span>
 	<span class="p">]</span>
@@ -1411,7 +1449,7 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""looks at the room."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span><span class="p">:</span>
@@ -1438,7 +1476,7 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Exits the program."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">"quit"</span><span class="p">)</span>
 </code></pre>
@@ -1460,7 +1498,7 @@ params: same as registerMudEventHandler.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""returns to the last room jumped to with the go command."""</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span><span class="p">)</span>
@@ -1486,7 +1524,7 @@ When running in offline mode, is equivalent to the return command.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	When emulating while connected to the mud, syncs the emulated location with the in-game location.</span>
 <span class="sd">	When running in offline mode, is equivalent to the return command.</span>
@@ -1505,7 +1543,7 @@ When running in offline mode, is equivalent to the return command.</p>
 
         <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
 
-        <code class="highlight language-python">getNeighborsFromCoordinates<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>        </code>
+        <code class="highlight language-python">getNeighborsFromCoordinates<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>        </code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1518,21 +1556,13 @@ Each yielded result contains the vnum, room object reference, and difference in 
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromCoordinates</span><span class="p">(</span>
+	<span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">radius</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Room</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 	<span class="sd">"""A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.</span>
 <span class="sd">	Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""</span>
-	<span class="k">try</span><span class="p">:</span>
-		<span class="nb">iter</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
-	<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-		<span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span>
-	<span class="k">try</span><span class="p">:</span>
-		<span class="nb">iter</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
-	<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-		<span class="n">radiusX</span> <span class="o">=</span> <span class="n">radiusY</span> <span class="o">=</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
+	<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span>
+	<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
 	<span class="k">for</span> <span class="n">vnum</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 		<span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="n">z</span><span class="p">:</span>
 			<span class="k">continue</span>
@@ -1549,7 +1579,7 @@ Each yielded result contains the vnum, room object reference, and difference in 
 
         <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
 
-        <code class="highlight language-python">getNeighborsFromRoom<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>        </code>
+        <code class="highlight language-python">getNeighborsFromRoom<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>        </code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1562,18 +1592,13 @@ Each yielded result contains the vnum, room object reference, and difference in 
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromRoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromRoom</span><span class="p">(</span>
+	<span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">Room</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Room</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 	<span class="sd">"""A generator which yields all rooms in the vicinity of a room object.</span>
 <span class="sd">	Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""</span>
-	<span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span>
 	<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">z</span>
-	<span class="k">try</span><span class="p">:</span>
-		<span class="nb">iter</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
-	<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-		<span class="n">radiusX</span> <span class="o">=</span> <span class="n">radiusY</span> <span class="o">=</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
+	<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
 	<span class="k">for</span> <span class="n">vnum</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 		<span class="n">differenceX</span><span class="p">,</span> <span class="n">differenceY</span><span class="p">,</span> <span class="n">differenceZ</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">z</span>
 		<span class="k">if</span> <span class="p">(</span>
@@ -1589,58 +1614,93 @@ Each yielded result contains the vnum, room object reference, and difference in 
 </div>
 </div>
 <div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getRoomFromLabel">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getNewExit">
 
         <span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
 
-        <code class="highlight language-python">getRoomFromLabel<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>        </code>
+        <code class="highlight language-python">getNewExit<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s1">'undefined'</span><span class="p">,</span> <span class="n">vnum</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>        </code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.mapper.Mapper.getRoomFromLabel" title="Permanent link">&para;</a></h3>
+      <a class="headerlink" href="#mapper.mapper.Mapper.getNewExit" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
-<p>Takes a single argument, and returns a tuple of length 2.
-If successful, the first element returned is a room object, and the second element is none.
-Otherwise, the first element returned is None, and the second element is a human-readable error message.
-If the given argument is a room object, it is returned as is.
-If the given argument is a room vnum corresponding to an extant room, the corresponding room is returned.
-If the given argument is the label of a room, that room is returned.
-Otherwise, None is returned with a helpful error message for the user.</p>
+<p>Creates a new exit object for a given direction.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>direction</code></td>
+<td><code>str</code></td>
+<td>
+<p>The direction of movement (north, east, south, west, up, down).</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td><code>str</code></td>
+<td>
+<p>The destination that the exit points to. Can be a vnum, 'undefined', or 'death'.</p>
+</td>
+<td><code>'undefined'</code></td>
+</tr>
+<tr>
+<td><code>vnum</code></td>
+<td><code>Optional[str]</code></td>
+<td>
+<p>The vnum of the room that the exit belongs to, defaults to self.currentRoom.vnum.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Exit</code></td>
+<td>
+<p>The new exit object.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getRoomFromLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-	<span class="sd">"""Takes a single argument, and returns a tuple of length 2.</span>
-<span class="sd">	If successful, the first element returned is a room object, and the second element is none.</span>
-<span class="sd">	Otherwise, the first element returned is None, and the second element is a human-readable error message.</span>
-<span class="sd">	If the given argument is a room object, it is returned as is.</span>
-<span class="sd">	If the given argument is a room vnum corresponding to an extant room, the corresponding room is returned.</span>
-<span class="sd">	If the given argument is the label of a room, that room is returned.</span>
-<span class="sd">	Otherwise, None is returned with a helpful error message for the user.</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">getNewExit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"undefined"</span><span class="p">,</span> <span class="n">vnum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Exit</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Creates a new exit object for a given direction.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		direction: The direction of movement (north, east, south, west, up, down).</span>
+<span class="sd">		to: The destination that the exit points to. Can be a vnum, 'undefined', or 'death'.</span>
+<span class="sd">		vnum: The vnum of the room that the exit belongs to, defaults to self.currentRoom.vnum.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The new exit object.</span>
 <span class="sd">	"""</span>
-	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">Room</span><span class="p">):</span>
-		<span class="k">return</span> <span class="n">label</span><span class="p">,</span> <span class="kc">None</span>
-	<span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
-		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"No label or room vnum specified."</span>
-	<span class="k">elif</span> <span class="n">label</span><span class="o">.</span><span class="n">isdecimal</span><span class="p">():</span>
-		<span class="n">vnum</span> <span class="o">=</span> <span class="n">label</span>
-		<span class="k">if</span> <span class="n">vnum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">vnum</span><span class="p">],</span> <span class="kc">None</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"No room with vnum "</span> <span class="o">+</span> <span class="n">vnum</span>
-	<span class="k">elif</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
-		<span class="n">vnum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
-		<span class="k">if</span> <span class="n">vnum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">vnum</span><span class="p">],</span> <span class="kc">None</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> is set to vnum </span><span class="si">{</span><span class="n">vnum</span><span class="si">}</span><span class="s2">, but there is no room with that vnum"</span>
-	<span class="k">else</span><span class="p">:</span>  <span class="c1"># The label is neither a vnum nor an existing label</span>
-		<span class="n">similarLabels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
-		<span class="n">similarLabels</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
-		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Unknown label. Did you mean </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">similarLabels</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span><span class="si">}</span><span class="s2">?"</span>
+	<span class="n">newExit</span><span class="p">:</span> <span class="n">Exit</span> <span class="o">=</span> <span class="n">Exit</span><span class="p">()</span>
+	<span class="n">newExit</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>
+	<span class="n">newExit</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">to</span>
+	<span class="n">newExit</span><span class="o">.</span><span class="n">vnum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span> <span class="k">if</span> <span class="n">vnum</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vnum</span>
+	<span class="k">return</span> <span class="n">newExit</span>
 </code></pre>
 </div>
 </details>
@@ -1663,7 +1723,7 @@ Otherwise, None is returned with a helpful error message for the user.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">GUIRefresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">GUIRefresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Trigger the clearing and redrawing of rooms by the GUI"""</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="o">!=</span> <span class="s2">"text"</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_gui_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">"on_gui_refresh"</span><span class="p">,))</span>
@@ -1761,17 +1821,17 @@ you just came from would put you back where you started, False otherwise.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">isBidirectional</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitObj</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">isBidirectional</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitObj</span><span class="p">:</span> <span class="n">Exit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Returns True if an exit is bidirectional, False if unidirectional.</span>
 <span class="sd">	I.E. True if moving in a given direction then moving back in the direction</span>
 <span class="sd">	you just came from would put you back where you started, False otherwise.</span>
 <span class="sd">	"""</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span><span class="p">]</span>
+		<span class="n">dest</span><span class="p">:</span> <span class="n">Room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span><span class="p">]</span>
 	<span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
 		<span class="k">return</span> <span class="kc">False</span>
-	<span class="n">revdir</span> <span class="o">=</span> <span class="n">REVERSE_DIRECTIONS</span><span class="p">[</span><span class="n">exitObj</span><span class="o">.</span><span class="n">direction</span><span class="p">]</span>
+	<span class="n">revdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">REVERSE_DIRECTIONS</span><span class="p">[</span><span class="n">exitObj</span><span class="o">.</span><span class="n">direction</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">revdir</span> <span class="ow">in</span> <span class="n">dest</span><span class="o">.</span><span class="n">exits</span> <span class="ow">and</span> <span class="n">dest</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">revdir</span><span class="p">]</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span>
 		<span class="k">return</span> <span class="kc">True</span>
 	<span class="k">else</span><span class="p">:</span>
@@ -1872,31 +1932,40 @@ exception.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">pathFind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">pathFind</span><span class="p">(</span>
+	<span class="bp">self</span><span class="p">,</span>
+	<span class="n">origin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Room</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">destination</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">flags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 	<span class="sd">"""Find the path"""</span>
-	<span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">origin</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"Error! The mapper has no location. Please use the sync command then try again."</span><span class="p">)</span>
-	<span class="n">destinationRoom</span><span class="p">,</span> <span class="n">errorFindingDestination</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">errorFindingDestination</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">errorFindingDestination</span><span class="p">)</span>
-		<span class="k">return</span> <span class="kc">None</span>
-	<span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="n">destinationRoom</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span> <span class="o">==</span> <span class="s2">"-1"</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"Error! The mapper has no location. Please use the sync command then try again."</span><span class="p">)</span>
+			<span class="k">return</span> <span class="p">[]</span>
+		<span class="n">origin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span>
+	<span class="n">destinationRoom</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Room</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">destination</span><span class="p">))</span>
+	<span class="k">if</span> <span class="n">destinationRoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">return</span> <span class="p">[]</span>
+	<span class="k">elif</span> <span class="n">destinationRoom</span> <span class="ow">is</span> <span class="n">origin</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"You are already there!"</span><span class="p">)</span>
 		<span class="k">return</span> <span class="p">[]</span>
+	<span class="n">avoidTerrains</span><span class="p">:</span> <span class="n">FrozenSet</span>
 	<span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
 		<span class="n">avoidTerrains</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">terrain</span> <span class="k">for</span> <span class="n">terrain</span> <span class="ow">in</span> <span class="n">TERRAIN_COSTS</span> <span class="k">if</span> <span class="sa">f</span><span class="s2">"no</span><span class="si">{</span><span class="n">terrain</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">flags</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="n">avoidTerrains</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
-	<span class="n">ignoreVnums</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">"undefined"</span><span class="p">,</span> <span class="s2">"death"</span><span class="p">))</span>
-	<span class="n">isDestinationFunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">currentRoomObj</span><span class="p">:</span> <span class="n">currentRoomObj</span> <span class="ow">is</span> <span class="n">destinationRoom</span>  <span class="c1"># NOQA: E731</span>
-	<span class="n">exitIgnoreFunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exitObj</span><span class="p">:</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="ow">in</span> <span class="n">ignoreVnums</span>  <span class="c1"># NOQA: E731</span>
-	<span class="n">exitCostFunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exitObj</span><span class="p">,</span> <span class="n">neighborRoomObj</span><span class="p">:</span> <span class="p">(</span>  <span class="c1"># NOQA: E731</span>
+	<span class="n">ignoreVnums</span><span class="p">:</span> <span class="n">FrozenSet</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">"undefined"</span><span class="p">,</span> <span class="s2">"death"</span><span class="p">))</span>
+	<span class="n">isDestinationFunc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Room</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">currentRoomObj</span><span class="p">:</span> <span class="p">(</span>  <span class="c1"># NOQA: E731</span>
+		<span class="n">currentRoomObj</span> <span class="ow">is</span> <span class="n">destinationRoom</span>
+	<span class="p">)</span>
+	<span class="n">exitIgnoreFunc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Exit</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exitObj</span><span class="p">:</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="ow">in</span> <span class="n">ignoreVnums</span>  <span class="c1"># NOQA: E731</span>
+	<span class="n">exitCostFunc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Exit</span><span class="p">,</span> <span class="n">Room</span><span class="p">],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exitObj</span><span class="p">,</span> <span class="n">neighborRoomObj</span><span class="p">:</span> <span class="p">(</span>  <span class="c1"># NOQA: E731</span>
 		<span class="p">(</span><span class="mi">5</span> <span class="k">if</span> <span class="s2">"door"</span> <span class="ow">in</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">exitFlags</span> <span class="ow">or</span> <span class="s2">"climb"</span> <span class="ow">in</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">exitFlags</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
 		<span class="o">+</span> <span class="p">(</span><span class="mi">1000</span> <span class="k">if</span> <span class="s2">"avoid"</span> <span class="ow">in</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">exitFlags</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
 		<span class="o">+</span> <span class="p">(</span><span class="mi">10</span> <span class="k">if</span> <span class="n">neighborRoomObj</span><span class="o">.</span><span class="n">terrain</span> <span class="ow">in</span> <span class="n">avoidTerrains</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
 	<span class="p">)</span>
-	<span class="n">exitDestinationFunc</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">exitDestinationFunc</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 	<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pathFind</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">isDestinationFunc</span><span class="p">,</span> <span class="n">exitIgnoreFunc</span><span class="p">,</span> <span class="n">exitCostFunc</span><span class="p">,</span> <span class="n">exitDestinationFunc</span><span class="p">)</span>
 </code></pre>
 </div>
@@ -1916,15 +1985,15 @@ exception.</p>
 <p>Registers a method to handle mud events of a given type.
 Params: event, handler
 where event is the name of the event type, typically corresponding to the XML tag of the incoming data,
-and handler is a method that takes a single argument, data, which is the text received from the mud.</p>
+and handler is a method that takes a single argument, text, which is the text received from the mud.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Registers a method to handle mud events of a given type.</span>
 <span class="sd">	Params: event, handler</span>
 <span class="sd">	where event is the name of the event type, typically corresponding to the XML tag of the incoming data,</span>
-<span class="sd">	and handler is a method that takes a single argument, data, which is the text received from the mud.</span>
+<span class="sd">	and handler is a method that takes a single argument, text, which is the text received from the mud.</span>
 <span class="sd">	"""</span>
 	<span class="k">if</span> <span class="n">event</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1954,19 +2023,20 @@ from the args and kwargs arguments, respectively.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="n">dataType</span><span class="p">:</span> <span class="nb">int</span>
+	<span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 		<span class="k">try</span><span class="p">:</span>
 			<span class="n">dataType</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 			<span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 				<span class="k">break</span>
-			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">USER_DATA</span><span class="p">:</span>
+			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">USER_DATA</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
 				<span class="c1"># The data was a valid mapper command, sent from the user's mud client.</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">handleUserData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">MUD_DATA</span><span class="p">:</span>
+			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">MUD_DATA</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
 				<span class="c1"># The data was from the mud server.</span>
-				<span class="n">event</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
 		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"map error"</span><span class="p">)</span>
 			<span class="nb">print</span><span class="p">(</span><span class="s2">"error "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
@@ -2040,19 +2110,19 @@ same thread object.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_maphelp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_maphelp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Shows documentation for mapper commands"""</span>
-	<span class="n">helpTexts</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">helpTexts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"user_command_"</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userCommands</span>
 	<span class="p">]</span>
-	<span class="n">documentedFuncs</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">documentedFuncs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">docString</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">" "</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 		<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">docString</span> <span class="ow">in</span> <span class="n">helpTexts</span>
 		<span class="k">if</span> <span class="n">docString</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="p">]</span>
-	<span class="n">undocumentedFuncs</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">helpTexts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-	<span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">undocumentedFuncs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">helpTexts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+	<span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="s2">"Mapper Commands"</span><span class="p">,</span>
 		<span class="s2">"The following commands are used for viewing and editing map data:"</span><span class="p">,</span>
 		<span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"    </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">helpText</span><span class="p">)</span> <span class="k">for</span> <span class="n">helpText</span> <span class="ow">in</span> <span class="n">documentedFuncs</span><span class="p">),</span>
@@ -2090,7 +2160,7 @@ same thread object.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_tvnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_tvnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""tells a given char the vnum of your room"""</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">"Tell VNum to who?"</span><span class="p">)</span>
@@ -2115,7 +2185,7 @@ same thread object.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_vnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">user_command_vnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""states the vnum of the current room"""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Vnum: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 </code></pre>
@@ -2165,15 +2235,15 @@ same thread object.</p>
       
     </div>
     
-      <script src="../../assets/javascripts/vendor.6a3d08fc.min.js"></script>
-      <script src="../../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../../assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "../..",
           features: [],
           search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.4ac00218.min.js"
+            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
