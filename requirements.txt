@@ -4,5 +4,5 @@ fuzzywuzzy
 pyglet
 python-Levenshtein
 python-rapidjson
+speechlight
 typed-argument-parser
-git+https://github.com/nstockton/speechlight.git#egg=speechlight
