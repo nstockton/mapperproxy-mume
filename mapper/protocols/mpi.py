@@ -1,4 +1,4 @@
-﻿"""
+"""
 Mume Remote Editing Protocol.
 """
 
