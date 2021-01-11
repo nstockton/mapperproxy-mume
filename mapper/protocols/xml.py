@@ -72,9 +72,9 @@ class XMLProtocol(Protocol):
 
 	def __init__(self, *args, **kwargs) -> None:
 		self.outputFormat: Union[str, None] = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
-		self.eventCaller: Callable[[Tuple[int, Tuple[str, bytes]]], None] = kwargs.pop(
-			"eventCaller"
-		) if "eventCaller" in kwargs else lambda *args: None
+		self.eventCaller: Callable[[Tuple[int, Tuple[str, bytes]]], None] = (
+			kwargs.pop("eventCaller") if "eventCaller" in kwargs else lambda *args: None
+		)
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
 		self._tagBuffer: bytearray = bytearray()  # Used for start and end tag names.

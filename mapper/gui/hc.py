@@ -72,8 +72,7 @@ logger = logging.getLogger(__name__)
 
 
 class Color(namedtuple("Color", ["r", "g", "b", "a"])):
-	"""Color tuple used by the debug drawing API.
-	"""
+	"""Color tuple used by the debug drawing API."""
 
 	__slots__ = ()
 
