@@ -9,4 +9,4 @@ mypy
 pre-commit
 PyInstaller
 git+https://github.com/nstockton/pytkdocs.git@tab-indentation-parser#egg=pytkdocs
-git+https://github.com/nstockton/tan.git#egg=tan
+git+https://github.com/nstockton/tan.git@personal#egg=tan
