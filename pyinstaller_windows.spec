@@ -316,7 +316,7 @@ include_files = [
 		".",
 	),
 	(
-		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.where())), "*.dll")),
+		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.LIB_DIRECTORY)), "*.dll")),
 		"speech_libs",
 	),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
