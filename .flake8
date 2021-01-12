@@ -33,6 +33,8 @@ ignore =
 
 exclude =
 	.git,
+	venv,
+	ENV,
 	__pycache__,
 
 filename =
