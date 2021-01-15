@@ -23,6 +23,7 @@ repos:
     hooks:
       - id: unittest
         name: UnitTest
+        args: ['--failfast']
         stages: [commit]
         language: system
         entry: "python -B -m coverage run -m unittest"
@@ -33,25 +34,25 @@ repos:
         stages: [commit]
         language: system
         entry: "python -B -m isort"
-        types: [python]
+        types_or: [python, spec]
       - id: tan
         name: Tan
         stages: [commit]
         language: system
         entry: "python -B -m black"
-        types: [python]
+        types_or: [python, spec]
       - id: flake8
         name: Flake8
         stages: [commit]
         language: system
         entry: "python -B -m flake8"
-        types: [python]
+        types_or: [python, spec]
       - id: mypy
         name: MyPy
         stages: [commit]
         language: system
         entry: "python -B -m mypy"
-        types: [python]
+        types_or: [python, spec]
         pass_filenames: false
       - id: coverage
         name: Coverage
