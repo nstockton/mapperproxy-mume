@@ -18,21 +18,30 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from _hashlib import HASH
+from typing import Dict, List, Match, Pattern, Tuple, Union
 
 # Third-party Modules:
 import PyInstaller.config
 import speechlight
+from PyInstaller.archive.pyz_crypto import PyiBlockCipher
+from PyInstaller.building.api import COLLECT, EXE, PYZ
+from PyInstaller.building.build_main import Analysis
+from PyInstaller.building.datastruct import TOC
 
 # Mapper Modules:
 from mapper.utils import padList
 
 
-APP_NAME = "Mapper Proxy"
-APP_AUTHOR = "Nick Stockton"
-VERSION_REGEX = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
-ORIG_DEST = os.path.realpath(os.path.expanduser(DISTPATH))  # NOQA: F821
-isTag = False
-found_version = None
+APP_NAME: str = "Mapper Proxy"
+APP_AUTHOR: str = "Nick Stockton"
+APP_VERSION: str
+APP_VERSION_TYPE: str
+VERSION_REGEX: Pattern[str] = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
+ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore # NOQA: F821
+isTag: bool = False
+found_version: Union[str, None] = None
+match: Union[Match[str], None]
 for arg in sys.argv[1:]:
 	match = VERSION_REGEX.search(arg.strip().lower())
 	if match is not None:
@@ -88,24 +97,25 @@ else:
 	print(f"No version information found. Using default. ({APP_VERSION}-{APP_VERSION_TYPE})")
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
-APP_VERSION_CSV = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
-APP_DEST = os.path.normpath(
+APP_VERSION_CSV: str = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
+APP_DEST: str = os.path.normpath(
 	os.path.join(
 		ORIG_DEST,
 		os.pardir,
 		f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_"),
 	)
 )
+ZIP_FILE: str
 if isTag:
 	ZIP_FILE = APP_DEST + ".zip"
 else:
 	ZIP_FILE = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "MapperProxy.zip"))
-VERSION_FILE = os.path.normpath(
+VERSION_FILE: str = os.path.normpath(
 	os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore")
 )
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
-excludes = [
+excludes: List[str] = [
 	"_gtkagg",
 	"_tkagg",
 	"bsddb",
@@ -131,7 +141,7 @@ excludes = [
 	"xml",
 ]
 
-dll_excludes = TOC(  # NOQA: F821
+dll_excludes: TOC = TOC(
 	[
 		("api-ms-win-core-console-l1-1-0.dll", None, None),
 		("api-ms-win-core-datetime-l1-1-0.dll", None, None),
@@ -179,9 +189,9 @@ dll_excludes = TOC(  # NOQA: F821
 	]
 )
 
-block_cipher = None
+block_cipher: Union[PyiBlockCipher, None] = None
 
-version_data = f"""
+version_data: str = f"""
 # UTF-8
 #
 # For more details about fixed file info 'ffi' see:
@@ -245,7 +255,7 @@ with codecs.open(
 ) as f:
 	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}"')
 
-a = Analysis(  # NOQA: F821
+a: Analysis = Analysis(
 	["start.py"],
 	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
 	binaries=[],
@@ -260,9 +270,9 @@ a = Analysis(  # NOQA: F821
 	noarchive=False,
 )
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)  # NOQA: F821
+pyz: PYZ = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
-exe = EXE(  # NOQA: F821
+exe: EXE = EXE(
 	pyz,
 	a.scripts,
 	[],
@@ -277,19 +287,16 @@ exe = EXE(  # NOQA: F821
 	version=VERSION_FILE,
 )
 
-coll = COLLECT(  # NOQA: F821
-	exe, a.binaries - dll_excludes, a.zipfiles, a.datas, strip=False, upx=False, name=""
-)
+coll: COLLECT = COLLECT(exe, a.binaries - dll_excludes, a.zipfiles, a.datas, strip=False, upx=False, name="")
 
 # Remove junk.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(os.path.normpath(os.path.join(APP_DEST, os.pardir, "__pycache__")), ignore_errors=True)
-shutil.rmtree(os.path.realpath(os.path.expanduser(workpath)), ignore_errors=True)  # NOQA: F821
+wp: str = os.path.realpath(os.path.expanduser(workpath))  # type: ignore # NOQA: F821
+shutil.rmtree(wp, ignore_errors=True)
 # The directory above workpath should now be empty.
 # Using os.rmdir to remove it instead of shutil.rmtree for safety.
-os.rmdir(
-	os.path.normpath(os.path.join(os.path.realpath(os.path.expanduser(workpath)), os.pardir))  # NOQA: F821
-)
+os.rmdir(os.path.normpath(os.path.join(wp, os.pardir)))
 if os.path.exists(
 	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))
 ) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
@@ -297,17 +304,7 @@ if os.path.exists(
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
 shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 
-lib_files = []
-
-for files, destination in lib_files:
-	dest_dir = os.path.join(APP_DEST, destination)
-	if not os.path.exists(dest_dir):
-		os.makedirs(dest_dir)
-	for src in files:
-		if os.path.exists(src) and not os.path.isdir(src):
-			shutil.move(src, dest_dir)
-
-include_files = [
+include_files: List[Tuple[List[str], str]] = [
 	(
 		[
 			os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")),
@@ -324,6 +321,7 @@ include_files = [
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles"),
 ]
 
+dest_dir: str
 for files, destination in include_files:
 	dest_dir = os.path.join(APP_DEST, destination)
 	if not os.path.exists(dest_dir):
@@ -344,9 +342,9 @@ shutil.make_archive(
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
-hashes = {"sha256": hashlib.sha256()}
-block_size = 2 ** 16
-with open(ZIP_FILE, "rb") as f:
+hashes: Dict[str, HASH] = {"sha256": hashlib.sha256()}
+block_size: int = 2 ** 16
+with codecs.open(ZIP_FILE, "rb") as f:
 	for block in iter(lambda: f.read(block_size), b""):
 		for _, hash in hashes.items():
 			hash.update(block)
