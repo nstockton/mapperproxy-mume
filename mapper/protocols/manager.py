@@ -33,14 +33,14 @@ class Manager(object):
 		"""Connection status."""
 		return getattr(self, "_isConnected", False)
 
-	def __enter__(self):
+	def __enter__(self) -> Manager:
 		self.connect()
 		return self
 
-	def __exit__(self, excType, excValue, excTraceback):
+	def __exit__(self, excType, excValue, excTraceback) -> None:
 		self.disconnect()
 
-	def __del__(self):
+	def __del__(self) -> None:
 		self.disconnect()
 
 	def close(self) -> None:
