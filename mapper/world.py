@@ -86,16 +86,16 @@ class World(object):
 		self.labels: Dict[str, str] = {}
 		self._interface: str = interface
 		if interface != "text":
-			self._gui_queue: SimpleQueue = SimpleQueue()
+			self._gui_queue: SimpleQueue[Union[Tuple[str], Tuple[str, Room], None]] = SimpleQueue()
 			self.window: pyglet.window.Window
 			if interface == "hc":
 				from .gui import hc
 
-				self.window = hc.Window(self)
+				self.window = hc.Window(self)  # type: ignore
 			elif interface == "sighted":
 				from .gui import sighted
 
-				self.window = sighted.Window(self)
+				self.window = sighted.Window(self)  # type: ignore
 		self._currentRoom: Room = Room()
 		self.loadRooms()
 		self.loadLabels()
@@ -1021,12 +1021,12 @@ class World(object):
 		elif destinationRoom is origin:
 			self.output("You are already there!")
 			return []
-		avoidTerrains: FrozenSet
+		avoidTerrains: FrozenSet[str]
 		if flags:
 			avoidTerrains = frozenset(terrain for terrain in TERRAIN_COSTS if f"no{terrain}" in flags)
 		else:
 			avoidTerrains = frozenset()
-		ignoreVnums: FrozenSet = frozenset(("undefined", "death"))
+		ignoreVnums: FrozenSet[str] = frozenset(("undefined", "death"))
 		isDestinationFunc: Callable[[Room], bool] = lambda currentRoomObj: (  # NOQA: E731
 			currentRoomObj is destinationRoom
 		)

@@ -8,7 +8,8 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Callable, Dict, Tuple, Union
+import socket
+from typing import Any, Callable, Dict, Tuple, Union
 
 # Local Modules:
 from .manager import Manager
@@ -44,7 +45,7 @@ class Telnet(TelnetProtocol):
 		proxy: The proxy that spawned this object.
 	"""
 
-	def __init__(self, name: str, proxy: "ProxyHandler", *args, **kwargs) -> None:
+	def __init__(self, name: str, proxy: "ProxyHandler", *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, **kwargs)
 		self.name: str = name.lower()
 		if self.name not in ("player", "game"):
@@ -61,7 +62,7 @@ class Telnet(TelnetProtocol):
 
 
 class Player(Telnet):
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__("player", *args, **kwargs)
 
 	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
@@ -89,7 +90,7 @@ class Game(Telnet):
 	)
 	"""Supported character sets."""
 
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__("game", *args, **kwargs)
 		self.commandMap[GA] = self.on_ga
 		self.subnegotiationMap[CHARSET] = self.on_charset
@@ -97,7 +98,7 @@ class Game(Telnet):
 	@property
 	def charset(self) -> bytes:
 		"""The character set to be used."""
-		return getattr(self, "_charset", self.charsets[0])
+		return bytes(getattr(self, "_charset", self.charsets[0]))
 
 	@charset.setter
 	def charset(self, value: bytes) -> None:
@@ -145,7 +146,7 @@ class Game(Telnet):
 			self.wont(CHARSET)
 		del self._oldCharset
 
-	def on_ga(self, *args) -> None:
+	def on_ga(self, *args: Union[bytes, None]) -> None:
 		"""Called when a Go Ahead command is received."""
 		self.proxy.player.write(self.proxy.promptTerminator)
 
@@ -179,7 +180,7 @@ class Game(Telnet):
 
 
 class ProxyHandler(object):
-	def __init__(self, playerSocket, gameSocket, **kwargs) -> None:
+	def __init__(self, playerSocket: socket.socket, gameSocket: socket.socket, **kwargs: Any) -> None:
 		self.outputFormat = kwargs["outputFormat"]
 		self.promptTerminator = kwargs["promptTerminator"] or IAC + GA
 		self.promptTerminator = self.promptTerminator.replace(CR_LF, LF).replace(CR_NULL, CR)
@@ -205,11 +206,11 @@ class ProxyHandler(object):
 		self.game.disconnect()
 		self.player.disconnect()
 
-	def on_playerReceived(self, data) -> None:
+	def on_playerReceived(self, data: bytes) -> None:
 		if self.isEmulatingOffline or b"".join(data.strip().split()[:1]) in self.mapperCommands:
 			self.eventCaller((USER_DATA, data))
 		else:
 			self.game.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))
 
-	def on_gameReceived(self, data) -> None:
+	def on_gameReceived(self, data: bytes) -> None:
 		self.player.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))

@@ -34,7 +34,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 from abc import abstractmethod
-from typing import Callable, Dict, FrozenSet, Union
+from typing import Any, Callable, Dict, FrozenSet, Union
 
 # Local Modules:
 from .base import Protocol
@@ -205,7 +205,7 @@ class TelnetProtocol(BaseTelnetProtocol):
 	)
 	"""Valid states for the state machine."""
 
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
 		self._options: Dict[bytes, _OptionState] = {}

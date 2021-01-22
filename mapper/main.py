@@ -14,7 +14,7 @@ import socket
 import ssl
 import threading
 import time
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 # Third-party Modules:
 from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
@@ -46,7 +46,7 @@ LISTENING_STATUS_FILE: str = os.path.join(getDirectoryPath("."), "mapper_ready.i
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class BufferedSSLSocket(BufferedSocket):
+class BufferedSSLSocket(BufferedSocket):  # type: ignore
 	def __init__(
 		self,
 		sock: Union[socket.socket, MockedSocket],
@@ -54,7 +54,7 @@ class BufferedSSLSocket(BufferedSocket):
 		maxsize: int = DEFAULT_MAXSIZE,
 		recvsize: Union[_UNSET, int] = _UNSET,
 		insecure: bool = False,
-		**sslKWArgs,
+		**sslKWArgs: Any,
 	) -> None:
 		self.sock: Union[socket.socket, MockedSocket, ssl.SSLSocket]
 		super().__init__(sock, timeout, maxsize, recvsize)
@@ -170,7 +170,7 @@ class MockedSocketEmpty(Exception):
 
 
 class MockedSocket(object):
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		self.inboundBuffer = Union[bytes, None]
 		self.timeout: Union[float, None] = None
 
@@ -186,19 +186,19 @@ class MockedSocket(object):
 	def setblocking(self, flag: bool) -> None:
 		self.settimeout(None if flag else 0.0)
 
-	def connect(self, *args) -> None:
+	def connect(self, *args: Any) -> None:
 		pass
 
-	def setsockopt(self, *args) -> None:
+	def setsockopt(self, *args: Any) -> None:
 		pass
 
-	def getpeercert(self, *args) -> Dict[str, List[List[str]]]:
+	def getpeercert(self, *args: Any) -> Dict[str, List[List[str]]]:
 		return {"subject": [["commonName", "mume.org"]]}
 
-	def shutdown(self, *args) -> None:
+	def shutdown(self, *args: Any) -> None:
 		pass
 
-	def close(self, *args) -> None:
+	def close(self, *args: Any) -> None:
 		pass
 
 	def send(self, data: bytes, flags: int = 0) -> int:
@@ -231,7 +231,7 @@ def main(
 	remoteHost: str,
 	remotePort: int,
 	noSsl: bool,
-):
+) -> None:
 	# initialise client connection
 	proxySocket: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	proxySocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)

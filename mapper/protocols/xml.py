@@ -13,7 +13,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Callable, Dict, FrozenSet, List, MutableSequence, Tuple, Union
+from typing import Any, Callable, Dict, FrozenSet, List, MutableSequence, Tuple, Union
 
 # Local Modules:
 from .base import Protocol
@@ -72,7 +72,7 @@ class XMLProtocol(Protocol):
 	}
 	"""A mapping of tag to replacement values for Tintin."""
 
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		self.outputFormat: Union[str, None] = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
 		self.eventCaller: Callable[[Tuple[int, Tuple[str, bytes]]], None] = (
 			kwargs.pop("eventCaller") if "eventCaller" in kwargs else lambda *args: None

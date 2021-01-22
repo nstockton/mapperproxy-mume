@@ -142,7 +142,8 @@ class Mapper(threading.Thread, World):
 		self.gagPrompts: bool = gagPrompts
 		self.findFormat: str = findFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
-		self.queue: SimpleQueue = SimpleQueue()
+		self.queue: SimpleQueue[Tuple[Union[int, None], Union[Tuple[str, bytes], bytes, None]]]
+		self.queue = SimpleQueue()
 		cfg: Config = Config()
 		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
 		del cfg
@@ -213,7 +214,7 @@ class Mapper(threading.Thread, World):
 
 	@property
 	def outputFormat(self) -> str:
-		return getattr(self, "_outputFormat", OUTPUT_FORMATS[0])
+		return str(getattr(self, "_outputFormat", OUTPUT_FORMATS[0]))
 
 	@outputFormat.setter
 	def outputFormat(self, value: str) -> None:
@@ -223,7 +224,7 @@ class Mapper(threading.Thread, World):
 
 	@property
 	def interface(self) -> str:
-		return getattr(self, "_interface", INTERFACES[0])
+		return str(getattr(self, "_interface", INTERFACES[0]))
 
 	@interface.setter
 	def interface(self, value: str) -> None:
@@ -1065,7 +1066,7 @@ class Mapper(threading.Thread, World):
 				del self.mudEventHandlers[event]
 
 	def run(self) -> None:
-		dataType: int
+		dataType: Union[int, None]
 		data: Union[Tuple[str, bytes], bytes, None]
 		while True:
 			try:

@@ -7,6 +7,7 @@ verify_ssl = true
 coverage = {extras = ["toml"], version = "*"}
 flake8 = "*"
 flake8-tabs = "*"
+fuzzywuzzy-stubs = "*"
 isort = {version = "==5.7.0"}
 mkdocs = {version = "==1.1.2"}
 mkdocs-material = {version = "==6.2.3"}

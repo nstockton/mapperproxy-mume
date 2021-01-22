@@ -11,7 +11,7 @@ import re
 from typing import Dict, List, Pattern, Set, Tuple, Union
 
 # Local Modules:
-from ..gui.vec2d import Vec2d
+from ..gui.vec2d import Vec2d  # type: ignore
 
 
 DIRECTIONS: Tuple[str, ...] = (

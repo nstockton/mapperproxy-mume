@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import threading
-from typing import Any, Callable, List, Union
+from typing import Any, Callable, Dict, List, Tuple, Union
 
 
 class BaseDelay(threading.Thread):
@@ -37,13 +37,13 @@ class BaseDelay(threading.Thread):
 		if count is not None and count < 0:
 			raise ValueError("count must be a positive number or None.")
 		super().__init__()
-		self.daemon = True
-		self._duration = duration
-		self._count = count
-		self._function = function
-		self._args = args
-		self._kwargs = kwargs
-		self._finished = threading.Event()
+		self.daemon: bool = True
+		self._duration: float = duration
+		self._count: Union[int, None] = count
+		self._function: Callable[..., Any] = function
+		self._args: Tuple[Any, ...] = args
+		self._kwargs: Dict[str, Any] = kwargs
+		self._finished: threading.Event = threading.Event()
 
 	def stop(self) -> None:
 		"""Stops an active delay."""
@@ -68,7 +68,7 @@ class Delay(BaseDelay):
 	Implements a delay which automatically starts upon creation.
 	"""
 
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, **kwargs)
 		self.start()
 

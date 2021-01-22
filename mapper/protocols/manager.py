@@ -9,7 +9,8 @@ from __future__ import annotations
 # Built-in Modules:
 import inspect
 import logging
-from typing import Callable, List, Type
+from types import TracebackType
+from typing import Any, Callable, List, Optional, Type
 
 # Local Modules:
 from .base import Protocol
@@ -31,13 +32,18 @@ class Manager(object):
 	@property
 	def isConnected(self) -> bool:
 		"""Connection status."""
-		return getattr(self, "_isConnected", False)
+		return bool(getattr(self, "_isConnected", False))
 
 	def __enter__(self) -> Manager:
 		self.connect()
 		return self
 
-	def __exit__(self, excType, excValue, excTraceback) -> None:
+	def __exit__(
+		self,
+		excType: Optional[Type[BaseException]],
+		excValue: Optional[BaseException],
+		excTraceback: Optional[TracebackType],
+	) -> None:
 		self.disconnect()
 
 	def __del__(self) -> None:
@@ -114,7 +120,7 @@ class Manager(object):
 		elif data:
 			self._writer(data)
 
-	def register(self, handler: Type[Protocol], *args, **kwargs) -> None:
+	def register(self, handler: Type[Protocol], *args: Any, **kwargs: Any) -> None:
 		"""
 		Registers a protocol handler.
 

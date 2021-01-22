@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Any, Callable
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class BaseProtocol(ABC):
 
 class Protocol(BaseProtocol):
 	def __init__(
-		self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None], *args, **kwargs
+		self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None], *args: Any, **kwargs: Any
 	) -> None:
 		self._writer: Callable[[bytes], None] = writer
 		self._receiver: Callable[[bytes], None] = receiver

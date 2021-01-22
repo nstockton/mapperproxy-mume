@@ -8,11 +8,10 @@ from __future__ import annotations
 
 # Built-in Modules:
 import codecs
-import collections.abc
 import json
 import os.path
 import threading
-from typing import Any, Dict, Iterator
+from typing import Any, Dict, Iterator, MutableMapping
 
 # Local Modules:
 from .utils import getDirectoryPath
@@ -25,7 +24,7 @@ class ConfigError(Exception):
 	"""Implements the base class for Config exceptions."""
 
 
-class Config(collections.abc.MutableMapping):
+class Config(MutableMapping[str, Any]):
 	"""
 	Implements loading and saving of program configuration.
 	"""
@@ -58,7 +57,7 @@ class Config(collections.abc.MutableMapping):
 		with self._configLock:
 			try:
 				with codecs.open(filename, "rb", encoding="utf-8") as fileObj:
-					return json.load(fileObj)
+					return dict(json.load(fileObj))
 			except IOError as e:  # pragma: no cover
 				raise ConfigError(f"{e.strerror}: '{e.filename}'")
 			except ValueError:

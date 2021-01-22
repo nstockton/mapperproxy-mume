@@ -18,7 +18,7 @@ import subprocess
 import sys
 import tempfile
 import threading
-from typing import Callable, Dict, FrozenSet, List, Union
+from typing import Any, Callable, Dict, FrozenSet, List, Union
 
 # Local Modules:
 from .base import Protocol
@@ -44,7 +44,7 @@ class MPIProtocol(Protocol):
 	states: FrozenSet[str] = frozenset(("data", "newline", "init", "command", "length", "body"))
 	"""Valid states for the state machine."""
 
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		self.outputFormat: Union[str, None] = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
 		super().__init__(*args, **kwargs)
 		self._state: str = "data"
