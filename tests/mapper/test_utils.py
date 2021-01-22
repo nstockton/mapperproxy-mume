@@ -155,6 +155,8 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.getFreezer(), "py2app")
 		mockSys.frozen = True
 		self.assertEqual(utils.getFreezer(), "cx_freeze")
+		mockSys.frozen = "some undefined freezer"
+		self.assertEqual(utils.getFreezer(), "unknown some undefined freezer")
 		mockSys._MEIPASS = "."
 		self.assertEqual(utils.getFreezer(), "pyinstaller")
 
