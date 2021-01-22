@@ -185,13 +185,13 @@ class Mapper(threading.Thread, World):
 		self.lastPathFindQuery: str = ""
 		self.prompt: str = ""
 		self.clock: Clock = Clock()
-		self.addedNewRoomFrom: Union[str, None] = None
 		self.scouting: bool = False
 		self.movement: Union[str, None] = None
 		self.moved: Union[str, None] = None
 		self.roomName: Union[str, None] = None
 		self.description: Union[str, None] = None
 		self.dynamic: Union[str, None] = None
+		self.exits: Union[str, None] = None
 		self.timeEvent: Union[str, None] = None
 		self.timeEventOffset: int = 0
 		self.parsedHour: int = 0
@@ -856,7 +856,6 @@ class Mapper(threading.Thread, World):
 			if self.autoWalkDirections and self.moved and self.autoWalk:
 				# The player is auto-walking. Send the next direction to Mume.
 				self.walkNextDirection()
-		self.addedNewRoomFrom = None
 		self.scouting = False
 		self.movement = None
 		self.moved = None
@@ -953,55 +952,51 @@ class Mapper(threading.Thread, World):
 	def mud_event_description(self, text: str) -> None:
 		self.description = simplified(text)
 
-	def mud_event_dynamic(self, text: str) -> None:
-		self.dynamic = text
-		self.moved = None
-		self.addedNewRoomFrom = None
-		if not self.isSynced or self.movement is None:
-			return None
-		elif not self.movement:
+	def validateMovement(self, movement: str) -> bool:
+		if not movement:
 			# The player was forcibly moved in an unknown direction.
-			self.isSynced = False
 			self.sendPlayer("Forced movement, no longer synced.")
-		elif self.movement not in DIRECTIONS:
-			self.isSynced = False
-			self.sendPlayer(f"Error: Invalid direction '{self.movement}'. Map no longer synced!")
-		elif not self.autoMapping and self.movement not in self.currentRoom.exits:
-			self.isSynced = False
-			self.sendPlayer(f"Error: direction '{self.movement}' not in database. Map no longer synced!")
-		elif not self.autoMapping and self.currentRoom.exits[self.movement].to not in self.rooms:
-			self.isSynced = False
+		elif movement not in DIRECTIONS:
+			self.sendPlayer(f"Error: Invalid direction '{movement}'. Map no longer synced!")
+		elif not self.autoMapping and movement not in self.currentRoom.exits:
+			self.sendPlayer(f"Error: direction '{movement}' not in database. Map no longer synced!")
+		elif not self.autoMapping and self.currentRoom.exits[movement].to not in self.rooms:
 			self.sendPlayer(
-				f"Error: vnum ({self.currentRoom.exits[self.movement].to}) in direction ({self.movement}) "
+				f"Error: vnum ({self.currentRoom.exits[movement].to}) in direction ({movement}) "
 				+ "is not in the database. Map no longer synced!"
 			)
 		else:
-			if (
-				self.autoMapping
-				and self.movement in DIRECTIONS
-				and (
-					self.movement not in self.currentRoom.exits
-					or self.currentRoom.exits[self.movement].to not in self.rooms
-				)
+			return True
+		self.isSynced = False
+		return False
+
+	def mud_event_dynamic(self, text: str) -> None:
+		self.dynamic = text
+		self.moved = None
+		addedNewRoomFrom: Union[str, None] = None
+		if not self.isSynced or self.movement is None:
+			return None
+		elif self.validateMovement(self.movement):
+			if self.autoMapping and (
+				self.movement not in self.currentRoom.exits
+				or self.currentRoom.exits[self.movement].to not in self.rooms
 			):
 				# Player has moved in a direction that either doesn't exist in the database
 				# or links to an invalid vnum (E.G. undefined).
-				duplicateRooms: Union[List[Room], None]
+				duplicates: Union[List[Room], None]
 				if self.autoMerging and self.roomName and self.description:
-					duplicateRooms = self.searchRooms(
-						exactMatch=True, name=self.roomName, desc=self.description
-					)
+					duplicates = self.searchRooms(exactMatch=True, name=self.roomName, desc=self.description)
 				else:
-					duplicateRooms = None
+					duplicates = None
 				if not self.roomName:
 					self.sendPlayer("Unable to add new room: empty room name.")
 				elif not self.description:
 					self.sendPlayer("Unable to add new room: empty room description.")
-				elif duplicateRooms is not None and len(duplicateRooms) == 1:
-					self.autoMergeRoom(self.movement, duplicateRooms[0])
+				elif duplicates is not None and len(duplicates) == 1:
+					self.autoMergeRoom(self.movement, duplicates[0])
 				else:
 					# Create new room.
-					self.addedNewRoomFrom = self.currentRoom.vnum
+					addedNewRoomFrom = self.currentRoom.vnum
 					self.addNewRoom(self.movement, self.roomName, self.description, self.dynamic)
 			self.currentRoom = self.rooms[self.currentRoom.exits[self.movement].to]
 			self.moved = self.movement
@@ -1016,15 +1011,16 @@ class Mapper(threading.Thread, World):
 				if self.dynamic and self.currentRoom.dynamicDesc != self.dynamic:
 					self.currentRoom.dynamicDesc = self.dynamic
 					self.sendPlayer("Updating room dynamic description.")
+		if self.autoMapping and self.isSynced and self.moved and self.exits:
+			if addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in self.exits:
+				self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(
+					REVERSE_DIRECTIONS[self.moved], to=addedNewRoomFrom
+				)
+			self.updateExitFlags(self.exits)
+		self.exits = None
 
 	def mud_event_exits(self, text: str) -> None:
-		if self.autoMapping and self.isSynced and self.moved:
-			if self.addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in text:
-				self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(
-					REVERSE_DIRECTIONS[self.moved], to=self.addedNewRoomFrom
-				)
-			self.updateExitFlags(text)
-		self.addedNewRoomFrom = None
+		self.exits = text
 
 	def handleUserData(self, data: bytes) -> None:
 		data = data.strip()

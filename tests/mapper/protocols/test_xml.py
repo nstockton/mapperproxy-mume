@@ -26,42 +26,52 @@ class TestXMLProtocol(TestCase):
 			+ b"\x1b[35mcloth create a place where one can stand and let the mind wander into the\x1b[0m" + LF
 			+ b"\x1b[35mstories told by the everchanging patterns.\x1b[0m" + LF
 		)
+		detectMagic = b"\x1b[35mTraces of white tones form the aura of this place.\x1b[0m"
 		dynamic = (
 			b"A finely crafted crystal lamp is hanging from a tree branch." + LF
 			+ b"An elven caretaker is standing here, offering his guests a rest." + LF
 		)
 		exits = b"Exits: north." + LF
 		magic = b"You feel less protected."
+		line = b"Hello world!"
 		prompt = b"!f CW&gt;"
 		self.rawData = (
 			b"<room><name>" + name + b"</name>" + LF
 			+ b"<gratuitous><description>" + description + b"</description></gratuitous>"
+			+ b"<magic>" + detectMagic + b"</magic>" + LF
 			+ dynamic
-			+ b"</room><exits>" + exits + b"</exits>" + LF
+			+ b"<exits>" + exits + b"</exits></room>" + LF
 			+ b"<magic>" + magic + b"</magic>" + LF
+			+ line + LF
 			+ b"<prompt>" + prompt + b"</prompt>"
 		)
 		self.normalData = (
 			name + LF
+			+ detectMagic + LF
 			+ dynamic
 			+ exits + LF
 			+ magic + LF
+			+ line + LF
 			+ unescapeXMLBytes(prompt)
 		)
 		self.tintinData = (
 			b"NAME:" + name + b":NAME" + LF
+			+ detectMagic + LF
 			+ dynamic
 			+ exits + LF
 			+ magic + LF
+			+ line + LF
 			+ b"PROMPT:" + unescapeXMLBytes(prompt) + b":PROMPT"
 		)
 		# fmt: on
 		self.expectedEvents = [
 			self.createEvent("name", name),
 			self.createEvent("description", description),
-			self.createEvent("dynamic", dynamic),
+			self.createEvent("magic", detectMagic),
 			self.createEvent("exits", exits),
-			self.createEvent("line", magic),
+			self.createEvent("dynamic", dynamic),
+			self.createEvent("magic", magic),
+			self.createEvent("line", line),
 			self.createEvent("prompt", unescapeXMLBytes(prompt)),
 		]
 		self.gameReceives = bytearray()
@@ -102,6 +112,9 @@ class TestXMLProtocol(TestCase):
 		self.mapperEvents.clear()
 		self.assertEqual(self.parse(LT + b"IncompleteTag"), (b"", b"", "tag"))
 		self.assertFalse(self.mapperEvents)
+		self.assertEqual(self.xml._tagBuffer, b"IncompleteTag")
+		self.assertEqual(self.xml._textBuffer, b"")
+		self.xml._tagBuffer.clear()
 		self.assertEqual(self.parse(self.rawData), (self.normalData, b"", "data"))
 		self.assertEqual(self.mapperEvents, self.expectedEvents)
 		self.mapperEvents.clear()

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Callable, Dict, FrozenSet, Tuple, Union
+from typing import Callable, Dict, FrozenSet, List, MutableSequence, Tuple, Union
 
 # Local Modules:
 from .base import Protocol
@@ -39,17 +39,19 @@ class XMLProtocol(Protocol):
 	"""Valid states for the state machine."""
 	modes: Dict[bytes, Union[bytes, None]] = {
 		b"room": b"room",
-		b"exits": b"exits",
-		b"prompt": b"prompt",
-		b"name": b"name",
-		b"description": b"description",
-		b"terrain": b"terrain",
-		b"/exits": None,
-		b"/prompt": None,
 		b"/room": None,
+		b"name": b"name",
 		b"/name": b"room",
+		b"description": b"description",
 		b"/description": b"room",
+		b"terrain": None,
 		b"/terrain": b"room",
+		b"magic": b"magic",
+		b"/magic": None,
+		b"exits": b"exits",
+		b"/exits": None,
+		b"prompt": b"prompt",
+		b"/prompt": None,
 	}
 	"""A mapping of XML mode to new XML mode values."""
 	tintinReplacements: Dict[bytes, bytes] = {
@@ -79,8 +81,10 @@ class XMLProtocol(Protocol):
 		self._state: str = "data"
 		self._tagBuffer: bytearray = bytearray()  # Used for start and end tag names.
 		self._textBuffer: bytearray = bytearray()  # Used for the text between start and end tags.
+		self._dynamicBuffer: bytearray = bytearray()  # Used for dynamic room descriptions.
 		self._lineBuffer: bytearray = bytearray()  # Used for non-XML lines.
 		self._gratuitous: bool = False
+		self._inRoom: bool = False
 		self._mode: Union[bytes, None] = None
 
 	@property
@@ -98,58 +102,98 @@ class XMLProtocol(Protocol):
 			raise ValueError(f"'{value}' not in {tuple(sorted(self.states))}")
 		self._state = value
 
-	def on_dataReceived(self, data: bytes) -> None:  # NOQA: C901
-		outputFormat = self.outputFormat
-		appDataBuffer = []
+	def _handleXMLText(self, data: bytes, appDataBuffer: MutableSequence[bytes]) -> bytes:
+		"""
+		Handles XML data that is not part of a tag.
+
+		Args:
+			data: The received data.
+			appDataBuffer: The application level data buffer.
+
+		Returns:
+			The remaining data.
+		"""
+		appData, separator, data = data.partition(LT)
+		if self.outputFormat == "raw" or not self._gratuitous:
+			appDataBuffer.append(appData)
+		if self._mode is None:
+			self._lineBuffer.extend(appData)
+			lines = self._lineBuffer.splitlines(True)
+			self._lineBuffer.clear()
+			if lines and not lines[-1].endswith(LF):
+				self._lineBuffer.extend(lines.pop())
+			lines = [line.rstrip(CR_LF) for line in lines if line.strip()]
+			for line in lines:
+				self.on_mapperEvent("line", unescapeXMLBytes(line))
+		else:
+			self._textBuffer.extend(appData)
+		if separator:
+			self.state = "tag"
+		return data
+
+	def _handleXMLTag(self, data: bytes, appDataBuffer: MutableSequence[bytes]) -> bytes:
+		"""
+		Handles XML data that is part of a tag (I.E. enclosed in '<>').
+
+		Args:
+			data: The received data.
+			appDataBuffer: The application level data buffer.
+
+		Returns:
+			The remaining data.
+		"""
+		appData, separator, data = data.partition(GT)
+		self._tagBuffer.extend(appData)
+		if not separator:
+			# End of tag not reached yet.
+			return data
+		tag = bytes(self._tagBuffer)
+		self._tagBuffer.clear()
+		text = bytes(self._textBuffer)
+		self._textBuffer.clear()
+		if self.outputFormat == "raw":
+			appDataBuffer.append(LT + tag + GT)
+		elif self.outputFormat == "tintin" and not self._gratuitous:
+			appDataBuffer.append(self.tintinReplacements.get(tag, b""))
+		if self._mode is None and tag.startswith(b"movement"):
+			self.on_mapperEvent("movement", unescapeXMLBytes(tag[13:-1]))
+		elif tag == b"gratuitous":
+			self._gratuitous = True
+		elif tag == b"/gratuitous":
+			self._gratuitous = False
+		elif tag == b"room":
+			self._inRoom = True
+			self._mode = self.modes[tag]
+		elif tag == b"/room":
+			self._inRoom = False
+			self._mode = self.modes[tag]
+			self._dynamicBuffer.extend(text)
+			self.on_mapperEvent("dynamic", unescapeXMLBytes(bytes(self._dynamicBuffer).lstrip(b"\r\n")))
+			self._dynamicBuffer.clear()
+		elif tag in self.modes:
+			if self._inRoom:
+				if tag.startswith(b"/"):
+					self.on_mapperEvent(tag[1:].decode("us-ascii"), unescapeXMLBytes(text))
+					self._mode = b"room"
+				else:
+					self._dynamicBuffer.extend(text)
+					self._mode = self.modes[tag]
+			else:
+				if tag.startswith(b"/"):
+					self.on_mapperEvent(tag[1:].decode("us-ascii"), unescapeXMLBytes(text))
+				self._mode = self.modes[tag]
+		self.state = "data"
+		return data
+
+	def on_dataReceived(self, data: bytes) -> None:
+		appDataBuffer: List[bytes] = []
 		while data:
 			if self.state == "data":
-				appData, separator, data = data.partition(LT)
-				if outputFormat == "raw" or not self._gratuitous:
-					appDataBuffer.append(appData)
-				if self._mode is None:
-					self._lineBuffer.extend(appData)
-					lines = self._lineBuffer.splitlines(True)
-					self._lineBuffer.clear()
-					if lines and not lines[-1].endswith(LF):
-						self._lineBuffer.extend(lines.pop())
-					lines = [line.rstrip(CR_LF) for line in lines if line.strip()]
-					for line in lines:
-						self.on_mapperEvent("line", unescapeXMLBytes(line))
-				else:
-					self._textBuffer.extend(appData)
-				if separator:
-					self.state = "tag"
+				data = self._handleXMLText(data, appDataBuffer)
 			elif self.state == "tag":
-				appData, separator, data = data.partition(GT)
-				self._tagBuffer.extend(appData)
-				if not separator:
-					# End of tag not reached yet.
-					continue
-				# End of tag reached.
-				tag = bytes(self._tagBuffer)
-				self._tagBuffer.clear()
-				text = bytes(self._textBuffer)
-				self._textBuffer.clear()
-				if outputFormat == "raw":
-					appDataBuffer.append(LT + tag + GT)
-				elif outputFormat == "tintin" and not self._gratuitous:
-					appDataBuffer.append(self.tintinReplacements.get(tag, b""))
-				if self._mode is None and tag.startswith(b"movement"):
-					self.on_mapperEvent("movement", unescapeXMLBytes(tag[13:-1]))
-				elif tag == b"gratuitous":
-					self._gratuitous = True
-				elif tag == b"/gratuitous":
-					self._gratuitous = False
-				elif tag in self.modes:
-					self._mode = self.modes[tag]
-					if tag.startswith(b"/"):
-						self.on_mapperEvent(
-							"dynamic" if tag == b"/room" else tag[1:].decode("us-ascii"),
-							unescapeXMLBytes(text),
-						)
-				self.state = "data"
+				data = self._handleXMLTag(data, appDataBuffer)
 		if appDataBuffer:
-			if outputFormat == "raw":
+			if self.outputFormat == "raw":
 				super().on_dataReceived(b"".join(appDataBuffer))
 			else:
 				super().on_dataReceived(unescapeXMLBytes(b"".join(appDataBuffer)))
