@@ -32,12 +32,10 @@ except ImportError:
 else:
 	CERT_LOCATION = certifi.where()
 
-piglet: "Union[pyglet, None]"
 try:
 	import pyglet
 except ImportError:
 	pyglet = None
-	print("Unable to import Pyglet. GUI will be disabled.")
 
 
 LISTENING_STATUS_FILE: str = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")

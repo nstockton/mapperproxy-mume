@@ -21,6 +21,13 @@ import mapper.main
 from mapper import INTERFACES, OUTPUT_FORMATS
 
 
+try:
+	import pyglet
+except ImportError:
+	pyglet = None
+	print("Unable to import Pyglet. GUI will be disabled.")
+
+
 VERSION: str
 try:
 	import mpm_version
@@ -88,7 +95,7 @@ if __name__ == "__main__":
 	try:
 		mapper.main.main(
 			outputFormat=args.format,
-			interface=args.interface if mapper.main.pyglet is not None else "text",
+			interface=args.interface if pyglet is not None else "text",
 			isEmulatingOffline=args.emulation,
 			promptTerminator=b"\r\n" if args.prompt_terminator_lf else None,
 			gagPrompts=args.gag_prompts,
