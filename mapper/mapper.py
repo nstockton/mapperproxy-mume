@@ -17,7 +17,7 @@ from timeit import default_timer
 from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Set, Tuple, Union
 
 # Local Modules:
-from . import INTERFACES, MUD_DATA, OUTPUT_FORMATS, USER_DATA
+from . import INTERFACES, MAPPER_QUEUE_TYPE, MUD_DATA, OUTPUT_FORMATS, USER_DATA
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config
@@ -142,8 +142,7 @@ class Mapper(threading.Thread, World):
 		self.gagPrompts: bool = gagPrompts
 		self.findFormat: str = findFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
-		self.queue: SimpleQueue[Tuple[Union[int, None], Union[Tuple[str, bytes], bytes, None]]]
-		self.queue = SimpleQueue()
+		self.queue: SimpleQueue[MAPPER_QUEUE_TYPE] = SimpleQueue()
 		cfg: Config = Config()
 		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
 		del cfg
@@ -1042,7 +1041,7 @@ class Mapper(threading.Thread, World):
 					handler(text)
 		elif event not in self.unknownMudEvents:
 			self.unknownMudEvents.append(event)
-			logger.debug("received data with an unknown event type of " + event)
+			logger.debug(f"received data with an unknown event type of {event}")
 
 	def registerMudEventHandler(self, event: str, handler: Callable[[str], None]) -> None:
 		"""Registers a method to handle mud events of a given type.
@@ -1066,8 +1065,6 @@ class Mapper(threading.Thread, World):
 				del self.mudEventHandlers[event]
 
 	def run(self) -> None:
-		dataType: Union[int, None]
-		data: Union[Tuple[str, bytes], bytes, None]
 		while True:
 			try:
 				dataType, data = self.queue.get()

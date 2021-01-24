@@ -8,30 +8,31 @@ from __future__ import annotations
 
 # Built-in Modules:
 import socket
-import unittest
-from unittest.mock import Mock
+from unittest import TestCase
+from unittest.mock import Mock, patch
 
 # Mapper Modules:
 from mapper.mapper import Mapper
 from mapper.mudevents import Handler
 
 
-class DummieHandler(Handler):
-	event = "testEvent"
+class DummyHandler(Handler):
+	event: str = "testEvent"
+	handleText: Mock = Mock()
 
-	def handle(self, data):
-		self.mapper.queue.put("I received " + data)
+	def handle(self, text: str) -> None:
+		self.handleText(f"I received {text}")
 
 
 class HandlerWithoutType(Handler):
-	def handle(self, data):
+	def handle(self, text: str) -> None:
 		pass
 
 
-class TestHandler(unittest.TestCase):
-	def setUp(self):
-		Mapper.loadRooms = Mock()  # to speed execution of tests
-		self.mapper = Mapper(
+class TestHandler(TestCase):
+	@patch.object(Mapper, "loadRooms", Mock())  # Speedup test execution.
+	def setUp(self) -> None:
+		self.mapper: Mapper = Mapper(
 			playerSocket=Mock(spec=socket.socket),
 			gameSocket=Mock(spec=socket.socket),
 			outputFormat="normal",
@@ -41,26 +42,20 @@ class TestHandler(unittest.TestCase):
 			findFormat="",
 			isEmulatingOffline=False,
 		)
-		self.mapper.daemon = (
-			True  # this allows unittest to quit if the mapper thread does not close properly.
-		)
+		self.mapper.daemon = True  # Allow unittest to quit if mapper thread does not close properly.
 
-	def testMapper_handle(self):
-		self.mapper.queue = Mock()
-		queue = self.mapper.queue
-		dummieHandler = DummieHandler(self.mapper)
+	def testMapper_handle(self) -> None:
+		dummy: DummyHandler = DummyHandler(self.mapper)
+		self.mapper.handleMudEvent(dummy.event, b"Hello world")
+		dummy.handleText.assert_called_once_with("I received Hello world")
+		dummy.handleText.reset_mock()
+		self.mapper.handleMudEvent(dummy.event, b"I am here.")
+		dummy.handleText.assert_called_once_with("I received I am here.")
+		dummy.handleText.reset_mock()
+		dummy.__del__()
+		self.mapper.handleMudEvent(dummy.event, b"Goodbye world")
+		dummy.handleText.assert_not_called()
 
-		self.mapper.handleMudEvent(dummieHandler.event, b"Hello world")
-		queue.put.assert_called_once_with("I received Hello world")
-		queue.put.reset_mock()
-
-		self.mapper.handleMudEvent("testEvent", b"I am here.")
-		queue.put.assert_called_once_with("I received I am here.")
-		queue.put.reset_mock()
-
-		dummieHandler.__del__()
-		self.mapper.handleMudEvent("testEvent", b"Goodbye world")
-		queue.put.assert_not_called()
-
-	def test_init_raisesValueErrorWhenNoEventTypeIsProvided(self):
-		self.assertRaises(ValueError, HandlerWithoutType, self.mapper)
+	def test_init_raisesValueErrorWhenNoEventTypeIsProvided(self) -> None:
+		with self.assertRaises(ValueError):
+			HandlerWithoutType(self.mapper)

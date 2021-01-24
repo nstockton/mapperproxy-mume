@@ -7,7 +7,9 @@
 from __future__ import annotations
 
 # Built-in Modules:
-from unittest import TestCase, mock
+from typing import Any, Tuple
+from unittest import TestCase
+from unittest.mock import Mock, patch
 
 # Mapper Modules:
 from mapper.protocols.base import Protocol
@@ -20,28 +22,28 @@ class Protocol1(Protocol):
 
 
 class Protocol2(Protocol):
-	on_connectionMade = mock.Mock()
-	on_connectionLost = mock.Mock()
-	on_dataReceived = mock.Mock()
+	on_connectionMade: Mock = Mock()
+	on_connectionLost: Mock = Mock()
+	on_dataReceived: Mock = Mock()
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, **kwargs)
-		self._receiver = mock.Mock()
+		self._receiver: Mock = Mock()
 
 
 class TestManager(TestCase):
-	def setUp(self):
-		self.gameReceives = bytearray()
-		self.playerReceives = bytearray()
-		self.manager = Manager(self.gameReceives.extend, self.playerReceives.extend)
+	def setUp(self) -> None:
+		self.gameReceives: bytearray = bytearray()
+		self.playerReceives: bytearray = bytearray()
+		self.manager: Manager = Manager(self.gameReceives.extend, self.playerReceives.extend)
 
-	def tearDown(self):
+	def tearDown(self) -> None:
 		self.manager.disconnect()
 		del self.manager
 		self.gameReceives.clear()
 		self.playerReceives.clear()
 
-	def parse(self, data):
+	def parse(self, data: bytes) -> Tuple[bytes, bytes]:
 		self.manager.parse(data)
 		playerReceives = bytes(self.playerReceives)
 		self.playerReceives.clear()
@@ -49,21 +51,21 @@ class TestManager(TestCase):
 		self.gameReceives.clear()
 		return playerReceives, gameReceives
 
-	@mock.patch("mapper.protocols.manager.Manager.disconnect")
-	@mock.patch("mapper.protocols.manager.Manager.connect")
-	def testManagerAsContextManager(self, mockConnect, mockDisconnect):
+	@patch("mapper.protocols.manager.Manager.disconnect")
+	@patch("mapper.protocols.manager.Manager.connect")
+	def testManagerAsContextManager(self, mockConnect: Mock, mockDisconnect: Mock) -> None:
 		with self.manager:
-			self.manager.connect.assert_called_once()
-		self.manager.disconnect.assert_called_once()
+			mockConnect.assert_called_once()
+		mockDisconnect.assert_called_once()
 
-	@mock.patch("mapper.protocols.manager.Manager.disconnect")
-	def testManagerClose(self, mockDisconnect):
+	@patch("mapper.protocols.manager.Manager.disconnect")
+	def testManagerClose(self, mockDisconnect: Mock) -> None:
 		self.manager.close()
-		self.manager.disconnect.assert_called_once()
+		mockDisconnect.assert_called_once()
 
-	def testManagerParse(self):
-		data = b"Hello World!"
-		bufferedData = b"Some buffered data."
+	def testManagerParse(self) -> None:
+		data: bytes = b"Hello World!"
+		bufferedData: bytes = b"Some buffered data."
 		# Make sure that any data passed to Manager.parse before calling Manager.connect() gets buffered.
 		self.assertEqual(self.parse(bufferedData), (b"", b""))
 		self.manager.connect()
@@ -72,9 +74,9 @@ class TestManager(TestCase):
 		self.manager.register(Protocol)
 		self.assertEqual(self.parse(data), (bufferedData + bufferedData + data, b""))
 
-	def testManagerWrite(self):
-		data = b"Hello World!"
-		bufferedData = b"Some buffered data."
+	def testManagerWrite(self) -> None:
+		data: bytes = b"Hello World!"
+		bufferedData: bytes = b"Some buffered data."
 		# Make sure that any data passed to Manager.write before calling Manager.connect() gets buffered.
 		self.manager.write(bufferedData)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
@@ -90,28 +92,32 @@ class TestManager(TestCase):
 		self.manager.write(data + IAC + LF + CR, escape=True)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", data + IAC + IAC + CR_LF + CR_NULL))
 
-	def testManagerRegister(self):
+	def testManagerRegister(self) -> None:
 		with self.assertRaises(ValueError):
-			self.manager.register(Protocol1(lambda *args: None, lambda *args: None))
+			# Handler class required, not instance.
+			self.manager.register(Protocol1(lambda *args: None, lambda *args: None))  # type: ignore
 		self.manager.register(Protocol1)
 		with self.assertRaises(ValueError):
 			self.manager.register(Protocol1)
 		self.assertIsNot(self.manager._handlers[0]._receiver, Protocol2.on_dataReceived)
 		self.manager.register(Protocol2)
 		self.assertIs(self.manager._handlers[0]._receiver, self.manager._handlers[1].on_dataReceived)
-		self.manager._handlers[1].on_connectionMade.assert_called_once()
+		mockOn_connectionMade: Mock = Protocol2.on_connectionMade
+		mockOn_connectionMade.assert_called_once()
 
-	def testManagerUnregister(self):
+	def testManagerUnregister(self) -> None:
 		self.manager.register(Protocol1)
 		with self.assertRaises(ValueError):
-			# Manager.unregister requires an instance.
-			self.manager.unregister(Protocol1)
+			# Handler instance required, not class.
+			self.manager.unregister(Protocol1)  # type: ignore
 		with self.assertRaises(ValueError):
 			# Calling Manager.unregister on an instance that was not registered.
 			self.manager.unregister(Protocol2(lambda *args: None, lambda *args: None))
 		self.manager.register(Protocol2)
-		instance = self.manager._handlers[-1]
+		instance: Protocol = self.manager._handlers[-1]
 		self.assertIsNot(self.manager._handlers[0]._receiver, instance._receiver)
-		self.manager.unregister(instance)
-		self.assertIs(self.manager._handlers[0]._receiver, instance._receiver)
-		instance.on_connectionLost.assert_called_once()
+		mockOn_connectionLost: Mock
+		with patch.object(instance, "on_connectionLost") as mockOn_connectionLost:
+			self.manager.unregister(instance)
+			self.assertIs(self.manager._handlers[0]._receiver, instance._receiver)
+			mockOn_connectionLost.assert_called_once()

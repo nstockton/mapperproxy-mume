@@ -8,9 +8,10 @@ from __future__ import annotations
 
 # Built-in Modules:
 import socket
-import unittest
 from queue import Empty, Queue
-from unittest.mock import Mock, call
+from typing import Callable, Sequence, Tuple
+from unittest import TestCase
+from unittest.mock import Mock, _Call, _CallList, call
 
 # Mapper Modules:
 from mapper import MUD_DATA
@@ -35,17 +36,17 @@ from mapper.protocols.telnet_constants import (
 
 
 # The initial output of MUME. Used by the server thread to detect connection success.
-INITIAL_OUTPUT = [
+INITIAL_OUTPUT: Tuple[bytes, ...] = (
 	IAC + DO + TTYPE,
 	IAC + DO + NAWS,
-]
-WELCOME_MESSAGE = CR_LF + b"                              ***  MUME VIII  ***" + CR_LF + CR_LF
+)
+WELCOME_MESSAGE: bytes = CR_LF + b"                              ***  MUME VIII  ***" + CR_LF + CR_LF
 
 
-class TestGameThread(unittest.TestCase):
-	def testGameThread(self):
+class TestGameThread(TestCase):
+	def testGameThread(self) -> None:
 		# fmt: off
-		initialConfiguration = (  # What the server thread sends MUME on connection success.
+		initialConfiguration: bytes = (  # What the server thread sends MUME on connection success.
 			IAC + WILL + CHARSET
 			# Tell the Mume server to put IAC-GA at end of prompts.
 			+ MPI_INIT + b"P2" + LF + b"G" + LF
@@ -55,17 +56,17 @@ class TestGameThread(unittest.TestCase):
 			+ MPI_INIT + b"X2" + LF + b"3G" + LF
 		)
 		# fmt: on
-		outputToPlayer = Queue()
-		outputFromMume = Queue()
-		inputToMume = Queue()
-		mumeSocket = Mock(spec=socket.socket)
+		outputToPlayer: Queue[bytes] = Queue()
+		outputFromMume: Queue[bytes] = Queue()
+		inputToMume: Queue[bytes] = Queue()
+		mumeSocket: Mock = Mock(spec=socket.socket)
 		mumeSocket.recv.side_effect = lambda arg: outputFromMume.get()
 		mumeSocket.sendall.side_effect = lambda data: inputToMume.put(data)
-		clientSocket = Mock(spec=socket.socket)
+		clientSocket: Mock = Mock(spec=socket.socket)
 		clientSocket.sendall.side_effect = lambda data: outputToPlayer.put(data)
-		mapperThread = Mock()
+		mapperThread: Mock = Mock()
 		mapperThread.interface = "text"
-		proxy = ProxyHandler(
+		proxy: ProxyHandler = ProxyHandler(
 			clientSocket,
 			mumeSocket,
 			outputFormat="normal",
@@ -76,12 +77,12 @@ class TestGameThread(unittest.TestCase):
 		)
 		proxy.connect()
 		mapperThread.proxy = proxy
-		gameThread = Game(mumeSocket, mapperThread)
-		gameThread.daemon = (
-			True  # otherwise if this does not terminate, it prevents unittest from terminating
-		)
+		gameThread: Game = Game(mumeSocket, mapperThread)
+		gameThread.daemon = True  # Allow unittest to quit if game thread does not close properly.
 		gameThread.start()
 		# test initial telnet negotiations were passed to the client
+		data: bytes
+		errorMessage: str
 		try:
 			for item in INITIAL_OUTPUT:
 				outputFromMume.put(item)
@@ -97,18 +98,18 @@ class TestGameThread(unittest.TestCase):
 				initialConfiguration = initialConfiguration.replace(data, b"", 1)
 		except Empty:
 			errorMessage = (
-				"The server thread did not output the expected number of configuration parameters.",
-				f"The yet-to-be-seen configurations are: {initialConfiguration!r}",
+				"The server thread did not output the expected number of configuration parameters."
+				+ f"The yet-to-be-seen configurations are: {initialConfiguration!r}"
 			)
-			raise AssertionError("\n".join(errorMessage))
+			raise AssertionError(errorMessage)
 		# test nothing extra has been sent yet
 		if not inputToMume.empty():
-			remainingOutput = inputToMume.get()
+			remainingOutput: bytes = inputToMume.get()
 			errorMessage = (
-				"The server thread spat out at least one unexpected initial configuration.",
-				f"Remaining output: {remainingOutput!r}",
+				"The server thread spat out at least one unexpected initial configuration."
+				+ f"Remaining output: {remainingOutput!r}"
 			)
-			raise AssertionError("\n".join(errorMessage))
+			raise AssertionError(errorMessage)
 		# test regular text is passed through to the client
 		try:
 			outputFromMume.put(WELCOME_MESSAGE)
@@ -118,8 +119,8 @@ class TestGameThread(unittest.TestCase):
 			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
 		# test further telnet negotiations are passed to the client with the exception of charset negotiations
 		try:
-			charsetNegotiation = IAC + DO + CHARSET + IAC + SB + TTYPE + TTYPE_SEND + IAC + SE
-			charsetResponseFromMume = IAC + SB + CHARSET + CHARSET_ACCEPTED + b"US-ASCII" + IAC + SE
+			charsetNegotiation: bytes = IAC + DO + CHARSET + IAC + SB + TTYPE + TTYPE_SEND + IAC + SE
+			charsetResponseFromMume: bytes = IAC + SB + CHARSET + CHARSET_ACCEPTED + b"US-ASCII" + IAC + SE
 			outputFromMume.put(charsetNegotiation)
 			data = outputToPlayer.get(timeout=1)
 			self.assertEqual(data, charsetNegotiation[3:])  # slicing off the charset negotiation
@@ -129,7 +130,7 @@ class TestGameThread(unittest.TestCase):
 			raise AssertionError("Further telnet negotiations were not passed to the client")
 		# when mume outputs further text, test it is passed to the user
 		try:
-			usernamePrompt = b"By what name do you wish to be known? "
+			usernamePrompt: bytes = b"By what name do you wish to be known? "
 			outputFromMume.put(usernamePrompt)
 			data = outputToPlayer.get(timeout=1)
 			self.assertEqual(data, usernamePrompt)
@@ -141,42 +142,47 @@ class TestGameThread(unittest.TestCase):
 		self.assertFalse(gameThread.is_alive())
 
 
-class TestGameThreadThroughput(unittest.TestCase):
-	def setUp(self):
-		self.inputFromPlayer = Queue()
-		self.outputToPlayer = Queue()
-		self.inputToMume = Queue()
-		self.outputFromMume = Queue()
-		playerSocket = Mock(spec=socket.socket)
+class TestGameThreadThroughput(TestCase):
+	def setUp(self) -> None:
+		self.inputFromPlayer: Queue[bytes] = Queue()
+		self.outputToPlayer: Queue[bytes] = Queue()
+		self.inputToMume: Queue[bytes] = Queue()
+		self.outputFromMume: Queue[bytes] = Queue()
+		playerSocket: Mock = Mock(spec=socket.socket)
 		playerSocket.recv.side_effect = lambda arg: self.inputFromPlayer.get()
 		playerSocket.sendall.side_effect = lambda data: self.outputToPlayer.put(data)
-		mumeSocket = Mock(spec=socket.socket)
+		mumeSocket: Mock = Mock(spec=socket.socket)
 		mumeSocket.recv.side_effect = lambda arg: self.outputFromMume.get()
 		mumeSocket.sendall.side_effect = lambda data: self.inputToMume.put(data)
-		mapperThread = Mock()
-		mapperThread.interface = "text"
-		proxy = ProxyHandler(
+		self.mapperThread: Mock = Mock()
+		self.mapperThread.interface = "text"
+		proxy: ProxyHandler = ProxyHandler(
 			playerSocket,
 			mumeSocket,
 			outputFormat="normal",
 			promptTerminator=CR_LF,
 			isEmulatingOffline=False,
 			mapperCommands=[],
-			eventCaller=mapperThread.queue.put,
+			eventCaller=self.mapperThread.queue.put,
 		)
 		proxy.connect()
-		mapperThread.proxy = proxy
-		self.gameThread = Game(mumeSocket, mapperThread)
-		self.gameThread.daemon = (
-			True  # otherwise if this does not terminate, it prevents unittest from terminating
-		)
+		self.mapperThread.proxy = proxy
+		self.gameThread: Game = Game(mumeSocket, self.mapperThread)
+		self.gameThread.daemon = True  # Allow unittest to quit if game thread does not close properly.
 		self.gameThread.start()
 
-	def tearDown(self):
+	def tearDown(self) -> None:
 		self.outputFromMume.put(b"")
 		del self.gameThread
 
-	def runThroughput(self, threadInput, expectedOutput, expectedData, inputDescription):
+	def runThroughput(
+		self,
+		threadInput: bytes,
+		expectedOutput: bytes,
+		expectedData: Sequence[Callable[[int, Tuple[str, bytes]], _Call]],
+		inputDescription: str,
+	) -> None:
+		res: bytes
 		try:
 			self.outputFromMume.put(threadInput)
 			res = self.outputToPlayer.get(timeout=1)
@@ -191,8 +197,8 @@ class TestGameThreadThroughput(unittest.TestCase):
 			raise AssertionError(
 				f"{inputDescription} data was not received by the player socket within 1 second."
 			)
-		actualData = self.gameThread.mapper.queue.put.mock_calls
-		i = 0
+		actualData: _CallList = self.mapperThread.queue.put.mock_calls
+		i: int = 0
 		while len(actualData) > i < len(expectedData):
 			self.assertEqual(
 				actualData[i],
@@ -207,7 +213,7 @@ class TestGameThreadThroughput(unittest.TestCase):
 				"The mapper queue did not receive the expected data: " + str(expectedData[i])
 			)
 
-	def testProcessingPrompt(self):
+	def testProcessingPrompt(self) -> None:
 		self.runThroughput(
 			threadInput=b"<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>" + IAC + GA,
 			expectedOutput=b"\x1b[34mMana:Hot Move:Tired>\x1b[0m" + CR_LF,
@@ -215,9 +221,9 @@ class TestGameThreadThroughput(unittest.TestCase):
 			inputDescription="prompt with mana burning and moves tired",
 		)
 
-	def testProcessingEnteringRoom(self):
+	def testProcessingEnteringRoom(self) -> None:
 		# fmt: off
-		threadInput = (
+		threadInput: bytes = (
 			b"<movement dir=down/><room><name>Seagull Inn</name>" + CR_LF
 			+ b"<gratuitous><description>"
 			+ b"This is the most famous meeting-place in Harlond where people of all sorts" + CR_LF
@@ -232,32 +238,32 @@ class TestGameThreadThroughput(unittest.TestCase):
 			+ b"An elven lamplighter is resting here." + CR_LF
 			+ b"</room>"
 		)
-		expectedOutput = (
+		expectedOutput: bytes = (
 			b"Seagull Inn" + CR_LF
 			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + CR_LF
 			+ b"A white-painted bench is here." + CR_LF
 			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + CR_LF
 			+ b"An elven lamplighter is resting here." + CR_LF
 		)
-		expectedDesc = (
+		expectedDesc: bytes = (
 			b"This is the most famous meeting-place in Harlond where people of all sorts" + LF
 			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of" + LF
 			+ b"Middle-earth, as far as Dol Amroth and even Pelargir, are frequent guests here." + LF
 			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to" + LF
 			+ b"the wall." + LF
 		)
-		expectedDynamicDesc = (
+		expectedDynamicDesc: bytes = (
 			b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + LF
 			+ b"A white-painted bench is here." + LF
 			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + LF
 			+ b"An elven lamplighter is resting here." + LF
 		)
 		# fmt: on
-		expectedData = [
+		expectedData: Tuple[Callable[[int, Tuple[str, bytes]], _Call], ...] = (
 			call((MUD_DATA, ("movement", b"down"))),
 			call((MUD_DATA, ("name", b"Seagull Inn"))),
 			call((MUD_DATA, ("description", expectedDesc))),
 			call((MUD_DATA, ("dynamic", expectedDynamicDesc))),
-		]
-		inputDescription = "moving into a room"
+		)
+		inputDescription: str = "moving into a room"
 		self.runThroughput(threadInput, expectedOutput, expectedData, inputDescription)

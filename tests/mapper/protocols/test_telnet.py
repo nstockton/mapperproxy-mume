@@ -7,7 +7,9 @@
 from __future__ import annotations
 
 # Built-in Modules:
-from unittest import TestCase, mock
+from typing import Tuple
+from unittest import TestCase
+from unittest.mock import Mock, patch
 
 # Mapper Modules:
 from mapper.protocols.telnet import TelnetProtocol
@@ -32,48 +34,48 @@ from mapper.protocols.telnet_constants import (
 
 
 class TestTelnetProtocol(TestCase):
-	def setUp(self):
-		self.gameReceives = bytearray()
-		self.playerReceives = bytearray()
-		self.telnet = TelnetProtocol(self.gameReceives.extend, self.playerReceives.extend)
+	def setUp(self) -> None:
+		self.gameReceives: bytearray = bytearray()
+		self.playerReceives: bytearray = bytearray()
+		self.telnet: TelnetProtocol = TelnetProtocol(self.gameReceives.extend, self.playerReceives.extend)
 
-	def tearDown(self):
+	def tearDown(self) -> None:
 		self.telnet.on_connectionLost()
 		del self.telnet
 		self.gameReceives.clear()
 		self.playerReceives.clear()
 
-	def newMockedOptionState(self):
-		state = mock.Mock()
+	def newMockedOptionState(self) -> Mock:
+		state: Mock = Mock()
 		state.us.enabled = False
 		state.us.negotiating = False
 		state.him.enabled = False
 		state.him.negotiating = False
 		return state
 
-	def parse(self, data):
+	def parse(self, data: bytes) -> Tuple[bytes, bytes, str]:
 		self.telnet.on_dataReceived(data)
-		playerReceives = bytes(self.playerReceives)
+		playerReceives: bytes = bytes(self.playerReceives)
 		self.playerReceives.clear()
-		gameReceives = bytes(self.gameReceives)
+		gameReceives: bytes = bytes(self.gameReceives)
 		self.gameReceives.clear()
-		state = self.telnet.state
+		state: str = self.telnet.state
 		self.telnet.state = "data"
 		return playerReceives, gameReceives, state
 
-	def testTelnetState(self):
+	def testTelnetState(self) -> None:
 		with self.assertRaises(ValueError):
 			self.telnet.state = "**junk**"
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	def testTelnetWill(self, mockLogger):
-		state = self.newMockedOptionState()
+	@patch("mapper.protocols.telnet.logger")
+	def testTelnetWill(self, mockLogger: Mock) -> None:
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
-		usNegotiatingWarning = (
+		usNegotiatingWarning: str = (
 			f"We are offering to enable option {ECHO!r}, "
 			+ "but the option is already being negotiated by us."
 		)
-		himNegotiatingWarning = (
+		himNegotiatingWarning: str = (
 			f"We are offering to enable option {ECHO!r}, "
 			+ "but the option is already being negotiated by peer."
 		)
@@ -101,15 +103,15 @@ class TestTelnetProtocol(TestCase):
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", IAC + WILL + ECHO))
 		self.assertTrue(state.us.negotiating)
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	def testTelnetWont(self, mockLogger):
-		state = self.newMockedOptionState()
+	@patch("mapper.protocols.telnet.logger")
+	def testTelnetWont(self, mockLogger: Mock) -> None:
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
-		usNegotiatingWarning = (
+		usNegotiatingWarning: str = (
 			f"We are refusing to enable option {ECHO!r}, "
 			+ "but the option is already being negotiated by us."
 		)
-		himNegotiatingWarning = (
+		himNegotiatingWarning: str = (
 			f"We are refusing to enable option {ECHO!r}, "
 			+ "but the option is already being negotiated by peer."
 		)
@@ -137,15 +139,15 @@ class TestTelnetProtocol(TestCase):
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", IAC + WONT + ECHO))
 		self.assertTrue(state.us.negotiating)
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	def testTelnetDo(self, mockLogger):
-		state = self.newMockedOptionState()
+	@patch("mapper.protocols.telnet.logger")
+	def testTelnetDo(self, mockLogger: Mock) -> None:
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
-		usNegotiatingWarning = (
+		usNegotiatingWarning: str = (
 			f"We are requesting that peer enable option {ECHO!r}, "
 			+ "but the option is already being negotiated by us."
 		)
-		himNegotiatingWarning = (
+		himNegotiatingWarning: str = (
 			f"We are requesting that peer enable option {ECHO!r}, "
 			+ "but the option is already being negotiated by peer."
 		)
@@ -173,15 +175,15 @@ class TestTelnetProtocol(TestCase):
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", IAC + DO + ECHO))
 		self.assertTrue(state.him.negotiating)
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	def testTelnetDont(self, mockLogger):
-		state = self.newMockedOptionState()
+	@patch("mapper.protocols.telnet.logger")
+	def testTelnetDont(self, mockLogger: Mock) -> None:
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
-		usNegotiatingWarning = (
+		usNegotiatingWarning: str = (
 			f"We are requesting that peer disable option {ECHO!r}, "
 			+ "but the option is already being negotiated by us."
 		)
-		himNegotiatingWarning = (
+		himNegotiatingWarning: str = (
 			f"We are requesting that peer disable option {ECHO!r}, "
 			+ "but the option is already being negotiated by peer."
 		)
@@ -209,12 +211,17 @@ class TestTelnetProtocol(TestCase):
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", IAC + DONT + ECHO))
 		self.assertTrue(state.him.negotiating)
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_subnegotiation")
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_command")
-	def testTelnetOn_dataReceived(self, mockOn_command, mockOn_subnegotiation, mockLogger):
+	@patch("mapper.protocols.telnet.logger")
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_subnegotiation")
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_command")
+	def testTelnetOn_dataReceived(
+		self,
+		mockOn_command: Mock,
+		mockOn_subnegotiation: Mock,
+		mockLogger: Mock,
+	) -> None:
 		# 'data' state:
-		data = b"Hello World!"
+		data: bytes = b"Hello World!"
 		self.telnet.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, b"", "data"))
 		self.assertEqual(self.parse(data + IAC), (data, b"", "command"))
@@ -268,27 +275,29 @@ class TestTelnetProtocol(TestCase):
 		self.assertEqual(self.parse(data), (data, b"", "data"))
 		mockLogger.warning.assert_called_once_with("Invalid Telnet state '**junk**'. How'd you do this?")
 
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_unhandledCommand")
-	def testTelnetOn_command(self, mockOn_unhandledCommand):
-		self.telnet.commandMap[GA] = mock.Mock()
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_unhandledCommand")
+	def testTelnetOn_command(self, mockOn_unhandledCommand: Mock) -> None:
+		mockCommandMapGA = Mock()
+		self.telnet.commandMap[GA] = mockCommandMapGA
 		self.telnet.on_command(GA, NULL)
-		self.telnet.commandMap[GA].assert_called_once_with(NULL)
+		mockCommandMapGA.assert_called_once_with(NULL)
 		self.telnet.on_command(ECHO, NULL)
 		mockOn_unhandledCommand.assert_called_once_with(ECHO, NULL)
 
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_unhandledSubnegotiation")
-	def testTelnetOn_subnegotiation(self, mockOn_unhandledSubnegotiation):
-		self.telnet.subnegotiationMap[GA] = mock.Mock()
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_unhandledSubnegotiation")
+	def testTelnetOn_subnegotiation(self, mockOn_unhandledSubnegotiation: Mock) -> None:
+		mockSubnegotiationMapGA = Mock()
+		self.telnet.subnegotiationMap[GA] = mockSubnegotiationMapGA
 		self.telnet.on_subnegotiation(GA, NULL)
-		self.telnet.subnegotiationMap[GA].assert_called_once_with(NULL)
+		mockSubnegotiationMapGA.assert_called_once_with(NULL)
 		self.telnet.on_subnegotiation(ECHO, NULL)
 		mockOn_unhandledSubnegotiation.assert_called_once_with(ECHO, NULL)
 
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_enableRemote")
-	def testTelnetOn_will(self, mockOn_enableRemote):
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_enableRemote")
+	def testTelnetOn_will(self, mockOn_enableRemote: Mock) -> None:
 		with self.assertRaises(AssertionError):
 			self.telnet.on_will(None)
-		state = self.newMockedOptionState()
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
 		# --------------------
 		# not state.him.enabled and not state.him.negotiating:
@@ -337,12 +346,12 @@ class TestTelnetProtocol(TestCase):
 		with self.assertRaises(AssertionError):
 			self.telnet.on_will(ECHO)
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_disableRemote")
-	def testTelnetOn_wont(self, mockOn_disableRemote, mockLogger):
+	@patch("mapper.protocols.telnet.logger")
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_disableRemote")
+	def testTelnetOn_wont(self, mockOn_disableRemote: Mock, mockLogger: Mock) -> None:
 		with self.assertRaises(AssertionError):
 			self.telnet.on_wont(None)
-		state = self.newMockedOptionState()
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
 		# --------------------
 		# not state.him.enabled and not state.him.negotiating:
@@ -382,11 +391,11 @@ class TestTelnetProtocol(TestCase):
 		mockOn_disableRemote.assert_called_once()
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_enableLocal")
-	def testTelnetOn_do(self, mockOn_enableLocal):
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_enableLocal")
+	def testTelnetOn_do(self, mockOn_enableLocal: Mock) -> None:
 		with self.assertRaises(AssertionError):
 			self.telnet.on_do(None)
-		state = self.newMockedOptionState()
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
 		# --------------------
 		# not state.us.enabled and not state.us.negotiating:
@@ -428,12 +437,12 @@ class TestTelnetProtocol(TestCase):
 		with self.assertRaises(AssertionError):
 			self.telnet.on_do(ECHO)
 
-	@mock.patch("mapper.protocols.telnet.logger")
-	@mock.patch("mapper.protocols.telnet.TelnetProtocol.on_disableLocal")
-	def testTelnetOn_dont(self, mockOn_disableLocal, mockLogger):
+	@patch("mapper.protocols.telnet.logger")
+	@patch("mapper.protocols.telnet.TelnetProtocol.on_disableLocal")
+	def testTelnetOn_dont(self, mockOn_disableLocal: Mock, mockLogger: Mock) -> None:
 		with self.assertRaises(AssertionError):
 			self.telnet.on_dont(None)
-		state = self.newMockedOptionState()
+		state: Mock = self.newMockedOptionState()
 		self.telnet._options[ECHO] = state
 		# --------------------
 		# not state.us.enabled and not state.us.negotiating:
@@ -473,28 +482,28 @@ class TestTelnetProtocol(TestCase):
 		mockOn_disableLocal.assert_called_once()
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	def testTelnetOn_unhandledCommand(self):
+	def testTelnetOn_unhandledCommand(self) -> None:
 		self.telnet.on_unhandledCommand(ECHO, NULL)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	def testTelnetOn_unhandledSubnegotiation(self):
+	def testTelnetOn_unhandledSubnegotiation(self) -> None:
 		self.telnet.on_unhandledSubnegotiation(ECHO, NULL)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	def testTelnetOn_enableLocal(self):
+	def testTelnetOn_enableLocal(self) -> None:
 		self.assertFalse(self.telnet.on_enableLocal(ECHO))
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	def testTelnetOn_enableRemote(self):
+	def testTelnetOn_enableRemote(self) -> None:
 		self.assertFalse(self.telnet.on_enableRemote(ECHO))
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	def testTelnetOn_disableLocal(self):
+	def testTelnetOn_disableLocal(self) -> None:
 		with self.assertRaises(NotImplementedError):
 			self.telnet.on_disableLocal(ECHO)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
 
-	def testTelnetOn_disableRemote(self):
+	def testTelnetOn_disableRemote(self) -> None:
 		with self.assertRaises(NotImplementedError):
 			self.telnet.on_disableRemote(ECHO)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))

@@ -10,80 +10,79 @@ from __future__ import annotations
 import os
 import sys
 import textwrap
-import unittest
-from unittest import mock
+from typing import Callable, List, Tuple
+from unittest import TestCase
+from unittest.mock import Mock, mock_open, patch
 
 # Mapper Modules:
 from mapper import utils
-from mapper.utils import IAC
+from mapper.protocols.telnet_constants import IAC
 
 
-class TestUtils(unittest.TestCase):
-	def test_iterBytes(self):
-		sent = b"hello"
-		expected = (b"h", b"e", b"l", b"l", b"o")
+class TestUtils(TestCase):
+	def test_iterBytes(self) -> None:
+		sent: bytes = b"hello"
+		expected: Tuple[bytes, ...] = (b"h", b"e", b"l", b"l", b"o")
 		self.assertEqual(tuple(utils.iterBytes(sent)), expected)
 
-	def test_minIndent(self):
+	def test_minIndent(self) -> None:
 		self.assertEqual(utils.minIndent("hello\nworld"), "")
 		self.assertEqual(utils.minIndent("\thello\n\t\tworld"), "\t")
 
-	def test_formatDocString(self):
-		docString = (
+	def test_formatDocString(self) -> None:
+		docString: str = (
 			"\nTest Doc String\n"
 			+ "This is the first line below the title.\n"
 			+ "\tThis is an indented line below the first. "
 			+ "Let's make it long so we can check if word wrapping works.\n"
 			+ "This is the final line, which should be at indention level 0.\n"
 		)
-		expectedOutput = (
+		expectedOutput: str = (
 			"Test Doc String\n"
 			+ "This is the first line below the title.\n"
 			+ "\tThis is an indented line below the first. Let's make it long so we can check\n"
 			+ "\tif word wrapping works.\n"
 			+ "This is the final line, which should be at indention level 0."
 		)
-		testFunction = lambda: None  # NOQA: E731
+		testFunction: Callable[[], None] = lambda: None  # NOQA: E731
 		testFunction.__doc__ = docString
-		expectedOutputIndentTwoSpace = "\n".join(
+		expectedOutputIndentTwoSpace: str = "\n".join(
 			"  " + line.replace("\t", "  ") for line in expectedOutput.splitlines()
 		)
-		width = 79
-		for item in (docString, testFunction):
-			self.assertEqual(utils.formatDocString(item, width), expectedOutput)
-			self.assertEqual(utils.formatDocString(item, width, prefix=""), expectedOutput)
-			self.assertEqual(utils.formatDocString(item, width, prefix="  "), expectedOutputIndentTwoSpace)
+		width: int = 79
+		self.assertEqual(utils.formatDocString(docString, width), expectedOutput)
+		self.assertEqual(utils.formatDocString(docString, width, prefix=""), expectedOutput)
+		self.assertEqual(utils.formatDocString(docString, width, prefix="  "), expectedOutputIndentTwoSpace)
+		self.assertEqual(utils.formatDocString(testFunction, width), expectedOutput)
+		self.assertEqual(utils.formatDocString(testFunction, width, prefix=""), expectedOutput)
+		self.assertEqual(
+			utils.formatDocString(testFunction, width, prefix="  "), expectedOutputIndentTwoSpace
+		)
 
-	def test_escapeIAC(self):
-		sent = b"hello" + IAC + b"world"
-		expected = b"hello" + IAC + IAC + b"world"
+	def test_escapeIAC(self) -> None:
+		sent: bytes = b"hello" + IAC + b"world"
+		expected: bytes = b"hello" + IAC + IAC + b"world"
 		self.assertEqual(utils.escapeIAC(sent), expected)
-		with self.assertRaises(TypeError):
-			utils.escapeIAC(sent.decode("us-ascii", "ignore"))
 
-	def test_stripAnsi(self):
-		sent = "\x1b[32mhello\x1b[0m"
-		expected = "hello"
+	def test_stripAnsi(self) -> None:
+		sent: str = "\x1b[32mhello\x1b[0m"
+		expected: str = "hello"
 		self.assertEqual(utils.stripAnsi(sent), expected)
-		with self.assertRaises(TypeError):
-			utils.stripAnsi(sent.encode("us-ascii"))
 
-	def test_simplified(self):
-		sent = "Hello world\r\nThis  is\ta\r\n\r\ntest."
-		expected = "Hello world This is a test."
+	def test_simplified(self) -> None:
+		sent: str = "Hello world\r\nThis  is\ta\r\n\r\ntest."
+		expected: str = "Hello world This is a test."
 		self.assertEqual(utils.simplified(sent), expected)
-		with self.assertRaises(TypeError):
-			utils.simplified(sent.encode("us-ascii"))
 
-	@mock.patch("mapper.utils.open", mock.mock_open(read_data="data"))
-	@mock.patch("mapper.utils.os")
-	def test_touch(self, mockOs):
+	@patch("mapper.utils.open", mock_open(read_data="data"))
+	@patch("mapper.utils.os")
+	def test_touch(self, mockOs: Mock) -> None:
 		utils.touch("path_1")
 		mockOs.utime.assert_called_once_with("path_1", None)
 
-	def test_padList(self):
-		lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-		padding = 0
+	def test_padList(self) -> None:
+		lst: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+		padding: int = 0
 		# Non-fixed padding with 0's on the right.
 		# Returned list will be of length >= *count*.
 		self.assertEqual(utils.padList([], padding, count=12, fixed=False), [0] * 12)
@@ -95,9 +94,9 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.padList(lst, padding, count=12, fixed=True), lst + [0] * 3)
 		self.assertEqual(utils.padList(lst, padding, count=5, fixed=True), lst[:5])
 
-	def test_lpadList(self):
-		lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-		padding = 0
+	def test_lpadList(self) -> None:
+		lst: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+		padding: int = 0
 		# Non-fixed padding with 0's on the left.
 		# Returned list will be of length >= *count*.
 		self.assertEqual(utils.lpadList([], padding, count=12, fixed=False), [0] * 12)
@@ -109,21 +108,21 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.lpadList(lst, padding, count=12, fixed=True), [0] * 3 + lst)
 		self.assertEqual(utils.lpadList(lst, padding, count=5, fixed=True), lst[:5])
 
-	def test_roundHalfAwayFromZero(self):
+	def test_roundHalfAwayFromZero(self) -> None:
 		self.assertEqual(utils.roundHalfAwayFromZero(5.4), 5.0)
 		self.assertEqual(utils.roundHalfAwayFromZero(5.5), 6.0)
 		self.assertEqual(utils.roundHalfAwayFromZero(-5.4), -5.0)
 		self.assertEqual(utils.roundHalfAwayFromZero(-5.5), -6.0)
 
-	def test_humanSort(self):
-		expectedOutput = [str(i) for i in range(1, 1001)]
-		badlySorted = sorted(expectedOutput)
+	def test_humanSort(self) -> None:
+		expectedOutput: List[str] = [str(i) for i in range(1, 1001)]
+		badlySorted: List[str] = sorted(expectedOutput)
 		self.assertEqual(badlySorted[:4], ["1", "10", "100", "1000"])
 		self.assertEqual(utils.humanSort(badlySorted), expectedOutput)
 
-	def test_regexFuzzy(self):
+	def test_regexFuzzy(self) -> None:
 		with self.assertRaises(TypeError):
-			utils.regexFuzzy(None)
+			utils.regexFuzzy(None)  # type: ignore
 		self.assertEqual(utils.regexFuzzy(""), "")
 		self.assertEqual(utils.regexFuzzy([]), "")
 		self.assertEqual(utils.regexFuzzy([""]), "")
@@ -131,13 +130,13 @@ class TestUtils(unittest.TestCase):
 		self.assertEqual(utils.regexFuzzy("east"), "e(a(s(t)?)?)?")
 		self.assertEqual(utils.regexFuzzy(["east"]), "e(a(s(t)?)?)?")
 		self.assertEqual(utils.regexFuzzy(("east")), "e(a(s(t)?)?)?")
-		expectedOutput = "e(a(s(t)?)?)?|w(e(s(t)?)?)?"
+		expectedOutput: str = "e(a(s(t)?)?)?|w(e(s(t)?)?)?"
 		self.assertEqual(utils.regexFuzzy(["east", "west"]), expectedOutput)
 		self.assertEqual(utils.regexFuzzy(("east", "west")), expectedOutput)
 
-	@mock.patch("mapper.utils._imp")
-	@mock.patch("mapper.utils.sys")
-	def test_getFreezer(self, mockSys, mockImp):
+	@patch("mapper.utils._imp")
+	@patch("mapper.utils.sys")
+	def test_getFreezer(self, mockSys: Mock, mockImp: Mock) -> None:
 		del mockSys.frozen
 		del mockSys._MEIPASS
 		del mockSys.importers
@@ -160,51 +159,52 @@ class TestUtils(unittest.TestCase):
 		mockSys._MEIPASS = "."
 		self.assertEqual(utils.getFreezer(), "pyinstaller")
 
-	def test_isFrozen(self):
+	def test_isFrozen(self) -> None:
 		self.assertIs(utils.isFrozen(), False)
 
-	@mock.patch("mapper.utils.isFrozen")
-	def test_getDirectoryPath(self, mockIsFrozen):
-		subdirectory = ("level1", "level2")
-		frozenDirName = os.path.dirname(sys.executable)
-		frozenOutput = os.path.realpath(os.path.join(frozenDirName, *subdirectory))
+	@patch("mapper.utils.isFrozen")
+	def test_getDirectoryPath(self, mockIsFrozen: Mock) -> None:
+		subdirectory: Tuple[str, ...] = ("level1", "level2")
+		frozenDirName: str = os.path.dirname(sys.executable)
+		frozenOutput: str = os.path.realpath(os.path.join(frozenDirName, *subdirectory))
 		mockIsFrozen.return_value = True
 		self.assertEqual(utils.getDirectoryPath(*subdirectory), frozenOutput)
-		unfrozenDirName = os.path.join(os.path.dirname(utils.__file__), os.path.pardir)
-		unfrozenOutput = os.path.realpath(os.path.join(unfrozenDirName, *subdirectory))
+		unfrozenDirName: str = os.path.join(os.path.dirname(utils.__file__), os.path.pardir)
+		unfrozenOutput: str = os.path.realpath(os.path.join(unfrozenDirName, *subdirectory))
 		mockIsFrozen.return_value = False
 		self.assertEqual(utils.getDirectoryPath(*subdirectory), unfrozenOutput)
 
-	def test_multiReplace(self):
-		replacements = (("ll", "yy"), ("h", "x"), ("o", "z"))
-		text = "hello world"
-		expectedOutput = "xeyyz wzrld"
+	def test_multiReplace(self) -> None:
+		replacements: Tuple[Tuple[str, str], ...] = (("ll", "yy"), ("h", "x"), ("o", "z"))
+		text: str = "hello world"
+		expectedOutput: str = "xeyyz wzrld"
 		self.assertEqual(utils.multiReplace(text, replacements), expectedOutput)
 		self.assertEqual(utils.multiReplace(text, ()), text)
 
-	def test_escapeXMLString(self):
-		originalString = "<one&two>three"
-		expectedString = "&lt;one&amp;two&gt;three"
+	def test_escapeXMLString(self) -> None:
+		originalString: str = "<one&two>three"
+		expectedString: str = "&lt;one&amp;two&gt;three"
 		self.assertEqual(utils.escapeXMLString(originalString), expectedString)
 
-	def test_unescapeXMLBytes(self):
-		originalBytes = b"&lt;one&amp;two&gt;three"
-		expectedBytes = b"<one&two>three"
+	def test_unescapeXMLBytes(self) -> None:
+		originalBytes: bytes = b"&lt;one&amp;two&gt;three"
+		expectedBytes: bytes = b"<one&two>three"
 		self.assertEqual(utils.unescapeXMLBytes(originalBytes), expectedBytes)
 
-	def test_decodeBytes(self):
-		characters = "".join(chr(i) for i in range(256))
+	def test_decodeBytes(self) -> None:
 		with self.assertRaises(TypeError):
-			utils.decodeBytes(characters)
+			utils.decodeBytes(None)  # type: ignore
+		characters: str = "".join(chr(i) for i in range(256))
 		self.assertEqual(utils.decodeBytes(characters.encode("utf-8")), characters)
 		self.assertEqual(utils.decodeBytes(characters.encode("latin-1")), characters)
 
-	@mock.patch("mapper.utils.pager")
-	@mock.patch("mapper.utils.shutil")
-	def test_page(self, mockShutil, mockPager):
-		cols, rows = 80, 24
+	@patch("mapper.utils.pager")
+	@patch("mapper.utils.shutil")
+	def test_page(self, mockShutil: Mock, mockPager: Mock) -> None:
+		cols: int = 80
+		rows: int = 24
 		mockShutil.get_terminal_size.return_value = os.terminal_size((cols, rows))
-		lines = [
+		lines: List[str] = [
 			"This is the first line.",
 			"this is the second line.",
 			"123456789 " * 10,
@@ -213,5 +213,5 @@ class TestUtils(unittest.TestCase):
 		]
 		lines = "\n".join(lines).splitlines()
 		utils.page(lines)
-		text = "\n".join(textwrap.fill(line.strip(), cols - 1) for line in lines)
+		text: str = "\n".join(textwrap.fill(line.strip(), cols - 1) for line in lines)
 		mockPager.assert_called_once_with(text)

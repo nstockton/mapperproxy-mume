@@ -14,32 +14,33 @@ from mapper.delays import BaseDelay, Delay, OneShot, Repeating
 
 
 class TestDelays(TestCase):
-	def testBaseDelay(self):
+	def testBaseDelay(self) -> None:
 		with self.assertRaises(ValueError):
 			BaseDelay(1, -1, lambda *args: None)
-		delay = BaseDelay(60, 10, lambda *args: None)
-		delay._finished.wait = mock.Mock()
-		delay.start()
-		delay._finished.wait.assert_called_with(60)
-		self.assertEqual(delay._finished.wait.call_count, 10)
-		delay.stop()
-		self.assertTrue(delay._finished.is_set())
+		delay: BaseDelay = BaseDelay(60, 10, lambda *args: None)
+		mockWait: mock.Mock
+		with mock.patch.object(delay._finished, "wait") as mockWait:
+			delay.start()
+			mockWait.assert_called_with(60)
+			self.assertEqual(mockWait.call_count, 10)
+			delay.stop()
+			self.assertTrue(delay._finished.is_set())
 
 	@mock.patch("mapper.delays.Delay.start")
-	def testDelay(self, mockStart):
+	def testDelay(self, mockStart: mock.Mock) -> None:
 		Delay(60, 10, lambda *args: None)
 		mockStart.assert_called_once()
 
 	@mock.patch("mapper.delays.OneShot.start")
-	def testOneShot(self, mockStart):
-		delay = OneShot(60, lambda *args: None)
+	def testOneShot(self, mockStart: mock.Mock) -> None:
+		delay: OneShot = OneShot(60, lambda *args: None)
 		self.assertEqual(delay._duration, 60)
 		self.assertEqual(delay._count, 1)
 		mockStart.assert_called_once()
 
 	@mock.patch("mapper.delays.Repeating.start")
-	def testRepeating(self, mockStart):
-		delay = Repeating(60, lambda *args: None)
+	def testRepeating(self, mockStart: mock.Mock) -> None:
+		delay: Repeating = Repeating(60, lambda *args: None)
 		self.assertEqual(delay._duration, 60)
 		self.assertIsNone(delay._count)
 		mockStart.assert_called_once()

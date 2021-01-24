@@ -15,9 +15,9 @@ from mapper.config import Config, ConfigError
 
 class TestConfig(TestCase):
 	@mock.patch("mapper.config.os")
-	def test_load(self, mockOs):
+	def test_load(self, mockOs: mock.Mock) -> None:
 		mockOs.path.exists.return_value = False
-		cfg = Config("testconfig")
+		cfg: Config = Config("testconfig")
 		self.assertEqual(cfg.name, "testconfig")
 		self.assertEqual(cfg._config, {})
 		mockOs.path.exists.return_value = True
@@ -36,10 +36,10 @@ class TestConfig(TestCase):
 		del cfg["test"]
 		self.assertEqual(cfg, {})
 
-	def test_save(self):
-		cfg = Config("testconfig")
+	def test_save(self) -> None:
+		cfg: Config = Config("testconfig")
 		cfg["test"] = "somevalue"
-		mockOpen = mock.mock_open()
+		mockOpen: mock.Mock = mock.mock_open()
 		with mock.patch("mapper.config.codecs.open", mockOpen):
 			cfg.save()
 		mockOpen.return_value.write.assert_called_once_with('{\r\n  "test": "somevalue"\r\n}')

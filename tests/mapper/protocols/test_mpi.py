@@ -7,48 +7,51 @@
 from __future__ import annotations
 
 # Built-in Modules:
-from unittest import TestCase, mock
+from typing import Tuple
+from unittest import TestCase
+from unittest.mock import Mock, mock_open, patch
 from uuid import uuid4
 
 # Mapper Modules:
-from mapper.protocols.mpi import LF, MPI_INIT, MPIProtocol
+from mapper.protocols.mpi import MPI_INIT, MPIProtocol
+from mapper.protocols.telnet_constants import LF
 
 
-BODY = b"Hello World!"
+BODY: bytes = b"Hello World!"
 
 
 class TestMPIProtocol(TestCase):
-	def setUp(self):
-		self.gameReceives = bytearray()
-		self.playerReceives = bytearray()
-		self.mpi = MPIProtocol(self.gameReceives.extend, self.playerReceives.extend)
+	def setUp(self) -> None:
+		self.gameReceives: bytearray = bytearray()
+		self.playerReceives: bytearray = bytearray()
+		self.mpi: MPIProtocol = MPIProtocol(self.gameReceives.extend, self.playerReceives.extend)
 
-	def tearDown(self):
+	def tearDown(self) -> None:
 		self.mpi.on_connectionLost()
 		del self.mpi
 		self.gameReceives.clear()
 		self.playerReceives.clear()
 
-	def parse(self, data):
+	def parse(self, data: bytes) -> Tuple[bytes, bytes, str]:
 		self.mpi.on_dataReceived(data)
-		playerReceives = bytes(self.playerReceives)
+		playerReceives: bytes = bytes(self.playerReceives)
 		self.playerReceives.clear()
-		gameReceives = bytes(self.gameReceives)
+		gameReceives: bytes = bytes(self.gameReceives)
 		self.gameReceives.clear()
-		state = self.mpi.state
+		state: str = self.mpi.state
 		self.mpi.state = "data"
 		self.mpi._MPIBuffer.clear()
 		return playerReceives, gameReceives, state
 
-	def testMPIState(self):
+	def testMPIState(self) -> None:
 		with self.assertRaises(ValueError):
 			self.mpi.state = "**junk**"
 
 	# Mock the logger so warnings won't be printed to the console.
-	@mock.patch("mapper.protocols.mpi.logger", mock.Mock())
-	@mock.patch("mapper.protocols.mpi.threading")
-	def testMPIOn_dataReceived(self, mockThreading):
-		data = BODY
+	@patch("mapper.protocols.mpi.logger", Mock())
+	@patch("mapper.protocols.mpi.threading")
+	def testMPIOn_dataReceived(self, mockThreading: Mock) -> None:
+		data: bytes = BODY
 		self.mpi.outputFormat = "normal"
 		self.mpi.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"I" + LF, "data"))
@@ -87,7 +90,7 @@ class TestMPIProtocol(TestCase):
 		# The body consists of the bytes following length and the line feed.
 		# Once <length> bytes are received, state becomes 'data' and the appropriate
 		# method is called to handle the MPI message.
-		message = b"%d%b%b" % (len(data), LF, data)
+		message: bytes = b"%d%b%b" % (len(data), LF, data)
 		# Test invalid MPI commands are handled.
 		self.assertEqual(
 			self.parse(LF + MPI_INIT + b"A" + message), (LF + MPI_INIT + b"A" + message, b"", "data")
@@ -98,12 +101,18 @@ class TestMPIProtocol(TestCase):
 			target=self.mpi.commandMap[b"V"], args=(data,), daemon=True
 		)
 
-	@mock.patch("mapper.protocols.mpi.os.remove")
-	@mock.patch("mapper.protocols.mpi.subprocess.Popen")
-	@mock.patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
-	@mock.patch("mapper.protocols.mpi.print")
-	def testMPIView(self, mockPrint, MockNamedTemporaryFile, mockSubprocess, mockRemove):
-		tempFileName = "temp_file_name"
+	@patch("mapper.protocols.mpi.os.remove")
+	@patch("mapper.protocols.mpi.subprocess.Popen")
+	@patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
+	@patch("mapper.protocols.mpi.print")
+	def testMPIView(
+		self,
+		mockPrint: Mock,
+		MockNamedTemporaryFile: Mock,
+		mockSubprocess: Mock,
+		mockRemove: Mock,
+	) -> None:
+		tempFileName: str = "temp_file_name"
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
 		self.assertEqual(self.playerReceives, b"")
 		self.assertEqual(self.gameReceives, b"")
@@ -126,19 +135,26 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
 
-	@mock.patch("mapper.protocols.mpi.open", mock.mock_open(read_data=BODY))
-	@mock.patch("mapper.protocols.mpi.os.remove")
-	@mock.patch("mapper.protocols.mpi.subprocess.Popen")
-	@mock.patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
-	@mock.patch("mapper.protocols.mpi.os.path")
-	@mock.patch("mapper.protocols.mpi.input", return_value="")
-	@mock.patch("mapper.protocols.mpi.print")
+	@patch("mapper.protocols.mpi.open", mock_open(read_data=BODY))
+	@patch("mapper.protocols.mpi.os.remove")
+	@patch("mapper.protocols.mpi.subprocess.Popen")
+	@patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
+	@patch("mapper.protocols.mpi.os.path")
+	@patch("mapper.protocols.mpi.input", return_value="")
+	@patch("mapper.protocols.mpi.print")
 	def testMPIEdit(
-		self, mockPrint, mockInput, mockOsPath, MockNamedTemporaryFile, mockSubprocess, mockRemove
-	):
-		session = b"12345" + LF
-		description = b"description" + LF
-		tempFileName = "temp_file_name"
+		self,
+		mockPrint: Mock,
+		mockInput: Mock,
+		mockOsPath: Mock,
+		MockNamedTemporaryFile: Mock,
+		mockSubprocess: Mock,
+		mockRemove: Mock,
+	) -> None:
+		session: bytes = b"12345" + LF
+		description: bytes = b"description" + LF
+		tempFileName: str = "temp_file_name"
+		expectedSent: bytes
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
 		# Make sure we are in the default state.
 		self.assertEqual(self.playerReceives, b"")

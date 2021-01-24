@@ -31,7 +31,7 @@ from .telnet_constants import (
 	SE,
 )
 from .xml import XMLProtocol
-from .. import USER_DATA
+from .. import MAPPER_QUEUE_TYPE, USER_DATA
 from ..utils import escapeIAC
 
 
@@ -187,7 +187,7 @@ class ProxyHandler(object):
 		self.promptTerminator = self.promptTerminator.replace(CR_NULL, CR).replace(LF, CR_LF)
 		self.isEmulatingOffline = kwargs["isEmulatingOffline"]
 		self.mapperCommands = kwargs["mapperCommands"]
-		self.eventCaller = kwargs["eventCaller"]
+		self.eventCaller: Callable[[MAPPER_QUEUE_TYPE], None] = kwargs["eventCaller"]
 		self.player = Manager(playerSocket.sendall, self.on_playerReceived)
 		self.player.register(Player, self)
 		self.game = Manager(gameSocket.sendall, self.on_gameReceived)

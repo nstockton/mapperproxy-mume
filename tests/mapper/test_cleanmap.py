@@ -2,22 +2,24 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+
 # Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:
-import unittest
+from typing import Match, Tuple, Union
+from unittest import TestCase
 from unittest.mock import Mock
 
 # Mapper Modules:
-from mapper.cleanmap import DIRECTIONS, EXIT_REGEX, ExitsCleaner
+from mapper.cleanmap import EXIT_REGEX, ExitsCleaner
 from mapper.mapper import Mapper
-from mapper.roomdata.objects import Exit, Room
+from mapper.roomdata.objects import DIRECTIONS, Exit, Room
 
 
-class test_exitRegex(unittest.TestCase):
-	def test_exitsCommandRegex_matches_allExitsThatAreNeitherOpenNorBrokenDoors(self):
-		for exit in [
+class test_exitRegex(TestCase):
+	def test_exitsCommandRegex_matches_allExitsThatAreNeitherOpenNorBrokenDoors(self) -> None:
+		exits: Tuple[str, ...] = (
 			"[North]  - A closed 'stabledoor'",
 			"South   - The Path over the Bruinen",
 			"[North]  - A closed 'marblegate'",
@@ -31,44 +33,47 @@ class test_exitRegex(unittest.TestCase):
 			" ~[West]~   - A closed 'bedroomcurtain'",
 			" ~[Up]~   - A closed 'DooMDoor'",
 			" ~[Down]~   - A closed 'azZeuZjoec'",
-		]:
-			m = EXIT_REGEX.match(exit)
-			self.assertTrue(m, exit + " does not match EXIT_REGEX.")
-			dir = m.group("dir").lower()
-			self.assertTrue(dir in DIRECTIONS, dir + " is not a valid direction.")
+		)
+		for item in exits:
+			match: Union[Match[str], None] = EXIT_REGEX.match(item)
+			self.assertIsNotNone(match, f"{item} does not match EXIT_REGEX.")
+			if match is not None:
+				direction: str = match.group("dir").lower()
+				self.assertIn(direction, DIRECTIONS, f"{direction} is not a valid direction.")
 
-	def test_exitRegex_doesNotMatch_exitsThatAreOpenOrBrokenDoors_or_autoexits(self):
-		for exit in [
+	def test_exitRegex_doesNotMatch_exitsThatAreOpenOrBrokenDoors_or_autoexits(self) -> None:
+		exits: Tuple[str, ...] = (
 			"#South#  - (archedfence) The Summer Terrace",
 			"  (West)  - (door) a room",
 			"None",
 			"Exits: down.",
 			"Exits: north, east, south, west." "Exits: none.",
-		]:
-			m = EXIT_REGEX.match(exit)
-			self.assertFalse(m, exit + " should not match EXIT_REGEX, but it does.")
+		)
+		for item in exits:
+			match: Union[Match[str], None] = EXIT_REGEX.match(item)
+			self.assertIsNone(match, f"{item} should not match EXIT_REGEX, but it does.")
 
 
-class TestExitsCleaner(unittest.TestCase):
-	def setUp(self):
-		self.mapper = Mock(spec=Mapper)
+class TestExitsCleaner(TestCase):
+	def setUp(self) -> None:
+		self.mapper: Mock = Mock(spec=Mapper)
 		self.mapper.isSynced = True
 		self.mapper.autoUpdateRooms = True
-		self.exitsCleaner = ExitsCleaner(self.mapper)
+		self.exitsCleaner: ExitsCleaner = ExitsCleaner(self.mapper)
 
-	def createRoom(self, *exits):
-		room = Room()
+	def createRoom(self, *exits: Tuple[str, bool]) -> Room:
+		room: Room = Room()
 		room.vnum = "0"
-		for dir, isHidden in exits:
-			if dir not in DIRECTIONS:
-				raise ValueError("Invalid direction " + dir + ". Cannot create room.")
-			room.exits[dir] = Exit()
+		for direction, isHidden in exits:
+			if direction not in DIRECTIONS:
+				raise ValueError(f"Invalid direction {direction}. Cannot create room.")
+			room.exits[direction] = Exit()
 			if isHidden:
-				room.exits[dir].doorFlags.add("hidden")
+				room.exits[direction].doorFlags.add("hidden")
 		return room
 
-	def test_handle_withZeroOrOneExits(self):
-		for room, exit in [
+	def test_handle_withZeroOrOneExits(self) -> None:
+		validExits: Tuple[Tuple[Room, str], ...] = (
 			(self.createRoom(), "None\r\n"),
 			(self.createRoom(("east", False)), "None\r\n"),
 			(self.createRoom(("south", True)), "None\r\n"),
@@ -83,18 +88,22 @@ class TestExitsCleaner(unittest.TestCase):
 			(self.createRoom(), "  /West\\   - Western Slope\r\n"),
 			(self.createRoom(("up", False)), "  Up   - Private Stair\r\n"),
 			(self.createRoom(("down", True)), "Exits: *=Down=*   - Public Courtyard\r\n"),
-		]:
+		)
+		for room, exit in validExits:
 			self.mapper.currentRoom = room
 			self.exitsCleaner.handle(exit)
 			self.mapper.user_command_secret.assert_not_called()
 			self.mapper.user_command_secret.reset_mock()
-
-		for room, exit in [
+		junkExits: Tuple[Tuple[Room, str], ...] = (
 			(self.createRoom(("south", True)), "  \\South/   - Southern Slope\r\n"),
 			(self.createRoom(("down", True)), "  *=Down=*   - Public Courtyard\r\n"),
-		]:
+		)
+		for room, exitStr in junkExits:
 			self.mapper.currentRoom = room
-			dir = EXIT_REGEX.match(exit).group("dir").lower()
-			self.exitsCleaner.handle(exit)
-			self.mapper.user_command_secret.assert_called_once_with("remove " + dir)
+			match: Union[Match[str], None] = EXIT_REGEX.match(exitStr)
+			self.assertIsNotNone(match, "Regex does not match exit string.")
+			if match is not None:
+				direction = match.group("dir").lower()
+				self.exitsCleaner.handle(exitStr)
+				self.mapper.user_command_secret.assert_called_once_with(f"remove {direction}")
 			self.mapper.user_command_secret.reset_mock()

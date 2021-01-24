@@ -13,13 +13,13 @@ from unittest import TestCase, mock
 from mapper.clock import FIRST_YEAR, Clock, MumeTime, deltaToTime, timeToDelta
 
 
-YEAR = FIRST_YEAR + 5
-MONTH = 4
-DAY = 3
-HOUR = 2
-MINUTES = 1
-DELTA = 2767801
-TIME_OUTPUT = (
+YEAR: int = FIRST_YEAR + 5
+MONTH: int = 4
+DAY: int = 3
+HOUR: int = 2
+MINUTES: int = 1
+DELTA: int = 2767801
+TIME_OUTPUT: str = (
 	"Game time 2:01 am: Dawn: 6 am, Dusk: 8 pm.\n"
 	+ "It is currently NIGHT, on Friday, May 3 (Forelithe / Norui), (Late-Spring), year 2855 of the third age.\n"
 	+ "Time left until DAY is less than 5 ticks\n"
@@ -32,15 +32,16 @@ TIME_OUTPUT = (
 
 
 class TestToAndFromDelta(TestCase):
-	def test_timeToDelta(self):
+	def test_timeToDelta(self) -> None:
 		self.assertEqual(timeToDelta(YEAR, MONTH, DAY, HOUR, MINUTES), DELTA)
 
-	def test_deltaToTime(self):
+	def test_deltaToTime(self) -> None:
 		self.assertEqual(deltaToTime(DELTA), (YEAR, MONTH, DAY, HOUR, MINUTES))
 
 
 class TestMumeTime(TestCase):
-	def test_properties(self):
+	def test_properties(self) -> None:
+		mt: MumeTime
 		mt = MumeTime(timeToDelta(YEAR, MONTH, DAY, HOUR, MINUTES))
 		self.assertEqual(mt.year, YEAR)
 		self.assertEqual(mt.month, MONTH)
@@ -85,18 +86,19 @@ class TestMumeTime(TestCase):
 
 class TestClock(TestCase):
 	@mock.patch("mapper.clock.time")
-	def test_setTime(self, mockTime):
+	def test_setTime(self, mockTime: mock.Mock) -> None:
 		mockTime.time.return_value = DELTA + 1
+		mockEpoch: mock.Mock
 		with mock.patch.object(Clock, "epoch", mock.PropertyMock()) as mockEpoch:
-			clock = Clock()
+			clock: Clock = Clock()
 			clock.setTime(YEAR, MONTH, DAY, HOUR, MINUTES)
 			mockEpoch.assert_called_once_with(1)
 
 	@mock.patch("mapper.clock.Clock.epoch", mock.PropertyMock(return_value=0))
 	@mock.patch("mapper.clock.time")
-	def test_time(self, mockTime):
+	def test_time(self, mockTime: mock.Mock) -> None:
 		mockTime.time.return_value = DELTA
-		clock = Clock()
+		clock: Clock = Clock()
 		self.assertEqual(clock.time("pull"), "pull lever 3\npull lever Forelithe")
 		self.assertEqual(clock.time("say"), f"say {TIME_OUTPUT.splitlines()[0]}")
 		self.assertEqual(clock.time(), TIME_OUTPUT)

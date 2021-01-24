@@ -7,35 +7,41 @@
 from __future__ import annotations
 
 # Built-in Modules:
+from typing import List, Tuple
 from unittest import TestCase
 
 # Mapper Modules:
 from mapper import MUD_DATA
-from mapper.protocols.xml import LF, LT, MPI_INIT, XMLProtocol
+from mapper.protocols.mpi import MPI_INIT
+from mapper.protocols.telnet_constants import LF
+from mapper.protocols.xml import LT, XMLProtocol
 from mapper.utils import unescapeXMLBytes
 
 
+EVENT_TYPE = Tuple[int, Tuple[str, bytes]]
+
+
 class TestXMLProtocol(TestCase):
-	def setUp(self):
-		name = b"\x1b[34mLower Flet\x1b[0m"
+	def setUp(self) -> None:
+		name: bytes = b"\x1b[34mLower Flet\x1b[0m"
 		# fmt: off
-		description = (
+		description: bytes = (
 			b"\x1b[35mBeing close to the ground, this white platform is not encircled by any rail.\x1b[0m" + LF
 			+ b"\x1b[35mInstead, beautiful draperies and tapestries hang from the many branches that\x1b[0m" + LF
 			+ b"\x1b[35msurround the flet. Swaying gently in the breeze, images on the colourful\x1b[0m" + LF
 			+ b"\x1b[35mcloth create a place where one can stand and let the mind wander into the\x1b[0m" + LF
 			+ b"\x1b[35mstories told by the everchanging patterns.\x1b[0m" + LF
 		)
-		detectMagic = b"\x1b[35mTraces of white tones form the aura of this place.\x1b[0m"
-		dynamic = (
+		detectMagic: bytes = b"\x1b[35mTraces of white tones form the aura of this place.\x1b[0m"
+		dynamic: bytes = (
 			b"A finely crafted crystal lamp is hanging from a tree branch." + LF
 			+ b"An elven caretaker is standing here, offering his guests a rest." + LF
 		)
-		exits = b"Exits: north." + LF
-		magic = b"You feel less protected."
-		line = b"Hello world!"
-		prompt = b"!f CW&gt;"
-		self.rawData = (
+		exits: bytes = b"Exits: north." + LF
+		magic: bytes = b"You feel less protected."
+		line: bytes = b"Hello world!"
+		prompt: bytes = b"!f CW&gt;"
+		self.rawData: bytes = (
 			b"<room><name>" + name + b"</name>" + LF
 			+ b"<gratuitous><description>" + description + b"</description></gratuitous>"
 			+ b"<magic>" + detectMagic + b"</magic>" + LF
@@ -45,7 +51,7 @@ class TestXMLProtocol(TestCase):
 			+ line + LF
 			+ b"<prompt>" + prompt + b"</prompt>"
 		)
-		self.normalData = (
+		self.normalData: bytes = (
 			name + LF
 			+ detectMagic + LF
 			+ dynamic
@@ -54,7 +60,7 @@ class TestXMLProtocol(TestCase):
 			+ line + LF
 			+ unescapeXMLBytes(prompt)
 		)
-		self.tintinData = (
+		self.tintinData: bytes = (
 			b"NAME:" + name + b":NAME" + LF
 			+ detectMagic + LF
 			+ dynamic
@@ -64,7 +70,7 @@ class TestXMLProtocol(TestCase):
 			+ b"PROMPT:" + unescapeXMLBytes(prompt) + b":PROMPT"
 		)
 		# fmt: on
-		self.expectedEvents = [
+		self.expectedEvents: List[EVENT_TYPE] = [
 			self.createEvent("name", name),
 			self.createEvent("description", description),
 			self.createEvent("magic", detectMagic),
@@ -74,37 +80,37 @@ class TestXMLProtocol(TestCase):
 			self.createEvent("line", line),
 			self.createEvent("prompt", unescapeXMLBytes(prompt)),
 		]
-		self.gameReceives = bytearray()
-		self.playerReceives = bytearray()
-		self.xml = XMLProtocol(self.gameReceives.extend, self.playerReceives.extend)
-		self.mapperEvents = []
+		self.gameReceives: bytearray = bytearray()
+		self.playerReceives: bytearray = bytearray()
+		self.xml: XMLProtocol = XMLProtocol(self.gameReceives.extend, self.playerReceives.extend)
+		self.mapperEvents: List[EVENT_TYPE] = []
 		self.xml.eventCaller = self.mapperEvents.append
 
-	def tearDown(self):
+	def tearDown(self) -> None:
 		self.xml.on_connectionLost()
 		del self.xml
 		self.gameReceives.clear()
 		self.playerReceives.clear()
 
-	def parse(self, data):
+	def parse(self, data: bytes) -> Tuple[bytes, bytes, str]:
 		self.xml.on_dataReceived(data)
-		playerReceives = bytes(self.playerReceives)
+		playerReceives: bytes = bytes(self.playerReceives)
 		self.playerReceives.clear()
-		gameReceives = bytes(self.gameReceives)
+		gameReceives: bytes = bytes(self.gameReceives)
 		self.gameReceives.clear()
-		state = self.xml.state
+		state: str = self.xml.state
 		self.xml.state = "data"
 		return playerReceives, gameReceives, state
 
-	def createEvent(self, name, data):
-		return (MUD_DATA, (name, data))
+	def createEvent(self, name: str, data: bytes) -> EVENT_TYPE:
+		return MUD_DATA, (name, data)
 
-	def testXMLState(self):
+	def testXMLState(self) -> None:
 		with self.assertRaises(ValueError):
 			self.xml.state = "**junk**"
 
-	def testXMLOn_dataReceived(self):
-		data = b"Hello World!" + LF
+	def testXMLOn_dataReceived(self) -> None:
+		data: bytes = b"Hello World!" + LF
 		self.xml.outputFormat = "normal"
 		self.xml.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"X2" + LF + b"3G" + LF, "data"))

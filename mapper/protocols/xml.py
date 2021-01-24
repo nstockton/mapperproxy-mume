@@ -19,7 +19,7 @@ from typing import Any, Callable, Dict, FrozenSet, List, MutableSequence, Tuple,
 from .base import Protocol
 from .mpi import MPI_INIT
 from .telnet_constants import CR_LF, LF
-from .. import MUD_DATA
+from .. import MUD_DATA, MUD_DATA_TYPE
 from ..utils import unescapeXMLBytes
 
 
@@ -74,7 +74,7 @@ class XMLProtocol(Protocol):
 
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		self.outputFormat: Union[str, None] = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
-		self.eventCaller: Callable[[Tuple[int, Tuple[str, bytes]]], None] = (
+		self.eventCaller: Callable[[Tuple[int, MUD_DATA_TYPE]], None] = (
 			kwargs.pop("eventCaller") if "eventCaller" in kwargs else lambda *args: None
 		)
 		super().__init__(*args, **kwargs)
