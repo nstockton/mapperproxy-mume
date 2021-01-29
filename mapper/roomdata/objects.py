@@ -225,7 +225,7 @@ class Room(object):
 	@property
 	def info(self) -> str:
 		"""A summery of the room info."""
-		output = []
+		output: List[str] = []
 		output.append(f"vnum: '{self.vnum}'")
 		output.append(f"Name: '{self.name}'")
 		output.append("Description:")
