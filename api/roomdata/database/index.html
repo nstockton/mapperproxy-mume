@@ -860,7 +860,7 @@
 <tr>
 <td><code>Union[Tuple[str, None], Tuple[None, Dict[str, str]]]</code></td>
 <td>
-<p>An error message or None, and the loaded labels database or None.</p>
+<p>An error message and None, or None and the loaded labels database.</p>
 </td>
 </tr>
 </tbody>
@@ -875,7 +875,7 @@
 <span class="sd">	The default label definitions are first loaded, then the user's label definitions are merged in.</span>
 
 <span class="sd">	Returns:</span>
-<span class="sd">		An error message or None, and the loaded labels database or None.</span>
+<span class="sd">		An error message and None, or None and the loaded labels database.</span>
 <span class="sd">	"""</span>
 	<span class="n">errorMessages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">labels</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -919,7 +919,7 @@
 <tr>
 <td><code>Union[Tuple[str, None], Tuple[None, Dict[str, Dict[str, Any]]]]</code></td>
 <td>
-<p>An error message or None, and the loaded rooms database or None.</p>
+<p>An error message and None, or None and the loaded rooms database.</p>
 </td>
 </tr>
 </tbody>
@@ -934,7 +934,7 @@
 <span class="sd">	An attempt to load the user's database is made first, otherwise the sample database is loaded.</span>
 
 <span class="sd">	Returns:</span>
-<span class="sd">		An error message or None, and the loaded rooms database or None.</span>
+<span class="sd">		An error message and None, or None and the loaded rooms database.</span>
 <span class="sd">	"""</span>
 	<span class="n">errorMessages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">MAP_FILE_PATH</span><span class="p">,</span> <span class="n">SAMPLE_MAP_FILE_PATH</span><span class="p">):</span>
