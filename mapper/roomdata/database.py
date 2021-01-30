@@ -123,7 +123,7 @@ def loadLabels() -> Union[Tuple[str, None], Tuple[None, Dict[str, str]]]:
 	The default label definitions are first loaded, then the user's label definitions are merged in.
 
 	Returns:
-		An error message or None, and the loaded labels database or None.
+		An error message and None, or None and the loaded labels database.
 	"""
 	errorMessages: List[str] = []
 	labels: Dict[str, str] = {}
@@ -157,7 +157,7 @@ def loadRooms() -> Union[Tuple[str, None], Tuple[None, Dict[str, Dict[str, Any]]
 	An attempt to load the user's database is made first, otherwise the sample database is loaded.
 
 	Returns:
-		An error message or None, and the loaded rooms database or None.
+		An error message and None, or None and the loaded rooms database.
 	"""
 	errorMessages: List[str] = []
 	for path in (MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH):
