@@ -318,6 +318,7 @@ include_files: List[Tuple[List[str], str]] = [
 	),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),
+	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.schema"))), "data"),
 	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles"),
 ]
 
