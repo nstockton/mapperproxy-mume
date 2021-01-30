@@ -2274,7 +2274,7 @@
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_connectionMade</span><span class="p">()</span>
 	<span class="c1"># Offer to handle charset.</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">will</span><span class="p">(</span><span class="n">CHARSET</span><span class="p">)</span>
@@ -2801,7 +2801,7 @@ in order to perform any necessary cleanup on our end.</p>
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">on_ga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">on_ga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""Called when a Go Ahead command is received."""</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">promptTerminator</span><span class="p">)</span>
 </code></pre>
@@ -4107,7 +4107,9 @@ in order to perform any necessary cleanup on our end.</p>
           <summary>Source code in <code>mapper\protocols\proxy.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">on_enableLocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-	<span class="k">if</span> <span class="n">option</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">_handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subnegotiationMap</span><span class="p">:</span>
+	<span class="n">subnegotiationMap</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">bytes</span><span class="p">],</span> <span class="kc">None</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span>
+	<span class="n">subnegotiationMap</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">_handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"subnegotiationMap"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">subnegotiationMap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">subnegotiationMap</span><span class="p">:</span>
 		<span class="k">return</span> <span class="kc">False</span>
 	<span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_enableLocal</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
 </code></pre>

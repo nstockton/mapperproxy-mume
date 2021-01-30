@@ -1950,12 +1950,12 @@ exception.</p>
 	<span class="k">elif</span> <span class="n">destinationRoom</span> <span class="ow">is</span> <span class="n">origin</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"You are already there!"</span><span class="p">)</span>
 		<span class="k">return</span> <span class="p">[]</span>
-	<span class="n">avoidTerrains</span><span class="p">:</span> <span class="n">FrozenSet</span>
+	<span class="n">avoidTerrains</span><span class="p">:</span> <span class="n">FrozenSet</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
 		<span class="n">avoidTerrains</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">terrain</span> <span class="k">for</span> <span class="n">terrain</span> <span class="ow">in</span> <span class="n">TERRAIN_COSTS</span> <span class="k">if</span> <span class="sa">f</span><span class="s2">"no</span><span class="si">{</span><span class="n">terrain</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">flags</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="n">avoidTerrains</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
-	<span class="n">ignoreVnums</span><span class="p">:</span> <span class="n">FrozenSet</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">"undefined"</span><span class="p">,</span> <span class="s2">"death"</span><span class="p">))</span>
+	<span class="n">ignoreVnums</span><span class="p">:</span> <span class="n">FrozenSet</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">"undefined"</span><span class="p">,</span> <span class="s2">"death"</span><span class="p">))</span>
 	<span class="n">isDestinationFunc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Room</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">currentRoomObj</span><span class="p">:</span> <span class="p">(</span>  <span class="c1"># NOQA: E731</span>
 		<span class="n">currentRoomObj</span> <span class="ow">is</span> <span class="n">destinationRoom</span>
 	<span class="p">)</span>
@@ -2024,8 +2024,6 @@ from the args and kwargs arguments, respectively.</p>
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="n">dataType</span><span class="p">:</span> <span class="nb">int</span>
-	<span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 		<span class="k">try</span><span class="p">:</span>
 			<span class="n">dataType</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>

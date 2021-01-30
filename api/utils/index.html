@@ -742,7 +742,7 @@
 <tbody>
 <tr>
 <td><code>functionOrString</code></td>
-<td><code>Union[str, Callable]</code></td>
+<td><code>Union[str, Callable[..., Any]]</code></td>
 <td>
 <p>The function containing the docstring, or the docstring its self.</p>
 </td>
@@ -787,7 +787,7 @@
 <summary>Source code in <code>mapper\utils.py</code></summary>
 <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">formatDocString</span><span class="p">(</span>
-	<span class="n">functionOrString</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">functionOrString</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Formats a docstring for displaying.</span>
@@ -953,7 +953,7 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		The name of the library or None.</span>
 <span class="sd">	"""</span>
-	<span class="n">frozen</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"frozen"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+	<span class="n">frozen</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"frozen"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">frozen</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"_MEIPASS"</span><span class="p">):</span>
 		<span class="k">return</span> <span class="s2">"pyinstaller"</span>
 	<span class="k">elif</span> <span class="n">frozen</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -966,7 +966,9 @@
 		<span class="k">return</span> <span class="s2">"old_py2exe"</span>
 	<span class="k">elif</span> <span class="n">_imp</span><span class="o">.</span><span class="n">is_frozen</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">):</span>
 		<span class="k">return</span> <span class="s2">"tools/freeze"</span>
-	<span class="k">return</span> <span class="n">frozen</span>
+	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frozen</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s2">"unknown </span><span class="si">{</span><span class="n">frozen</span><span class="si">}</span><span class="s2">"</span>
+	<span class="k">return</span> <span class="kc">None</span>
 </code></pre>
 </div>
 </details>

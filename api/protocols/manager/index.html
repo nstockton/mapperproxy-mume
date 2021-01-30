@@ -996,7 +996,7 @@
 </tr>
 <tr>
 <td><code>*args</code></td>
-<td><code></code></td>
+<td><code>Any</code></td>
 <td>
 <p>Positional arguments to be passed to the handler's constructer.</p>
 </td>
@@ -1004,7 +1004,7 @@
 </tr>
 <tr>
 <td><code>**kwargs</code></td>
-<td><code></code></td>
+<td><code>Any</code></td>
 <td>
 <p>Key word arguments to be passed to the handler's constructer.</p>
 </td>
@@ -1015,7 +1015,7 @@
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\manager.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Protocol</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Protocol</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Registers a protocol handler.</span>
 
