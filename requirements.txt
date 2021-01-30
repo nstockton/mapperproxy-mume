@@ -1,6 +1,7 @@
 boltons
 certifi
 fuzzywuzzy
+jsonschema
 pyglet
 python-Levenshtein
 python-rapidjson

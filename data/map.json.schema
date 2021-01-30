@@ -1,0 +1,110 @@
+{
+  "id": "data/map.schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Map",
+  "description": "The map database.",
+  "type": "object",
+  "patternProperties": {
+    "^[0-9]+$": {
+      "type": "object",
+      "properties": {
+        "align": {
+          "type": "string",
+          "pattern": "^(good|neutral|evil|undefined)$"
+        },
+        "avoid": {
+          "type": "boolean"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "dynamicDesc": {
+          "type": "string"
+        },
+        "exits": {
+          "type": "object",
+          "patternProperties": {
+            "^(north|east|south|west|up|down)$": {
+              "type": "object",
+              "properties": {
+                "door": {
+                  "type": "string"
+                },
+                "doorFlags": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(hidden|need_key|no_block|no_break|no_pick|delayed|callable|knockable|magic|action|no_bash)$"
+                  }
+                },
+                "exitFlags": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(exit|door|road|climb|random|special|avoid|no_match|flow|no_flee|damage|fall|guarded)$"
+                  }
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^([0-9]+|death|undefined)$"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "light": {
+          "type": "string",
+          "pattern": "^(lit|dark|undefined)$"
+        },
+        "loadFlags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach|ferry)$"
+          }
+        },
+        "mobFlags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob)$"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "portable": {
+          "type": "string",
+          "pattern": "^(portable|notportable|undefined)$"
+        },
+        "ridable": {
+          "type": "string",
+          "pattern": "^(ridable|notridable|undefined)$"
+        },
+        "terrain": {
+          "type": "string",
+          "pattern": "^(brush|cavern|city|deathtrap|field|forest|hills|indoors|mountains|rapids|road|shallow|tunnel|undefined|underwater|water)$"
+        },
+        "x": {
+          "type": "integer"
+        },
+        "y": {
+          "type": "integer"
+        },
+        "z": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

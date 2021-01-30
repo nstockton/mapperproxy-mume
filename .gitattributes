@@ -12,6 +12,7 @@ Pipfile text eol=crlf
 *.md text eol=crlf
 *.spec text eol=crlf
 *.json.sample text eol=lf
+*.json.schema text eol=crlf
 data/config.json.sample text eol=crlf
 *.toml text eol=crlf
 *.jpg -text

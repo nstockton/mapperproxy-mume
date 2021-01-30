@@ -53,7 +53,7 @@
 	# The heading to display for third-party imports.
 	import_heading_thirdparty = "Third-party Modules:"
 	# Override known third-party imports.
-	known_third_party = ["boltons", "certifi", "fuzzywuzzy", "pyglet", "PyInstaller", "rapidjson", "speechlight", "tap"]
+	known_third_party = ["boltons", "certifi", "fuzzywuzzy", "jsonschema", "pyglet", "PyInstaller", "rapidjson", "speechlight", "tap"]
 	# The heading to display for first-party imports.
 	import_heading_firstparty = "Mapper Modules:"
 	# Override known first-party imports.

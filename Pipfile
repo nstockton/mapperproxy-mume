@@ -22,6 +22,7 @@ tan = {git = "https://github.com/nstockton/tan.git", ref = "personal"}
 boltons = "*"
 certifi = "*"
 fuzzywuzzy = "*"
+jsonschema = "*"
 pyglet = "*"
 python-Levenshtein = "*"
 python-rapidjson = "*"
