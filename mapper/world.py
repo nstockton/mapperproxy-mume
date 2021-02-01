@@ -53,7 +53,7 @@ from .utils import regexFuzzy
 
 if TYPE_CHECKING:  # pragma: no cover
 	# Only import pyglet.window if type checking. Prevents slowdown during tests.
-	import pyglet.window
+	import pyglet.window  # type: ignore[import]
 
 
 LEAD_BEFORE_ENTERING_VNUMS: List[str] = ["196", "3473", "3474", "12138", "12637"]
@@ -87,15 +87,15 @@ class World(object):
 		self._interface: str = interface
 		if interface != "text":
 			self._gui_queue: SimpleQueue[Union[Tuple[str], Tuple[str, Room], None]] = SimpleQueue()
-			self.window: pyglet.window.Window
+			self.window: pyglet.window.Window  # type: ignore[no-any-unimported]
 			if interface == "hc":
 				from .gui import hc
 
-				self.window = hc.Window(self)  # type: ignore
+				self.window = hc.Window(self)  # type: ignore[attr-defined]
 			elif interface == "sighted":
 				from .gui import sighted
 
-				self.window = sighted.Window(self)  # type: ignore
+				self.window = sighted.Window(self)  # type: ignore[attr-defined]
 		self._currentRoom: Room = Room()
 		self.loadRooms()
 		self.loadLabels()

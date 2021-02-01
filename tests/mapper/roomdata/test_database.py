@@ -14,7 +14,7 @@ from unittest.case import _AssertLogsContext
 from unittest.mock import Mock, _CallList, call, patch
 
 # Third-party Modules:
-import rapidjson
+import rapidjson  # type: ignore[import]
 
 # Mapper Modules:
 from mapper.roomdata.database import (

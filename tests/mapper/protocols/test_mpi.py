@@ -24,7 +24,9 @@ class TestMPIProtocol(TestCase):
 	def setUp(self) -> None:
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.mpi: MPIProtocol = MPIProtocol(self.gameReceives.extend, self.playerReceives.extend)
+		self.mpi: MPIProtocol = MPIProtocol(
+			self.gameReceives.extend, self.playerReceives.extend, outputFormat="normal"
+		)
 
 	def tearDown(self) -> None:
 		self.mpi.on_connectionLost()

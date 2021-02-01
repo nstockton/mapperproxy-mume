@@ -82,9 +82,13 @@ class TestXMLProtocol(TestCase):
 		]
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.xml: XMLProtocol = XMLProtocol(self.gameReceives.extend, self.playerReceives.extend)
 		self.mapperEvents: List[EVENT_TYPE] = []
-		self.xml.eventCaller = self.mapperEvents.append
+		self.xml: XMLProtocol = XMLProtocol(
+			self.gameReceives.extend,
+			self.playerReceives.extend,
+			outputFormat="normal",
+			eventCaller=self.mapperEvents.append,
+		)
 
 	def tearDown(self) -> None:
 		self.xml.on_connectionLost()

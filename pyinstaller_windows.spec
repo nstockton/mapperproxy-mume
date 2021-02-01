@@ -18,16 +18,16 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from _hashlib import HASH
+from _hashlib import HASH  # type: ignore[import]
 from typing import Dict, List, Match, Pattern, Tuple, Union
 
 # Third-party Modules:
-import PyInstaller.config
-import speechlight
-from PyInstaller.archive.pyz_crypto import PyiBlockCipher
-from PyInstaller.building.api import COLLECT, EXE, PYZ
-from PyInstaller.building.build_main import Analysis
-from PyInstaller.building.datastruct import TOC
+import PyInstaller.config  # type: ignore[import]
+import speechlight  # type: ignore[import]
+from PyInstaller.archive.pyz_crypto import PyiBlockCipher  # type: ignore[import]
+from PyInstaller.building.api import COLLECT, EXE, PYZ  # type: ignore[import]
+from PyInstaller.building.build_main import Analysis  # type: ignore[import]
+from PyInstaller.building.datastruct import TOC  # type: ignore[import]
 
 # Mapper Modules:
 from mapper.utils import padList
@@ -38,7 +38,7 @@ APP_AUTHOR: str = "Nick Stockton"
 APP_VERSION: str
 APP_VERSION_TYPE: str
 VERSION_REGEX: Pattern[str] = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
-ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore # NOQA: F821
+ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
 isTag: bool = False
 found_version: Union[str, None] = None
 match: Union[Match[str], None]
@@ -141,7 +141,7 @@ excludes: List[str] = [
 	"xml",
 ]
 
-dll_excludes: TOC = TOC(
+dll_excludes: TOC = TOC(  # type: ignore[no-any-unimported]
 	[
 		("api-ms-win-core-console-l1-1-0.dll", None, None),
 		("api-ms-win-core-datetime-l1-1-0.dll", None, None),
@@ -189,7 +189,7 @@ dll_excludes: TOC = TOC(
 	]
 )
 
-block_cipher: Union[PyiBlockCipher, None] = None
+block_cipher: Union[PyiBlockCipher, None] = None  # type: ignore[no-any-unimported]
 
 version_data: str = f"""
 # UTF-8
@@ -255,7 +255,7 @@ with codecs.open(
 ) as f:
 	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}"')
 
-a: Analysis = Analysis(
+a: Analysis = Analysis(  # type: ignore[no-any-unimported]
 	["start.py"],
 	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
 	binaries=[],
@@ -270,9 +270,9 @@ a: Analysis = Analysis(
 	noarchive=False,
 )
 
-pyz: PYZ = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz: PYZ = PYZ(a.pure, a.zipped_data, cipher=block_cipher)  # type: ignore[no-any-unimported]
 
-exe: EXE = EXE(
+exe: EXE = EXE(  # type: ignore[no-any-unimported]
 	pyz,
 	a.scripts,
 	[],
@@ -287,12 +287,20 @@ exe: EXE = EXE(
 	version=VERSION_FILE,
 )
 
-coll: COLLECT = COLLECT(exe, a.binaries - dll_excludes, a.zipfiles, a.datas, strip=False, upx=False, name="")
+coll: COLLECT = COLLECT(  # type: ignore[no-any-unimported]
+	exe,
+	a.binaries - dll_excludes,
+	a.zipfiles,
+	a.datas,
+	strip=False,
+	upx=False,
+	name="",
+)
 
 # Remove junk.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(os.path.normpath(os.path.join(APP_DEST, os.pardir, "__pycache__")), ignore_errors=True)
-wp: str = os.path.realpath(os.path.expanduser(workpath))  # type: ignore # NOQA: F821
+wp: str = os.path.realpath(os.path.expanduser(workpath))  # type: ignore[name-defined] # NOQA: F821
 shutil.rmtree(wp, ignore_errors=True)
 # The directory above workpath should now be empty.
 # Using os.rmdir to remove it instead of shutil.rmtree for safety.
@@ -343,7 +351,9 @@ shutil.make_archive(
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
-hashes: Dict[str, HASH] = {"sha256": hashlib.sha256()}
+hashes: Dict[str, HASH] = {  # type: ignore[no-any-unimported]
+	"sha256": hashlib.sha256(),
+}
 block_size: int = 2 ** 16
 with codecs.open(ZIP_FILE, "rb") as f:
 	for block in iter(lambda: f.read(block_size), b""):

@@ -22,7 +22,7 @@ from mapper import INTERFACES, OUTPUT_FORMATS
 
 
 try:
-	import pyglet
+	import pyglet  # type: ignore[import]
 except ImportError:
 	pyglet = None
 	print("Unable to import Pyglet. GUI will be disabled.")
@@ -30,7 +30,7 @@ except ImportError:
 
 VERSION: str
 try:
-	import mpm_version
+	import mpm_version  # type: ignore[import]
 except ImportError:
 	VERSION = "%(prog)s: No version information available. This is normal when running from source."
 else:

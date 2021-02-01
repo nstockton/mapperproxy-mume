@@ -17,7 +17,7 @@ import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 # Third-party Modules:
-from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket
+from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket  # type: ignore[import]
 
 # Local Modules:
 from .mapper import Mapper
@@ -33,7 +33,7 @@ else:
 	CERT_LOCATION = certifi.where()
 
 try:
-	import pyglet
+	import pyglet  # type: ignore[import]
 except ImportError:
 	pyglet = None
 
@@ -44,8 +44,8 @@ LISTENING_STATUS_FILE: str = os.path.join(getDirectoryPath("."), "mapper_ready.i
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class BufferedSSLSocket(BufferedSocket):  # type: ignore
-	def __init__(
+class BufferedSSLSocket(BufferedSocket):  # type: ignore[misc, no-any-unimported]
+	def __init__(  # type: ignore[no-any-unimported]
 		self,
 		sock: Union[socket.socket, MockedSocket],
 		timeout: Union[_UNSET, float, None] = _UNSET,
@@ -105,10 +105,10 @@ class BufferedSSLSocket(BufferedSocket):  # type: ignore
 
 
 class Player(threading.Thread):
-	def __init__(self, player: BufferedSocket, mapper: Mapper) -> None:
+	def __init__(self, player: BufferedSocket, mapper: Mapper) -> None:  # type: ignore[no-any-unimported]
 		threading.Thread.__init__(self)
 		self.name: str = "Player"
-		self.player: BufferedSocket = player
+		self.player: BufferedSocket = player  # type: ignore[no-any-unimported]
 		self.mapper: Mapper = mapper
 		self.finished: threading.Event = threading.Event()
 
@@ -241,7 +241,10 @@ def main(
 	unbufferedPlayerSocket: socket.socket
 	playerAddress: Tuple[str, int]
 	unbufferedPlayerSocket, playerAddress = proxySocket.accept()
-	playerSocket: BufferedSocket = BufferedSocket(unbufferedPlayerSocket, timeout=1.0)
+	playerSocket: BufferedSocket = BufferedSocket(  # type: ignore[no-any-unimported]
+		unbufferedPlayerSocket,
+		timeout=1.0,
+	)
 	# initialise server connection
 	unbufferedGameSocket: Union[socket.socket, MockedSocket]
 	try:

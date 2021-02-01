@@ -9,9 +9,10 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import socket
-from typing import Any, Callable, Dict, Tuple, Union
+from typing import Any, Callable, Dict, List, Tuple, Union
 
 # Local Modules:
+from .base import Protocol
 from .manager import Manager
 from .mpi import MPI_INIT, MPIProtocol
 from .telnet import TelnetProtocol
@@ -45,12 +46,12 @@ class Telnet(TelnetProtocol):
 		proxy: The proxy that spawned this object.
 	"""
 
-	def __init__(self, name: str, proxy: "ProxyHandler", *args: Any, **kwargs: Any) -> None:
-		super().__init__(*args, **kwargs)
-		self.name: str = name.lower()
+	def __init__(self, *args: Any, name: str, proxy: ProxyHandler, **kwargs: Any) -> None:
+		super().__init__(*args, **kwargs)  # type: ignore[misc]
+		self.name: str = name
 		if self.name not in ("player", "game"):
 			raise ValueError("Name must be 'player' or 'game'")
-		self.proxy: "ProxyHandler" = proxy
+		self.proxy: ProxyHandler = proxy
 
 	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
 		if command in NEGOTIATION_BYTES and option not in self.subnegotiationMap:
@@ -63,21 +64,24 @@ class Telnet(TelnetProtocol):
 
 class Player(Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		super().__init__("player", *args, **kwargs)
+		super().__init__(*args, name="player", **kwargs)  # type: ignore[misc]
 
 	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
+		# Forward unhandled commands to the game.
 		if option is None:
 			self.proxy.game.write(IAC + command)
 		else:
 			self.proxy.game.write(IAC + command + option)
 
 	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
+		# Forward unhandled subnegotiations to the game.
 		self.proxy.game.write(IAC + SB + option + data + IAC + SE)
 
 	def on_enableLocal(self, option: bytes) -> bool:
-		subnegotiationMap: Union[Dict[bytes, Callable[[bytes], None]], None]
-		subnegotiationMap = getattr(self.proxy.game._handlers[0], "subnegotiationMap", None)
-		if subnegotiationMap is not None and option in subnegotiationMap:
+		gameSubnegotiationMap: Union[Dict[bytes, Callable[[bytes], None]], None]
+		game: Protocol = self.proxy.game._handlers[0]
+		gameSubnegotiationMap = getattr(game, "subnegotiationMap", None)
+		if gameSubnegotiationMap is not None and option in gameSubnegotiationMap:
 			return False
 		return super().on_enableLocal(option)
 
@@ -91,14 +95,15 @@ class Game(Telnet):
 	"""Supported character sets."""
 
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		super().__init__("game", *args, **kwargs)
+		super().__init__(*args, name="game", **kwargs)  # type: ignore[misc]
 		self.commandMap[GA] = self.on_ga
 		self.subnegotiationMap[CHARSET] = self.on_charset
+		self._charset: bytes = self.charsets[0]
 
 	@property
 	def charset(self) -> bytes:
 		"""The character set to be used."""
-		return bytes(getattr(self, "_charset", self.charsets[0]))
+		return self._charset
 
 	@charset.setter
 	def charset(self, value: bytes) -> None:
@@ -148,7 +153,8 @@ class Game(Telnet):
 
 	def on_ga(self, *args: Union[bytes, None]) -> None:
 		"""Called when a Go Ahead command is received."""
-		self.proxy.player.write(self.proxy.promptTerminator)
+		promptTerminator: bytes = self.proxy.promptTerminator
+		self.proxy.player.write(promptTerminator)
 
 	def on_connectionMade(self) -> None:
 		super().on_connectionMade()
@@ -180,20 +186,41 @@ class Game(Telnet):
 
 
 class ProxyHandler(object):
-	def __init__(self, playerSocket: socket.socket, gameSocket: socket.socket, **kwargs: Any) -> None:
-		self.outputFormat = kwargs["outputFormat"]
-		self.promptTerminator = kwargs["promptTerminator"] or IAC + GA
-		self.promptTerminator = self.promptTerminator.replace(CR_LF, LF).replace(CR_NULL, CR)
-		self.promptTerminator = self.promptTerminator.replace(CR_NULL, CR).replace(LF, CR_LF)
-		self.isEmulatingOffline = kwargs["isEmulatingOffline"]
-		self.mapperCommands = kwargs["mapperCommands"]
-		self.eventCaller: Callable[[MAPPER_QUEUE_TYPE], None] = kwargs["eventCaller"]
-		self.player = Manager(playerSocket.sendall, self.on_playerReceived)
-		self.player.register(Player, self)
-		self.game = Manager(gameSocket.sendall, self.on_gameReceived)
-		self.game.register(Game, self)
-		self.game.register(MPIProtocol, outputFormat=self.outputFormat)
-		self.game.register(XMLProtocol, outputFormat=self.outputFormat, eventCaller=self.eventCaller)
+	def __init__(
+		self,
+		playerSocket: socket.socket,
+		gameSocket: socket.socket,
+		*,
+		outputFormat: str,
+		promptTerminator: Union[bytes, None],
+		isEmulatingOffline: bool,
+		mapperCommands: List[bytes],
+		eventCaller: Callable[[MAPPER_QUEUE_TYPE], None],
+	) -> None:
+		self.outputFormat: str = outputFormat
+		self.promptTerminator: bytes
+		if promptTerminator is None:
+			self.promptTerminator = IAC + GA
+		else:
+			self.promptTerminator = (
+				promptTerminator.replace(CR_LF, LF)
+				.replace(CR_NULL, CR)
+				.replace(CR_NULL, CR)
+				.replace(LF, CR_LF)
+			)
+		self.isEmulatingOffline: bool = isEmulatingOffline
+		self.mapperCommands: List[bytes] = mapperCommands
+		self.eventCaller: Callable[[MAPPER_QUEUE_TYPE], None] = eventCaller
+		self.player: Manager = Manager(playerSocket.sendall, self.on_playerReceived)
+		self.player.register(Player, proxy=self)  # type: ignore[misc]
+		self.game: Manager = Manager(gameSocket.sendall, self.on_gameReceived)
+		self.game.register(Game, proxy=self)  # type: ignore[misc]
+		self.game.register(MPIProtocol, outputFormat=self.outputFormat)  # type: ignore[misc]
+		self.game.register(
+			XMLProtocol,  # type: ignore[misc]
+			outputFormat=self.outputFormat,
+			eventCaller=self.eventCaller,
+		)
 
 	def close(self) -> None:
 		self.disconnect()

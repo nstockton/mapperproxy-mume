@@ -11,11 +11,11 @@ import codecs
 import json
 import logging
 import os.path
-from typing import Any, Dict, List, Mapping, Tuple, Union
+from typing import Any, Callable, Dict, List, Mapping, Tuple, Union
 
 # Third-party Modules:
-import jsonschema
-import rapidjson
+import jsonschema  # type: ignore[import]
+import rapidjson  # type: ignore[import]
 
 # Local Modules:
 from ..utils import getDirectoryPath
@@ -61,7 +61,7 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 	"""
 	with codecs.open(schemaPath, "rb", encoding="utf-8") as fileObj:
 		schema: Dict[str, Any] = json.load(fileObj)
-	validate: rapidjson.Validator = rapidjson.Validator(rapidjson.dumps(schema))
+	validate: Callable[[str], None] = rapidjson.Validator(rapidjson.dumps(schema))
 	try:
 		validate(rapidjson.dumps(database))
 	except rapidjson.ValidationError as rapidjsonExc:

@@ -72,12 +72,16 @@ class XMLProtocol(Protocol):
 	}
 	"""A mapping of tag to replacement values for Tintin."""
 
-	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		self.outputFormat: Union[str, None] = kwargs.pop("outputFormat") if "outputFormat" in kwargs else None
-		self.eventCaller: Callable[[Tuple[int, MUD_DATA_TYPE]], None] = (
-			kwargs.pop("eventCaller") if "eventCaller" in kwargs else lambda *args: None
-		)
-		super().__init__(*args, **kwargs)
+	def __init__(
+		self,
+		*args: Any,
+		outputFormat: str,
+		eventCaller: Callable[[Tuple[int, MUD_DATA_TYPE]], None],
+		**kwargs: Any,
+	) -> None:
+		self.outputFormat: str = outputFormat
+		self.eventCaller: Callable[[Tuple[int, MUD_DATA_TYPE]], None] = eventCaller
+		super().__init__(*args, **kwargs)  # type: ignore[misc]
 		self._state: str = "data"
 		self._tagBuffer: bytearray = bytearray()  # Used for start and end tag names.
 		self._textBuffer: bytearray = bytearray()  # Used for the text between start and end tags.

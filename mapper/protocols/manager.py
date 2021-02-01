@@ -28,11 +28,12 @@ class Manager(object):
 		self._readBuffer: List[bytes] = []
 		self._writeBuffer: List[bytes] = []
 		self._handlers: List[Protocol] = []
+		self._isConnected: bool = False
 
 	@property
 	def isConnected(self) -> bool:
 		"""Connection status."""
-		return bool(getattr(self, "_isConnected", False))
+		return self._isConnected
 
 	def __enter__(self) -> Manager:
 		self.connect()
@@ -59,6 +60,7 @@ class Manager(object):
 
 		If data was buffered while not connected, `parse` will be called with the data.
 		"""
+		data: bytes
 		if not self.isConnected:
 			self._isConnected = True
 			if self._readBuffer:
@@ -120,13 +122,12 @@ class Manager(object):
 		elif data:
 			self._writer(data)
 
-	def register(self, handler: Type[Protocol], *args: Any, **kwargs: Any) -> None:
+	def register(self, handler: Type[Protocol], **kwargs: Any) -> None:
 		"""
 		Registers a protocol handler.
 
 		Args:
 			handler: The handler to be registered.
-			*args: Positional arguments to be passed to the handler's constructer.
 			**kwargs: Key word arguments to be passed to the handler's constructer.
 		"""
 		if not inspect.isclass(handler):
@@ -134,7 +135,7 @@ class Manager(object):
 		for i in self._handlers:
 			if isinstance(i, handler):
 				raise ValueError("Already registered.")
-		instance: Protocol = handler(*args, self.write, self._receiver, **kwargs)
+		instance: Protocol = handler(self.write, self._receiver, **kwargs)  # type: ignore[misc]
 		if self._handlers:
 			self._handlers[-1]._receiver = instance.on_dataReceived
 		self._handlers.append(instance)

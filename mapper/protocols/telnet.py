@@ -206,7 +206,7 @@ class TelnetProtocol(BaseTelnetProtocol):
 	"""Valid states for the state machine."""
 
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		super().__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)  # type: ignore[misc]
 		self._state: str = "data"
 		self._options: Dict[bytes, _OptionState] = {}
 		"""A mapping of option bytes to their current state."""
@@ -623,4 +623,4 @@ class TelnetProtocol(BaseTelnetProtocol):
 		raise NotImplementedError(f"Don't know how to disable local Telnet option {option!r}")
 
 	def on_disableRemote(self, option: bytes) -> None:
-		raise NotImplementedError(f"Don't know how to disable local Telnet option {option!r}")
+		raise NotImplementedError(f"Don't know how to disable remote Telnet option {option!r}")

@@ -95,7 +95,7 @@ class TestManager(TestCase):
 	def testManagerRegister(self) -> None:
 		with self.assertRaises(ValueError):
 			# Handler class required, not instance.
-			self.manager.register(Protocol1(lambda *args: None, lambda *args: None))  # type: ignore
+			self.manager.register(Protocol1(lambda *args: None, lambda *args: None))  # type: ignore[arg-type]
 		self.manager.register(Protocol1)
 		with self.assertRaises(ValueError):
 			self.manager.register(Protocol1)
@@ -109,7 +109,7 @@ class TestManager(TestCase):
 		self.manager.register(Protocol1)
 		with self.assertRaises(ValueError):
 			# Handler instance required, not class.
-			self.manager.unregister(Protocol1)  # type: ignore
+			self.manager.unregister(Protocol1)  # type: ignore[arg-type]
 		with self.assertRaises(ValueError):
 			# Calling Manager.unregister on an instance that was not registered.
 			self.manager.unregister(Protocol2(lambda *args: None, lambda *args: None))

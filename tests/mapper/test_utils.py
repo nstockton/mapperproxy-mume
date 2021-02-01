@@ -122,7 +122,7 @@ class TestUtils(TestCase):
 
 	def test_regexFuzzy(self) -> None:
 		with self.assertRaises(TypeError):
-			utils.regexFuzzy(None)  # type: ignore
+			utils.regexFuzzy(None)  # type: ignore[arg-type]
 		self.assertEqual(utils.regexFuzzy(""), "")
 		self.assertEqual(utils.regexFuzzy([]), "")
 		self.assertEqual(utils.regexFuzzy([""]), "")
@@ -193,7 +193,7 @@ class TestUtils(TestCase):
 
 	def test_decodeBytes(self) -> None:
 		with self.assertRaises(TypeError):
-			utils.decodeBytes(None)  # type: ignore
+			utils.decodeBytes(None)  # type: ignore[arg-type]
 		characters: str = "".join(chr(i) for i in range(256))
 		self.assertEqual(utils.decodeBytes(characters.encode("utf-8")), characters)
 		self.assertEqual(utils.decodeBytes(characters.encode("latin-1")), characters)
