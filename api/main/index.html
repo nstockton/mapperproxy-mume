@@ -1,792 +1,1294 @@
 
-<!DOCTYPE html>
-
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="Mapper Proxy Main Page" name="description"/>
-<meta content="Nick Stockton" name="author"/>
-<link href="https://nstockton.github.io/mapperproxy-mume/api/main/" rel="canonical"/>
-<link href="../../assets/images/favicon.png" rel="shortcut icon"/>
-<meta content="mkdocs-1.1.2, mkdocs-material-6.2.3" name="generator"/>
-<title>main.py - Mapper Proxy</title>
-<link href="../../assets/stylesheets/main.3b61ea93.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.39b8e14a.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&amp;display=fallback" rel="stylesheet"/>
-<style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
-</head>
-<body data-md-color-accent="none" data-md-color-primary="none" data-md-color-scheme="" dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#mapper.main">
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mapper Proxy Main Page">
+      
+      
+      
+        <meta name="author" content="Nick Stockton">
+      
+      
+        <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/main/">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+    
+    
+      
+        <title>main.py - Mapper Proxy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mapper.main" class="md-skip">
           Skip to content
         </a>
-</div>
-<div data-md-component="announce">
-</div>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
 <header class="md-header" data-md-component="header">
-<nav aria-label="Header" class="md-header-nav md-grid">
-<a aria-label="Mapper Proxy" class="md-header-nav__button md-logo" href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
-</a>
-<label class="md-header-nav__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"></path></svg>
-</label>
-<div class="md-header-nav__title" data-md-component="header-title">
-<div class="md-header-nav__ellipsis">
-<div class="md-header-nav__topic">
-<span class="md-ellipsis">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             Mapper Proxy
           </span>
-</div>
-<div class="md-header-nav__topic">
-<span class="md-ellipsis">
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             
               main.py
             
           </span>
-</div>
-</div>
-</div>
-<label class="md-header-nav__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
-</label>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
 <div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" data-md-state="active" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
-</label>
-<button aria-label="Clear" class="md-search__icon md-icon" data-md-component="search-reset" tabindex="-1" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
-</button>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
             Initializing search
           </div>
-<ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="md-header-nav__source">
-<a class="md-source" href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository">
-<div class="md-source__icon md-icon">
-<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
-</div>
-<div class="md-source__repository">
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
     nstockton/mapperproxy-mume
   </div>
 </a>
-</div>
-</nav>
+      </div>
+    
+  </nav>
 </header>
-<div class="md-container" data-md-component="container">
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="Mapper Proxy" class="md-nav__button md-logo" href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
-</a>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
     Mapper Proxy
   </label>
-<div class="md-nav__source">
-<a class="md-source" href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository">
-<div class="md-source__icon md-icon">
-<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
-</div>
-<div class="md-source__repository">
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
     nstockton/mapperproxy-mume
   </div>
 </a>
-</div>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../..">
-      Home
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../">
-      API Index
-    </a>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/>
-<label class="md-nav__link" for="nav-3">
-      API Navigation
-      <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="API Navigation" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="nav-3">
-<span class="md-nav__icon md-icon"></span>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        API Index
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      
+      <label class="md-nav__link" for="nav-3">
         API Navigation
-      </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" id="nav-3-1" type="checkbox"/>
-<label class="md-nav__link" for="nav-3-1">
-      protocols
-      <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="protocols" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="nav-3-1">
-<span class="md-nav__icon md-icon"></span>
-        protocols
-      </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/base/">
-      base.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/manager/">
-      manager.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/mpi/">
-      mpi.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/proxy/">
-      proxy.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/telnet/">
-      telnet.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/telnet_constants/">
-      telnet_constants.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/xml/">
-      xml.py
-    </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" id="nav-3-2" type="checkbox"/>
-<label class="md-nav__link" for="nav-3-2">
-      roomdata
-      <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="roomdata" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="nav-3-2">
-<span class="md-nav__icon md-icon"></span>
-        roomdata
-      </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../roomdata/database/">
-      database.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../roomdata/objects/">
-      objects.py
-    </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../cleanmap/">
-      cleanmap.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../clock/">
-      clock.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../config/">
-      config.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../delays/">
-      delays.py
-    </a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-        main.py
         <span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-      main.py
-    </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API Navigation" data-md-level="1">
+        <label class="md-nav__title" for="nav-3">
+          <span class="md-nav__icon md-icon"></span>
+          API Navigation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
+      
+      <label class="md-nav__link" for="nav-3-1">
+        protocols
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="protocols" data-md-level="2">
+        <label class="md-nav__title" for="nav-3-1">
+          <span class="md-nav__icon md-icon"></span>
+          protocols
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/base/" class="md-nav__link">
+        base.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/manager/" class="md-nav__link">
+        manager.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/mpi/" class="md-nav__link">
+        mpi.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/proxy/" class="md-nav__link">
+        proxy.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/telnet/" class="md-nav__link">
+        telnet.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/telnet_constants/" class="md-nav__link">
+        telnet_constants.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/xml/" class="md-nav__link">
+        xml.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
+      
+      <label class="md-nav__link" for="nav-3-2">
+        roomdata
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="roomdata" data-md-level="2">
+        <label class="md-nav__title" for="nav-3-2">
+          <span class="md-nav__icon md-icon"></span>
+          roomdata
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roomdata/database/" class="md-nav__link">
+        database.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roomdata/objects/" class="md-nav__link">
+        objects.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cleanmap/" class="md-nav__link">
+        cleanmap.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clock/" class="md-nav__link">
+        clock.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        config.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../delays/" class="md-nav__link">
+        delays.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          main.py
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        main.py
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main">
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.main" class="md-nav__link">
     main
   </a>
-<nav aria-label="main" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket">
+  
+    <nav class="md-nav" aria-label="main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket" class="md-nav__link">
     BufferedSSLSocket
   </a>
-<nav aria-label="BufferedSSLSocket" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.family">
+  
+    <nav class="md-nav" aria-label="BufferedSSLSocket">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.family" class="md-nav__link">
     family
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.proto">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.proto" class="md-nav__link">
     proto
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.type">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.type" class="md-nav__link">
     type
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.buffer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.buffer" class="md-nav__link">
     buffer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.close">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.close" class="md-nav__link">
     close()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.fileno">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.fileno" class="md-nav__link">
     fileno()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.flush">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.flush" class="md-nav__link">
     flush()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getpeername">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getpeername" class="md-nav__link">
     getpeername()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getrecvbuffer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getrecvbuffer" class="md-nav__link">
     getrecvbuffer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getsendbuffer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getsendbuffer" class="md-nav__link">
     getsendbuffer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getsockname">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getsockname" class="md-nav__link">
     getsockname()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getsockopt">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getsockopt" class="md-nav__link">
     getsockopt()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.peek">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.peek" class="md-nav__link">
     peek()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv" class="md-nav__link">
     recv()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv_close">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv_close" class="md-nav__link">
     recv_close()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv_size">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv_size" class="md-nav__link">
     recv_size()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv_until">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv_until" class="md-nav__link">
     recv_until()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.send">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.send" class="md-nav__link">
     send()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.sendall">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.sendall" class="md-nav__link">
     sendall()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.setmaxsize">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.setmaxsize" class="md-nav__link">
     setmaxsize()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.setsockopt">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.setsockopt" class="md-nav__link">
     setsockopt()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.settimeout">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.settimeout" class="md-nav__link">
     settimeout()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.shutdown">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.shutdown" class="md-nav__link">
     shutdown()
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game" class="md-nav__link">
     Game
   </a>
-<nav aria-label="Game" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.daemon">
+  
+    <nav class="md-nav" aria-label="Game">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.daemon" class="md-nav__link">
     daemon
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.ident">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.ident" class="md-nav__link">
     ident
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.name">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.name" class="md-nav__link">
     name
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.is_alive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.is_alive" class="md-nav__link">
     is_alive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.isAlive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.isAlive" class="md-nav__link">
     isAlive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.join">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.join" class="md-nav__link">
     join()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.run">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.run" class="md-nav__link">
     run()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.start">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.start" class="md-nav__link">
     start()
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player" class="md-nav__link">
     Player
   </a>
-<nav aria-label="Player" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.daemon">
+  
+    <nav class="md-nav" aria-label="Player">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.daemon" class="md-nav__link">
     daemon
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.ident">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.ident" class="md-nav__link">
     ident
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.name">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.name" class="md-nav__link">
     name
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.is_alive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.is_alive" class="md-nav__link">
     is_alive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.isAlive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.isAlive" class="md-nav__link">
     isAlive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.join">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.join" class="md-nav__link">
     join()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.run">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.run" class="md-nav__link">
     run()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.start">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.start" class="md-nav__link">
     start()
   </a>
+  
 </li>
-</ul>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
-</li>
-</ul>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mapper/" class="md-nav__link">
+        mapper.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mudevents/" class="md-nav__link">
+        mudevents.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utils/" class="md-nav__link">
+        utils.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../world/" class="md-nav__link">
+        world.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
 </nav>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../mapper/">
-      mapper.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../mudevents/">
-      mudevents.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../utils/">
-      utils.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../world/">
-      world.py
-    </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../license/">
-      License
-    </a>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main">
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.main" class="md-nav__link">
     main
   </a>
-<nav aria-label="main" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket">
+  
+    <nav class="md-nav" aria-label="main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket" class="md-nav__link">
     BufferedSSLSocket
   </a>
-<nav aria-label="BufferedSSLSocket" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.family">
+  
+    <nav class="md-nav" aria-label="BufferedSSLSocket">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.family" class="md-nav__link">
     family
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.proto">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.proto" class="md-nav__link">
     proto
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.type">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.type" class="md-nav__link">
     type
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.buffer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.buffer" class="md-nav__link">
     buffer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.close">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.close" class="md-nav__link">
     close()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.fileno">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.fileno" class="md-nav__link">
     fileno()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.flush">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.flush" class="md-nav__link">
     flush()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getpeername">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getpeername" class="md-nav__link">
     getpeername()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getrecvbuffer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getrecvbuffer" class="md-nav__link">
     getrecvbuffer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getsendbuffer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getsendbuffer" class="md-nav__link">
     getsendbuffer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getsockname">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getsockname" class="md-nav__link">
     getsockname()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.getsockopt">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.getsockopt" class="md-nav__link">
     getsockopt()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.peek">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.peek" class="md-nav__link">
     peek()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv" class="md-nav__link">
     recv()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv_close">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv_close" class="md-nav__link">
     recv_close()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv_size">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv_size" class="md-nav__link">
     recv_size()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.recv_until">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.recv_until" class="md-nav__link">
     recv_until()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.send">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.send" class="md-nav__link">
     send()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.sendall">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.sendall" class="md-nav__link">
     sendall()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.setmaxsize">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.setmaxsize" class="md-nav__link">
     setmaxsize()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.setsockopt">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.setsockopt" class="md-nav__link">
     setsockopt()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.settimeout">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.settimeout" class="md-nav__link">
     settimeout()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.BufferedSSLSocket.shutdown">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.BufferedSSLSocket.shutdown" class="md-nav__link">
     shutdown()
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game" class="md-nav__link">
     Game
   </a>
-<nav aria-label="Game" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.daemon">
+  
+    <nav class="md-nav" aria-label="Game">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.daemon" class="md-nav__link">
     daemon
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.ident">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.ident" class="md-nav__link">
     ident
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.name">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.name" class="md-nav__link">
     name
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.is_alive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.is_alive" class="md-nav__link">
     is_alive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.isAlive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.isAlive" class="md-nav__link">
     isAlive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.join">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.join" class="md-nav__link">
     join()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.run">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.run" class="md-nav__link">
     run()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Game.start">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Game.start" class="md-nav__link">
     start()
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player" class="md-nav__link">
     Player
   </a>
-<nav aria-label="Player" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.daemon">
+  
+    <nav class="md-nav" aria-label="Player">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.daemon" class="md-nav__link">
     daemon
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.ident">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.ident" class="md-nav__link">
     ident
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.name">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.name" class="md-nav__link">
     name
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.is_alive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.is_alive" class="md-nav__link">
     is_alive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.isAlive">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.isAlive" class="md-nav__link">
     isAlive()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.join">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.join" class="md-nav__link">
     join()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.run">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.run" class="md-nav__link">
     run()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.main.Player.start">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.main.Player.start" class="md-nav__link">
     start()
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-</ul>
+      
+    </ul>
+  
 </nav>
-</div>
-</div>
-</div>
-<div class="md-content">
-<article class="md-content__inner md-typeset">
-<div class="doc doc-object doc-module">
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <div class="doc doc-object doc-module">
 <h1 class="doc doc-heading" id="mapper.main">
-<span class="doc doc-types"><small class="doc doc-type doc-type-module"><code>Module</code></small></span>
-<code>mapper.main</code>
-<a class="headerlink" href="#mapper.main" title="Permanent link">¶</a></h1>
+
+        <code>Module mapper.main</code>
+
+
+
+      <a class="headerlink" href="#mapper.main" title="Permanent link">&para;</a></h1>
 <div class="doc doc-contents first">
 <div class="doc doc-children">
 <div class="doc doc-object doc-class">
 <h2 class="doc doc-heading" id="mapper.main.BufferedSSLSocket">
-<span class="doc doc-types"><small class="doc doc-type doc-type-class"><code>Class</code></small></span>
-<code>BufferedSSLSocket</code>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+        <code>Class BufferedSSLSocket</code>
+
+
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <div class="doc doc-children">
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.family">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">family        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.family" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">family</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.family" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A passthrough to the wrapped socket's family. BufferedSocket
 supports all widely-used families, so this read-only attribute
 can be one of :data:<code>socket.AF_INET</code> for IP,
@@ -796,15 +1298,17 @@ for UDS.</p>
 </div>
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.proto">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">proto        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.proto" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">proto</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.proto" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A passthrough to the wrapped socket's protocol. The <code>proto</code>
 attribute is very rarely used, so it's always 0, meaning "the
 default" protocol. Pretty much all the practical information
@@ -815,32 +1319,36 @@ thinking about this.</p>
 </div>
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.type">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">type        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.type" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="nb">type</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.type" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A passthrough to the wrapped socket's type. Valid usages should
 only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
 </div>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.buffer">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">buffer<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.buffer" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.buffer" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Buffer <em>data</em> bytes for the next send operation.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="s2">"Buffer *data* bytes for the next send operation."</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
@@ -853,13 +1361,15 @@ only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.close">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">close<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.close" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.close" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Closes the wrapped socket, and empties the internal buffers. The
 send buffer is not flushed automatically, so if you have been
 calling :meth:<code>~BufferedSocket.buffer</code>, be sure to call
@@ -867,8 +1377,8 @@ calling :meth:<code>~BufferedSocket.buffer</code>, be sure to call
 method. After calling this method, future socket operations
 will raise :exc:<code>socket.error</code>.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Closes the wrapped socket, and empties the internal buffers. The</span>
 <span class="sd">    send buffer is not flushed automatically, so if you have been</span>
@@ -891,13 +1401,15 @@ will raise :exc:<code>socket.error</code>.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.fileno">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">fileno<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.fileno" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.fileno" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Returns the file descriptor of the wrapped socket. -1 if it has
 been closed on this end.</p>
 <p>Note that this makes the BufferedSocket selectable, i.e.,
@@ -906,8 +1418,8 @@ libraries. Keep in mind that the operating system cannot know
 about data in BufferedSocket's internal buffer. Exercise
 discipline with calling <code>recv*</code> functions.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Returns the file descriptor of the wrapped socket. -1 if it has</span>
 <span class="sd">    been closed on this end.</span>
@@ -926,17 +1438,19 @@ discipline with calling <code>recv*</code> functions.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.flush">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">flush<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.flush" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.flush" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Send the contents of the internal send buffer.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"Send the contents of the internal send buffer."</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
@@ -949,19 +1463,21 @@ discipline with calling <code>recv*</code> functions.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.getpeername">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">getpeername<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.getpeername" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.getpeername" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Convenience function to return the remote address to which the
 wrapped socket is connected.  See :meth:<code>socket.getpeername</code>
 for more details.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Convenience function to return the remote address to which the</span>
 <span class="sd">    wrapped socket is connected.  See :meth:`socket.getpeername`</span>
@@ -975,17 +1491,19 @@ for more details.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.getrecvbuffer">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">getrecvbuffer<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.getrecvbuffer" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.getrecvbuffer" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Returns the receive buffer bytestring (rbuf).</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"Returns the receive buffer bytestring (rbuf)."</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
@@ -997,17 +1515,19 @@ for more details.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.getsendbuffer">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">getsendbuffer<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.getsendbuffer" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.getsendbuffer" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Returns a copy of the send buffer list.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">"Returns a copy of the send buffer list."</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
@@ -1019,18 +1539,20 @@ for more details.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.getsockname">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">getsockname<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.getsockname" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.getsockname" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Convenience function to return the wrapped socket's own address.
 See :meth:<code>socket.getsockname</code> for more details.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Convenience function to return the wrapped socket's own address.</span>
 <span class="sd">    See :meth:`socket.getsockname` for more details.</span>
@@ -1043,18 +1565,20 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.getsockopt">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">getsockopt<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.getsockopt" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.getsockopt" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Convenience function passing through to the wrapped socket's
 :meth:<code>socket.getsockopt</code>.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Convenience function passing through to the wrapped socket's</span>
 <span class="sd">    :meth:`socket.getsockopt`.</span>
@@ -1070,13 +1594,15 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.peek">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">peek<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.peek" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.peek" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Returns <em>size</em> bytes from the socket and/or internal buffer. Bytes
 are retained in BufferedSocket's internal recv buffer. To only
 see bytes in the recv buffer, use :meth:<code>getrecvbuffer</code>.</p>
@@ -1107,7 +1633,7 @@ see bytes in the recv buffer, use :meth:<code>getrecvbuffer</code>.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x01A93C30&gt;</code></td>
+<td><code>&lt;object object at 0x01763C90&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1116,8 +1642,8 @@ buffer and socket before <em>timeout</em> expires, then a
 :exc:<code>Timeout</code> will be raised. If the connection is closed, a
 :exc:<code>ConnectionClosed</code> will be raised.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Returns *size* bytes from the socket and/or internal buffer. Bytes</span>
 <span class="sd">    are retained in BufferedSocket's internal recv buffer. To only</span>
@@ -1147,13 +1673,15 @@ buffer and socket before <em>timeout</em> expires, then a
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Returns <strong>up to</strong> <em>size</em> bytes, using the internal buffer before
 performing a single :meth:<code>socket.recv</code> operation.</p>
 <p><strong>Parameters:</strong></p>
@@ -1193,7 +1721,7 @@ the default, <code>0</code>, is valid.</p>
 timeout. Defaults to the value set in the constructor
 of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x01A93C30&gt;</code></td>
+<td><code>&lt;object object at 0x01763C90&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1203,8 +1731,8 @@ of BufferedSocket.</p>
 then the socket is closed and recv buffer is empty. Further
 calls to recv will raise :exc:<code>socket.error</code>.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Returns **up to** *size* bytes, using the internal buffer before</span>
 <span class="sd">    performing a single :meth:`socket.recv` operation.</span>
@@ -1251,18 +1779,20 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv_close">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv_close<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv_close" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv_close" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Receive until the connection is closed, up to <em>maxsize</em> bytes. If
 more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong</code>.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Receive until the connection is closed, up to *maxsize* bytes. If</span>
 <span class="sd">    more than *maxsize* bytes are received, raises :exc:`MessageTooLong`.</span>
@@ -1293,13 +1823,15 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv_size">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv_size<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv_size" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv_size" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Read off of the internal buffer, then off the socket, until
 <em>size</em> bytes have been read.</p>
 <p><strong>Parameters:</strong></p>
@@ -1329,7 +1861,7 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x01A93C30&gt;</code></td>
+<td><code>&lt;object object at 0x01763C90&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1338,8 +1870,8 @@ buffer and socket before <em>timeout</em> expires, then a
 :exc:<code>Timeout</code> will be raised. If the connection is closed, a
 :exc:<code>ConnectionClosed</code> will be raised.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Read off of the internal buffer, then off the socket, until</span>
 <span class="sd">    *size* bytes have been read.</span>
@@ -1401,13 +1933,15 @@ buffer and socket before <em>timeout</em> expires, then a
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.recv_until">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">recv_until<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv_until" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.recv_until" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Receive until <em>delimiter</em> is found, <em>maxsize</em> bytes have been read,
 or <em>timeout</em> is exceeded.</p>
 <p><strong>Parameters:</strong></p>
@@ -1438,7 +1972,7 @@ in the socket stream.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x01A93C30&gt;</code></td>
+<td><code>&lt;object object at 0x01763C90&gt;</code></td>
 </tr>
 <tr>
 <td><code>maxsize</code></td>
@@ -1447,7 +1981,7 @@ set in the constructor of BufferedSocket.</p>
 <p>The maximum size for the internal buffer.
 Defaults to the value set in the constructor.</p>
 </td>
-<td><code>&lt;object object at 0x01A93C30&gt;</code></td>
+<td><code>&lt;object object at 0x01763C90&gt;</code></td>
 </tr>
 <tr>
 <td><code>with_delimiter</code></td>
@@ -1474,8 +2008,8 @@ forwarding the messages.</p>
     occurs, such as operating on a closed socket.</li>
 </ul>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span>
                <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">"""Receive until *delimiter* is found, *maxsize* bytes have been read,</span>
@@ -1564,13 +2098,15 @@ forwarding the messages.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.send">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">send<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.send" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.send" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Send the contents of the internal send buffer, as well as <em>data</em>,
 to the receiving end of the connection. Returns the total
 number of bytes sent. If no exception is raised, all of <em>data</em> was
@@ -1611,7 +2147,7 @@ the default 0 is valid.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x01A93C30&gt;</code></td>
+<td><code>&lt;object object at 0x01763C90&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1620,8 +2156,8 @@ complete before <em>timeout</em>. In the event of an exception, use
 :meth:<code>BufferedSocket.getsendbuffer</code> to see which data was
 unsent.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""Send the contents of the internal send buffer, as well as *data*,</span>
 <span class="sd">    to the receiving end of the connection. Returns the total</span>
@@ -1672,18 +2208,20 @@ unsent.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.sendall">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">sendall<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01A93C30</span><span class="o">&gt;</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.sendall" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01763C90</span><span class="o">&gt;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.sendall" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A passthrough to :meth:<code>~BufferedSocket.send</code>, retained for
 parallelism to the :class:<code>socket.socket</code> API.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
     <span class="sd">"""A passthrough to :meth:`~BufferedSocket.send`, retained for</span>
 <span class="sd">    parallelism to the :class:`socket.socket` API.</span>
@@ -1696,18 +2234,20 @@ parallelism to the :class:<code>socket.socket</code> API.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.setmaxsize">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">setmaxsize<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.setmaxsize" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.setmaxsize" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Set the default maximum buffer size <em>maxsize</em> for future
 operations, in bytes. Does not truncate the current buffer.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
     <span class="sd">"""Set the default maximum buffer size *maxsize* for future</span>
 <span class="sd">    operations, in bytes. Does not truncate the current buffer.</span>
@@ -1720,18 +2260,20 @@ operations, in bytes. Does not truncate the current buffer.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.setsockopt">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">setsockopt<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.setsockopt" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.setsockopt" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Convenience function passing through to the wrapped socket's
 :meth:<code>socket.setsockopt</code>.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">"""Convenience function passing through to the wrapped socket's</span>
 <span class="sd">    :meth:`socket.setsockopt`.</span>
@@ -1744,17 +2286,19 @@ operations, in bytes. Does not truncate the current buffer.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.settimeout">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">settimeout<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.settimeout" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.settimeout" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Set the default <em>timeout</em> for future operations, in seconds.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
     <span class="s2">"Set the default *timeout* for future operations, in seconds."</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
@@ -1765,13 +2309,15 @@ operations, in bytes. Does not truncate the current buffer.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.BufferedSSLSocket.shutdown">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">shutdown<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.BufferedSSLSocket.shutdown" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.BufferedSSLSocket.shutdown" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Convenience method which passes through to the wrapped socket's
 :meth:<code>~socket.shutdown</code>. Semantics vary by platform, so no
 special internal handling is done with the buffers. This
@@ -1781,8 +2327,8 @@ full <code>shutdown</code> is followed by a
 support, please open <code>an issue</code>_.</p>
 <p>.. _an issue: https://github.com/mahmoud/boltons/issues</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
     <span class="sd">"""Convenience method which passes through to the wrapped socket's</span>
 <span class="sd">    :meth:`~socket.shutdown`. Semantics vary by platform, so no</span>
@@ -1808,22 +2354,27 @@ support, please open <code>an issue</code>_.</p>
 </div>
 <div class="doc doc-object doc-class">
 <h2 class="doc doc-heading" id="mapper.main.Game">
-<span class="doc doc-types"><small class="doc doc-type doc-type-class"><code>Class</code></small></span>
-<code>Game</code>
-<a class="headerlink" href="#mapper.main.Game" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+        <code>Class Game</code>
+
+
+
+      <a class="headerlink" href="#mapper.main.Game" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <div class="doc doc-children">
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.Game.daemon">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">daemon        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-writable"><code>writable</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.daemon" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-writable"><code>writable</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.daemon" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A boolean value indicating whether this thread is a daemon thread.</p>
 <p>This must be set before start() is called, otherwise RuntimeError is
 raised. Its initial value is inherited from the creating thread; the
@@ -1834,15 +2385,17 @@ the main thread default to daemon = False.</p>
 </div>
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.Game.ident">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">ident        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.ident" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.ident" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Thread identifier of this thread or None if it has not been started.</p>
 <p>This is a nonzero integer. See the get_ident() function. Thread
 identifiers may be recycled when a thread exits and another thread is
@@ -1851,15 +2404,17 @@ created. The identifier is available even after the thread has exited.</p>
 </div>
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.Game.name">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">name        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-writable"><code>writable</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.name" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-writable"><code>writable</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.name" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
@@ -1867,20 +2422,22 @@ initial name is set by the constructor.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Game.is_alive">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">is_alive<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.is_alive" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.is_alive" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
 after the run() method terminates. The module function enumerate()
 returns a list of all alive threads.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
 
@@ -1901,18 +2458,20 @@ returns a list of all alive threads.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Game.isAlive">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">isAlive<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.isAlive" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.isAlive" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Return whether the thread is alive.</p>
 <p>This method is deprecated, use is_alive() instead.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
 
@@ -1929,13 +2488,15 @@ returns a list of all alive threads.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Game.join">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">join<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.join" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.join" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Wait until the thread terminates.</p>
 <p>This blocks the calling thread until the thread whose join() method is
 called terminates -- either normally or through an unhandled exception
@@ -1953,8 +2514,8 @@ thread as that would cause a deadlock. It is also an error to join() a
 thread before it has been started and attempts to do so raises the same
 exception.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Wait until the thread terminates.</span>
 
@@ -1999,18 +2560,20 @@ exception.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Game.run">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">run<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.main.Game.run" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.main.Game.run" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Method representing the thread's activity.</p>
 <p>You may override this method in a subclass. The standard run() method
 invokes the callable object passed to the object's constructor as the
 target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span>
 	<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -2035,21 +2598,23 @@ from the args and kwargs arguments, respectively.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Game.start">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">start<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Game.start" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Game.start" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Start the thread's activity.</p>
 <p>It must be called at most once per thread object. It arranges for the
 object's run() method to be invoked in a separate thread of control.</p>
 <p>This method will raise a RuntimeError if called more than once on the
 same thread object.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Start the thread's activity.</span>
 
@@ -2084,22 +2649,27 @@ same thread object.</p>
 </div>
 <div class="doc doc-object doc-class">
 <h2 class="doc doc-heading" id="mapper.main.Player">
-<span class="doc doc-types"><small class="doc doc-type doc-type-class"><code>Class</code></small></span>
-<code>Player</code>
-<a class="headerlink" href="#mapper.main.Player" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+        <code>Class Player</code>
+
+
+
+      <a class="headerlink" href="#mapper.main.Player" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <div class="doc doc-children">
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.Player.daemon">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">daemon        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-writable"><code>writable</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.daemon" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-writable"><code>writable</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.daemon" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A boolean value indicating whether this thread is a daemon thread.</p>
 <p>This must be set before start() is called, otherwise RuntimeError is
 raised. Its initial value is inherited from the creating thread; the
@@ -2110,15 +2680,17 @@ the main thread default to daemon = False.</p>
 </div>
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.Player.ident">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">ident        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.ident" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.ident" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Thread identifier of this thread or None if it has not been started.</p>
 <p>This is a nonzero integer. See the get_ident() function. Thread
 identifiers may be recycled when a thread exits and another thread is
@@ -2127,15 +2699,17 @@ created. The identifier is available even after the thread has exited.</p>
 </div>
 <div class="doc doc-object doc-attribute">
 <h3 class="doc doc-heading" id="mapper.main.Player.name">
-<span class="doc doc-types"><small class="doc doc-type doc-type-attribute"><code>Attribute</code></small></span>
-<code class="highlight">name        </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-<small class="doc doc-property doc-property-property"><code>property</code></small>
-<small class="doc doc-property doc-property-writable"><code>writable</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.name" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-writable"><code>writable</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.name" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
@@ -2143,20 +2717,22 @@ initial name is set by the constructor.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Player.is_alive">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">is_alive<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.is_alive" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.is_alive" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
 after the run() method terminates. The module function enumerate()
 returns a list of all alive threads.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
 
@@ -2177,18 +2753,20 @@ returns a list of all alive threads.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Player.isAlive">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">isAlive<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.isAlive" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.isAlive" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Return whether the thread is alive.</p>
 <p>This method is deprecated, use is_alive() instead.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Return whether the thread is alive.</span>
 
@@ -2205,13 +2783,15 @@ returns a list of all alive threads.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Player.join">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">join<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.join" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.join" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Wait until the thread terminates.</p>
 <p>This blocks the calling thread until the thread whose join() method is
 called terminates -- either normally or through an unhandled exception
@@ -2229,8 +2809,8 @@ thread as that would cause a deadlock. It is also an error to join() a
 thread before it has been started and attempts to do so raises the same
 exception.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Wait until the thread terminates.</span>
 
@@ -2275,18 +2855,20 @@ exception.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Player.run">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">run<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.main.Player.run" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.main.Player.run" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Method representing the thread's activity.</p>
 <p>You may override this method in a subclass. The standard run() method
 invokes the callable object passed to the object's constructor as the
 target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span>
 	<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -2310,21 +2892,23 @@ from the args and kwargs arguments, respectively.</p>
 </div>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.main.Player.start">
-<span class="doc doc-types"><small class="doc doc-type doc-type-method"><code>Method</code></small></span>
-<code class="highlight language-python">start<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
-<span class="doc doc-properties">
-<small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-</span>
-<a class="headerlink" href="#mapper.main.Player.start" title="Permanent link">¶</a></h3>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+      <a class="headerlink" href="#mapper.main.Player.start" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
 <p>Start the thread's activity.</p>
 <p>It must be called at most once per thread object. It arranges for the
 object's run() method to be invoked in a separate thread of control.</p>
 <p>This method will raise a RuntimeError if called more than once on the
 same thread object.</p>
 <details class="quote">
-<summary>Source code in <code>mapper\main.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">"""Start the thread's activity.</span>
 
@@ -2360,38 +2944,57 @@ same thread object.</p>
 </div>
 </div>
 </div>
-</article>
-</div>
-</div>
-</main>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
 <footer class="md-footer">
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-footer-copyright">
-<div class="md-footer-copyright__highlight">
+  
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
             Copyright © 2020 Nick Stockton
           </div>
         
         Made with
-        <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs
         </a>
-</div>
-</div>
-</div>
+      </div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<script src="../../assets/javascripts/vendor.08c56446.min.js"></script>
-<script src="../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
-<script>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.53cc9318.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
         app = initialize({
           base: "../..",
           features: [],
           search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
-<script src="../../search/main.js"></script>
-</body>
+      
+        <script src="../../search/main.js"></script>
+      
+    
+  </body>
 </html>

@@ -1,536 +1,935 @@
 
-<!DOCTYPE html>
-
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="Mapper Proxy Main Page" name="description"/>
-<meta content="Nick Stockton" name="author"/>
-<link href="https://nstockton.github.io/mapperproxy-mume/api/utils/" rel="canonical"/>
-<link href="../../assets/images/favicon.png" rel="shortcut icon"/>
-<meta content="mkdocs-1.1.2, mkdocs-material-6.2.3" name="generator"/>
-<title>utils.py - Mapper Proxy</title>
-<link href="../../assets/stylesheets/main.3b61ea93.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.39b8e14a.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&amp;display=fallback" rel="stylesheet"/>
-<style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
-</head>
-<body data-md-color-accent="none" data-md-color-primary="none" data-md-color-scheme="" dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#mapper.utils">
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mapper Proxy Main Page">
+      
+      
+      
+        <meta name="author" content="Nick Stockton">
+      
+      
+        <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/utils/">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+    
+    
+      
+        <title>utils.py - Mapper Proxy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mapper.utils" class="md-skip">
           Skip to content
         </a>
-</div>
-<div data-md-component="announce">
-</div>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
 <header class="md-header" data-md-component="header">
-<nav aria-label="Header" class="md-header-nav md-grid">
-<a aria-label="Mapper Proxy" class="md-header-nav__button md-logo" href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
-</a>
-<label class="md-header-nav__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"></path></svg>
-</label>
-<div class="md-header-nav__title" data-md-component="header-title">
-<div class="md-header-nav__ellipsis">
-<div class="md-header-nav__topic">
-<span class="md-ellipsis">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             Mapper Proxy
           </span>
-</div>
-<div class="md-header-nav__topic">
-<span class="md-ellipsis">
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             
               utils.py
             
           </span>
-</div>
-</div>
-</div>
-<label class="md-header-nav__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
-</label>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
 <div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" data-md-state="active" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
-</label>
-<button aria-label="Clear" class="md-search__icon md-icon" data-md-component="search-reset" tabindex="-1" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
-</button>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
             Initializing search
           </div>
-<ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="md-header-nav__source">
-<a class="md-source" href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository">
-<div class="md-source__icon md-icon">
-<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
-</div>
-<div class="md-source__repository">
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
     nstockton/mapperproxy-mume
   </div>
 </a>
-</div>
-</nav>
+      </div>
+    
+  </nav>
 </header>
-<div class="md-container" data-md-component="container">
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="Mapper Proxy" class="md-nav__button md-logo" href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
-</a>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
     Mapper Proxy
   </label>
-<div class="md-nav__source">
-<a class="md-source" href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository">
-<div class="md-source__icon md-icon">
-<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
-</div>
-<div class="md-source__repository">
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
     nstockton/mapperproxy-mume
   </div>
 </a>
-</div>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../..">
-      Home
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../">
-      API Index
-    </a>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/>
-<label class="md-nav__link" for="nav-3">
-      API Navigation
-      <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="API Navigation" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="nav-3">
-<span class="md-nav__icon md-icon"></span>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        API Index
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      
+      <label class="md-nav__link" for="nav-3">
         API Navigation
-      </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" id="nav-3-1" type="checkbox"/>
-<label class="md-nav__link" for="nav-3-1">
-      protocols
-      <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="protocols" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="nav-3-1">
-<span class="md-nav__icon md-icon"></span>
-        protocols
-      </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/base/">
-      base.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/manager/">
-      manager.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/mpi/">
-      mpi.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/proxy/">
-      proxy.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/telnet/">
-      telnet.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/telnet_constants/">
-      telnet_constants.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocols/xml/">
-      xml.py
-    </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" id="nav-3-2" type="checkbox"/>
-<label class="md-nav__link" for="nav-3-2">
-      roomdata
-      <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="roomdata" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="nav-3-2">
-<span class="md-nav__icon md-icon"></span>
-        roomdata
-      </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../roomdata/database/">
-      database.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../roomdata/objects/">
-      objects.py
-    </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../cleanmap/">
-      cleanmap.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../clock/">
-      clock.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../config/">
-      config.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../delays/">
-      delays.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../main/">
-      main.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../mapper/">
-      mapper.py
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../mudevents/">
-      mudevents.py
-    </a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-        utils.py
         <span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-      utils.py
-    </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API Navigation" data-md-level="1">
+        <label class="md-nav__title" for="nav-3">
+          <span class="md-nav__icon md-icon"></span>
+          API Navigation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
+      
+      <label class="md-nav__link" for="nav-3-1">
+        protocols
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="protocols" data-md-level="2">
+        <label class="md-nav__title" for="nav-3-1">
+          <span class="md-nav__icon md-icon"></span>
+          protocols
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/base/" class="md-nav__link">
+        base.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/manager/" class="md-nav__link">
+        manager.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/mpi/" class="md-nav__link">
+        mpi.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/proxy/" class="md-nav__link">
+        proxy.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/telnet/" class="md-nav__link">
+        telnet.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/telnet_constants/" class="md-nav__link">
+        telnet_constants.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/xml/" class="md-nav__link">
+        xml.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
+      
+      <label class="md-nav__link" for="nav-3-2">
+        roomdata
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="roomdata" data-md-level="2">
+        <label class="md-nav__title" for="nav-3-2">
+          <span class="md-nav__icon md-icon"></span>
+          roomdata
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roomdata/database/" class="md-nav__link">
+        database.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roomdata/objects/" class="md-nav__link">
+        objects.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cleanmap/" class="md-nav__link">
+        cleanmap.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clock/" class="md-nav__link">
+        clock.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        config.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../delays/" class="md-nav__link">
+        delays.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../main/" class="md-nav__link">
+        main.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mapper/" class="md-nav__link">
+        mapper.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mudevents/" class="md-nav__link">
+        mudevents.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          utils.py
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        utils.py
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils">
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils" class="md-nav__link">
     utils
   </a>
-<nav aria-label="utils" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.decodeBytes">
+  
+    <nav class="md-nav" aria-label="utils">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.decodeBytes" class="md-nav__link">
     decodeBytes()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.escapeIAC">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.escapeIAC" class="md-nav__link">
     escapeIAC()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.escapeXMLString">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.escapeXMLString" class="md-nav__link">
     escapeXMLString()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.formatDocString">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.formatDocString" class="md-nav__link">
     formatDocString()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.getDirectoryPath">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.getDirectoryPath" class="md-nav__link">
     getDirectoryPath()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.getFreezer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.getFreezer" class="md-nav__link">
     getFreezer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.humanSort">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.humanSort" class="md-nav__link">
     humanSort()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.isFrozen">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.isFrozen" class="md-nav__link">
     isFrozen()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.iterBytes">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.iterBytes" class="md-nav__link">
     iterBytes()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.lpadList">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.lpadList" class="md-nav__link">
     lpadList()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.minIndent">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.minIndent" class="md-nav__link">
     minIndent()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.multiReplace">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.multiReplace" class="md-nav__link">
     multiReplace()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.padList">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.padList" class="md-nav__link">
     padList()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.page">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.page" class="md-nav__link">
     page()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.regexFuzzy">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.regexFuzzy" class="md-nav__link">
     regexFuzzy()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.roundHalfAwayFromZero">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.roundHalfAwayFromZero" class="md-nav__link">
     roundHalfAwayFromZero()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.simplified">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.simplified" class="md-nav__link">
     simplified()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.stripAnsi">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.stripAnsi" class="md-nav__link">
     stripAnsi()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.touch">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.touch" class="md-nav__link">
     touch()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.unescapeXMLBytes">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.unescapeXMLBytes" class="md-nav__link">
     unescapeXMLBytes()
   </a>
+  
 </li>
-</ul>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
-</li>
-</ul>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../world/" class="md-nav__link">
+        world.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../world/">
-      world.py
-    </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../license/">
-      License
-    </a>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils">
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils" class="md-nav__link">
     utils
   </a>
-<nav aria-label="utils" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.decodeBytes">
+  
+    <nav class="md-nav" aria-label="utils">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.decodeBytes" class="md-nav__link">
     decodeBytes()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.escapeIAC">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.escapeIAC" class="md-nav__link">
     escapeIAC()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.escapeXMLString">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.escapeXMLString" class="md-nav__link">
     escapeXMLString()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.formatDocString">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.formatDocString" class="md-nav__link">
     formatDocString()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.getDirectoryPath">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.getDirectoryPath" class="md-nav__link">
     getDirectoryPath()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.getFreezer">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.getFreezer" class="md-nav__link">
     getFreezer()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.humanSort">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.humanSort" class="md-nav__link">
     humanSort()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.isFrozen">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.isFrozen" class="md-nav__link">
     isFrozen()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.iterBytes">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.iterBytes" class="md-nav__link">
     iterBytes()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.lpadList">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.lpadList" class="md-nav__link">
     lpadList()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.minIndent">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.minIndent" class="md-nav__link">
     minIndent()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.multiReplace">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.multiReplace" class="md-nav__link">
     multiReplace()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.padList">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.padList" class="md-nav__link">
     padList()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.page">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.page" class="md-nav__link">
     page()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.regexFuzzy">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.regexFuzzy" class="md-nav__link">
     regexFuzzy()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.roundHalfAwayFromZero">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.roundHalfAwayFromZero" class="md-nav__link">
     roundHalfAwayFromZero()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.simplified">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.simplified" class="md-nav__link">
     simplified()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.stripAnsi">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.stripAnsi" class="md-nav__link">
     stripAnsi()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.touch">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.touch" class="md-nav__link">
     touch()
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mapper.utils.unescapeXMLBytes">
+        
+          <li class="md-nav__item">
+  <a href="#mapper.utils.unescapeXMLBytes" class="md-nav__link">
     unescapeXMLBytes()
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-</ul>
+      
+    </ul>
+  
 </nav>
-</div>
-</div>
-</div>
-<div class="md-content">
-<article class="md-content__inner md-typeset">
-<div class="doc doc-object doc-module">
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <div class="doc doc-object doc-module">
 <h1 class="doc doc-heading" id="mapper.utils">
-<span class="doc doc-types"><small class="doc doc-type doc-type-module"><code>Module</code></small></span>
-<code>mapper.utils</code>
-<a class="headerlink" href="#mapper.utils" title="Permanent link">¶</a></h1>
+
+        <code>Module mapper.utils</code>
+
+
+
+      <a class="headerlink" href="#mapper.utils" title="Permanent link">&para;</a></h1>
 <div class="doc doc-contents first">
 <div class="doc doc-children">
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.decodeBytes">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">decodeBytes<span class="p">(</span><span class="n">data</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.decodeBytes" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.decodeBytes" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Decodes UTF-8 or Latin-1 bytes into a string.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -571,8 +970,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Decodes UTF-8 or Latin-1 bytes into a string.</span>
@@ -596,10 +995,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.escapeIAC">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">escapeIAC<span class="p">(</span><span class="n">data</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.escapeIAC" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.escapeIAC" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Escapes IAC bytes of a bytes-like object.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -640,8 +1041,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Escapes IAC bytes of a bytes-like object.</span>
@@ -660,10 +1061,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.escapeXMLString">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">escapeXMLString<span class="p">(</span><span class="n">text</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.escapeXMLString" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">escapeXMLString</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.escapeXMLString" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Escapes XML entities in a string.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -704,8 +1107,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">escapeXMLString</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Escapes XML entities in a string.</span>
@@ -724,10 +1127,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.formatDocString">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">formatDocString<span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.formatDocString" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.formatDocString" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Formats a docstring for displaying.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -784,8 +1189,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">formatDocString</span><span class="p">(</span>
 	<span class="n">functionOrString</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -846,10 +1251,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.getDirectoryPath">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">getDirectoryPath<span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.getDirectoryPath" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.getDirectoryPath" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Retrieves the path of the directory where the program is located.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -890,8 +1297,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Retrieves the path of the directory where the program is located.</span>
@@ -914,10 +1321,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.getFreezer">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">getFreezer<span class="p">()</span> </code>
-<a class="headerlink" href="#mapper.utils.getFreezer" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">getFreezer</span><span class="p">()</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.getFreezer" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Determines the name of the library used to freeze the code.</p>
 <div class="admonition note">
 <p class="admonition-title">Note<p>https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py</p>
@@ -941,8 +1350,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">getFreezer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Determines the name of the library used to freeze the code.</span>
@@ -976,10 +1385,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.humanSort">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">humanSort<span class="p">(</span><span class="n">lst</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.humanSort" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.humanSort" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Sorts a list of strings, with numbers sorted according to their numeric value.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1020,8 +1431,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Sorts a list of strings, with numbers sorted according to their numeric value.</span>
@@ -1045,10 +1456,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.isFrozen">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">isFrozen<span class="p">()</span> </code>
-<a class="headerlink" href="#mapper.utils.isFrozen" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">isFrozen</span><span class="p">()</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.isFrozen" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Determines whether the program is running from a frozen copy or from source.</p>
 <p><strong>Returns:</strong></p>
 <table class="data" role="grid">
@@ -1068,8 +1481,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">isFrozen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Determines whether the program is running from a frozen copy or from source.</span>
@@ -1085,10 +1498,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.iterBytes">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">iterBytes<span class="p">(</span><span class="n">data</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.iterBytes" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">iterBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.iterBytes" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>A generator which yields each byte of a bytes-like object.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1116,8 +1531,8 @@
 </p>
 </div>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">iterBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 	<span class="sd">"""</span>
 <span class="sd">	A generator which yields each byte of a bytes-like object.</span>
@@ -1137,10 +1552,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.lpadList">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">lpadList<span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.lpadList" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.lpadList" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Pad the left side of a list.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1205,8 +1622,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Pad the left side of a list.</span>
@@ -1231,10 +1648,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.minIndent">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">minIndent<span class="p">(</span><span class="n">text</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.minIndent" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.minIndent" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Retrieves the indention characters from the line with the least indention.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1275,8 +1694,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Retrieves the indention characters from the line with the least indention.</span>
@@ -1301,10 +1720,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.multiReplace">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">multiReplace<span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">replacements</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.multiReplace" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">multiReplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">replacements</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.multiReplace" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Performs multiple replacement operations on a string or bytes-like object.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1353,8 +1774,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">multiReplace</span><span class="p">(</span>
 	<span class="n">data</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">replacements</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]],</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyStr</span><span class="p">:</span>
@@ -1378,10 +1799,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.padList">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">padList<span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.padList" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.padList" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Pad the right side of a list.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1446,8 +1869,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Pad the right side of a list.</span>
@@ -1472,10 +1895,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.page">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">page<span class="p">(</span><span class="n">lines</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.page" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">page</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.page" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Displays lines using the pager if necessary.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1499,8 +1924,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">page</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Displays lines using the pager if necessary.</span>
@@ -1522,10 +1947,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.regexFuzzy">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">regexFuzzy<span class="p">(</span><span class="n">text</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.regexFuzzy" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.regexFuzzy" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Creates a regular expression matching all or part of a string or sequence.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1566,8 +1993,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Creates a regular expression matching all or part of a string or sequence.</span>
@@ -1593,10 +2020,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.roundHalfAwayFromZero">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">roundHalfAwayFromZero<span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.roundHalfAwayFromZero" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.roundHalfAwayFromZero" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Rounds a float away from 0 if the fractional is 5 or more.</p>
 <div class="admonition note">
 <p class="admonition-title">Note<p>https://realpython.com/python-rounding</p>
@@ -1649,8 +2078,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">decimals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Rounds a float away from 0 if the fractional is 5 or more.</span>
@@ -1674,10 +2103,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.simplified">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">simplified<span class="p">(</span><span class="n">text</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.simplified" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.simplified" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Replaces one or more consecutive white space characters with a single space.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1718,8 +2149,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Replaces one or more consecutive white space characters with a single space.</span>
@@ -1738,10 +2169,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.stripAnsi">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">stripAnsi<span class="p">(</span><span class="n">text</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.stripAnsi" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.stripAnsi" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Strips ANSI escape sequences from text.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1782,8 +2215,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Strips ANSI escape sequences from text.</span>
@@ -1802,10 +2235,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.touch">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">touch<span class="p">(</span><span class="n">name</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.touch" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">touch</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.touch" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Touches a file.</p>
 <p>I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does.</p>
 <p><strong>Parameters:</strong></p>
@@ -1830,8 +2265,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">touch</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Touches a file.</span>
@@ -1850,10 +2285,12 @@
 </div>
 <div class="doc doc-object doc-function">
 <h2 class="doc doc-heading" id="mapper.utils.unescapeXMLBytes">
-<span class="doc doc-types"><small class="doc doc-type doc-type-function"><code>Function</code></small></span>
-<code class="highlight language-python">unescapeXMLBytes<span class="p">(</span><span class="n">data</span><span class="p">)</span> </code>
-<a class="headerlink" href="#mapper.utils.unescapeXMLBytes" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
+
+<code class="highlight language-python"><span class="n">Function</span> <span class="n">unescapeXMLBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.utils.unescapeXMLBytes" title="Permanent link">&para;</a></h2>
+<div class="doc doc-contents ">
 <p>Unescapes XML entities in a bytes-like object.</p>
 <p><strong>Parameters:</strong></p>
 <table class="data" role="grid">
@@ -1894,8 +2331,8 @@
 </tbody>
 </table>
 <details class="quote">
-<summary>Source code in <code>mapper\utils.py</code></summary>
-<div class="highlight">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">unescapeXMLBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Unescapes XML entities in a bytes-like object.</span>
@@ -1915,38 +2352,57 @@
 </div>
 </div>
 </div>
-</article>
-</div>
-</div>
-</main>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
 <footer class="md-footer">
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-footer-copyright">
-<div class="md-footer-copyright__highlight">
+  
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
             Copyright © 2020 Nick Stockton
           </div>
         
         Made with
-        <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs
         </a>
-</div>
-</div>
-</div>
+      </div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<script src="../../assets/javascripts/vendor.08c56446.min.js"></script>
-<script src="../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
-<script>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.53cc9318.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
         app = initialize({
           base: "../..",
           features: [],
           search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
-<script src="../../search/main.js"></script>
-</body>
+      
+        <script src="../../search/main.js"></script>
+      
+    
+  </body>
 </html>
