@@ -10,8 +10,9 @@ flake8-tabs = "*"
 fuzzywuzzy-stubs = "*"
 isort = {version = "==5.7.0"}
 mkdocs = {version = "==1.1.2"}
-mkdocs-material = {version = "==6.2.3"}
-mkdocstrings = {version = "==0.13.6"}
+mkdocs-material = {version = "==6.2.7"}
+mkdocs-material-extensions = {version = "==1.0.1"}
+mkdocstrings = {version = "==0.14.0"}
 mypy = "*"
 pre-commit = "*"
 PyInstaller = {version = "==4.1"}

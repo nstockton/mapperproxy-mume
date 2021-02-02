@@ -86,64 +86,63 @@ from mapper.main import main
 
 Auto mapping mode must be on for these commands to have any effect.
 
-* autolink  --  Toggle Auto linking on or off. If on, the mapper will attempt to link undefined exits in newly added rooms.
-* automap  --  Toggle automatic mapping mode on.
-* automerge  --  Toggle automatic merging of duplicate rooms on or off.
-* autoupdate  --  Toggle Automatic updating of room name/descriptions/dynamic descriptions on or off.
+* `autolink`  --  Toggle Auto linking on or off. If on, the mapper will attempt to link undefined exits in newly added rooms.
+* `automap`  --  Toggle automatic mapping mode on.
+* `automerge`  --  Toggle automatic merging of duplicate rooms on or off.
+* `autoupdate`  --  Toggle Automatic updating of room name/descriptions/dynamic descriptions on or off.
 
 ### Map Editing Commands
 
-* doorflags [add|remove] [hidden|need_key|no_block|no_break|no_pick|delayed|callable|knockable|magic|action|no_bash] [north|east|south|west|up|down]  --  Modify door flags for a given direction.
-* exitflags [add|remove] [exit|door|road|climb|random|special|avoid|no_match] [north|east|south|west|up|down]  --  Modify exit flags for a given direction.
-* ralign [good|neutral|evil|undefined]  --  Modify the alignment flag of the current room.
-* ravoid [+|-]  --  Set or clear the avoid flag for the current room. If the avoid flag is set, the mapper will try to avoid the room when path finding.
-* rdelete [vnum]  --  Delete the room with vnum. If the mapper is synced and no vnum is given, delete the current room.
-* rlabel [add|delete|info|search] [label] [vnum]  --  Manage room labels. Vnum is only used when adding a room. Leave it blank to use the current room's vnum. Use rlabel info all to get a list of all labels.
-* rlight [lit|dark|undefined]  --  Modify the light flag of the current room.
-* rlink [add|remove] [oneway] [vnum] [north|east|south|west|up|down]  --  Manually manage links from the current room to room with vnum. If oneway is given, treat the link as unidirectional.
-* rloadflags [add|remove] [treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach]  --  Modify the load flags of the current room.
-* rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob]  --  Modify the mob flags of the current room.
-* rnote [-a|-r] [text]  --  Modify the note for the current room. If '-a' is given, append text to the current note. If '-r' is given, remove the note.
-* rportable [portable|notportable|undefined]  --  Modify the portable flag of the current room.
-* rridable [ridable|notridable|undefined]  --  Modify the ridable flag of the current room.
-* rterrain [death|city|shallowwater|forest|hills|road|cavern|field|water|underwater|rapids|indoors|brush|tunnel|mountains|random|undefined]  --  Modify the terrain of the current room.
-* rx [number]  --  Modify the X coordinate of the current room.
-* ry [number]  --  Modify the Y coordinate of the current room.
-* rz [number]  --  Modify the Z coordinate of the current room.
-* savemap  --  Save modifications to the map to disk.
-* secret [add|remove] [name] [north|east|south|west|up|down]  --  Add or remove a secret door in the current room.
+* `doorflags [add|remove] [hidden|need_key|no_block|no_break|no_pick|delayed|callable|knockable|magic|action|no_bash] [north|east|south|west|up|down]`  --  Modify door flags for a given direction.
+* `exitflags [add|remove] [exit|door|road|climb|random|special|avoid|no_match] [north|east|south|west|up|down]`  --  Modify exit flags for a given direction.
+* `ralign [good|neutral|evil|undefined]`  --  Modify the alignment flag of the current room.
+* `ravoid [+|-]`  --  Set or clear the avoid flag for the current room. If the avoid flag is set, the mapper will try to avoid the room when path finding.
+* `rdelete [vnum]`  --  Delete the room with vnum. If the mapper is synced and no vnum is given, delete the current room.
+* `rlabel [add|delete|info|search] [label] [vnum]`  --  Manage room labels. Vnum is only used when adding a room. Leave it blank to use the current room's vnum. Use rlabel info all to get a list of all labels.
+* `rlight [lit|dark|undefined]`  --  Modify the light flag of the current room.
+* `rlink [add|remove] [oneway] [vnum] [north|east|south|west|up|down]`  --  Manually manage links from the current room to room with vnum. If oneway is given, treat the link as unidirectional.
+* `rloadflags [add|remove] [treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach]`  --  Modify the load flags of the current room.
+* `rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob]`  --  Modify the mob flags of the current room.
+* `rnote [-a|-r] [text]`  --  Modify the note for the current room. If '-a' is given, append text to the current note. If '-r' is given, remove the note.
+* `rportable [portable|notportable|undefined]`  --  Modify the portable flag of the current room.
+* `rridable [ridable|notridable|undefined]`  --  Modify the ridable flag of the current room.
+* `rterrain [death|city|shallowwater|forest|hills|road|cavern|field|water|underwater|rapids|indoors|brush|tunnel|mountains|random|undefined]`  --  Modify the terrain of the current room.
+* `rx [number]`  --  Modify the X coordinate of the current room.
+* `ry [number]`  --  Modify the Y coordinate of the current room.
+* `rz [number]`  --  Modify the Z coordinate of the current room.
+* `savemap`  --  Save modifications to the map to disk.
+* `secret [add|remove] [name] [north|east|south|west|up|down]`  --  Add or remove a secret door in the current room.
 
 ### Searching Commands
 
-* fdoor [text]  --  Search the map for rooms with doors matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
-* fdynamic [text]  --  Search the map for rooms with dynamic descriptions matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
-* flabel [text]  --  Search the map for rooms with labels matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry") If no text is given, will show the 20 closest labeled rooms.
-* fname [text]  --  Search the map for rooms with names matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
-* fnote [text]  --  Search the map for rooms with notes matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
+* `fdoor [text]`  --  Search the map for rooms with doors matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
+* `fdynamic [text]`  --  Search the map for rooms with dynamic descriptions matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
+* `flabel [text]`  --  Search the map for rooms with labels matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry") If no text is given, will show the 20 closest labeled rooms.
+* `fname [text]`  --  Search the map for rooms with names matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
+* `fnote [text]`  --  Search the map for rooms with notes matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
 
 ### Path Commands
 
-* path [vnum|label] [nodeath|nocity|noshallowwater|noforest|nohills|noroad|nocavern|nofield|nowater|nounderwater|norapids|noindoors|nobrush|notunnel|nomountains|norandom|noundefined]  --  Print speed walk directions from the current room to the room with vnum or label. If one or more avoid terrain flags are given after the destination, the mapper will try to avoid all rooms with that terrain type. Multiple avoid terrains can be ringed together with the '|' character, for example, path ingrove noroad|nobrush.
-* run [c|t] [vnum|label] [nodeath|nocity|noshallowwater|noforest|nohills|noroad|nocavern|nofield|nowater|nounderwater|norapids|noindoors|nobrush|notunnel|nomountains|norandom|noundefined]  --  Automatically walk from the current room to the room with vnum or label. If 'c' is provided instead of a vnum or label, the mapper will recalculate the path from the current room to the previously provided destination. If t (short for target) is given before the vnum or label, the mapper will store the destination, but won't start auto walking until the user enters 'run c'. If one or more avoid terrain flags are given after the destination, the mapper will try to avoid all rooms with that terrain type. Multiple avoid terrains can be ringed together with the '|' character, for example, run ingrove noroad|nobrush.
-* step [label|vnum]  --  Move 1 room towards the destination room matching label or vnum.
-* stop  --  Stop auto walking.
+* `path [vnum|label] [nodeath|nocity|noshallowwater|noforest|nohills|noroad|nocavern|nofield|nowater|nounderwater|norapids|noindoors|nobrush|notunnel|nomountains|norandom|noundefined]`  --  Print speed walk directions from the current room to the room with vnum or label. If one or more avoid terrain flags are given after the destination, the mapper will try to avoid all rooms with that terrain type. Multiple avoid terrains can be ringed together with the '|' character, for example, path ingrove noroad|nobrush.
+* `run [c|t] [vnum|label] [nodeath|nocity|noshallowwater|noforest|nohills|noroad|nocavern|nofield|nowater|nounderwater|norapids|noindoors|nobrush|notunnel|nomountains|norandom|noundefined]`  --  Automatically walk from the current room to the room with vnum or label. If 'c' is provided instead of a vnum or label, the mapper will recalculate the path from the current room to the previously provided destination. If t (short for target) is given before the vnum or label, the mapper will store the destination, but won't start auto walking until the user enters 'run c'. If one or more avoid terrain flags are given after the destination, the mapper will try to avoid all rooms with that terrain type. Multiple avoid terrains can be ringed together with the '|' character, for example, run ingrove noroad|nobrush.
+* `step [label|vnum]`  --  Move 1 room towards the destination room matching label or vnum.
+* `stop`  --  Stop auto walking.
 
 ### Door Commands
 
-* secretaction [action] [north|east|south|west|up|down]  --  Perform an action on a secret door in a given direction. This command is meant to be called from an alias. For example, secretaction open east.
+* `secretaction [action] [north|east|south|west|up|down]`  --  Perform an action on a secret door in a given direction. This command is meant to be called from an alias. For example, secretaction open east.
 
 ### Miscellaneous Commands
 
-* clock [action]  --  If no action is given, print the output from the mapper's clock. If the action is 'pull', send the appropriate commands to the game for opening the exit in mystical. If any other action is given, send a line with the current game time to the game, prefixed by the action. Example: `clock narrate` to narrate the current game time.
-* emu [command]  --  If not in emulation mode (I.E. connected to the game), execute an emulation command.
-* getlabel [vnum]  --  Returns the label or labels defined for the room with vnum. If no vnum is supplied, the current room's vnum is used.
-* gettimer  --  Returns the amount of seconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
-* gettimerms  --  Returns the amount of milliseconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
-* help  --  If in emulation mode, print a summery of the available emulation commands.
-* maphelp  --  Print a summery of the available mapper commands.
-* quit  --  Quit the mapper when in emulation mode.
-* rinfo [vnum|label]  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
-* rinfo [vnum|label]  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
-* sync [vnum|label]  --  Manually sync the map to the room with vnum or label. If no vnum or label is given, mapper will be placed in an unsynced state, and will try to automatically sync to the current room.
-* tvnum  --  Tell the vnum of the current room to another player.
-* vnum  --  Print the vnum of the current room.
+* `clock [action]`  --  If no action is given, print the output from the mapper's clock. If the action is 'pull', send the appropriate commands to the game for opening the exit in mystical. If any other action is given, send a line with the current game time to the game, prefixed by the action. Example: `clock narrate` to narrate the current game time.
+* `emu [command]`  --  If not in emulation mode (I.E. connected to the game), execute an emulation command.
+* `getlabel [vnum]`  --  Returns the label or labels defined for the room with vnum. If no vnum is supplied, the current room's vnum is used.
+* `gettimer`  --  Returns the amount of seconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
+* `gettimerms`  --  Returns the amount of milliseconds since the mapper was started in an optimal format for triggering. This is to assist scripters who use clients with no time stamp support such as VIP Mud.
+* `help`  --  If in emulation mode, print a summery of the available emulation commands.
+* `maphelp`  --  Print a summery of the available mapper commands.
+* `quit`  --  Quit the mapper when in emulation mode.
+* `rinfo [vnum|label]`  --  Print info about the room with vnum or label. If no vnum or label is given, use current room.
+* `sync [vnum|label]`  --  Manually sync the map to the room with vnum or label. If no vnum or label is given, mapper will be placed in an unsynced state, and will try to automatically sync to the current room.
+* `tvnum [player]`  --  Tell the vnum of the current room to another player.
+* `vnum`  --  Print the vnum of the current room.
