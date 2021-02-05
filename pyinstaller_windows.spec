@@ -9,7 +9,6 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import codecs
 import glob
 import hashlib
 import os
@@ -57,8 +56,8 @@ else:
 	if os.path.exists(
 		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
 	) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
-		with codecs.open(
-			os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "rb", encoding="utf-8"
+		with open(
+			os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "r", encoding="utf-8"
 		) as f:
 			match = VERSION_REGEX.search(f.read(30).strip().lower())
 			if match is not None:
@@ -247,12 +246,10 @@ if os.path.exists(
 	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(VERSION_FILE, ignore_errors=True)
 
-with codecs.open(VERSION_FILE, "wb", encoding="utf-8") as f:
+with open(VERSION_FILE, "w", encoding="utf-8") as f:
 	f.write(version_data)
 
-with codecs.open(
-	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "wb", encoding="utf-8"
-) as f:
+with open(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "w", encoding="utf-8") as f:
 	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}"')
 
 a: Analysis = Analysis(  # type: ignore[no-any-unimported]
@@ -355,12 +352,12 @@ hashes: Dict[str, HASH] = {  # type: ignore[no-any-unimported]
 	"sha256": hashlib.sha256(),
 }
 block_size: int = 2 ** 16
-with codecs.open(ZIP_FILE, "rb") as f:
-	for block in iter(lambda: f.read(block_size), b""):
+with open(ZIP_FILE, "rb") as zf:
+	for block in iter(lambda: zf.read(block_size), b""):
 		for _, hash in hashes.items():
 			hash.update(block)
 for hashtype, hash in hashes.items():
-	with codecs.open(f"{ZIP_FILE}.{hashtype}", "wb", encoding="utf-8") as f:
+	with open(f"{ZIP_FILE}.{hashtype}", "w", encoding="utf-8") as f:
 		f.write(f"{hash.hexdigest().lower()} *{os.path.basename(ZIP_FILE)}\n")
 
 print("Done.")

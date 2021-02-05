@@ -110,7 +110,7 @@ class TestDatabase(TestCase):
 			_validate({"invalid": "invalid"}, schemaPath)
 
 	@patch("mapper.roomdata.database._validate")
-	@patch("mapper.roomdata.database.codecs.open")
+	@patch("mapper.roomdata.database.open")
 	@patch("mapper.roomdata.database.os.path")
 	def testLoad(self, mockOSPath: Mock, mockOpen: Mock, mockValidate: Mock) -> None:
 		fileName: str = "__junk__.json"
@@ -150,7 +150,7 @@ class TestDatabase(TestCase):
 
 	@patch("mapper.roomdata.database.rapidjson.dump")
 	@patch("mapper.roomdata.database._validate")
-	@patch("mapper.roomdata.database.codecs.open")
+	@patch("mapper.roomdata.database.open")
 	def testDump(self, mockOpen: Mock, mockValidate: Mock, mockJsonDump: Mock) -> None:
 		mockFileObj = Mock()
 		mockOpen.return_value.__enter__.return_value = mockFileObj

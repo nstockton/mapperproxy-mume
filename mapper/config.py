@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import codecs
 import json
 import os.path
 import threading
@@ -56,7 +55,7 @@ class Config(MutableMapping[str, Any]):
 			raise ConfigError(f"'{filename}' is a directory, not a file.")
 		with self._configLock:
 			try:
-				with codecs.open(filename, "rb", encoding="utf-8") as fileObj:
+				with open(filename, "r", encoding="utf-8") as fileObj:
 					return dict(json.load(fileObj))
 			except IOError as e:  # pragma: no cover
 				raise ConfigError(f"{e.strerror}: '{e.filename}'")
@@ -73,15 +72,10 @@ class Config(MutableMapping[str, Any]):
 		"""Saves the configuration to disc."""
 		filename: str = os.path.join(DATA_DIRECTORY, f"{self.name}.json")
 		with self._configLock:
-			with codecs.open(filename, "wb", encoding="utf-8") as fileObj:
+			with open(filename, "w", encoding="utf-8", newline="\r\n") as fileObj:
 				# Configuration should be stored using Windows style line endings (\r\n)
 				# so the file can be viewed in Notepad.
-				# However, codecs.open forces opening files in binary mode, which
-				# prevents the use of the newline flag to force a particular delimiter for new lines.
-				# The json data must therefore be modified to replace Unix line endings
-				# with Windows line endings before it is written.
-				data: str = json.dumps(self._config, sort_keys=True, indent=2)
-				fileObj.write(data.replace("\n", "\r\n"))
+				json.dump(self._config, fileObj, sort_keys=True, indent=2)
 
 	def __getitem__(self, key: str) -> Any:
 		return self._config[key]

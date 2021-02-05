@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import codecs
 import json
 import logging
 import os.path
@@ -59,7 +58,7 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 		database: The database to be validated.
 		schemaPath: The location of the schema.
 	"""
-	with codecs.open(schemaPath, "rb", encoding="utf-8") as fileObj:
+	with open(schemaPath, "r", encoding="utf-8") as fileObj:
 		schema: Dict[str, Any] = json.load(fileObj)
 	validate: Callable[[str], None] = rapidjson.Validator(rapidjson.dumps(schema))
 	try:
@@ -92,7 +91,7 @@ def _load(databasePath: str, schemaPath: str) -> Union[Tuple[str, None], Tuple[N
 	elif os.path.isdir(databasePath):
 		return f"Error: '{databasePath}' is a directory, not a file.", None
 	try:
-		with codecs.open(databasePath, "rb", encoding="utf-8") as fileObj:
+		with open(databasePath, "r", encoding="utf-8") as fileObj:
 			database: Dict[str, Any] = json.load(fileObj)
 		_validate(database, schemaPath)
 		return None, database
@@ -111,7 +110,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		databasePath: The location where the database should be saved.
 		schemaPath: The location of the schema.
 	"""
-	with codecs.open(databasePath, "wb", encoding="utf-8") as fileObj:
+	with open(databasePath, "w", encoding="utf-8") as fileObj:
 		_validate(database, schemaPath)
 		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
 
