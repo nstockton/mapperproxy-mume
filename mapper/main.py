@@ -14,9 +14,9 @@ import threading
 from typing import Tuple, Union
 
 # Local Modules:
-from .bufferedsocket import BufferedSocket
-from .fakesocket import FakeSocket, FakeSocketEmpty
 from .mapper import Mapper
+from .sockets.bufferedsocket import BufferedSocket
+from .sockets.fakesocket import FakeSocket, FakeSocketEmpty
 from .utils import getDirectoryPath, touch
 
 
