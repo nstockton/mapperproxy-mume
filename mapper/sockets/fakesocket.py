@@ -21,7 +21,7 @@ class FakeSocketEmpty(Exception):
 
 class FakeSocket(object):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		self.inboundBuffer = Union[bytes, None]
+		self.inboundBuffer: Union[bytes, None] = None
 		self.timeout: Union[float, None] = None
 
 	def gettimeout(self) -> Union[float, None]:
@@ -36,19 +36,19 @@ class FakeSocket(object):
 	def setblocking(self, flag: bool) -> None:
 		self.settimeout(None if flag else 0.0)
 
-	def connect(self, *args: Any) -> None:
+	def connect(self, *args: Any) -> None:  # pragma: no cover
 		pass
 
-	def setsockopt(self, *args: Any) -> None:
+	def setsockopt(self, *args: Any) -> None:  # pragma: no cover
 		pass
 
 	def getpeercert(self, *args: Any) -> Dict[str, List[List[str]]]:
 		return {"subject": [["commonName", "mume.org"]]}
 
-	def shutdown(self, *args: Any) -> None:
+	def shutdown(self, *args: Any) -> None:  # pragma: no cover
 		pass
 
-	def close(self, *args: Any) -> None:
+	def close(self, *args: Any) -> None:  # pragma: no cover
 		pass
 
 	def send(self, data: bytes, flags: int = 0) -> int:
