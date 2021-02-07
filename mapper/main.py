@@ -9,28 +9,16 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import os
-import select
 import socket
-import ssl
 import threading
-import time
-from typing import Any, Dict, List, Optional, Tuple, Union
-
-# Third-party Modules:
-from boltons.socketutils import _UNSET, DEFAULT_MAXSIZE, BufferedSocket  # type: ignore[import]
+from typing import Tuple, Union
 
 # Local Modules:
+from .bufferedsocket import BufferedSocket
+from .fakesocket import FakeSocket, FakeSocketEmpty
 from .mapper import Mapper
 from .utils import getDirectoryPath, touch
 
-
-CERT_LOCATION: Union[str, None]
-try:
-	import certifi
-except ImportError:
-	CERT_LOCATION = None
-else:
-	CERT_LOCATION = certifi.where()
 
 try:
 	import pyglet  # type: ignore[import]
@@ -44,71 +32,11 @@ LISTENING_STATUS_FILE: str = os.path.join(getDirectoryPath("."), "mapper_ready.i
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class BufferedSSLSocket(BufferedSocket):  # type: ignore[misc, no-any-unimported]
-	def __init__(  # type: ignore[no-any-unimported]
-		self,
-		sock: Union[socket.socket, MockedSocket],
-		timeout: Union[_UNSET, float, None] = _UNSET,
-		maxsize: int = DEFAULT_MAXSIZE,
-		recvsize: Union[_UNSET, int] = _UNSET,
-		insecure: bool = False,
-		**sslKWArgs: Any,
-	) -> None:
-		self.sock: Union[socket.socket, MockedSocket, ssl.SSLSocket]
-		super().__init__(sock, timeout, maxsize, recvsize)
-		if not insecure and ssl is not None:
-			self.wrapSSL(**sslKWArgs)
-
-	def wrapSSL(
-		self,
-		server_side: bool = False,
-		do_handshake_on_connect: bool = True,
-		suppress_ragged_eofs: bool = True,
-		server_hostname: Optional[str] = None,
-		session: Optional[ssl.SSLSession] = None,
-	) -> None:
-		if CERT_LOCATION is None:
-			print("Error: cannot encrypt connection. Certifi not found.")
-			return None
-		with self._recv_lock:
-			with self._send_lock:
-				sock: Union[socket.socket, MockedSocket, ssl.SSLSocket] = self.sock
-				originalTimeout: Union[float, None] = sock.gettimeout()
-				sock.settimeout(None)
-				try:
-					if isinstance(sock, socket.socket):
-						context: ssl.SSLContext = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-						context.load_verify_locations(CERT_LOCATION)
-						sock = context.wrap_socket(
-							sock,
-							server_side=server_side,
-							do_handshake_on_connect=False,  # This should always be set to False.
-							suppress_ragged_eofs=suppress_ragged_eofs,
-							server_hostname=server_hostname,
-							session=session,
-						)
-					if isinstance(sock, ssl.SSLSocket):
-						self.doSSLHandshake(sock)
-				finally:
-					sock.settimeout(originalTimeout)
-					self.sock = sock
-
-	def doSSLHandshake(self, sock: ssl.SSLSocket) -> None:
-		while True:
-			try:
-				sock.do_handshake()
-				break
-			except ssl.SSLWantReadError:
-				select.select([sock], [], [])
-			except ssl.SSLWantWriteError:
-				select.select([], [sock], [])
-
-
 class Player(threading.Thread):
-	def __init__(self, player: BufferedSocket, mapper: Mapper) -> None:  # type: ignore[no-any-unimported]
+	def __init__(self, player: BufferedSocket, mapper: Mapper) -> None:
 		threading.Thread.__init__(self)
 		self.name: str = "Player"
-		self.player: BufferedSocket = player  # type: ignore[no-any-unimported]
+		self.player: BufferedSocket = player
 		self.mapper: Mapper = mapper
 		self.finished: threading.Event = threading.Event()
 
@@ -134,10 +62,10 @@ class Player(threading.Thread):
 
 
 class Game(threading.Thread):
-	def __init__(self, game: BufferedSSLSocket, mapper: Mapper) -> None:
+	def __init__(self, game: BufferedSocket, mapper: Mapper) -> None:
 		threading.Thread.__init__(self)
 		self.name: str = "Game"
-		self.game: BufferedSSLSocket = game
+		self.game: BufferedSocket = game
 		self.mapper: Mapper = mapper
 		self.finished: threading.Event = threading.Event()
 
@@ -153,7 +81,7 @@ class Game(threading.Thread):
 					self.mapper.proxy.game.parse(data)
 				else:
 					self.close()
-			except MockedSocketEmpty:
+			except FakeSocketEmpty:
 				continue
 			except EnvironmentError:
 				self.close()
@@ -161,60 +89,6 @@ class Game(threading.Thread):
 		if self.mapper.interface != "text":
 			# Shutdown the gui
 			self.mapper._gui_queue.put(None)
-
-
-class MockedSocketEmpty(Exception):
-	pass
-
-
-class MockedSocket(object):
-	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		self.inboundBuffer = Union[bytes, None]
-		self.timeout: Union[float, None] = None
-
-	def gettimeout(self) -> Union[float, None]:
-		return self.timeout
-
-	def settimeout(self, timeout: Union[float, None]) -> None:
-		self.timeout = None if timeout is None else float(timeout)
-
-	def getblocking(self) -> bool:
-		return self.gettimeout() is None
-
-	def setblocking(self, flag: bool) -> None:
-		self.settimeout(None if flag else 0.0)
-
-	def connect(self, *args: Any) -> None:
-		pass
-
-	def setsockopt(self, *args: Any) -> None:
-		pass
-
-	def getpeercert(self, *args: Any) -> Dict[str, List[List[str]]]:
-		return {"subject": [["commonName", "mume.org"]]}
-
-	def shutdown(self, *args: Any) -> None:
-		pass
-
-	def close(self, *args: Any) -> None:
-		pass
-
-	def send(self, data: bytes, flags: int = 0) -> int:
-		if data == b"quit":
-			self.inboundBuffer = b""
-		return len(data)
-
-	def sendall(self, data: bytes, flags: int = 0) -> None:
-		self.send(data, flags)
-
-	def recv(self, buffersize: int, flags: int = 0) -> bytes:
-		#  Simulate some lag.
-		time.sleep(0.005)
-		if isinstance(self.inboundBuffer, bytes):
-			inboundBuffer: bytes = self.inboundBuffer
-			self.inboundBuffer = None
-			return inboundBuffer
-		raise MockedSocketEmpty()
 
 
 def main(
@@ -241,15 +115,15 @@ def main(
 	unbufferedPlayerSocket: socket.socket
 	playerAddress: Tuple[str, int]
 	unbufferedPlayerSocket, playerAddress = proxySocket.accept()
-	playerSocket: BufferedSocket = BufferedSocket(  # type: ignore[no-any-unimported]
+	playerSocket: BufferedSocket = BufferedSocket(
 		unbufferedPlayerSocket,
 		timeout=1.0,
 	)
 	# initialise server connection
-	unbufferedGameSocket: Union[socket.socket, MockedSocket]
+	unbufferedGameSocket: Union[socket.socket, FakeSocket]
 	try:
 		if isEmulatingOffline:
-			unbufferedGameSocket = MockedSocket()
+			unbufferedGameSocket = FakeSocket()
 		else:
 			unbufferedGameSocket = socket.create_connection((remoteHost, remotePort))
 	except TimeoutError:
@@ -266,8 +140,11 @@ def main(
 	else:
 		unbufferedGameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 		unbufferedGameSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-	gameSocket: BufferedSSLSocket = BufferedSSLSocket(
-		unbufferedGameSocket, timeout=None, insecure=noSsl or isEmulatingOffline, server_hostname=remoteHost
+	gameSocket: BufferedSocket = BufferedSocket(
+		unbufferedGameSocket,
+		timeout=None,
+		encrypt=False if noSsl or isEmulatingOffline else True,
+		server_hostname=remoteHost,
 	)
 	mapperThread: Mapper = Mapper(
 		playerSocket=playerSocket,
