@@ -13,7 +13,7 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 
 # Mapper Modules:
-from mapper import USER_DATA
+from mapper import EVENT_CALLER_TYPE
 from mapper.protocols.mpi import MPI_INIT
 from mapper.protocols.proxy import Game, Player, ProxyHandler, Telnet
 from mapper.protocols.telnet_constants import (
@@ -31,9 +31,6 @@ from mapper.protocols.telnet_constants import (
 	SE,
 	WILL,
 )
-
-
-EVENT_TYPE = Tuple[int, Tuple[str, bytes]]
 
 
 class TestTelnet(TestCase):
@@ -207,7 +204,7 @@ class TestProxyHandler(TestCase):
 	def setUp(self) -> None:
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.mapperEvents: List[EVENT_TYPE] = []
+		self.mapperEvents: List[EVENT_CALLER_TYPE] = []
 		playerSocket: Mock = Mock(spec=socket.socket)
 		playerSocket.sendall.side_effect = lambda data: self.playerReceives.extend(data)
 		gameSocket: Mock = Mock(spec=socket.socket)
@@ -251,11 +248,11 @@ class TestProxyHandler(TestCase):
 		self.assertEqual(self.parse("player", data), (b"", data))
 		self.assertFalse(self.mapperEvents)
 		self.assertEqual(self.parse("player", b"testCommand " + data), (b"", b""))
-		self.assertEqual(self.mapperEvents, [(USER_DATA, b"testCommand " + data)])
+		self.assertEqual(self.mapperEvents, [("userInput", b"testCommand " + data)])
 		self.mapperEvents.clear()
 		self.proxy.isEmulatingOffline = True
 		self.assertEqual(self.parse("player", data), (b"", b""))
-		self.assertEqual(self.mapperEvents, [(USER_DATA, data)])
+		self.assertEqual(self.mapperEvents, [("userInput", data)])
 
 	def testProxyHandlerOn_gameReceived(self) -> None:
 		data: bytes = b"Hello world!"

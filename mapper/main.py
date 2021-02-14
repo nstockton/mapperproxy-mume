@@ -168,7 +168,7 @@ def main(
 		gameSocket.shutdown(socket.SHUT_RDWR)
 	except EnvironmentError:
 		pass
-	mapperThread.queue.put((None, None))
+	mapperThread.queue.put(None)
 	mapperThread.join()
 	try:
 		playerSocket.sendall(b"\r\n")

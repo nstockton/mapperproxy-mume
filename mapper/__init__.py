@@ -16,11 +16,7 @@ from .config import Config
 
 INTERFACES: Tuple[str, str, str] = ("text", "hc", "sighted")
 OUTPUT_FORMATS: Tuple[str, str, str] = ("normal", "raw", "tintin")
-USER_DATA: int = 0
-USER_DATA_TYPE = bytes
-MUD_DATA: int = 1
-MUD_DATA_TYPE = Tuple[str, bytes]
-MAPPER_QUEUE_TYPE = Union[Tuple[None, None], Tuple[int, Union[MUD_DATA_TYPE, USER_DATA_TYPE]]]
+EVENT_CALLER_TYPE = Tuple[str, bytes]
 
 
 cfg: Config = Config()

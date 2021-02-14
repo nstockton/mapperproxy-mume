@@ -14,8 +14,7 @@ from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
 # Mapper Modules:
-from mapper import MAPPER_QUEUE_TYPE, MUD_DATA, USER_DATA
-from mapper.mapper import Mapper
+from mapper.mapper import MAPPER_QUEUE_TYPE, Mapper
 
 
 class TestMapper(TestCase):
@@ -41,15 +40,15 @@ class TestMapper(TestCase):
 			self.mapper.start()
 			# feed data into the mapper queue
 			testMapperInput: Tuple[MAPPER_QUEUE_TYPE, ...] = (
-				(MUD_DATA, ("line", b"Welcome to mume")),
-				(MUD_DATA, ("prompt", b"hp:hurt mana:burning>")),
-				(USER_DATA, b"rinfo"),
-				(USER_DATA, b"emu go lorien"),
-				(USER_DATA, b"not_a_user_command"),
-				(MUD_DATA, ("movement", b"east")),
-				(USER_DATA, b"run ingrove"),
-				(MUD_DATA, ("not_an_event", b"good bype world")),
-				(None, None),
+				("line", b"Welcome to mume"),
+				("prompt", b"hp:hurt mana:burning>"),
+				("userInput", b"rinfo"),
+				("userInput", b"emu go lorien"),
+				("userInput", b"not_a_user_command"),
+				("movement", b"east"),
+				("userInput", b"run ingrove"),
+				("not_an_event", b"good bype world"),
+				None,
 			)
 			for item in testMapperInput:
 				self.mapper.queue.put(item)

@@ -17,7 +17,7 @@ from timeit import default_timer
 from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Set, Tuple, Union
 
 # Local Modules:
-from . import INTERFACES, MAPPER_QUEUE_TYPE, MUD_DATA, OUTPUT_FORMATS, USER_DATA
+from . import EVENT_CALLER_TYPE, INTERFACES, OUTPUT_FORMATS
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config
@@ -28,6 +28,7 @@ from .utils import decodeBytes, escapeIAC, escapeXMLString, formatDocString, reg
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 
+MAPPER_QUEUE_TYPE = Union[EVENT_CALLER_TYPE, None]
 EXIT_TAGS_REGEX: Pattern[str] = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ fr"(?P<direction>{'|'.join(DIRECTIONS)})"
@@ -1066,16 +1067,15 @@ class Mapper(threading.Thread, World):
 
 	def run(self) -> None:
 		while True:
+			item: MAPPER_QUEUE_TYPE = self.queue.get()
+			if item is None:
+				break
 			try:
-				dataType, data = self.queue.get()
-				if data is None:
-					break
-				elif dataType == USER_DATA and isinstance(data, bytes):
-					# The data was a valid mapper command, sent from the user's mud client.
+				event, data = item
+				if event == "userInput":
 					self.handleUserData(data)
-				elif dataType == MUD_DATA and isinstance(data, tuple):
-					# The data was from the mud server.
-					self.handleMudEvent(*data)
+				else:
+					self.handleMudEvent(*item)
 			except Exception as e:
 				self.output("map error")
 				print("error " + str(e))

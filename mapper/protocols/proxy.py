@@ -32,7 +32,7 @@ from .telnet_constants import (
 	SE,
 )
 from .xml import XMLProtocol
-from .. import MAPPER_QUEUE_TYPE, USER_DATA
+from .. import EVENT_CALLER_TYPE
 from ..utils import escapeIAC
 
 
@@ -195,7 +195,7 @@ class ProxyHandler(object):
 		promptTerminator: Union[bytes, None],
 		isEmulatingOffline: bool,
 		mapperCommands: List[bytes],
-		eventCaller: Callable[[MAPPER_QUEUE_TYPE], None],
+		eventCaller: Callable[[EVENT_CALLER_TYPE], None],
 	) -> None:
 		self.outputFormat: str = outputFormat
 		self.promptTerminator: bytes
@@ -210,7 +210,7 @@ class ProxyHandler(object):
 			)
 		self.isEmulatingOffline: bool = isEmulatingOffline
 		self.mapperCommands: List[bytes] = mapperCommands
-		self.eventCaller: Callable[[MAPPER_QUEUE_TYPE], None] = eventCaller
+		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
 		self.player: Manager = Manager(playerSocket.sendall, self.on_playerReceived)
 		self.player.register(Player, proxy=self)  # type: ignore[misc]
 		self.game: Manager = Manager(gameSocket.sendall, self.on_gameReceived)
@@ -235,7 +235,7 @@ class ProxyHandler(object):
 
 	def on_playerReceived(self, data: bytes) -> None:
 		if self.isEmulatingOffline or b"".join(data.strip().split()[:1]) in self.mapperCommands:
-			self.eventCaller((USER_DATA, data))
+			self.eventCaller(("userInput", data))
 		else:
 			self.game.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))
 

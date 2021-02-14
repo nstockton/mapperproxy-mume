@@ -11,14 +11,11 @@ from typing import List, Tuple
 from unittest import TestCase
 
 # Mapper Modules:
-from mapper import MUD_DATA
+from mapper import EVENT_CALLER_TYPE
 from mapper.protocols.mpi import MPI_INIT
 from mapper.protocols.telnet_constants import LF
 from mapper.protocols.xml import LT, XMLProtocol
 from mapper.utils import unescapeXMLBytes
-
-
-EVENT_TYPE = Tuple[int, Tuple[str, bytes]]
 
 
 class TestXMLProtocol(TestCase):
@@ -70,19 +67,19 @@ class TestXMLProtocol(TestCase):
 			+ b"PROMPT:" + unescapeXMLBytes(prompt) + b":PROMPT"
 		)
 		# fmt: on
-		self.expectedEvents: List[EVENT_TYPE] = [
-			self.createEvent("name", name),
-			self.createEvent("description", description),
-			self.createEvent("magic", detectMagic),
-			self.createEvent("exits", exits),
-			self.createEvent("dynamic", dynamic),
-			self.createEvent("magic", magic),
-			self.createEvent("line", line),
-			self.createEvent("prompt", unescapeXMLBytes(prompt)),
+		self.expectedEvents: List[EVENT_CALLER_TYPE] = [
+			("name", name),
+			("description", description),
+			("magic", detectMagic),
+			("exits", exits),
+			("dynamic", dynamic),
+			("magic", magic),
+			("line", line),
+			("prompt", unescapeXMLBytes(prompt)),
 		]
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.mapperEvents: List[EVENT_TYPE] = []
+		self.mapperEvents: List[EVENT_CALLER_TYPE] = []
 		self.xml: XMLProtocol = XMLProtocol(
 			self.gameReceives.extend,
 			self.playerReceives.extend,
@@ -106,9 +103,6 @@ class TestXMLProtocol(TestCase):
 		self.xml.state = "data"
 		return playerReceives, gameReceives, state
 
-	def createEvent(self, name: str, data: bytes) -> EVENT_TYPE:
-		return MUD_DATA, (name, data)
-
 	def testXMLState(self) -> None:
 		with self.assertRaises(ValueError):
 			self.xml.state = "**junk**"
@@ -118,7 +112,7 @@ class TestXMLProtocol(TestCase):
 		self.xml.outputFormat = "normal"
 		self.xml.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"X2" + LF + b"3G" + LF, "data"))
-		self.assertEqual(self.mapperEvents, [self.createEvent("line", data.rstrip(LF))])
+		self.assertEqual(self.mapperEvents, [("line", data.rstrip(LF))])
 		self.mapperEvents.clear()
 		self.assertEqual(self.parse(LT + b"IncompleteTag"), (b"", b"", "tag"))
 		self.assertFalse(self.mapperEvents)

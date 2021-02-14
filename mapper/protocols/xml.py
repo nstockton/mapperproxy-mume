@@ -13,13 +13,13 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Any, Callable, Dict, FrozenSet, List, MutableSequence, Tuple, Union
+from typing import Any, Callable, Dict, FrozenSet, List, MutableSequence, Union
 
 # Local Modules:
 from .base import Protocol
 from .mpi import MPI_INIT
 from .telnet_constants import CR_LF, LF
-from .. import MUD_DATA, MUD_DATA_TYPE
+from .. import EVENT_CALLER_TYPE
 from ..utils import unescapeXMLBytes
 
 
@@ -76,11 +76,11 @@ class XMLProtocol(Protocol):
 		self,
 		*args: Any,
 		outputFormat: str,
-		eventCaller: Callable[[Tuple[int, MUD_DATA_TYPE]], None],
+		eventCaller: Callable[[EVENT_CALLER_TYPE], None],
 		**kwargs: Any,
 	) -> None:
 		self.outputFormat: str = outputFormat
-		self.eventCaller: Callable[[Tuple[int, MUD_DATA_TYPE]], None] = eventCaller
+		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
 		super().__init__(*args, **kwargs)  # type: ignore[misc]
 		self._state: str = "data"
 		self._tagBuffer: bytearray = bytearray()  # Used for start and end tag names.
@@ -128,7 +128,7 @@ class XMLProtocol(Protocol):
 				self._lineBuffer.extend(lines.pop())
 			lines = [line.rstrip(CR_LF) for line in lines if line.strip()]
 			for line in lines:
-				self.on_mapperEvent("line", unescapeXMLBytes(line))
+				self.callEvent("line", unescapeXMLBytes(line))
 		else:
 			self._textBuffer.extend(appData)
 		if separator:
@@ -160,7 +160,7 @@ class XMLProtocol(Protocol):
 		elif self.outputFormat == "tintin" and not self._gratuitous:
 			appDataBuffer.append(self.tintinReplacements.get(tag, b""))
 		if self._mode is None and tag.startswith(b"movement"):
-			self.on_mapperEvent("movement", unescapeXMLBytes(tag[13:-1]))
+			self.callEvent("movement", unescapeXMLBytes(tag[13:-1]))
 		elif tag == b"gratuitous":
 			self._gratuitous = True
 		elif tag == b"/gratuitous":
@@ -172,19 +172,19 @@ class XMLProtocol(Protocol):
 			self._inRoom = False
 			self._mode = self.modes[tag]
 			self._dynamicBuffer.extend(text)
-			self.on_mapperEvent("dynamic", unescapeXMLBytes(bytes(self._dynamicBuffer).lstrip(b"\r\n")))
+			self.callEvent("dynamic", unescapeXMLBytes(bytes(self._dynamicBuffer).lstrip(b"\r\n")))
 			self._dynamicBuffer.clear()
 		elif tag in self.modes:
 			if self._inRoom:
 				if tag.startswith(b"/"):
-					self.on_mapperEvent(tag[1:].decode("us-ascii"), unescapeXMLBytes(text))
+					self.callEvent(tag[1:].decode("us-ascii"), unescapeXMLBytes(text))
 					self._mode = b"room"
 				else:
 					self._dynamicBuffer.extend(text)
 					self._mode = self.modes[tag]
 			else:
 				if tag.startswith(b"/"):
-					self.on_mapperEvent(tag[1:].decode("us-ascii"), unescapeXMLBytes(text))
+					self.callEvent(tag[1:].decode("us-ascii"), unescapeXMLBytes(text))
 				self._mode = self.modes[tag]
 		self.state = "data"
 		return data
@@ -208,12 +208,12 @@ class XMLProtocol(Protocol):
 		# Option "G" tells MUME to wrap room descriptions in gratuitous tags if they would otherwise be hidden.
 		self.write(MPI_INIT + b"X2" + LF + b"3G" + LF)
 
-	def on_mapperEvent(self, name: str, data: bytes) -> None:
+	def callEvent(self, name: str, data: bytes) -> None:
 		"""
-		Sends an event to the mapper thread.
+		Executes an event using the event caller.
 
 		Args:
 			name: The event name.
 			data: The payload.
 		"""
-		self.eventCaller((MUD_DATA, (name, data)))
+		self.eventCaller((name, data))

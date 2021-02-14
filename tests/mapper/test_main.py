@@ -14,7 +14,6 @@ from unittest import TestCase
 from unittest.mock import Mock, _Call, _CallList, call
 
 # Mapper Modules:
-from mapper import MUD_DATA
 from mapper.main import Game
 from mapper.protocols.mpi import MPI_INIT
 from mapper.protocols.proxy import ProxyHandler
@@ -217,7 +216,7 @@ class TestGameThreadThroughput(TestCase):
 		self.runThroughput(
 			threadInput=b"<prompt>\x1b[34mMana:Hot Move:Tired>\x1b[0m</prompt>" + IAC + GA,
 			expectedOutput=b"\x1b[34mMana:Hot Move:Tired>\x1b[0m" + CR_LF,
-			expectedData=[call((MUD_DATA, ("prompt", b"\x1b[34mMana:Hot Move:Tired>\x1b[0m")))],
+			expectedData=[call(("prompt", b"\x1b[34mMana:Hot Move:Tired>\x1b[0m"))],
 			inputDescription="prompt with mana burning and moves tired",
 		)
 
@@ -260,10 +259,10 @@ class TestGameThreadThroughput(TestCase):
 		)
 		# fmt: on
 		expectedData: Tuple[Callable[[int, Tuple[str, bytes]], _Call], ...] = (
-			call((MUD_DATA, ("movement", b"down"))),
-			call((MUD_DATA, ("name", b"Seagull Inn"))),
-			call((MUD_DATA, ("description", expectedDesc))),
-			call((MUD_DATA, ("dynamic", expectedDynamicDesc))),
+			call(("movement", b"down")),
+			call(("name", b"Seagull Inn")),
+			call(("description", expectedDesc)),
+			call(("dynamic", expectedDynamicDesc)),
 		)
 		inputDescription: str = "moving into a room"
 		self.runThroughput(threadInput, expectedOutput, expectedData, inputDescription)
