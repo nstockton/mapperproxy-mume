@@ -24,7 +24,7 @@ from .config import Config
 from .delays import OneShot
 from .protocols.proxy import ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
-from .utils import decodeBytes, escapeIAC, escapeXMLString, formatDocString, regexFuzzy, simplified, stripAnsi
+from .utils import decodeBytes, escapeXMLString, formatDocString, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 
@@ -199,8 +199,8 @@ class Mapper(threading.Thread, World):
 		self.parsedMinutes: int = 0
 		self.timeSynchronized: bool = False
 		self.proxy: ProxyHandler = ProxyHandler(
-			playerSocket,
-			gameSocket,
+			playerSocket.sendall,
+			gameSocket.sendall,
 			outputFormat=outputFormat,
 			promptTerminator=promptTerminator,
 			isEmulatingOffline=isEmulatingOffline,
@@ -249,31 +249,30 @@ class Mapper(threading.Thread, World):
 		self.sendPlayer(*args, **kwargs)
 
 	def sendPlayer(self, msg: str, showPrompt: bool = True) -> None:
-		msg = msg.replace("\r\n", "\n").replace("\r", "\r\0").replace("\n", "\r\n")
 		if self.outputFormat == "raw":
 			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{escapeXMLString(msg)}\r\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
-				self.proxy.player.write(escapeIAC(msg.encode("utf-8")) + self.proxy.promptTerminator)
+				msg = f"{escapeXMLString(msg)}\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
 			else:
-				msg = f"\r\n{escapeXMLString(msg)}\r\n"
-				self.proxy.player.write(escapeIAC(msg.encode("utf-8")))
+				msg = f"\n{escapeXMLString(msg)}\n"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True)
 		elif self.outputFormat == "tintin":
 			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{msg}\r\nPROMPT:{self.prompt}:PROMPT"
-				self.proxy.player.write(escapeIAC(msg.encode("utf-8")) + self.proxy.promptTerminator)
+				msg = f"{msg}\nPROMPT:{self.prompt}:PROMPT"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
 			else:
-				msg = f"\r\n{msg}\r\n"
-				self.proxy.player.write(escapeIAC(msg.encode("utf-8")))
+				msg = f"\n{msg}\n"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True)
 		else:
 			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{msg}\r\n{self.prompt}"
-				self.proxy.player.write(escapeIAC(msg.encode("utf-8")) + self.proxy.promptTerminator)
+				msg = f"{msg}\n{self.prompt}"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
 			else:
-				msg = f"\r\n{msg}\r\n"
-				self.proxy.player.write(escapeIAC(msg.encode("utf-8")))
+				msg = f"\n{msg}\n"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True)
 
 	def sendGame(self, msg: str) -> None:
-		self.proxy.game.write(msg.encode("utf-8") + b"\r\n", escape=True)
+		self.proxy.game.write(msg.encode("utf-8") + b"\n", escape=True)
 
 	def emulation_command_quit(self, *args: str) -> None:
 		"""Exits the program."""

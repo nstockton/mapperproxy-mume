@@ -66,8 +66,8 @@ class TestGameThread(TestCase):
 		mapperThread: Mock = Mock()
 		mapperThread.interface = "text"
 		proxy: ProxyHandler = ProxyHandler(
-			clientSocket,
-			mumeSocket,
+			clientSocket.sendall,
+			mumeSocket.sendall,
 			outputFormat="normal",
 			promptTerminator=IAC + GA,
 			isEmulatingOffline=False,
@@ -156,8 +156,8 @@ class TestGameThreadThroughput(TestCase):
 		self.mapperThread: Mock = Mock()
 		self.mapperThread.interface = "text"
 		proxy: ProxyHandler = ProxyHandler(
-			playerSocket,
-			mumeSocket,
+			playerSocket.sendall,
+			mumeSocket.sendall,
 			outputFormat="normal",
 			promptTerminator=CR_LF,
 			isEmulatingOffline=False,

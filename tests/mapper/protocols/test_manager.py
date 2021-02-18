@@ -35,7 +35,9 @@ class TestManager(TestCase):
 	def setUp(self) -> None:
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.manager: Manager = Manager(self.gameReceives.extend, self.playerReceives.extend)
+		self.manager: Manager = Manager(
+			self.gameReceives.extend, self.playerReceives.extend, promptTerminator=CR_LF
+		)
 
 	def tearDown(self) -> None:
 		self.manager.disconnect()
@@ -88,9 +90,15 @@ class TestManager(TestCase):
 		self.manager.write(data)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", bufferedData + bufferedData + data))
 		self.gameReceives.clear()
-		# Make sure IAC bytes are escaped and line endings are normalized if the escape argument is given.
+		# Make sure IAC bytes are escaped and line endings are normalized if the escape argument is True.
 		self.manager.write(data + IAC + LF + CR, escape=True)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", data + IAC + IAC + CR_LF + CR_NULL))
+		self.gameReceives.clear()
+		# Make sure prompt terminator is appended to bytes if the prompt argument is True.
+		self.manager.write(data, prompt=True)
+		self.assertEqual(
+			(self.playerReceives, self.gameReceives), (b"", data + self.manager.promptTerminator)
+		)
 
 	def testManagerRegister(self) -> None:
 		with self.assertRaises(ValueError):

@@ -162,9 +162,8 @@ class TestGame(TestCase):
 		mockWont.assert_called_once_with(CHARSET)
 
 	def testGameOn_ga(self) -> None:
-		self.proxy.promptTerminator = CR_LF
 		self.game.on_ga(None)
-		self.proxy.player.write.assert_called_once_with(CR_LF)
+		self.proxy.player.write.assert_called_once_with(b"", prompt=True)
 
 	@patch("mapper.protocols.proxy.Telnet.on_connectionMade")
 	def testGameOn_connectionMade(self, mockOn_connectionMade: Mock) -> None:
@@ -210,8 +209,8 @@ class TestProxyHandler(TestCase):
 		gameSocket: Mock = Mock(spec=socket.socket)
 		gameSocket.sendall.side_effect = lambda data: self.gameReceives.extend(data)
 		self.proxy: ProxyHandler = ProxyHandler(
-			playerSocket,
-			gameSocket,
+			playerSocket.sendall,
+			gameSocket.sendall,
 			outputFormat="normal",
 			promptTerminator=IAC + GA,
 			isEmulatingOffline=False,

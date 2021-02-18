@@ -14,7 +14,7 @@ from typing import Any, Callable, List, Optional, Type
 
 # Local Modules:
 from .base import Protocol
-from .telnet_constants import CR, CR_LF, CR_NULL, LF
+from .telnet_constants import CR, CR_LF, CR_NULL, GA, IAC, LF
 from ..utils import escapeIAC
 
 
@@ -22,9 +22,25 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 class Manager(object):
-	def __init__(self, writer: Callable[[bytes], None], receiver: Callable[[bytes], None]) -> None:
+	def __init__(
+		self,
+		writer: Callable[[bytes], None],
+		receiver: Callable[[bytes], None],
+		*,
+		promptTerminator: Optional[bytes] = None,
+	) -> None:
 		self._writer: Callable[[bytes], None] = writer
 		self._receiver: Callable[[bytes], None] = receiver
+		self.promptTerminator: bytes
+		if promptTerminator is None:
+			self.promptTerminator = IAC + GA
+		else:
+			self.promptTerminator = (
+				promptTerminator.replace(CR_LF, LF)
+				.replace(CR_NULL, CR)
+				.replace(CR, CR_NULL)
+				.replace(LF, CR_LF)
+			)
 		self._readBuffer: List[bytes] = []
 		self._writeBuffer: List[bytes] = []
 		self._handlers: List[Protocol] = []
@@ -97,22 +113,19 @@ class Manager(object):
 		elif data:
 			self._handlers[0].on_dataReceived(data)
 
-	def write(self, data: bytes, escape: bool = False) -> None:
+	def write(self, data: bytes, *, escape: bool = False, prompt: bool = False) -> None:
 		"""
 		Writes data to peer.
 
 		Args:
 			data: The bytes to be written.
-			escape: If true, escapes line endings and IAC characters.
+			escape: If True, escapes line endings and IAC characters.
+			prompt: If True, appends the prompt terminator to the data.
 		"""
 		if escape:
-			data = (
-				escapeIAC(data)
-				.replace(CR_LF, LF)
-				.replace(CR_NULL, CR)
-				.replace(CR, CR_NULL)
-				.replace(LF, CR_LF)
-			)
+			data = escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF)
+		if prompt:
+			data += self.promptTerminator
 		if not self.isConnected or not self._handlers:
 			self._writeBuffer.append(data)
 		elif self._writeBuffer:

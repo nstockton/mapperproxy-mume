@@ -8,7 +8,6 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-import socket
 from typing import Any, Callable, Dict, List, Tuple, Union
 
 # Local Modules:
@@ -21,9 +20,6 @@ from .telnet_constants import (
 	CHARSET_ACCEPTED,
 	CHARSET_REJECTED,
 	CHARSET_REQUEST,
-	CR,
-	CR_LF,
-	CR_NULL,
 	GA,
 	IAC,
 	LF,
@@ -33,7 +29,6 @@ from .telnet_constants import (
 )
 from .xml import XMLProtocol
 from .. import EVENT_CALLER_TYPE
-from ..utils import escapeIAC
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -153,8 +148,7 @@ class Game(Telnet):
 
 	def on_ga(self, *args: Union[bytes, None]) -> None:
 		"""Called when a Go Ahead command is received."""
-		promptTerminator: bytes = self.proxy.promptTerminator
-		self.proxy.player.write(promptTerminator)
+		self.proxy.player.write(b"", prompt=True)
 
 	def on_connectionMade(self) -> None:
 		super().on_connectionMade()
@@ -188,8 +182,8 @@ class Game(Telnet):
 class ProxyHandler(object):
 	def __init__(
 		self,
-		playerSocket: socket.socket,
-		gameSocket: socket.socket,
+		playerWriter: Callable[[bytes], None],
+		gameWriter: Callable[[bytes], None],
 		*,
 		outputFormat: str,
 		promptTerminator: Union[bytes, None],
@@ -198,22 +192,14 @@ class ProxyHandler(object):
 		eventCaller: Callable[[EVENT_CALLER_TYPE], None],
 	) -> None:
 		self.outputFormat: str = outputFormat
-		self.promptTerminator: bytes
-		if promptTerminator is None:
-			self.promptTerminator = IAC + GA
-		else:
-			self.promptTerminator = (
-				promptTerminator.replace(CR_LF, LF)
-				.replace(CR_NULL, CR)
-				.replace(CR_NULL, CR)
-				.replace(LF, CR_LF)
-			)
 		self.isEmulatingOffline: bool = isEmulatingOffline
 		self.mapperCommands: List[bytes] = mapperCommands
 		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
-		self.player: Manager = Manager(playerSocket.sendall, self.on_playerReceived)
+		self.player: Manager = Manager(
+			playerWriter, self.on_playerReceived, promptTerminator=promptTerminator
+		)
 		self.player.register(Player, proxy=self)  # type: ignore[misc]
-		self.game: Manager = Manager(gameSocket.sendall, self.on_gameReceived)
+		self.game: Manager = Manager(gameWriter, self.on_gameReceived, promptTerminator=promptTerminator)
 		self.game.register(Game, proxy=self)  # type: ignore[misc]
 		self.game.register(MPIProtocol, outputFormat=self.outputFormat)  # type: ignore[misc]
 		self.game.register(
@@ -237,7 +223,7 @@ class ProxyHandler(object):
 		if self.isEmulatingOffline or b"".join(data.strip().split()[:1]) in self.mapperCommands:
 			self.eventCaller(("userInput", data))
 		else:
-			self.game.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))
+			self.game.write(data, escape=True)
 
 	def on_gameReceived(self, data: bytes) -> None:
-		self.player.write(escapeIAC(data).replace(CR, CR_NULL).replace(LF, CR_LF))
+		self.player.write(data, escape=True)
