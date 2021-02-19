@@ -1065,10 +1065,8 @@ class Mapper(threading.Thread, World):
 				del self.mudEventHandlers[event]
 
 	def run(self) -> None:
-		while True:
-			item: MAPPER_QUEUE_TYPE = self.queue.get()
-			if item is None:
-				break
+		item: EVENT_CALLER_TYPE
+		for item in iter(self.queue.get, None):
 			try:
 				event, data = item
 				if event == "userInput":
