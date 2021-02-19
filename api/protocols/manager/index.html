@@ -1062,7 +1062,7 @@
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.protocols.manager.Manager.write">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 
       <a class="headerlink" href="#mapper.protocols.manager.Manager.write" title="Permanent link">&para;</a></h3>
@@ -1091,7 +1091,15 @@
 <td><code>escape</code></td>
 <td><code>bool</code></td>
 <td>
-<p>If true, escapes line endings and IAC characters.</p>
+<p>If True, escapes line endings and IAC characters.</p>
+</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td><code>bool</code></td>
+<td>
+<p>If True, appends the prompt terminator to the data.</p>
 </td>
 <td><code>False</code></td>
 </tr>
@@ -1100,22 +1108,19 @@
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\manager.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="sd">"""</span>
 <span class="sd">	Writes data to peer.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		data: The bytes to be written.</span>
-<span class="sd">		escape: If true, escapes line endings and IAC characters.</span>
+<span class="sd">		escape: If True, escapes line endings and IAC characters.</span>
+<span class="sd">		prompt: If True, appends the prompt terminator to the data.</span>
 <span class="sd">	"""</span>
 	<span class="k">if</span> <span class="n">escape</span><span class="p">:</span>
-		<span class="n">data</span> <span class="o">=</span> <span class="p">(</span>
-			<span class="n">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-			<span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">CR_LF</span><span class="p">,</span> <span class="n">LF</span><span class="p">)</span>
-			<span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">CR_NULL</span><span class="p">,</span> <span class="n">CR</span><span class="p">)</span>
-			<span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">CR</span><span class="p">,</span> <span class="n">CR_NULL</span><span class="p">)</span>
-			<span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">LF</span><span class="p">,</span> <span class="n">CR_LF</span><span class="p">)</span>
-		<span class="p">)</span>
+		<span class="n">data</span> <span class="o">=</span> <span class="n">escapeIAC</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">CR</span><span class="p">,</span> <span class="n">CR_NULL</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">LF</span><span class="p">,</span> <span class="n">CR_LF</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">prompt</span><span class="p">:</span>
+		<span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">promptTerminator</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isConnected</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_writeBuffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 	<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_writeBuffer</span><span class="p">:</span>

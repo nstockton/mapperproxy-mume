@@ -1958,20 +1958,17 @@ from the args and kwargs arguments, respectively.</p>
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+	<span class="n">item</span><span class="p">:</span> <span class="n">EVENT_CALLER_TYPE</span>
+	<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
 		<span class="k">try</span><span class="p">:</span>
-			<span class="n">dataType</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-			<span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="k">break</span>
-			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">USER_DATA</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-				<span class="c1"># The data was a valid mapper command, sent from the user's mud client.</span>
+			<span class="n">event</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">item</span>
+			<span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s2">"userInput"</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">handleUserData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-			<span class="k">elif</span> <span class="n">dataType</span> <span class="o">==</span> <span class="n">MUD_DATA</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-				<span class="c1"># The data was from the mud server.</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
-		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">"map error"</span><span class="p">)</span>
-			<span class="nb">print</span><span class="p">(</span><span class="s2">"error "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
+		<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error in mapper thread:</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Error in mapper thread"</span><span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">"Exiting mapper thread."</span><span class="p">)</span>
 </code></pre>
 </div>

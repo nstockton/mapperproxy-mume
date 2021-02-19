@@ -423,6 +423,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.protocols.xml.XMLProtocol.callEvent" class="md-nav__link">
+    callEvent()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.protocols.xml.XMLProtocol.on_connectionLost" class="md-nav__link">
     on_connectionLost()
   </a>
@@ -439,13 +446,6 @@
           <li class="md-nav__item">
   <a href="#mapper.protocols.xml.XMLProtocol.on_dataReceived" class="md-nav__link">
     on_dataReceived()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.protocols.xml.XMLProtocol.on_mapperEvent" class="md-nav__link">
-    on_mapperEvent()
   </a>
   
 </li>
@@ -729,6 +729,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.protocols.xml.XMLProtocol.callEvent" class="md-nav__link">
+    callEvent()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.protocols.xml.XMLProtocol.on_connectionLost" class="md-nav__link">
     on_connectionLost()
   </a>
@@ -745,13 +752,6 @@
           <li class="md-nav__item">
   <a href="#mapper.protocols.xml.XMLProtocol.on_dataReceived" class="md-nav__link">
     on_dataReceived()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.protocols.xml.XMLProtocol.on_mapperEvent" class="md-nav__link">
-    on_mapperEvent()
   </a>
   
 </li>
@@ -858,6 +858,61 @@
 </div>
 </div>
 <div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.xml.XMLProtocol.callEvent">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">callEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.xml.XMLProtocol.callEvent" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Executes an event using the event caller.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>str</code></td>
+<td>
+<p>The event name.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><code>bytes</code></td>
+<td>
+<p>The payload.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">callEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Executes an event using the event caller.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		name: The event name.</span>
+<span class="sd">		data: The payload.</span>
+<span class="sd">	"""</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">eventCaller</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.protocols.xml.XMLProtocol.on_connectionLost">
 
 <code class="highlight language-python"><span class="n">Method</span> <span class="n">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
@@ -946,61 +1001,6 @@
 			<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">))</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_dataReceived</span><span class="p">(</span><span class="n">unescapeXMLBytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appDataBuffer</span><span class="p">)))</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.protocols.xml.XMLProtocol.on_mapperEvent">
-
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">on_mapperEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
-
-
-      <a class="headerlink" href="#mapper.protocols.xml.XMLProtocol.on_mapperEvent" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Sends an event to the mapper thread.</p>
-<p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>name</code></td>
-<td><code>str</code></td>
-<td>
-<p>The event name.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>data</code></td>
-<td><code>bytes</code></td>
-<td>
-<p>The payload.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-<details class="quote">
-          <summary>Source code in <code>mapper\protocols\xml.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">on_mapperEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
-<span class="sd">	Sends an event to the mapper thread.</span>
-
-<span class="sd">	Args:</span>
-<span class="sd">		name: The event name.</span>
-<span class="sd">		data: The payload.</span>
-<span class="sd">	"""</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">eventCaller</span><span class="p">((</span><span class="n">MUD_DATA</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">)))</span>
 </code></pre>
 </div>
 </details>
