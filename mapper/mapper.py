@@ -12,6 +12,7 @@ import re
 import socket
 import textwrap
 import threading
+import traceback
 from queue import SimpleQueue
 from timeit import default_timer
 from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Set, Tuple, Union
@@ -1073,7 +1074,7 @@ class Mapper(threading.Thread, World):
 					self.handleUserData(data)
 				else:
 					self.handleMudEvent(*item)
-			except Exception as e:
-				self.output("map error")
-				print("error " + str(e))
+			except Exception:
+				self.output(f"Error in mapper thread:\n{traceback.format_exc().strip()}")
+				logger.exception("Error in mapper thread")
 		self.sendPlayer("Exiting mapper thread.")

@@ -107,7 +107,7 @@ if __name__ == "__main__":
 			noSsl=args.no_ssl,
 		)
 	except Exception:
-		traceback.print_exception(*sys.exc_info())
+		traceback.print_exc()
 		logging.exception("OOPS!")
 	finally:
 		logging.info("Shutting down.")
