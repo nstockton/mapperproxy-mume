@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 from _hashlib import HASH  # type: ignore[import]
+from contextlib import suppress
 from typing import Dict, List, Match, Pattern, Tuple, Union
 
 # Third-party Modules:
@@ -71,7 +72,7 @@ else:
 	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(
 		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))
 	):
-		try:
+		with suppress(subprocess.CalledProcessError):
 			match = VERSION_REGEX.search(
 				subprocess.check_output("git describe --tags --always --long", shell=True)
 				.decode("utf-8")
@@ -86,8 +87,6 @@ else:
 				else:
 					APP_VERSION_TYPE = "_".join(match.groups()[1:])
 				found_version = "latest Git tag"
-		except subprocess.CalledProcessError:
-			pass
 if found_version:
 	print(f"Using version info from {found_version}. ({APP_VERSION}-{APP_VERSION_TYPE})")
 else:

@@ -11,6 +11,7 @@ import logging
 import os
 import socket
 import threading
+from contextlib import ExitStack, closing, suppress
 from typing import Tuple, Union
 
 # Local Modules:
@@ -127,14 +128,13 @@ def main(
 		else:
 			unbufferedGameSocket = socket.create_connection((remoteHost, remotePort))
 	except TimeoutError:
-		try:
+		cm: ExitStack
+		with ExitStack() as cm:
+			cm.enter_context(closing(playerSocket))
+			cm.enter_context(suppress(EnvironmentError))
 			playerSocket.sendall(b"\r\nError: server connection timed out!\r\n")
 			playerSocket.sendall(b"\r\n")
 			playerSocket.shutdown(socket.SHUT_RDWR)
-		except EnvironmentError:
-			pass
-		finally:
-			playerSocket.close()
 			os.remove(LISTENING_STATUS_FILE)
 			return None
 	else:
@@ -164,18 +164,14 @@ def main(
 	if interface != "text" and pyglet is not None:
 		pyglet.app.run()
 	gameThread.join()
-	try:
+	with suppress(EnvironmentError):
 		gameSocket.shutdown(socket.SHUT_RDWR)
-	except EnvironmentError:
-		pass
 	mapperThread.queue.put(None)
 	mapperThread.join()
-	try:
+	with suppress(EnvironmentError):
 		playerSocket.sendall(b"\r\n")
 		playerThread.close()
 		playerSocket.shutdown(socket.SHUT_RDWR)
-	except EnvironmentError:
-		pass
 	playerThread.join()
 	mapperThread.proxy.close()
 	gameSocket.close()

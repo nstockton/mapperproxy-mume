@@ -13,6 +13,7 @@ import socket
 import textwrap
 import threading
 import traceback
+from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer
 from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Set, Tuple, Union
@@ -750,24 +751,18 @@ class Mapper(threading.Thread, World):
 			return None
 		promptDict: Dict[str, str] = match.groupdict()
 		output: List[str] = []
-		try:
+		with suppress(KeyError):
 			light: str = LIGHT_SYMBOLS[promptDict["light"]]
 			if light == "lit" and self.currentRoom.light != light:
 				output.append(self.rlight("lit"))
-		except KeyError:
-			pass
-		try:
+		with suppress(KeyError):
 			terrain: str = TERRAIN_SYMBOLS[promptDict["terrain"]]
 			if self.currentRoom.terrain not in (terrain, "deathtrap"):
 				output.append(self.rterrain(terrain))
-		except KeyError:
-			pass
-		try:
+		with suppress(KeyError):
 			ridable: bool = "r" in promptDict["movementFlags"].lower()
 			if ridable and self.currentRoom.ridable != "ridable":
 				output.append(self.rridable("ridable"))
-		except KeyError:
-			pass
 		if output:
 			self.sendPlayer("\n".join(output))
 

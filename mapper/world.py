@@ -12,6 +12,7 @@ import heapq
 import itertools
 import operator
 import re
+from contextlib import suppress
 from queue import SimpleQueue
 from typing import (
 	TYPE_CHECKING,
@@ -173,10 +174,8 @@ class World(object):
 			newRoom.align = roomDict["align"]
 			newRoom.portable = roomDict["portable"]
 			newRoom.ridable = roomDict["ridable"]
-			try:
+			with suppress(KeyError):
 				newRoom.avoid = roomDict["avoid"]
-			except KeyError:
-				pass
 			newRoom.mobFlags = {mobFlagReplacements.get(flag, flag) for flag in roomDict["mobFlags"]}
 			newRoom.loadFlags = {loadFlagReplacements.get(flag, flag) for flag in roomDict["loadFlags"]}
 			newRoom.x = roomDict["x"]
