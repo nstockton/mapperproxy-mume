@@ -11,6 +11,7 @@ import logging
 import select
 import socket
 import ssl
+from contextlib import ExitStack
 from typing import Any, Optional, Union
 
 # Third-party Modules:
@@ -50,28 +51,30 @@ class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-u
 		server_hostname: Optional[str] = None,
 		session: Optional[ssl.SSLSession] = None,
 	) -> None:
-		with self._recv_lock:
-			with self._send_lock:
-				sock: Union[socket.socket, FakeSocket, ssl.SSLSocket] = self.sock
-				originalTimeout: Union[float, None] = sock.gettimeout()
-				sock.settimeout(None)
-				try:
-					if isinstance(sock, socket.socket):
-						context: ssl.SSLContext = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-						context.load_verify_locations(CERT_LOCATION)
-						sock = context.wrap_socket(
-							sock,
-							server_side=server_side,
-							do_handshake_on_connect=False,  # This should always be set to False.
-							suppress_ragged_eofs=suppress_ragged_eofs,
-							server_hostname=server_hostname,
-							session=session,
-						)
-					if isinstance(sock, ssl.SSLSocket):
-						self.doSSLHandshake(sock)
-				finally:
-					sock.settimeout(originalTimeout)
-					self.sock = sock
+		cm: ExitStack
+		with ExitStack() as cm:
+			cm.enter_context(self._recv_lock)
+			cm.enter_context(self._send_lock)
+			sock: Union[socket.socket, FakeSocket, ssl.SSLSocket] = self.sock
+			originalTimeout: Union[float, None] = sock.gettimeout()
+			sock.settimeout(None)
+			try:
+				if isinstance(sock, socket.socket):
+					context: ssl.SSLContext = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+					context.load_verify_locations(CERT_LOCATION)
+					sock = context.wrap_socket(
+						sock,
+						server_side=server_side,
+						do_handshake_on_connect=False,  # This should always be set to False.
+						suppress_ragged_eofs=suppress_ragged_eofs,
+						server_hostname=server_hostname,
+						session=session,
+					)
+				if isinstance(sock, ssl.SSLSocket):
+					self.doSSLHandshake(sock)
+			finally:
+				sock.settimeout(originalTimeout)
+				self.sock = sock
 
 	def doSSLHandshake(self, sock: ssl.SSLSocket) -> None:
 		while True:
