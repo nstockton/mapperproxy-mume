@@ -1,11 +1,6 @@
-# type: ignore
-
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-
-# Some code borrowed from pymunk's debug drawing functions.
 
 
 # Future Modules:
@@ -14,20 +9,28 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import os.path
+import re
 from queue import Empty as QueueEmpty
-from re import search
+from queue import SimpleQueue
+from typing import TYPE_CHECKING, Dict, List, Tuple, Union
 
 # Third-party Modules:
-import pyglet
+import pyglet  # type: ignore[import]
 
 # Local Modules:
+from ..roomdata.objects import Room
 from ..utils import getDirectoryPath
 
 
-FPS = 40
-TILESDIR = getDirectoryPath("tiles")
+if TYPE_CHECKING:  # pragma: no cover
+	# Prevent cyclic import.
+	from ..world import GUI_QUEUE_TYPE, World
 
-TILES = {
+
+FPS: int = 40
+TILESDIR: str = getDirectoryPath("tiles")
+
+TILES: Dict[str, pyglet.image.ImageData] = {  # type: ignore[no-any-unimported]
 	# terrain
 	"field": pyglet.image.load(os.path.join(TILESDIR, "field.png")),
 	"brush": pyglet.image.load(os.path.join(TILESDIR, "brush.png")),
@@ -72,76 +75,71 @@ TILES = {
 
 
 pyglet.options["debug_gl"] = False
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 
-class Window(pyglet.window.Window):
-	def __init__(self, world):
+class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
+	def __init__(self, world: World) -> None:
 		# Mapperproxy world
-		self.world = world
+		self.world: World = world
 		# Map variables
 		# Number of columns
-		self.col = 9
+		self.col: int = 9
 		# Number of rows
-		self.row = 23
+		self.row: int = 23
 		# The center of the window
-		self.mcol = int(self.col / 2)
-		self.mrow = int(self.row / 2)
-		self.radius = (self.mcol, self.mrow, 1)
-		# The size of a tile in pixel
-		self.square = 32
+		self.mcol: int = int(self.col / 2)
+		self.mrow: int = int(self.row / 2)
+		self.radius: Tuple[int, int, int] = (self.mcol, self.mrow, 1)
+		# The size of a tile in pixels
+		self.square: int = 32
 		# The list of visible rooms:
 		# A dictionary using a tuple of coordinates (x, y) as keys
-		self.visibleRooms = {}
+		self.visibleRooms: Dict[Tuple[int, int], Room] = {}
 		# Player position and central rooms
 		# They are set to None at startup.
-		self.playerRoom = None
-		self.centerRoom = None
+		self.playerRoom: Union[Room, None] = None
+		self.centerRoom: Union[Room, None] = None
 		# Pyglet window
-		super(Window, self).__init__(
-			self.col * self.square, self.row * self.square, caption="MPM", resizable=True
-		)
+		super().__init__(self.col * self.square, self.row * self.square, caption="MPM", resizable=True)
 		logger.info(f"Creating window {self}")
-		self._gui_queue = world._gui_queue
+		self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = world._gui_queue
 		# Sprites
 		# The list of sprites
-		self.sprites = []
+		self.sprites: List[pyglet.sprite.Sprite] = []  # type: ignore[no-any-unimported]
 		# Pyglet batch of sprites
-		self.batch = pyglet.graphics.Batch()
+		self.batch: pyglet.graphics.Batch = pyglet.graphics.Batch()  # type: ignore[no-any-unimported]
 		# The list of visible layers (level 0 is covered by level 1)
-		self.layer = []
-		self.layer.append(pyglet.graphics.OrderedGroup(0))
-		self.layer.append(pyglet.graphics.OrderedGroup(1))
-		self.layer.append(pyglet.graphics.OrderedGroup(2))
-		self.layer.append(pyglet.graphics.OrderedGroup(3))
+		self.layer: List[pyglet.graphics.OrderedGroup]  # type: ignore[no-any-unimported]
+		self.layer = [pyglet.graphics.OrderedGroup(i) for i in range(4)]
 		# Define FPS
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 
-	def queue_observer(self, dt):
+	def queue_observer(self, dt: float) -> None:
 		while not self._gui_queue.empty():
 			try:
-				event = self._gui_queue.get_nowait()
+				event: GUI_QUEUE_TYPE = self._gui_queue.get_nowait()
 				if event is None:
 					event = ("on_close",)
 				self.dispatch_event(event[0], *event[1:])
 			except QueueEmpty:
 				continue
 
-	def on_close(self):
+	def on_close(self) -> None:
 		logger.debug(f"Closing window {self}")
-		super(Window, self).on_close()
+		super().on_close()
 
-	def on_draw(self):
+	def on_draw(self) -> None:
 		logger.debug(f"Drawing window {self}")
 		# pyglet stuff to clear the window
 		self.clear()
 		# pyglet stuff to print the batch of sprites
 		self.batch.draw()
 
-	def on_resize(self, width, height):
+	def on_resize(self, width: int, height: int) -> None:
 		logger.debug(f"Resizing window {self}")
-		super(Window, self).on_resize(width, height)
+		super().on_resize(width, height)
 		# reset window size
 		self.col = int(width / self.square)
 		self.mcol = int(self.col / 2)
@@ -151,13 +149,13 @@ class Window(pyglet.window.Window):
 		if self.centerRoom is not None:
 			self.draw_map(self.centerRoom)
 
-	def on_map_sync(self, currentRoom):
+	def on_map_sync(self, currentRoom: Room) -> None:
 		logger.debug(f"Map synced to {currentRoom}, vnum {currentRoom.vnum}")
 		# reset player position, center the map around
 		self.playerRoom = currentRoom
 		self.draw_map(currentRoom)
 
-	def on_gui_refresh(self):
+	def on_gui_refresh(self) -> None:
 		"""This event is fired when the mapper needs to signal the GUI to clear
 		the visible rooms cache and redraw the map view."""
 		if self.centerRoom is not None:
@@ -166,33 +164,40 @@ class Window(pyglet.window.Window):
 		else:
 			logger.debug("Unable to refresh the GUI. The center room is not defined.")
 
-	def draw_map(self, centerRoom):
+	def draw_map(self, centerRoom: Room) -> None:
 		logger.debug(f"Drawing rooms around {centerRoom}")
 		# reset the recorded state of the window
-		self.sprites = []
-		self.visibleRooms = {}
+		self.sprites.clear()
+		self.visibleRooms.clear()
 		self.centerRoom = centerRoom
 		# draw the rooms, beginning by the central one
 		self.draw_room(self.mcol, self.mrow, centerRoom)
+		vnum: str
+		room: Room
+		x: int
+		y: int
+		z: int
 		for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=centerRoom, radius=self.radius):
 			if z == 0:
 				self.draw_room(self.mcol + x, self.mrow + y, room)
 		self.draw_player()
 
-	def draw_room(self, x, y, room):
+	def draw_room(self, x: int, y: int, room: Room) -> None:
 		logger.debug(f"Drawing room: {x} {y} {room}")
 		self.visibleRooms[x, y] = room
 		# draw the terrain on layer 0
 		self.draw_tile(x, y, 0, room.terrain)
 		# draw the walls on layer 1
-		for exit in ("north", "east", "south", "west"):
-			if exit not in room.exits:
-				self.draw_tile(x, y, 1, "wall" + exit)
+		direction: str
+		for direction in ("north", "east", "south", "west"):
+			if direction not in room.exits:
+				self.draw_tile(x, y, 1, "wall" + direction)
 		# draw the arrows for exits up and down on layer 1
-		for exit in ("up", "down"):
-			if exit in room.exits:
-				self.draw_tile(x, y, 1, "exit" + exit)
+		for direction in ("up", "down"):
+			if direction in room.exits:
+				self.draw_tile(x, y, 1, "exit" + direction)
 		# draw a single load flag on layer 2
+		flag: str
 		for flag in room.loadFlags:
 			if flag in ("attention", "treasure", "key", "armour", "weapon", "herb"):
 				self.draw_tile(x, y, 2, flag)
@@ -202,29 +207,30 @@ class Window(pyglet.window.Window):
 			if flag in ("aggressive_mob", "rent", "quest_mob"):
 				self.draw_tile(x, y, 2, flag)
 				break
-			if search("shop", flag):
+			elif re.search("shop", flag) is not None:
 				self.draw_tile(x, y, 2, "shop")
 				break
-			if search("guild", flag):
+			elif re.search("guild", flag) is not None:
 				self.draw_tile(x, y, 2, "guild")
 				break
 
-	def draw_player(self):
+	def draw_player(self) -> None:
 		if self.playerRoom is None or self.centerRoom is None:
 			return None
 		logger.debug(f"Drawing player on room vnum {self.playerRoom.vnum}")
 		# transform map coordinates to window ones
-		x = self.playerRoom.x - self.centerRoom.x + self.mcol
-		y = self.playerRoom.y - self.centerRoom.y + self.mrow
-		z = self.playerRoom.z - self.centerRoom.z
+		x: int = self.playerRoom.x - self.centerRoom.x + self.mcol
+		y: int = self.playerRoom.y - self.centerRoom.y + self.mrow
+		z: int = self.playerRoom.z - self.centerRoom.z
 		# Be sure the player coordinates are part of the window
 		if z == 0 and x >= 0 and x < self.col and y >= 0 and y < self.row:
 			# draw the player on layer 3
 			self.draw_tile(x, y, 3, "player")
 
-	def draw_tile(self, x, y, z, tile):
+	def draw_tile(self, x: int, y: int, z: int, tile: str) -> None:
 		logger.debug(f"Drawing tile: {x} {y} {tile}")
 		# pyglet stuff to add a sprite to the batch
+		sprite: pyglet.sprite.Sprite  # type: ignore[no-any-unimported]
 		sprite = pyglet.sprite.Sprite(TILES[tile], batch=self.batch, group=self.layer[z])
 		# adapt sprite coordinates
 		sprite.x = x * self.square
@@ -232,14 +238,14 @@ class Window(pyglet.window.Window):
 		# add the sprite to the list of visible sprites
 		self.sprites.append(sprite)
 
-	def on_mouse_press(self, wx, wy, buttons, modifiers):
+	def on_mouse_press(self, wx: int, wy: int, buttons: int, modifiers: int) -> None:
 		logger.debug(f"Mouse press on {wx} {wy}.")
-		x = int(wx / self.square)
-		y = int(wy / self.square)
+		x: int = int(wx / self.square)
+		y: int = int(wy / self.square)
 		# check if the player clicked on a room
 		# searching for the tuple of coordinates (x, y)
 		try:
-			room = self.visibleRooms[x, y]
+			room: Room = self.visibleRooms[x, y]
 		except KeyError:
 			return None
 		# Action depends on which button the player clicked
@@ -248,7 +254,10 @@ class Window(pyglet.window.Window):
 			self.draw_map(room)
 		elif buttons == pyglet.window.mouse.MIDDLE:
 			# center the map on the player
-			self.draw_map(self.playerRoom)
+			if self.playerRoom is not None:
+				self.draw_map(self.playerRoom)
+			else:
+				logger.debug("Unable to center the map on the player. The player room is not defined.")
 		elif buttons == pyglet.window.mouse.RIGHT:
 			# print the vnum
 			self.world.output(f"Click on room {room.vnum}.")

@@ -57,6 +57,7 @@ if TYPE_CHECKING:  # pragma: no cover
 	import pyglet.window  # type: ignore[import]
 
 
+GUI_QUEUE_TYPE = Union[Tuple[str], Tuple[str, Room], None]
 LEAD_BEFORE_ENTERING_VNUMS: List[str] = ["196", "3473", "3474", "12138", "12637"]
 LIGHT_SYMBOLS: Dict[str, str] = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
 RUN_DESTINATION_REGEX: Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
@@ -87,7 +88,7 @@ class World(object):
 		self.labels: Dict[str, str] = {}
 		self._interface: str = interface
 		if interface != "text":
-			self._gui_queue: SimpleQueue[Union[Tuple[str], Tuple[str, Room], None]] = SimpleQueue()
+			self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = SimpleQueue()
 			self.window: pyglet.window.Window  # type: ignore[no-any-unimported]
 			if interface == "hc":
 				from .gui import hc
@@ -96,7 +97,7 @@ class World(object):
 			elif interface == "sighted":
 				from .gui import sighted
 
-				self.window = sighted.Window(self)  # type: ignore[attr-defined]
+				self.window = sighted.Window(self)
 		self._currentRoom: Room = Room()
 		self.loadRooms()
 		self.loadLabels()
