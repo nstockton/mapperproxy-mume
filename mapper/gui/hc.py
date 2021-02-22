@@ -500,7 +500,7 @@ class Window(pyglet.window.Window):
 		self.say("Reset zoom", True)
 
 	def circle_vertices(self, cp, radius):
-		cp = Vec2d(cp)
+		cp = Vec2d(*cp)
 		# http://slabode.exofire.net/circle_draw.shtml
 		numSegments = int(4 * math.sqrt(radius))
 		theta = float(2 * math.pi / numSegments)
@@ -529,8 +529,8 @@ class Window(pyglet.window.Window):
 		)
 
 	def draw_segment(self, a, b, color, group=None):
-		vecA = Vec2d(a)
-		vecB = Vec2d(b)
+		vecA = Vec2d(*a)
+		vecB = Vec2d(*b)
 		vertices = (int(vecA.x), int(vecA.y), int(vecB.x), int(vecB.y))
 		count = len(vertices) // 2
 		return self.batch.add(
@@ -538,8 +538,8 @@ class Window(pyglet.window.Window):
 		)
 
 	def fat_segment_vertices(self, a, b, radius):
-		vecA = Vec2d(a)
-		vecB = Vec2d(b)
+		vecA = Vec2d(*a)
+		vecB = Vec2d(*b)
 		radius = max(radius, 1)
 		tangent = -math.atan2(*(vecB - vecA))
 		delta = (math.cos(tangent) * radius, math.sin(tangent) * radius)
@@ -572,8 +572,8 @@ class Window(pyglet.window.Window):
 		]
 
 	def equilateral_triangle(self, cp, radius, angleDegrees):
-		vecA = Vec2d(radius, 0)
-		vecA.rotate_degrees(angleDegrees)
+		vec = Vec2d(radius, 0)
+		vecA = vec.rotated_degrees(angleDegrees)
 		vecB = vecA.rotated_degrees(120)
 		vecC = vecB.rotated_degrees(120)
 		return [vecA + cp, vecB + cp, vecC + cp]
@@ -581,9 +581,9 @@ class Window(pyglet.window.Window):
 	def arrow_points(self, a, d, radius):
 		vec = d - a
 		h = math.sqrt(3) * radius * 1.5
-		vec.length -= h
+		vec = vec.scale_to_length(vec.length - h)
 		b = a + vec
-		vec.length += h / 3.0
+		vec = vec.scale_to_length(vec.length + h / 3.0)
 		c = a + vec
 		return (b, c, vec.angle_degrees)
 
@@ -686,7 +686,7 @@ class Window(pyglet.window.Window):
 				)
 		else:  # one-way, random, etc
 			vec = newCP - cp
-			vec.length /= 2
+			vec = vec.scale_to_length(vec.length / 2)
 			a = newCP - vec
 			d = newCP + vec
 			r = (self.size / radius) / 2.0
@@ -847,6 +847,10 @@ class Window(pyglet.window.Window):
 	def enable_current_room_markers(self):
 		if "current_room_markers" in self.blinkers:
 			return None
+		bottom_left = self.cp - (self.size / 2.0, self.size / 2.0)
+		top_left = self.cp - (self.size / 2.0, -self.size / 2.0)
+		top_right = self.cp + (self.size / 2.0, self.size / 2.0)
+		bottom_right = self.cp + (self.size / 2.0, -self.size / 2.0)
 		current_room_markers = []
 		current_room_markers.append(
 			Blinker(
@@ -854,7 +858,7 @@ class Window(pyglet.window.Window):
 				self.draw_circle,
 				lambda: (
 					(
-						self.cp - (self.size / 2.0),
+						bottom_left,
 						(self.size / 100.0) * self.current_room_mark_radius,
 						self.current_room_mark_color,
 					),
@@ -868,7 +872,7 @@ class Window(pyglet.window.Window):
 				self.draw_circle,
 				lambda: (
 					(
-						self.cp - (self.size / 2.0, -self.size / 2.0),
+						top_left,
 						(self.size / 100.0) * self.current_room_mark_radius,
 						self.current_room_mark_color,
 					),
@@ -882,7 +886,7 @@ class Window(pyglet.window.Window):
 				self.draw_circle,
 				lambda: (
 					(
-						self.cp + (self.size / 2.0),
+						top_right,
 						(self.size / 100.0) * self.current_room_mark_radius,
 						self.current_room_mark_color,
 					),
@@ -896,7 +900,7 @@ class Window(pyglet.window.Window):
 				self.draw_circle,
 				lambda: (
 					(
-						self.cp + (self.size / 2.0, -self.size / 2.0),
+						bottom_right,
 						(self.size / 100.0) * self.current_room_mark_radius,
 						self.current_room_mark_color,
 					),
