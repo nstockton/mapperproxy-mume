@@ -14,9 +14,11 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import os
+import re
 import subprocess
 import sys
 import tempfile
+import textwrap
 import threading
 from typing import Any, Callable, Dict, FrozenSet, List
 
@@ -99,6 +101,11 @@ class MPIProtocol(Protocol):
 			# The user closed the text editor without saving. Cancel the editing session.
 			response = b"C" + session
 		else:
+			with open(fileName, "r") as textFileObj:
+				text: str = str(textFileObj.read())
+			text = self.postprocess(text)
+			with open(fileName, "w") as textFileObj:
+				textFileObj.write(text)
 			with open(fileName, "rb") as fileObj:
 				response = b"E" + session + LF + fileObj.read()
 		response = response.replace(CR, b"").strip() + LF
@@ -219,3 +226,10 @@ class MPIProtocol(Protocol):
 			data: The payload.
 		"""
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
+
+	def postprocess(self, text: str) -> str:
+		text = re.sub(r"\s+", " ", text.strip())
+		text = textwrap.fill(
+			text, width=79, drop_whitespace=True, break_long_words=False, break_on_hyphens=False
+		)
+		return text

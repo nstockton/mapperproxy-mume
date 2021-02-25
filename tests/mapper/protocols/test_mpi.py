@@ -16,6 +16,9 @@ from uuid import uuid4
 from mapper.protocols.mpi import MPI_INIT, MPIProtocol
 from mapper.protocols.telnet_constants import LF
 
+# Local Modules:
+from .test_paragraphs import paragraphs
+
 
 BODY: bytes = b"Hello World!"
 
@@ -231,3 +234,22 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
+
+
+class TestEditorPostprocessor(TestCase):
+	def setUp(self) -> None:
+		self.gameReceives: bytearray = bytearray()
+		self.playerReceives: bytearray = bytearray()
+		self.postprocess = MPIProtocol(
+			self.gameReceives.extend, self.playerReceives.extend, outputFormat="normal"
+		).postprocess
+
+	def test_whenClosingEditor_linesAreWordwrappedTo80chars(self) -> None:
+		for paragraph in paragraphs:
+			processedParagraph: str = self.postprocess(paragraph)
+			for line in processedParagraph.split("\n"):
+				self.assertLess(
+					len(line),
+					80,
+					f"The line\n{line}\nfrom the paragraph\n{paragraph}\nis {len(line)} chars long, which is too long",
+				)
