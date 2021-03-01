@@ -366,6 +366,12 @@ class TelnetProtocol(BaseTelnetProtocol):
 		"""
 		self.write(IAC + SB + option + escapeIAC(data) + IAC + SE)
 
+	def on_connectionMade(self) -> None:
+		pass
+
+	def on_connectionLost(self) -> None:
+		pass
+
 	def on_dataReceived(self, data: bytes) -> None:  # NOQA: C901
 		appDataBuffer = []
 		while data:

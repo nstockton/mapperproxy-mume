@@ -53,11 +53,5 @@ class Protocol(BaseProtocol):
 	def write(self, data: bytes) -> None:
 		self._writer(data)
 
-	def on_connectionMade(self) -> None:
-		pass
-
-	def on_connectionLost(self) -> None:
-		pass
-
 	def on_dataReceived(self, data: bytes) -> None:
 		self._receiver(data)

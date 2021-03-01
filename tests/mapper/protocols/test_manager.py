@@ -17,11 +17,15 @@ from mapper.protocols.manager import Manager
 from mapper.protocols.telnet_constants import CR, CR_LF, CR_NULL, IAC, LF
 
 
-class Protocol1(Protocol):
-	pass
+class FakeProtocol(Protocol):
+	def on_connectionMade(self) -> None:
+		pass
+
+	def on_connectionLost(self) -> None:
+		pass
 
 
-class Protocol2(Protocol):
+class MockProtocol(Protocol):
 	on_connectionMade: Mock = Mock()
 	on_connectionLost: Mock = Mock()
 	on_dataReceived: Mock = Mock()
@@ -73,7 +77,7 @@ class TestManager(TestCase):
 		self.manager.connect()
 		# Make sure that any data passed to Manager.parse before registering a protocol gets buffered.
 		self.assertEqual(self.parse(bufferedData), (b"", b""))
-		self.manager.register(Protocol)
+		self.manager.register(FakeProtocol)
 		self.assertEqual(self.parse(data), (bufferedData + bufferedData + data, b""))
 
 	def testManagerWrite(self) -> None:
@@ -86,7 +90,7 @@ class TestManager(TestCase):
 		# Make sure that any data passed to Manager.write before registering a protocol gets buffered.
 		self.manager.write(bufferedData)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", b""))
-		self.manager.register(Protocol)
+		self.manager.register(FakeProtocol)
 		self.manager.write(data)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", bufferedData + bufferedData + data))
 		self.gameReceives.clear()
@@ -103,25 +107,25 @@ class TestManager(TestCase):
 	def testManagerRegister(self) -> None:
 		with self.assertRaises(ValueError):
 			# Handler class required, not instance.
-			self.manager.register(Protocol1(lambda *args: None, lambda *args: None))  # type: ignore[arg-type]
-		self.manager.register(Protocol1)
+			self.manager.register(FakeProtocol(lambda *args: None, lambda *args: None))  # type: ignore[arg-type]
+		self.manager.register(FakeProtocol)
 		with self.assertRaises(ValueError):
-			self.manager.register(Protocol1)
-		self.assertIsNot(self.manager._handlers[0]._receiver, Protocol2.on_dataReceived)
-		self.manager.register(Protocol2)
+			self.manager.register(FakeProtocol)
+		self.assertIsNot(self.manager._handlers[0]._receiver, MockProtocol.on_dataReceived)
+		self.manager.register(MockProtocol)
 		self.assertIs(self.manager._handlers[0]._receiver, self.manager._handlers[1].on_dataReceived)
-		mockOn_connectionMade: Mock = Protocol2.on_connectionMade
+		mockOn_connectionMade: Mock = MockProtocol.on_connectionMade
 		mockOn_connectionMade.assert_called_once()
 
 	def testManagerUnregister(self) -> None:
-		self.manager.register(Protocol1)
+		self.manager.register(FakeProtocol)
 		with self.assertRaises(ValueError):
 			# Handler instance required, not class.
-			self.manager.unregister(Protocol1)  # type: ignore[arg-type]
+			self.manager.unregister(FakeProtocol)  # type: ignore[arg-type]
 		with self.assertRaises(ValueError):
 			# Calling Manager.unregister on an instance that was not registered.
-			self.manager.unregister(Protocol2(lambda *args: None, lambda *args: None))
-		self.manager.register(Protocol2)
+			self.manager.unregister(MockProtocol(lambda *args: None, lambda *args: None))
+		self.manager.register(MockProtocol)
 		instance: Protocol = self.manager._handlers[-1]
 		self.assertIsNot(self.manager._handlers[0]._receiver, instance._receiver)
 		mockOn_connectionLost: Mock

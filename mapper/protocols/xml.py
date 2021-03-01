@@ -208,6 +208,9 @@ class XMLProtocol(Protocol):
 		# Option "G" tells MUME to wrap room descriptions in gratuitous tags if they would otherwise be hidden.
 		self.write(MPI_INIT + b"X2" + LF + b"3G" + LF)
 
+	def on_connectionLost(self) -> None:
+		pass
+
 	def callEvent(self, name: str, data: bytes) -> None:
 		"""
 		Executes an event using the event caller.
