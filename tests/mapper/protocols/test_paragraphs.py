@@ -4,6 +4,9 @@ from __future__ import annotations
 
 paragraphs: list[str] = [
 	"",
+	".",
+	"..",
+	"....",
 	"\n",
 	"\n\n",
 	"\\t  \t \n \n",

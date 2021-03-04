@@ -228,7 +228,11 @@ class MPIProtocol(Protocol):
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
 
 	def postprocess(self, text: str) -> str:
+		# collapse all runs of whitespace into a single space
 		text = re.sub(r"\s+", " ", text.strip())
+		# capitaalise beginnings of sentences
+		text = ". ".join([sentence.capitalize() for sentence in text.split(". ")])
+		# wordwrap to 80 chars
 		text = textwrap.fill(
 			text, width=79, drop_whitespace=True, break_long_words=False, break_on_hyphens=False
 		)

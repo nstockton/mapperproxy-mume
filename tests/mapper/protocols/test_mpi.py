@@ -244,9 +244,16 @@ class TestEditorPostprocessor(TestCase):
 			self.gameReceives.extend, self.playerReceives.extend, outputFormat="normal"
 		).postprocess
 
-	def test_whenClosingEditor_linesAreWordwrappedTo80chars(self) -> None:
+	def test_postprocessing(self) -> None:
 		for paragraph in paragraphs:
 			processedParagraph: str = self.postprocess(paragraph)
+			# test capitalisation
+		for sentence in processedParagraph.split(". "):
+			self.assertTrue(
+				sentence[0].isupper() or not sentence[0].isalpha(),
+				f"The sentence\n{sentence}\nfrom the paragraph\n{paragraph}\nstarts with an uncapitalized letter.",
+			)
+			# test wordwrapping
 			for line in processedParagraph.split("\n"):
 				self.assertLess(
 					len(line),
