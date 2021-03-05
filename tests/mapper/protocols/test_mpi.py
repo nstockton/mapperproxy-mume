@@ -260,3 +260,15 @@ class TestEditorPostprocessor(TestCase):
 					80,
 					f"The line\n{line}\nfrom the paragraph\n{paragraph}\nis {len(line)} chars long, which is too long",
 				)
+			# test preservation of runs of newlines
+			startLineCount = len(
+				[line for line in paragraph.strip().split("\n") if line.isspace() or not len(line)]
+			)
+			processedLineCount = len(
+				[line for line in processedParagraph.strip().split("\n") if not len(line)]
+			)
+			self.assertEqual(
+				startLineCount,
+				processedLineCount,
+				f"These paragraphs have {startLineCount} and {processedLineCount} runs of newlines, respectively.\nFirst paragraph:\n{paragraph}\n\nSecond paragraph:\n{processedParagraph}",  # noqa E501
+			)
