@@ -140,6 +140,8 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
 
+	@patch("mapper.protocols.mpi.MPIProtocol.postprocess")
+	@patch("mapper.protocols.mpi.Config")
 	@patch("mapper.protocols.mpi.open", mock_open(read_data=BODY))
 	@patch("mapper.protocols.mpi.os.remove")
 	@patch("mapper.protocols.mpi.subprocess.Popen")
@@ -155,12 +157,16 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile: Mock,
 		mockSubprocess: Mock,
 		mockRemove: Mock,
+		mockConfig: Mock,
+		mockPostprocessor: Mock,
 	) -> None:
 		session: bytes = b"12345" + LF
 		description: bytes = b"description" + LF
 		tempFileName: str = "temp_file_name"
 		expectedSent: bytes
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
+		cfg: dict[str, bool] = {}
+		mockConfig.return_value = cfg
 		# Make sure we are in the default state.
 		self.assertEqual(self.playerReceives, b"")
 		self.assertEqual(self.gameReceives, b"")
@@ -234,6 +240,18 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
+		# confirm pre and post processors were not called since wordwrapping was not defined
+		mockPostprocessor.assert_not_called()
+		# test given wordwrapping is enabled, processor methods are called
+		cfg["wordwrap"] = True
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		mockPostprocessor.assert_called_once()
+		mockPostprocessor.reset_mock()
+		# test given wordwrapping is disabled, processor methods are not called
+		cfg["wordwrap"] = False
+		mockConfig.get = Mock(return_value=False)
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		mockPostprocessor.assert_not_called()
 
 
 class TestEditorPostprocessor(TestCase):

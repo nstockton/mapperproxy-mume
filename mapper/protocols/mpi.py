@@ -25,6 +25,7 @@ from typing import Any, Callable, Dict, FrozenSet, List
 # Local Modules:
 from .base import Protocol
 from .telnet_constants import CR, CR_LF, LF
+from ..config import Config
 
 
 MPI_INIT: bytes = b"~$#E"
@@ -87,6 +88,8 @@ class MPIProtocol(Protocol):
 			data: Received data from Mume, containing the session, description, and body of the text.
 		"""
 		session, description, body = data[1:].split(LF, 2)
+		cfg: Config = Config()
+		isWordwrapping: bool = cfg.get("wordwrap", False)
 		with tempfile.NamedTemporaryFile(prefix="mume_editing_", suffix=".txt", delete=False) as fileObj:
 			fileName = fileObj.name
 			fileObj.write(body.replace(CR, b"").replace(LF, CR_LF))
@@ -101,11 +104,12 @@ class MPIProtocol(Protocol):
 			# The user closed the text editor without saving. Cancel the editing session.
 			response = b"C" + session
 		else:
-			with open(fileName, "r") as textFileObj:
-				text: str = str(textFileObj.read())
-			text = self.postprocess(text)
-			with open(fileName, "w") as textFileObj:
-				textFileObj.write(text)
+			if isWordwrapping:
+				with open(fileName, "r") as textFileObj:
+					text: str = str(textFileObj.read())
+				text = self.postprocess(text)
+				with open(fileName, "w") as textFileObj:
+					textFileObj.write(text)
 			with open(fileName, "rb") as fileObj:
 				response = b"E" + session + LF + fileObj.read()
 		response = response.replace(CR, b"").strip() + LF
