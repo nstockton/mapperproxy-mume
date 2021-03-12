@@ -10,7 +10,6 @@ from __future__ import annotations
 from contextlib import ExitStack
 from typing import Any, Dict
 from unittest import TestCase
-from unittest.case import _AssertLogsContext
 from unittest.mock import Mock, _CallList, call, patch
 
 # Third-party Modules:
@@ -96,9 +95,7 @@ class TestDatabase(TestCase):
 		cm: ExitStack
 		with ExitStack() as cm:
 			cm.enter_context(patch("mapper.roomdata.database.jsonschema.validate"))
-			mockLogger: _AssertLogsContext = cm.enter_context(
-				self.assertLogs("mapper.roomdata.database", level="WARNING")
-			)
+			mockLogger = cm.enter_context(self.assertLogs("mapper.roomdata.database", level="WARNING"))
 			cm.enter_context(
 				self.assertRaises(SchemaValidationError, msg="rapidjson fails validation, jsonschema passes")
 			)
