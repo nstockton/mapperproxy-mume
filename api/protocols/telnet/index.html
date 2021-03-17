@@ -732,6 +732,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3" >
+      
+      <label class="md-nav__link" for="nav-3-3">
+        sockets
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="sockets" data-md-level="2">
+        <label class="md-nav__title" for="nav-3-3">
+          <span class="md-nav__icon md-icon"></span>
+          sockets
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sockets/bufferedsocket/" class="md-nav__link">
+        bufferedsocket.py
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sockets/fakesocket/" class="md-nav__link">
+        fakesocket.py
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../cleanmap/" class="md-nav__link">
         cleanmap.py
@@ -1212,8 +1264,9 @@
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\telnet.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="k">pass</span>
+<pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""Called by `disconnect` when a connection to peer has been lost."""</span>
 </code></pre>
 </div>
 </details>
@@ -1234,8 +1287,9 @@
 <details class="quote">
           <summary>Source code in <code>mapper\protocols\telnet.py</code></summary>
           <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="k">pass</span>
+<pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">"""Called by `connect` when a connection to peer has been established."""</span>
 </code></pre>
 </div>
 </details>
@@ -1995,9 +2049,6 @@ handled.</p>
 
 <code class="highlight language-python"><span class="n">Method</span> <span class="n">on_connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
 
       <a class="headerlink" href="#mapper.protocols.telnet.TelnetProtocol.on_connectionLost" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
@@ -2017,9 +2068,6 @@ handled.</p>
 
 <code class="highlight language-python"><span class="n">Method</span> <span class="n">on_connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
 
       <a class="headerlink" href="#mapper.protocols.telnet.TelnetProtocol.on_connectionMade" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
