@@ -27,12 +27,14 @@ class BaseDelay(threading.Thread):
 		**kwargs: Any,
 	) -> None:
 		"""
+		Defines the constructor for the object.
+
 		Args:
 			duration: The amount of time (in seconds) to delay between iterations.
 			count: The number of iterations to delay, or None to repeat indefinitely.
 			function: The function to be called at each iteration.
 			*args: Positional arguments to be passed to the called function.
-			**args: Key-word only arguments to be passed to the called function.
+			**kwargs: Key-word only arguments to be passed to the called function.
 		"""
 		if count is not None and count < 0:
 			raise ValueError("count must be a positive number or None.")
@@ -80,11 +82,13 @@ class OneShot(Delay):
 
 	def __init__(self, duration: float, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
 		"""
+		Defines the constructor for the object.
+
 		Args:
 			duration: The amount of time (in seconds) to delay.
 			function: The function to be called when the delay completes.
 			*args: Positional arguments to be passed to the called function.
-			**args: Key-word only arguments to be passed to the called function.
+			**kwargs: Key-word only arguments to be passed to the called function.
 		"""
 		super().__init__(duration, 1, function, *args, **kwargs)
 
@@ -96,10 +100,12 @@ class Repeating(Delay):
 
 	def __init__(self, duration: float, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
 		"""
+		Defines the constructor for the object.
+
 		Args:
 			duration: The amount of time (in seconds) to delay between iterations.
 			function: The function to be called at each iteration.
 			*args: Positional arguments to be passed to the called function.
-			**args: Key-word only arguments to be passed to the called function.
+			**kwargs: Key-word only arguments to be passed to the called function.
 		"""
 		super().__init__(duration, None, function, *args, **kwargs)
