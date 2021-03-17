@@ -26,3 +26,8 @@ Automatically generated API reference.
 
 * [Database](roomdata/database.md)
 * [Room Objects](roomdata/objects.md)
+
+### Sockets
+
+* [Buffered Socket](sockets/bufferedsocket.md)
+* [Fake Socket](sockets/fakesocket.md)

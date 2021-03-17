@@ -25,6 +25,9 @@ nav:
       - roomdata:
           - database.py: api/roomdata/database.md
           - objects.py: api/roomdata/objects.md
+      - sockets:
+          - bufferedsocket.py: api/sockets/bufferedsocket.md
+          - fakesocket.py: api/sockets/fakesocket.md
       - cleanmap.py: api/cleanmap.md
       - clock.py: api/clock.md
       - config.py: api/config.md
