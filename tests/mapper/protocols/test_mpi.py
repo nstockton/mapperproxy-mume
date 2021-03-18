@@ -258,27 +258,16 @@ class TestEditorPostprocessor(TestCase):
 	def setUp(self) -> None:
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.postprocess = MPIProtocol(
+		self.MPIProtocol = MPIProtocol(
 			self.gameReceives.extend, self.playerReceives.extend, outputFormat="normal"
-		).postprocess
+		)
+		self.collapseSpaces = self.MPIProtocol.collapseSpaces
+		self.capitalise = self.MPIProtocol.capitalise
+		self.wordwrap = self.MPIProtocol.wordwrap
 
-	def test_postprocessing(self) -> None:
+	def test_whenCollapsingSpaces_thenRunsOfNewlinesArePreserved(self) -> None:
 		for paragraph in paragraphs:
-			processedParagraph: str = self.postprocess(paragraph)
-			# test capitalisation
-		for sentence in processedParagraph.split(". "):
-			self.assertTrue(
-				sentence[0].isupper() or not sentence[0].isalpha(),
-				f"The sentence\n{sentence}\nfrom the paragraph\n{paragraph}\nstarts with an uncapitalized letter.",
-			)
-			# test wordwrapping
-			for line in processedParagraph.split("\n"):
-				self.assertLess(
-					len(line),
-					80,
-					f"The line\n{line}\nfrom the paragraph\n{paragraph}\nis {len(line)} chars long, which is too long",
-				)
-			# test preservation of runs of newlines
+			processedParagraph: str = self.collapseSpaces(paragraph)
 			startLineCount = len(
 				[line for line in paragraph.strip().split("\n") if line.isspace() or not len(line)]
 			)
@@ -290,3 +279,22 @@ class TestEditorPostprocessor(TestCase):
 				processedLineCount,
 				f"These paragraphs have {startLineCount} and {processedLineCount} runs of newlines, respectively.\nFirst paragraph:\n{paragraph}\n\nSecond paragraph:\n{processedParagraph}",  # noqa E501
 			)
+
+	def test_capitalisation(self) -> None:
+		for paragraph in paragraphs:
+			processedParagraph: str = self.capitalise(paragraph)
+		for sentence in processedParagraph.split(". "):
+			self.assertTrue(
+				sentence[0].isupper() or not sentence[0].isalpha(),
+				f"The sentence\n{sentence}\nfrom the paragraph\n{paragraph}\nstarts with an uncapitalized letter.",
+			)
+
+	def test_wordwrap(self) -> None:
+		for paragraph in paragraphs:
+			processedParagraph: str = self.wordwrap(paragraph)
+			for line in processedParagraph.split("\n"):
+				self.assertLess(
+					len(line),
+					80,
+					f"The line\n{line}\nfrom the paragraph\n{paragraph}\nis {len(line)} chars long, which is too long",
+				)

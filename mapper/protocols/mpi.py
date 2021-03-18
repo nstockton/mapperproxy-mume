@@ -232,16 +232,24 @@ class MPIProtocol(Protocol):
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
 
 	def postprocess(self, text: str) -> str:
+		text = self.collapseSpaces(text)
+		text = self.capitalise(text)
+		text = self.wordwrap(text)
+		return text
+
+	def collapseSpaces(self, text: str) -> str:
 		# replace consecutive newlines with a null placeholder
 		text = re.sub(r"\n(\s*\n)+", "\0", text)
 		# collapse all runs of whitespace into a single space
 		text = re.sub(r"\s+", " ", text.strip())
-		# capitaalise beginnings of sentences
-		text = ". ".join([sentence.capitalize() for sentence in text.split(". ")])
 		# reinsert consecutive newlines
 		text = text.replace("\0", "\n\n")
-		# wordwrap to 80 chars
-		text = textwrap.fill(
+		return text
+
+	def capitalise(self, text: str) -> str:
+		return ". ".join([sentence.capitalize() for sentence in text.split(". ")])
+
+	def wordwrap(self, text: str) -> str:
+		return textwrap.fill(
 			text, width=79, drop_whitespace=True, break_long_words=False, break_on_hyphens=False
 		)
-		return text
