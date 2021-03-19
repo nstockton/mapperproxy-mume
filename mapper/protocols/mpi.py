@@ -232,10 +232,31 @@ class MPIProtocol(Protocol):
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
 
 	def postprocess(self, text: str) -> str:
-		text = self.collapseSpaces(text)
-		text = self.capitalise(text)
-		text = self.wordwrap(text)
-		return text
+		paragraphs: list[str] = self.getParagraphs(text)
+		for p in range(len(paragraphs)):
+			if not self.isComment(paragraphs[p]):
+				paragraphs[p] = self.collapseSpaces(paragraphs[p])
+				paragraphs[p] = text = self.capitalise(paragraphs[p])
+				paragraphs[p] = self.wordwrap(paragraphs[p])
+		return "\n".join(paragraphs)
+
+	def getParagraphs(self, text: str) -> list[str]:
+		lines = [line for line in text.split("\n")]
+		lineno = 0
+		while lineno < len(lines):
+			if self.isComment(lines[lineno]):
+				if lineno > 0:
+					lines[lineno] = "\0" + lines[lineno]
+				if lineno + 1 < len(lines):
+					lines[lineno] += "\0"
+			lineno += 1
+		text = "\n".join(lines)
+		text = re.sub(r"\0\n\0?", "\0", text)
+		lines = [line.rstrip() for line in text.split("\0")]
+		return [line for line in lines if line]
+
+	def isComment(self, line: str) -> bool:
+		return line.lstrip().startswith("#")
 
 	def collapseSpaces(self, text: str) -> str:
 		# replace consecutive newlines with a null placeholder

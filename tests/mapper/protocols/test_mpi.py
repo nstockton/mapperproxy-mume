@@ -7,9 +7,10 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import re
 from typing import Tuple
 from unittest import TestCase
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import Mock, call, mock_open, patch
 from uuid import uuid4
 
 # Mapper Modules:
@@ -261,9 +262,26 @@ class TestEditorPostprocessor(TestCase):
 		self.MPIProtocol = MPIProtocol(
 			self.gameReceives.extend, self.playerReceives.extend, outputFormat="normal"
 		)
+		self.postprocess = self.MPIProtocol.postprocess
+		self.getParagraphs = self.MPIProtocol.getParagraphs
 		self.collapseSpaces = self.MPIProtocol.collapseSpaces
 		self.capitalise = self.MPIProtocol.capitalise
 		self.wordwrap = self.MPIProtocol.wordwrap
+
+	def test_postprocessing(self) -> None:
+		subfunctionsMock = self.MPIProtocol.collapseSpaces = Mock(wraps=str)  # type: ignore [assignment]
+		for sampleText in sampleTexts:
+			self.MPIProtocol.postprocess(sampleText)
+			textWithoutComments = re.sub(r"(^|(?<=\n))\s*#.*(?=\n|$)", "\0", sampleText)
+			textWithoutComments = textWithoutComments.replace("\0\n", "\0")
+			paragraphs = [paragraph.rstrip() for paragraph in textWithoutComments.split("\0")]
+			expectedCalls = [call(p) for p in paragraphs if p]
+			self.assertListEqual(
+				subfunctionsMock.mock_calls,
+				expectedCalls,
+				f"from sample text {bytes(sampleText, 'ANSI')}",  # type: ignore [str-bytes-safe]
+			)
+			subfunctionsMock.reset_mock()
 
 	def test_whenCollapsingSpaces_thenRunsOfNewlinesArePreserved(self) -> None:
 		for sampleText in sampleTexts:
