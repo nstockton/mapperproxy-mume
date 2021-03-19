@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 
-paragraphs: list[str] = [
+sampleTexts: list[str] = [
 	"",
 	".",
 	"..",

@@ -38,7 +38,7 @@ exclude =
 	__pycache__,
 	env/
 	maps/
-	tests\mapper\protocols\test_*paragraphs.py
+	tests\mapper\protocols\test_sample_texts.py
 
 filename =
 	*.py,
