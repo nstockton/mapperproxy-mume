@@ -283,17 +283,13 @@ class TestEditorPostprocessor(TestCase):
 			)
 			subfunctionsMock.reset_mock()
 
-	def test_whenCollapsingSpaces_thenRunsOfNewlinesArePreserved(self) -> None:
+	def test_whenCollapsingSpaces_thenEachNewlineIsPreserved(self) -> None:
 		for sampleText in sampleTexts:
 			processedText: str = self.collapseSpaces(sampleText)
-			startLineCount = len(
-				[line for line in sampleText.strip().split("\n") if line.isspace() or not len(line)]
-			)
-			processedLineCount = len([line for line in processedText.strip().split("\n") if not len(line)])
 			self.assertEqual(
-				startLineCount,
-				processedLineCount,
-				f"These texts have {startLineCount} and {processedLineCount} runs of newlines, respectively.\nsample text:\n{sampleText}\n\nprocessed text:\n{processedText}",  # noqa E501
+				processedText.count("\n"),
+				sampleText.count("\n"),
+				f"processed text:\n{processedText}\nsample text:\n{sampleText}\n",
 			)
 
 	def test_capitalisation(self) -> None:

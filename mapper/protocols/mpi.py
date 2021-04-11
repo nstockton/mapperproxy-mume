@@ -260,11 +260,11 @@ class MPIProtocol(Protocol):
 
 	def collapseSpaces(self, text: str) -> str:
 		# replace consecutive newlines with a null placeholder
-		text = re.sub(r"\n(\s*\n)+", "\0", text)
+		text = text.replace("\n", "\0")
 		# collapse all runs of whitespace into a single space
-		text = re.sub(r"\s+", " ", text.strip())
+		text = re.sub(r"[ \t]+", " ", text.strip())
 		# reinsert consecutive newlines
-		text = text.replace("\0", "\n\n")
+		text = text.replace("\0", "\n")
 		return text
 
 	def capitalise(self, text: str) -> str:
