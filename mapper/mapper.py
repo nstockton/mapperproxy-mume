@@ -444,7 +444,7 @@ class Mapper(threading.Thread, World):
 			# first set current room to the emulation room so the user command acts on the emulation room
 			oldRoom: Room = self.currentRoom
 			self.currentRoom = self.emulationRoom
-			returnVal: tuple[Any] = getattr(self, f"user_command_{userCommand}")(*userArgs)
+			returnVal: tuple[Any] = getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
 			self.currentRoom = oldRoom
 			return returnVal
 		else:
