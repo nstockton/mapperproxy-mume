@@ -232,17 +232,17 @@ class MPIProtocol(Protocol):
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
 
 	def postprocess(self, text: str) -> str:
-		paragraphs: list[str] = self.getParagraphs(text)
+		paragraphs: List[str] = self.getParagraphs(text)
 		for p in range(len(paragraphs)):
 			if not self.isComment(paragraphs[p]):
 				paragraphs[p] = self.collapseSpaces(paragraphs[p])
-				paragraphs[p] = text = self.capitalise(paragraphs[p])
+				paragraphs[p] = self.capitalise(paragraphs[p])
 				paragraphs[p] = self.wordwrap(paragraphs[p])
 		return "\n".join(paragraphs)
 
-	def getParagraphs(self, text: str) -> list[str]:
-		lines = [line for line in text.split("\n")]
-		lineno = 0
+	def getParagraphs(self, text: str) -> List[str]:
+		lines: List[str] = [line for line in text.split("\n")]
+		lineno: int = 0
 		while lineno < len(lines):
 			if self.isComment(lines[lineno]):
 				if lineno > 0:
@@ -268,7 +268,7 @@ class MPIProtocol(Protocol):
 		return text
 
 	def capitalise(self, text: str) -> str:
-		return ". ".join([sentence.capitalize() for sentence in text.split(". ")])
+		return ". ".join(sentence.capitalize() for sentence in text.split(". "))
 
 	def wordwrap(self, text: str) -> str:
 		return textwrap.fill(

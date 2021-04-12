@@ -523,7 +523,7 @@ class Mapper(threading.Thread, World):
 
 	def user_command_wordwrap(self, *args: str) -> None:
 		cfg: Config = Config()
-		wordwrap = not cfg.get("wordwrap", True)
+		wordwrap: bool = not cfg.get("wordwrap", True)
 		self.sendPlayer(f"wordwrap {'enabled' if wordwrap else 'disabled'}")
 		cfg["wordwrap"] = wordwrap
 		cfg.save()

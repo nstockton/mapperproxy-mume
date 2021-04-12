@@ -8,9 +8,9 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
-from typing import Tuple
+from typing import Callable, Dict, List, Tuple
 from unittest import TestCase
-from unittest.mock import Mock, call, mock_open, patch
+from unittest.mock import Mock, _Call, call, mock_open, patch
 from uuid import uuid4
 
 # Mapper Modules:
@@ -220,9 +220,9 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
 
+	@patch("mapper.protocols.mpi.open", mock_open(read_data=BODY))
 	@patch("mapper.protocols.mpi.MPIProtocol.postprocess")
 	@patch("mapper.protocols.mpi.Config")
-	@patch("mapper.protocols.mpi.open", mock_open(read_data=BODY))
 	@patch("mapper.protocols.mpi.os.remove")
 	@patch("mapper.protocols.mpi.subprocess.Popen")
 	@patch("mapper.protocols.mpi.tempfile.NamedTemporaryFile")
@@ -245,7 +245,7 @@ class TestMPIProtocol(TestCase):
 		tempFileName: str = "temp_file_name"
 		expectedSent: bytes
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
-		cfg: dict[str, bool] = {}
+		cfg: Dict[str, bool] = {}
 		mockConfig.return_value = cfg
 		# Make sure we are in the default state.
 		self.assertEqual(self.playerReceives, b"")
@@ -329,7 +329,6 @@ class TestMPIProtocol(TestCase):
 		mockPostprocessor.reset_mock()
 		# test given wordwrapping is disabled, processor methods are not called
 		cfg["wordwrap"] = False
-		mockConfig.get = Mock(return_value=False)
 		self.mpi.edit(b"E" + session + description + BODY + LF)
 		mockPostprocessor.assert_not_called()
 
@@ -348,19 +347,19 @@ class TestEditorPostprocessor(TestCase):
 		self.wordwrap = self.MPIProtocol.wordwrap
 
 	def test_postprocessing(self) -> None:
-		subfunctionsMock = self.MPIProtocol.collapseSpaces = Mock(wraps=str)  # type: ignore [assignment]
-		for sampleText in SAMPLE_TEXTS:
-			self.MPIProtocol.postprocess(sampleText)
-			textWithoutComments = re.sub(r"(^|(?<=\n))\s*#.*(?=\n|$)", "\0", sampleText)
-			textWithoutComments = textWithoutComments.replace("\0\n", "\0")
-			paragraphs = [paragraph.rstrip() for paragraph in textWithoutComments.split("\0")]
-			expectedCalls = [call(p) for p in paragraphs if p]
-			self.assertListEqual(
-				subfunctionsMock.mock_calls,
-				expectedCalls,
-				f"from sample text {bytes(sampleText, 'ANSI')}",  # type: ignore [str-bytes-safe]
-			)
-			subfunctionsMock.reset_mock()
+		with patch.object(self.MPIProtocol, "collapseSpaces", Mock(wraps=str)) as collapseSpacesMock:
+			for sampleText in SAMPLE_TEXTS:
+				self.MPIProtocol.postprocess(sampleText)
+				textWithoutComments: str = re.sub(r"(^|(?<=\n))\s*#.*(?=\n|$)", "\0", sampleText)
+				textWithoutComments = textWithoutComments.replace("\0\n", "\0")
+				paragraphs: List[str] = [paragraph.rstrip() for paragraph in textWithoutComments.split("\0")]
+				expectedCalls: List[Callable[[str], _Call]] = [call(p) for p in paragraphs if p]
+				self.assertListEqual(
+					collapseSpacesMock.mock_calls,
+					expectedCalls,
+					f"from sample text {sampleText.encode('ANSI')!r}",
+				)
+				collapseSpacesMock.reset_mock()
 
 	def test_whenCollapsingSpaces_thenEachNewlineIsPreserved(self) -> None:
 		for sampleText in SAMPLE_TEXTS:
