@@ -14,15 +14,18 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import os
+import re
 import subprocess
 import sys
 import tempfile
+import textwrap
 import threading
 from typing import Any, Callable, Dict, FrozenSet, List
 
 # Local Modules:
 from .base import Protocol
 from .telnet_constants import CR, CR_LF, LF
+from ..config import Config
 
 
 MPI_INIT: bytes = b"~$#E"
@@ -85,6 +88,8 @@ class MPIProtocol(Protocol):
 			data: Received data from Mume, containing the session, description, and body of the text.
 		"""
 		session, description, body = data[1:].split(LF, 2)
+		cfg: Config = Config()
+		isWordwrapping: bool = cfg.get("wordwrap", False)
 		with tempfile.NamedTemporaryFile(prefix="mume_editing_", suffix=".txt", delete=False) as fileObj:
 			fileName = fileObj.name
 			fileObj.write(body.replace(CR, b"").replace(LF, CR_LF))
@@ -99,6 +104,12 @@ class MPIProtocol(Protocol):
 			# The user closed the text editor without saving. Cancel the editing session.
 			response = b"C" + session
 		else:
+			if isWordwrapping:
+				with open(fileName, "r") as textFileObj:
+					text: str = str(textFileObj.read())
+				text = self.postprocess(text)
+				with open(fileName, "w") as textFileObj:
+					textFileObj.write(text)
 			with open(fileName, "rb") as fileObj:
 				response = b"E" + session + LF + fileObj.read()
 		response = response.replace(CR, b"").strip() + LF
@@ -219,3 +230,102 @@ class MPIProtocol(Protocol):
 			data: The payload.
 		"""
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
+
+	def postprocess(self, text: str) -> str:
+		"""
+		Reformats text before it is sent to the game when wordwrapping is enabled.
+
+		Args:
+			text: The text to be processed.
+
+		Returns:
+			The text with formatting applied.
+		"""
+		paragraphs: List[str] = self.getParagraphs(text)
+		for i, paragraph in enumerate(paragraphs):
+			if not self.isComment(paragraph):
+				paragraph = self.collapseSpaces(paragraph)
+				paragraph = self.capitalise(paragraph)
+				paragraph = self.wordwrap(paragraph)
+				paragraphs[i] = paragraph
+		return "\n".join(paragraphs)
+
+	def getParagraphs(self, text: str) -> List[str]:
+		"""
+		Extracts paragraphs from a string.
+
+		Args:
+			text: The text to analyze.
+
+		Returns:
+			The extracted paragraphs.
+		"""
+		lines: List[str] = text.splitlines()
+		lineno: int = 0
+		while lineno < len(lines):
+			if self.isComment(lines[lineno]):
+				if lineno > 0:
+					lines[lineno] = "\0" + lines[lineno]
+				if lineno + 1 < len(lines):
+					lines[lineno] += "\0"
+			lineno += 1
+		text = "\n".join(lines)
+		text = re.sub(r"\0\n\0?", "\0", text)
+		lines = [line.rstrip() for line in text.split("\0")]
+		return [line for line in lines if line]
+
+	def isComment(self, line: str) -> bool:
+		"""
+		Determines whether a line is a comment.
+
+		Args:
+			line: The line to analyze.
+
+		Returns:
+			True if the line is a comment, False otherwise.
+		"""
+		return line.lstrip().startswith("#")
+
+	def collapseSpaces(self, text: str) -> str:
+		"""
+		Collapses all consecutive space and tab characters of a string to a single space character.
+
+		Args:
+			text: The text to perform the operation on.
+
+		Returns:
+			The text with consecutive space and tab characters collapsed.
+		"""
+		# replace consecutive newlines with a null placeholder
+		text = text.replace("\n", "\0")
+		# collapse all runs of whitespace into a single space
+		text = re.sub(r"[ \t]+", " ", text.strip())
+		# reinsert consecutive newlines
+		text = text.replace("\0", "\n")
+		return text
+
+	def capitalise(self, text: str) -> str:
+		"""
+		Capitalizes each sentence in a string.
+
+		Args:
+			text: The text to perform sentence capitalization on.
+
+		Returns:
+			The text after each sentence has been capitalized.
+		"""
+		return ". ".join(sentence.capitalize() for sentence in text.split(". "))
+
+	def wordwrap(self, text: str) -> str:
+		"""
+		Wordwraps text using module-specific settings.
+
+		Args:
+			text: The text to be wordwrapped.
+
+		Returns:
+			The text with wordwrapping applied.
+		"""
+		return textwrap.fill(
+			text, width=79, drop_whitespace=True, break_long_words=False, break_on_hyphens=False
+		)

@@ -521,6 +521,13 @@ class Mapper(threading.Thread, World):
 	def user_command_doorflags(self, *args: str) -> None:
 		self.sendPlayer(self.doorflags(*args))
 
+	def user_command_wordwrap(self, *args: str) -> None:
+		cfg: Config = Config()
+		wordwrap: bool = not cfg.get("wordwrap", True)
+		self.sendPlayer(f"wordwrap {'enabled' if wordwrap else 'disabled'}")
+		cfg["wordwrap"] = wordwrap
+		cfg.save()
+
 	def user_command_secret(self, *args: str) -> None:
 		self.sendPlayer(self.secret(*args))
 

@@ -36,6 +36,8 @@ exclude =
 	venv,
 	ENV,
 	__pycache__,
+	env,
+	maps,
 
 filename =
 	*.py,
