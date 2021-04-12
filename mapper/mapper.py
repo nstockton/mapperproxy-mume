@@ -185,6 +185,7 @@ class Mapper(threading.Thread, World):
 			)
 		)
 		self.isEmulatingBriefMode: bool = True
+		self.isEmulatingDynamicDescs: bool = True
 		self.lastPathFindQuery: str = ""
 		self.prompt: str = ""
 		self.clock: Clock = Clock()
@@ -276,29 +277,57 @@ class Mapper(threading.Thread, World):
 	def sendGame(self, msg: str) -> None:
 		self.proxy.game.write(msg.encode("utf-8") + b"\n", escape=True)
 
-	def emulation_command_quit(self, *args: str) -> None:
+	def emulation_command_quit(self, *args: str) -> Tuple[str, ...]:
 		"""Exits the program."""
 		self.proxy.game.write(b"quit")
+		return args
 
-	def emulation_command_brief(self, *args: str) -> None:
+	def emulation_command_at(self, label: str = "", *args: str) -> Tuple[str, ...]:
+		"""mimic the /at command that the ainur use. Syntax: at <room label|room number> <command>"""
+		room: Union[Room, None] = self.getRoomFromLabel(label)
+		if room is None:
+			return args
+		command = " ".join(args)
+		if not command:
+			self.sendPlayer(f"What do you want to do at {label}?")
+			return args
+		# execute command at room
+		oldRoom = self.emulationRoom
+		self.emulationRoom = room
+		self.user_command_emu(command)
+		self.emulationRoom = oldRoom
+		return args
+
+	def emulation_command_brief(self, *args: str) -> Tuple[str, ...]:
 		"""toggles brief mode."""
 		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
 		self.output(f"Brief mode {'on' if self.isEmulatingBriefMode else 'off'}")
+		return args
 
-	def emulation_command_examine(self, *args: str) -> None:
+	def emulation_command_dynamic(self, *args: str) -> Tuple[str, ...]:
+		"""toggles automatic speaking of dynamic descs."""
+		self.isEmulatingDynamicDescs = not self.isEmulatingDynamicDescs
+		self.sendPlayer("dynamic descs {}".format("on" if self.isEmulatingDynamicDescs else "off"))
+		return args
+
+	def emulation_command_examine(self, *args: str) -> Tuple[str, ...]:
 		"""shows the room's description."""
 		self.output(self.emulationRoom.desc)
+		return args
 
-	def emulation_command_exits(self, *args: str) -> None:
+	def emulation_command_exits(self, *args: str) -> Tuple[str, ...]:
 		"""shows the exits in the room."""
 		exits: List[str] = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
 		self.output(f"Exits: {', '.join(exits)}.")
+		return args
 
-	def emulation_command_go(self, label: Union[str, Room], isJump: bool = True) -> None:
-		"""mimic the /go command that the ainur use."""
+	def emulation_command_go(
+		self, label: Union[str, Room] = "", *args: str, isJump: bool = True
+	) -> Tuple[str, ...]:
+		"""mimic the /go command that the ainur use. Syntax: go <room label|room number> <command>"""
 		room: Union[Room, None] = label if isinstance(label, Room) else self.getRoomFromLabel(label)
 		if room is None:
-			return None
+			return args
 		self.emulationRoom = room
 		self.emulation_command_look()
 		self.emulation_command_exits()
@@ -306,8 +335,9 @@ class Mapper(threading.Thread, World):
 			self.currentRoom = self.emulationRoom
 		if isJump:
 			self.lastEmulatedJump = room
+		return args
 
-	def emulation_command_help(self, *args: str) -> None:
+	def emulation_command_help(self, *args: str) -> Tuple[str, ...]:
 		"""Shows documentation for mapper's emulation commands."""
 		helpTexts: List[Tuple[str, str]] = [
 			(funcName, getattr(self, "emulation_command_" + funcName).__doc__)
@@ -337,24 +367,34 @@ class Mapper(threading.Thread, World):
 				)
 			)
 		self.output("\n".join(result))
+		return args
 
-	def emulation_command_look(self, *args: str) -> None:
+	def emulation_command_look(self, *args: str) -> Tuple[str, ...]:
 		"""looks at the room."""
 		self.output(self.emulationRoom.name)
 		if not self.isEmulatingBriefMode:
 			self.output(self.emulationRoom.desc)
-		self.output(self.emulationRoom.dynamicDesc)
+		if self.isEmulatingDynamicDescs:
+			self.sendPlayer(self.emulationRoom.dynamicDesc)
 		if self.emulationRoom.note:
 			self.output(f"Note: {self.emulationRoom.note}")
+		return args
 
-	def emulation_command_return(self, *args: str) -> None:
+	def emulation_command_return(self, *args: str) -> Tuple[str, ...]:
 		"""returns to the last room jumped to with the go command."""
 		if self.lastEmulatedJump:
 			self.emulation_command_go(self.lastEmulatedJump)
 		else:
 			self.output("Cannot return anywhere until the go command has been used at least once.")
+		return args
 
-	def emulation_command_sync(self, *args: str) -> None:
+	def emulation_command_rename(self, name: str = "", *args: str) -> Tuple[str, ...]:
+		"""changes the room name. (useful for exploring places with many similar names)"""
+		self.emulationRoom.name = name
+		self.sendPlayer(f"Room name set to '{name}'.")
+		return args
+
+	def emulation_command_sync(self, *args: str) -> Tuple[str, ...]:
 		"""
 		When emulating while connected to the mud, syncs the emulated location with the in-game location.
 		When running in offline mode, is equivalent to the return command.
@@ -363,12 +403,13 @@ class Mapper(threading.Thread, World):
 			self.emulation_command_return()
 		else:
 			self.emulation_command_go(self.currentRoom)
+		return args
 
-	def emulate_leave(self, direction: str) -> None:
+	def emulate_leave(self, direction: str, *args: str) -> Tuple[str, ...]:
 		"""emulates leaving the room into a neighbouring room"""
 		if direction not in self.emulationRoom.exits:
 			self.output("Alas, you cannot go that way...")
-			return None
+			return args
 		vnum: str = self.emulationRoom.exits[direction].to
 		if vnum == "death":
 			self.output("deathtrap!")
@@ -376,31 +417,43 @@ class Mapper(threading.Thread, World):
 			self.output("undefined")
 		else:
 			self.emulation_command_go(vnum, isJump=False)
+		return args
 
-	def user_command_emu(self, *args: str) -> None:
-		inputText: List[str] = args[0].strip().split()
-		userCommand: str = inputText[0].lower()
-		userArgs: str = " ".join(inputText[1:])
-		if not userCommand:
+	def user_command_emu(self, inputText: str, *args: str) -> None:
+		if not inputText:
 			self.output("What command do you want to emulate?")
 			return None
+		else:
+			words: Tuple[str, ...] = inputText.strip().split(" ")  # type: ignore[assignment]
+			while words:
+				words = self.emulateCommands(*words)
+
+	def emulateCommands(self, *words: str) -> tuple[str, ...]:
+		userCommand: str = words[0].lower()
+		userArgs: Union[tuple[str], Any] = words[1:]
 		# get the full name of the user's command
 		for command in [*DIRECTIONS, *self.emulationCommands]:
 			if command.startswith(userCommand):
 				if command in DIRECTIONS:
-					self.emulate_leave(command)
+					return self.emulate_leave(command, *userArgs)
 				else:
-					getattr(self, f"emulation_command_{command}")(userArgs)
-				return None
+					return getattr(self, f"emulation_command_{command}")(*userArgs)  # type: ignore
+		# else try to execute the user command as a regular mapper command
 		if userCommand in self.userCommands:
 			# call the user command
 			# first set current room to the emulation room so the user command acts on the emulation room
 			oldRoom: Room = self.currentRoom
 			self.currentRoom = self.emulationRoom
-			getattr(self, f"user_command_{userCommand}")(userArgs)
+			returnVal: tuple[Any] = getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
 			self.currentRoom = oldRoom
-		elif userCommand:
-			self.output("Invalid command. Type 'help' for more help.")
+			return returnVal
+		else:
+			room = self.getRoomFromLabel(userCommand)
+			if room:
+				return self.emulation_command_go(room, *userArgs)
+			else:
+				self.output("Invalid command. Type 'help' for more help.")
+		return ("",)
 
 	def user_command_gettimer(self, *args: str) -> None:
 		self.sendPlayer(f"TIMER:{int(default_timer() - self.initTimer)}:TIMER")
