@@ -361,8 +361,36 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.capitalise" class="md-nav__link">
+    capitalise()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.collapseSpaces" class="md-nav__link">
+    collapseSpaces()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.protocols.mpi.MPIProtocol.edit" class="md-nav__link">
     edit()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.getParagraphs" class="md-nav__link">
+    getParagraphs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.isComment" class="md-nav__link">
+    isComment()
   </a>
   
 </li>
@@ -403,8 +431,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.postprocess" class="md-nav__link">
+    postprocess()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.protocols.mpi.MPIProtocol.view" class="md-nav__link">
     view()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.wordwrap" class="md-nav__link">
+    wordwrap()
   </a>
   
 </li>
@@ -774,8 +816,36 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.capitalise" class="md-nav__link">
+    capitalise()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.collapseSpaces" class="md-nav__link">
+    collapseSpaces()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.protocols.mpi.MPIProtocol.edit" class="md-nav__link">
     edit()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.getParagraphs" class="md-nav__link">
+    getParagraphs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.isComment" class="md-nav__link">
+    isComment()
   </a>
   
 </li>
@@ -816,8 +886,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.postprocess" class="md-nav__link">
+    postprocess()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.protocols.mpi.MPIProtocol.view" class="md-nav__link">
     view()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.protocols.mpi.MPIProtocol.wordwrap" class="md-nav__link">
+    wordwrap()
   </a>
   
 </li>
@@ -935,6 +1019,144 @@
 </div>
 </div>
 <div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.capitalise">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">capitalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.mpi.MPIProtocol.capitalise" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Capitalizes each sentence in a string.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>
+<p>The text to perform sentence capitalization on.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code></td>
+<td>
+<p>The text after each sentence has been capitalized.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\mpi.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">capitalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Capitalizes each sentence in a string.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to perform sentence capitalization on.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The text after each sentence has been capitalized.</span>
+<span class="sd">	"""</span>
+	<span class="k">return</span> <span class="s2">". "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span> <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">". "</span><span class="p">))</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.collapseSpaces">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">collapseSpaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.mpi.MPIProtocol.collapseSpaces" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Collapses all consecutive space and tab characters of a string to a single space character.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>
+<p>The text to perform the operation on.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code></td>
+<td>
+<p>The text with consecutive space and tab characters collapsed.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\mpi.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">collapseSpaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Collapses all consecutive space and tab characters of a string to a single space character.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to perform the operation on.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The text with consecutive space and tab characters collapsed.</span>
+<span class="sd">	"""</span>
+	<span class="c1"># replace consecutive newlines with a null placeholder</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">"</span><span class="p">)</span>
+	<span class="c1"># collapse all runs of whitespace into a single space</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[ \t]+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+	<span class="c1"># reinsert consecutive newlines</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">text</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.edit">
 
 <code class="highlight language-python"><span class="n">Method</span> <span class="n">edit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
@@ -975,6 +1197,8 @@
 <span class="sd">		data: Received data from Mume, containing the session, description, and body of the text.</span>
 <span class="sd">	"""</span>
 	<span class="n">session</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">LF</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+	<span class="n">isWordwrapping</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"wordwrap"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 	<span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"mume_editing_"</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".txt"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">fileObj</span><span class="p">:</span>
 		<span class="n">fileName</span> <span class="o">=</span> <span class="n">fileObj</span><span class="o">.</span><span class="n">name</span>
 		<span class="n">fileObj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">CR</span><span class="p">,</span> <span class="sa">b</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">LF</span><span class="p">,</span> <span class="n">CR_LF</span><span class="p">))</span>
@@ -989,11 +1213,161 @@
 		<span class="c1"># The user closed the text editor without saving. Cancel the editing session.</span>
 		<span class="n">response</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"C"</span> <span class="o">+</span> <span class="n">session</span>
 	<span class="k">else</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">isWordwrapping</span><span class="p">:</span>
+			<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">textFileObj</span><span class="p">:</span>
+				<span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">textFileObj</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+			<span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+			<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">textFileObj</span><span class="p">:</span>
+				<span class="n">textFileObj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fileObj</span><span class="p">:</span>
 			<span class="n">response</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"E"</span> <span class="o">+</span> <span class="n">session</span> <span class="o">+</span> <span class="n">LF</span> <span class="o">+</span> <span class="n">fileObj</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 	<span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">CR</span><span class="p">,</span> <span class="sa">b</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="n">LF</span>
 	<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">MPI_INIT</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"E"</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"</span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">+</span> <span class="n">LF</span> <span class="o">+</span> <span class="n">response</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.getParagraphs">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">getParagraphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.mpi.MPIProtocol.getParagraphs" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Extracts paragraphs from a string.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>
+<p>The text to analyze.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List[str]</code></td>
+<td>
+<p>The extracted paragraphs.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\mpi.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">getParagraphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Extracts paragraphs from a string.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to analyze.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The extracted paragraphs.</span>
+<span class="sd">	"""</span>
+	<span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+	<span class="n">lineno</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">while</span> <span class="n">lineno</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isComment</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">lineno</span><span class="p">]):</span>
+			<span class="k">if</span> <span class="n">lineno</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">lines</span><span class="p">[</span><span class="n">lineno</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">"</span> <span class="o">+</span> <span class="n">lines</span><span class="p">[</span><span class="n">lineno</span><span class="p">]</span>
+			<span class="k">if</span> <span class="n">lineno</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+				<span class="n">lines</span><span class="p">[</span><span class="n">lineno</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">"</span>
+		<span class="n">lineno</span> <span class="o">+=</span> <span class="mi">1</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\0\n\0?"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+	<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">"</span><span class="p">)]</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">line</span><span class="p">]</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.isComment">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">isComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.mpi.MPIProtocol.isComment" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Determines whether a line is a comment.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>line</code></td>
+<td><code>str</code></td>
+<td>
+<p>The line to analyze.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td>
+<p>True if the line is a comment, False otherwise.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\mpi.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">isComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Determines whether a line is a comment.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		line: The line to analyze.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		True if the line is a comment, False otherwise.</span>
+<span class="sd">	"""</span>
+	<span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"#"</span><span class="p">)</span>
 </code></pre>
 </div>
 </details>
@@ -1257,6 +1631,79 @@
 </div>
 </div>
 <div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.postprocess">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.mpi.MPIProtocol.postprocess" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Reformats text before it is sent to the game when wordwrapping is enabled.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>
+<p>The text to be processed.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code></td>
+<td>
+<p>The text with formatting applied.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\mpi.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Reformats text before it is sent to the game when wordwrapping is enabled.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to be processed.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The text with formatting applied.</span>
+<span class="sd">	"""</span>
+	<span class="n">paragraphs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParagraphs</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isComment</span><span class="p">(</span><span class="n">paragraph</span><span class="p">):</span>
+			<span class="n">paragraph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collapseSpaces</span><span class="p">(</span><span class="n">paragraph</span><span class="p">)</span>
+			<span class="n">paragraph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capitalise</span><span class="p">(</span><span class="n">paragraph</span><span class="p">)</span>
+			<span class="n">paragraph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wordwrap</span><span class="p">(</span><span class="n">paragraph</span><span class="p">)</span>
+			<span class="n">paragraphs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paragraph</span>
+	<span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.view">
 
 <code class="highlight language-python"><span class="n">Method</span> <span class="n">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
@@ -1305,6 +1752,74 @@
 		<span class="n">pagerProcess</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">((</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pager</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">fileName</span><span class="p">))</span>
 		<span class="n">pagerProcess</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 		<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="mapper.protocols.mpi.MPIProtocol.wordwrap">
+
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">wordwrap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></code>
+
+
+      <a class="headerlink" href="#mapper.protocols.mpi.MPIProtocol.wordwrap" title="Permanent link">&para;</a></h3>
+<div class="doc doc-contents ">
+<p>Wordwraps text using module-specific settings.</p>
+<p><strong>Parameters:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>
+<p>The text to be wordwrapped.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table class="data" role="grid">
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code></td>
+<td>
+<p>The text with wordwrapping applied.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>mapper\protocols\mpi.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">wordwrap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">"""</span>
+<span class="sd">	Wordwraps text using module-specific settings.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to be wordwrapped.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The text with wordwrapping applied.</span>
+<span class="sd">	"""</span>
+	<span class="k">return</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span>
+		<span class="n">text</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span> <span class="n">drop_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">break_long_words</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">break_on_hyphens</span><span class="o">=</span><span class="kc">False</span>
+	<span class="p">)</span>
 </code></pre>
 </div>
 </details>
