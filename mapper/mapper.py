@@ -453,7 +453,7 @@ class Mapper(threading.Thread, World):
 				return self.emulation_command_go(room, *userArgs)
 			else:
 				self.output("Invalid command. Type 'help' for more help.")
-		return ("",)
+		return ()
 
 	def user_command_gettimer(self, *args: str) -> None:
 		self.sendPlayer(f"TIMER:{int(default_timer() - self.initTimer)}:TIMER")
