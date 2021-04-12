@@ -7,14 +7,18 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import re
 from typing import Tuple
 from unittest import TestCase
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import Mock, call, mock_open, patch
 from uuid import uuid4
 
 # Mapper Modules:
 from mapper.protocols.mpi import MPI_INIT, MPIProtocol
 from mapper.protocols.telnet_constants import LF
+
+# Local Modules:
+from .test_sample_texts import sampleTexts
 
 
 BODY: bytes = b"Hello World!"
@@ -137,6 +141,8 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
 
+	@patch("mapper.protocols.mpi.MPIProtocol.postprocess")
+	@patch("mapper.protocols.mpi.Config")
 	@patch("mapper.protocols.mpi.open", mock_open(read_data=BODY))
 	@patch("mapper.protocols.mpi.os.remove")
 	@patch("mapper.protocols.mpi.subprocess.Popen")
@@ -152,12 +158,16 @@ class TestMPIProtocol(TestCase):
 		MockNamedTemporaryFile: Mock,
 		mockSubprocess: Mock,
 		mockRemove: Mock,
+		mockConfig: Mock,
+		mockPostprocessor: Mock,
 	) -> None:
 		session: bytes = b"12345" + LF
 		description: bytes = b"description" + LF
 		tempFileName: str = "temp_file_name"
 		expectedSent: bytes
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
+		cfg: dict[str, bool] = {}
+		mockConfig.return_value = cfg
 		# Make sure we are in the default state.
 		self.assertEqual(self.playerReceives, b"")
 		self.assertEqual(self.gameReceives, b"")
@@ -231,3 +241,72 @@ class TestMPIProtocol(TestCase):
 		mockSubprocess.assert_called_once_with((*self.mpi.editor.split(), tempFileName))
 		mockSubprocess.return_value.wait.assert_called_once()
 		mockRemove.assert_called_once_with(tempFileName)
+		# confirm pre and post processors were not called since wordwrapping was not defined
+		mockPostprocessor.assert_not_called()
+		# test given wordwrapping is enabled, processor methods are called
+		cfg["wordwrap"] = True
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		mockPostprocessor.assert_called_once()
+		mockPostprocessor.reset_mock()
+		# test given wordwrapping is disabled, processor methods are not called
+		cfg["wordwrap"] = False
+		mockConfig.get = Mock(return_value=False)
+		self.mpi.edit(b"E" + session + description + BODY + LF)
+		mockPostprocessor.assert_not_called()
+
+
+class TestEditorPostprocessor(TestCase):
+	def setUp(self) -> None:
+		self.gameReceives: bytearray = bytearray()
+		self.playerReceives: bytearray = bytearray()
+		self.MPIProtocol = MPIProtocol(
+			self.gameReceives.extend, self.playerReceives.extend, outputFormat="normal"
+		)
+		self.postprocess = self.MPIProtocol.postprocess
+		self.getParagraphs = self.MPIProtocol.getParagraphs
+		self.collapseSpaces = self.MPIProtocol.collapseSpaces
+		self.capitalise = self.MPIProtocol.capitalise
+		self.wordwrap = self.MPIProtocol.wordwrap
+
+	def test_postprocessing(self) -> None:
+		subfunctionsMock = self.MPIProtocol.collapseSpaces = Mock(wraps=str)  # type: ignore [assignment]
+		for sampleText in sampleTexts:
+			self.MPIProtocol.postprocess(sampleText)
+			textWithoutComments = re.sub(r"(^|(?<=\n))\s*#.*(?=\n|$)", "\0", sampleText)
+			textWithoutComments = textWithoutComments.replace("\0\n", "\0")
+			paragraphs = [paragraph.rstrip() for paragraph in textWithoutComments.split("\0")]
+			expectedCalls = [call(p) for p in paragraphs if p]
+			self.assertListEqual(
+				subfunctionsMock.mock_calls,
+				expectedCalls,
+				f"from sample text {bytes(sampleText, 'ANSI')}",  # type: ignore [str-bytes-safe]
+			)
+			subfunctionsMock.reset_mock()
+
+	def test_whenCollapsingSpaces_thenEachNewlineIsPreserved(self) -> None:
+		for sampleText in sampleTexts:
+			processedText: str = self.collapseSpaces(sampleText)
+			self.assertEqual(
+				processedText.count("\n"),
+				sampleText.count("\n"),
+				f"processed text:\n{processedText}\nsample text:\n{sampleText}\n",
+			)
+
+	def test_capitalisation(self) -> None:
+		for sampleText in sampleTexts:
+			processedText: str = self.capitalise(sampleText)
+		for sentence in processedText.split(". "):
+			self.assertTrue(
+				sentence[0].isupper() or not sentence[0].isalpha(),
+				f"The sentence\n{sentence}\nfrom the sample text\n{sampleText}\nstarts with an uncapitalized letter.",
+			)
+
+	def test_wordwrap(self) -> None:
+		for sampleText in sampleTexts:
+			processedText: str = self.wordwrap(sampleText)
+			for line in processedText.split("\n"):
+				self.assertLess(
+					len(line),
+					80,
+					f"The line\n{line}\nfrom the sample text\n{sampleText}\nis {len(line)} chars long, which is too long",
+				)
