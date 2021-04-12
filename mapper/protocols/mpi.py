@@ -232,16 +232,35 @@ class MPIProtocol(Protocol):
 		super().on_dataReceived(MPI_INIT + command + b"%d" % len(data) + LF + data)
 
 	def postprocess(self, text: str) -> str:
+		"""
+		Reformats text before it is sent to the game when wordwrapping is enabled.
+
+		Args:
+			text: The text to be processed.
+
+		Returns:
+			The text with formatting applied.
+		"""
 		paragraphs: List[str] = self.getParagraphs(text)
-		for p in range(len(paragraphs)):
-			if not self.isComment(paragraphs[p]):
-				paragraphs[p] = self.collapseSpaces(paragraphs[p])
-				paragraphs[p] = self.capitalise(paragraphs[p])
-				paragraphs[p] = self.wordwrap(paragraphs[p])
+		for i, paragraph in enumerate(paragraphs):
+			if not self.isComment(paragraph):
+				paragraph = self.collapseSpaces(paragraph)
+				paragraph = self.capitalise(paragraph)
+				paragraph = self.wordwrap(paragraph)
+				paragraphs[i] = paragraph
 		return "\n".join(paragraphs)
 
 	def getParagraphs(self, text: str) -> List[str]:
-		lines: List[str] = [line for line in text.split("\n")]
+		"""
+		Extracts paragraphs from a string.
+
+		Args:
+			text: The text to analyze.
+
+		Returns:
+			The extracted paragraphs.
+		"""
+		lines: List[str] = text.splitlines()
 		lineno: int = 0
 		while lineno < len(lines):
 			if self.isComment(lines[lineno]):
@@ -256,9 +275,27 @@ class MPIProtocol(Protocol):
 		return [line for line in lines if line]
 
 	def isComment(self, line: str) -> bool:
+		"""
+		Determines whether a line is a comment.
+
+		Args:
+			line: The line to analyze.
+
+		Returns:
+			True if the line is a comment, False otherwise.
+		"""
 		return line.lstrip().startswith("#")
 
 	def collapseSpaces(self, text: str) -> str:
+		"""
+		Collapses all consecutive space and tab characters of a string to a single space character.
+
+		Args:
+			text: The text to perform the operation on.
+
+		Returns:
+			The text with consecutive space and tab characters collapsed.
+		"""
 		# replace consecutive newlines with a null placeholder
 		text = text.replace("\n", "\0")
 		# collapse all runs of whitespace into a single space
@@ -268,9 +305,27 @@ class MPIProtocol(Protocol):
 		return text
 
 	def capitalise(self, text: str) -> str:
+		"""
+		Capitalizes each sentence in a string.
+
+		Args:
+			text: The text to perform sentence capitalization on.
+
+		Returns:
+			The text after each sentence has been capitalized.
+		"""
 		return ". ".join(sentence.capitalize() for sentence in text.split(". "))
 
 	def wordwrap(self, text: str) -> str:
+		"""
+		Wordwraps text using module-specific settings.
+
+		Args:
+			text: The text to be wordwrapped.
+
+		Returns:
+			The text with wordwrapping applied.
+		"""
 		return textwrap.fill(
 			text, width=79, drop_whitespace=True, break_long_words=False, break_on_hyphens=False
 		)
