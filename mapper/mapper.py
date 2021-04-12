@@ -287,12 +287,12 @@ class Mapper(threading.Thread, World):
 		room: Union[Room, None] = self.getRoomFromLabel(label)
 		if room is None:
 			return args
-		command = " ".join(args)
+		command: str = " ".join(args)
 		if not command:
 			self.sendPlayer(f"What do you want to do at {label}?")
 			return args
 		# execute command at room
-		oldRoom = self.emulationRoom
+		oldRoom: Room = self.emulationRoom
 		self.emulationRoom = room
 		self.user_command_emu(command)
 		self.emulationRoom = oldRoom
@@ -307,7 +307,7 @@ class Mapper(threading.Thread, World):
 	def emulation_command_dynamic(self, *args: str) -> Tuple[str, ...]:
 		"""toggles automatic speaking of dynamic descs."""
 		self.isEmulatingDynamicDescs = not self.isEmulatingDynamicDescs
-		self.sendPlayer("dynamic descs {}".format("on" if self.isEmulatingDynamicDescs else "off"))
+		self.sendPlayer(f"dynamic descs {'on' if self.isEmulatingDynamicDescs else 'off'}")
 		return args
 
 	def emulation_command_examine(self, *args: str) -> Tuple[str, ...]:
@@ -424,32 +424,33 @@ class Mapper(threading.Thread, World):
 			self.output("What command do you want to emulate?")
 			return None
 		else:
-			words: Tuple[str, ...] = inputText.strip().split(" ")  # type: ignore[assignment]
+			words: Tuple[str, ...] = tuple(inputText.strip().split(" "))
 			while words:
 				words = self.emulateCommands(*words)
 
-	def emulateCommands(self, *words: str) -> tuple[str, ...]:
+	def emulateCommands(self, *words: str) -> Tuple[str, ...]:
 		userCommand: str = words[0].lower()
-		userArgs: Union[tuple[str], Any] = words[1:]
+		userArgs: Tuple[str, ...] = words[1:]
 		# get the full name of the user's command
 		for command in [*DIRECTIONS, *self.emulationCommands]:
 			if command.startswith(userCommand):
 				if command in DIRECTIONS:
 					return self.emulate_leave(command, *userArgs)
 				else:
-					return getattr(self, f"emulation_command_{command}")(*userArgs)  # type: ignore
+					commandResult: Tuple[str, ...] = getattr(self, f"emulation_command_{command}")(*userArgs)
+					return commandResult
 		# else try to execute the user command as a regular mapper command
 		if userCommand in self.userCommands:
 			# call the user command
 			# first set current room to the emulation room so the user command acts on the emulation room
 			oldRoom: Room = self.currentRoom
 			self.currentRoom = self.emulationRoom
-			returnVal: tuple[Any] = getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
+			returnVal: Tuple[str, ...] = getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
 			self.currentRoom = oldRoom
 			return returnVal
 		else:
-			room = self.getRoomFromLabel(userCommand)
-			if room:
+			room: Union[Room, None] = self.getRoomFromLabel(userCommand)
+			if room is not None:
 				return self.emulation_command_go(room, *userArgs)
 			else:
 				self.output("Invalid command. Type 'help' for more help.")
