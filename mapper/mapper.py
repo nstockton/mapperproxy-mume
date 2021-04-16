@@ -454,9 +454,9 @@ class Mapper(threading.Thread, World):
 			self.currentRoom = self.emulationRoom
 			getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
 			self.currentRoom = oldRoom
-		else:
-			self.output("Invalid command. Type 'help' for more help.")
-		return ()
+			return ()
+		# Otherwise, treat userCommand as a potential vnum or room label to jump to.
+		return self.emulation_command_go(userCommand, *userArgs)
 
 	def user_command_gettimer(self, *args: str) -> None:
 		self.sendPlayer(f"TIMER:{int(default_timer() - self.initTimer)}:TIMER")
