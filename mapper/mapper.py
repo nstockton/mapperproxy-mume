@@ -213,7 +213,7 @@ class Mapper(threading.Thread, World):
 		self.proxy.connect()
 		World.__init__(self, interface=self.interface)
 		self.emulationRoom: Room = self.currentRoom
-		self.lastEmulatedJump: Room = self.currentRoom
+		self.lastEmulatedJump: Union[str, None] = None
 
 	@property
 	def outputFormat(self) -> str:
@@ -291,7 +291,7 @@ class Mapper(threading.Thread, World):
 		else:
 			room: Union[Room, None] = self.getRoomFromLabel(label)
 			if room is None:
-				pass  # Alternative suggestions were sent by the call to 'getRoomFromLabel'.
+				pass  # Alternative suggestions were sent by the call to `getRoomFromLabel`.
 			elif not command:
 				self.sendPlayer(f"What do you want to do at {label}?")
 			else:
@@ -325,20 +325,19 @@ class Mapper(threading.Thread, World):
 		self.output(f"Exits: {', '.join(exits)}.")
 		return args
 
-	def emulation_command_go(
-		self, label: Union[str, Room] = "", *args: str, isJump: bool = True
-	) -> Tuple[str, ...]:
+	def emulation_command_go(self, *args: str, isJump: bool = True) -> Tuple[str, ...]:
 		"""mimic the /go command that the ainur use. Syntax: go <room label|room number> <command>"""
-		room: Union[Room, None] = label if isinstance(label, Room) else self.getRoomFromLabel(label)
-		if room is None:
-			return args
-		self.emulationRoom = room
-		self.emulation_command_look()
-		self.emulation_command_exits()
-		if self.isEmulatingOffline:
-			self.currentRoom = self.emulationRoom
-		if isJump:
-			self.lastEmulatedJump = room
+		label: str = "".join(args[:1]).strip()
+		args = args[1:]
+		room: Union[Room, None] = self.getRoomFromLabel(label)
+		if room is not None:
+			self.emulationRoom = room
+			self.emulation_command_look()
+			self.emulation_command_exits()
+			if self.isEmulatingOffline:
+				self.currentRoom = self.emulationRoom
+			if isJump:
+				self.lastEmulatedJump = room.vnum
 		return args
 
 	def emulation_command_help(self, *args: str) -> Tuple[str, ...]:
@@ -386,7 +385,7 @@ class Mapper(threading.Thread, World):
 
 	def emulation_command_return(self, *args: str) -> Tuple[str, ...]:
 		"""returns to the last room jumped to with the go command."""
-		if self.lastEmulatedJump:
+		if self.lastEmulatedJump is not None:
 			self.emulation_command_go(self.lastEmulatedJump)
 		else:
 			self.output("Cannot return anywhere until the go command has been used at least once.")
@@ -410,7 +409,7 @@ class Mapper(threading.Thread, World):
 		if self.isEmulatingOffline:
 			self.emulation_command_return()
 		else:
-			self.emulation_command_go(self.currentRoom)
+			self.emulation_command_go(self.currentRoom.vnum)
 		return args
 
 	def emulate_leave(self, direction: str, *args: str) -> Tuple[str, ...]:
