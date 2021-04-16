@@ -424,36 +424,31 @@ class Mapper(threading.Thread, World):
 			self.output("What command do you want to emulate?")
 			return None
 		else:
-			words: Tuple[str, ...] = tuple(inputText.strip().split(" "))
+			words: Tuple[str, ...] = tuple(inputText.strip().split())
 			while words:
 				words = self.emulateCommands(*words)
 
 	def emulateCommands(self, *words: str) -> Tuple[str, ...]:
 		userCommand: str = words[0].lower()
 		userArgs: Tuple[str, ...] = words[1:]
-		# get the full name of the user's command
+		# Get the full name of the user's command.
 		for command in [*DIRECTIONS, *self.emulationCommands]:
 			if command.startswith(userCommand):
+				remainingArgs: Tuple[str, ...]
 				if command in DIRECTIONS:
-					return self.emulate_leave(command, *userArgs)
+					remainingArgs = self.emulate_leave(command, *userArgs)
 				else:
-					commandResult: Tuple[str, ...] = getattr(self, f"emulation_command_{command}")(*userArgs)
-					return commandResult
-		# else try to execute the user command as a regular mapper command
+					remainingArgs = getattr(self, f"emulation_command_{command}")(*userArgs)
+				return remainingArgs
+		# Else try to execute the user command as a regular mapper command.
 		if userCommand in self.userCommands:
-			# call the user command
-			# first set current room to the emulation room so the user command acts on the emulation room
+			# Call the user command from the emulation room.
 			oldRoom: Room = self.currentRoom
 			self.currentRoom = self.emulationRoom
-			returnVal: Tuple[str, ...] = getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
+			getattr(self, f"user_command_{userCommand}")(" ".join(userArgs))
 			self.currentRoom = oldRoom
-			return returnVal
 		else:
-			room: Union[Room, None] = self.getRoomFromLabel(userCommand)
-			if room is not None:
-				return self.emulation_command_go(room, *userArgs)
-			else:
-				self.output("Invalid command. Type 'help' for more help.")
+			self.output("Invalid command. Type 'help' for more help.")
 		return ()
 
 	def user_command_gettimer(self, *args: str) -> None:
