@@ -282,21 +282,25 @@ class Mapper(threading.Thread, World):
 		self.proxy.game.write(b"quit")
 		return args
 
-	def emulation_command_at(self, label: str = "", *args: str) -> Tuple[str, ...]:
+	def emulation_command_at(self, *args: str) -> Tuple[str, ...]:
 		"""mimic the /at command that the ainur use. Syntax: at <room label|room number> <command>"""
-		room: Union[Room, None] = self.getRoomFromLabel(label)
-		if room is None:
-			return args
-		command: str = " ".join(args)
-		if not command:
-			self.sendPlayer(f"What do you want to do at {label}?")
-			return args
-		# execute command at room
-		oldRoom: Room = self.emulationRoom
-		self.emulationRoom = room
-		self.user_command_emu(command)
-		self.emulationRoom = oldRoom
-		return args
+		label: str = "".join(args[:1]).strip()
+		command: str = " ".join(args[1:]).strip()
+		if not label:
+			self.sendPlayer("Please provide a room in which to execute commands.")
+		else:
+			room: Union[Room, None] = self.getRoomFromLabel(label)
+			if room is None:
+				pass  # Alternative suggestions were sent by the call to 'getRoomFromLabel'.
+			elif not command:
+				self.sendPlayer(f"What do you want to do at {label}?")
+			else:
+				# Execute command at room.
+				oldRoom: Room = self.emulationRoom
+				self.emulationRoom = room
+				self.user_command_emu(command)
+				self.emulationRoom = oldRoom
+		return ()
 
 	def emulation_command_brief(self, *args: str) -> Tuple[str, ...]:
 		"""toggles brief mode."""
@@ -388,11 +392,15 @@ class Mapper(threading.Thread, World):
 			self.output("Cannot return anywhere until the go command has been used at least once.")
 		return args
 
-	def emulation_command_rename(self, name: str = "", *args: str) -> Tuple[str, ...]:
+	def emulation_command_rename(self, *args: str) -> Tuple[str, ...]:
 		"""changes the room name. (useful for exploring places with many similar names)"""
-		self.emulationRoom.name = name
-		self.sendPlayer(f"Room name set to '{name}'.")
-		return args
+		name: str = " ".join(args).strip()
+		if name:
+			self.emulationRoom.name = name
+			self.sendPlayer(f"Room name set to '{name}'.")
+		else:
+			self.sendPlayer("Error: You must specify a new room name.")
+		return ()
 
 	def emulation_command_sync(self, *args: str) -> Tuple[str, ...]:
 		"""
