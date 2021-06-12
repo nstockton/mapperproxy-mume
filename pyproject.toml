@@ -60,3 +60,21 @@
 	known_first_party = ["mapper"]
 	# The heading to display for local imports.
 	import_heading_localfolder = "Local Modules:"
+
+[tool.mypy]
+	files = ["mapper", "tests", "pyinstaller_windows.spec", "start.py"]
+	local_partial_types = true
+	strict = true
+	disallow_any_unimported = true
+	disallow_any_decorated = true
+	warn_unreachable = true
+	show_error_codes = true
+	no_color_output = true
+
+[[tool.mypy.overrides]]
+	module = "mapper.protocols.*"
+	disallow_any_expr = true
+
+[[tool.mypy.overrides]]
+	module = "tests.*"
+	disallow_any_decorated = false
