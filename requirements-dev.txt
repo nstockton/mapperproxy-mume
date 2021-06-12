@@ -12,3 +12,4 @@ pre-commit
 PyInstaller==4.1
 git+https://github.com/nstockton/pytkdocs.git@tab-indentation-parser#egg=pytkdocs
 git+https://github.com/nstockton/tan.git@personal#egg=tan
+types-certifi

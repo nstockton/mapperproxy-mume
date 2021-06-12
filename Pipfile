@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 coverage = {extras = ["toml"], version = "*"}
 flake8 = "*"
-flake8-tabs = "*"
+flake8-tabs = {version = "==2.2.2"}
 fuzzywuzzy-stubs = "*"
 isort = {version = "==5.7.0"}
 mkdocs = {version = "==1.1.2"}
@@ -18,6 +18,7 @@ pre-commit = "*"
 PyInstaller = {version = "==4.1"}
 pytkdocs = {git = "https://github.com/nstockton/pytkdocs.git", ref = "tab-indentation-parser"}
 tan = {git = "https://github.com/nstockton/tan.git", ref = "personal"}
+types-certifi = "*"
 
 [packages]
 boltons = "*"
