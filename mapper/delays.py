@@ -63,6 +63,8 @@ class BaseDelay(threading.Thread):
 		finally:
 			del self._function, self._args, self._kwargs
 			self._delays.remove(self)
+			if not self._finished.is_set():
+				self.stop()
 
 
 class Delay(BaseDelay):
