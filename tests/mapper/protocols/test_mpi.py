@@ -357,7 +357,7 @@ class TestEditorPostprocessor(TestCase):
 				self.assertListEqual(
 					collapseSpacesMock.mock_calls,
 					expectedCalls,
-					f"from sample text {sampleText.encode('ANSI')!r}",
+					f"from sample text {sampleText.encode('us-ascii')!r}",
 				)
 				collapseSpacesMock.reset_mock()
 
