@@ -81,16 +81,23 @@ from typing import FrozenSet
 
 # Protocol specifications.
 
-# http://tintin.sourceforge.net/mtts
-# https://zuggsoft.com/zmud/mcp.htm
-# http://tintin.sourceforge.net/mccp
-# http://tintin.sourceforge.net/msdp
-# http://tintin.sourceforge.net/mssp
-# https://zuggsoft.com/zmud/msp.htm
-# https://zuggsoft.com/zmud/mxp.htm
-# http://discworld.starturtle.net/external/protocols/zmp.html
-# http://www.ironrealms.com/rapture/manual/files/FeatATCP-txt.html
+# Achaea Telnet Client Protocol: http://www.ironrealms.com/rapture/manual/files/FeatATCP-txt.html
+# End of Record: https://mudhalla.net/tintin/protocols/eor
+# Generic Mud Communication Protocol: https://mudhalla.net/tintin/protocols/gmcp
 # https://www.gammon.com.au/gmcp
+# Mud Client Compression Protocol: https://mudhalla.net/tintin/protocols/mccp
+# http://www.gammon.com.au/mccp
+# https://zuggsoft.com/zmud/mcp.htm
+# MUD Client Protocol: https://www.moo.mud.org/mcp
+# Mud Master Chat Protocol: https://mudhalla.net/tintin/protocols/mmcp
+# MUD NEW-ENVIRON Standard: https://mudhalla.net/tintin/protocols/mnes
+# Mud Server Data Protocol: https://mudhalla.net/tintin/protocols/msdp
+# Mud Server Link Protocol: https://mudhalla.net/tintin/protocols/mslp
+# Mud Server Status Protocol: https://mudhalla.net/tintin/protocols/mssp
+# MUD Sound Protocol: https://zuggsoft.com/zmud/msp.htm
+# Mud Terminal Type Standard: https://mudhalla.net/tintin/protocols/mtts
+# MUD eXtension Protocol: https://zuggsoft.com/zmud/mxp.htm
+# Zenith MUD Protocol: http://discworld.starturtle.net/external/protocols/zmp.html
 
 
 # ASCII characters.
