@@ -25,7 +25,6 @@ from typing import Any, Callable, Dict, FrozenSet, List
 # Local Modules:
 from .base import Protocol
 from .telnet_constants import CR, CR_LF, LF
-from ..config import Config
 
 
 MPI_INIT: bytes = b"~$#E"
@@ -64,6 +63,7 @@ class MPIProtocol(Protocol):
 		defaultPager: str = pagers.get(sys.platform, "less")
 		self.editor: str = os.getenv("VISUAL", "") or os.getenv("EDITOR", defaultEditor)
 		self.pager: str = os.getenv("PAGER", defaultPager)
+		self._isWordWrapping: bool = False
 
 	@property
 	def state(self) -> str:
@@ -80,6 +80,15 @@ class MPIProtocol(Protocol):
 			raise ValueError(f"'{value}' not in {tuple(sorted(self.states))}")
 		self._state = value
 
+	@property
+	def isWordWrapping(self) -> bool:
+		"""Specifies whether text should be word wrapped during editing or not."""
+		return self._isWordWrapping
+
+	@isWordWrapping.setter
+	def isWordWrapping(self, value: bool) -> None:
+		self._isWordWrapping = value
+
 	def edit(self, data: bytes) -> None:
 		"""
 		Edits text using the program defined in `editor`.
@@ -88,8 +97,6 @@ class MPIProtocol(Protocol):
 			data: Received data from Mume, containing the session, description, and body of the text.
 		"""
 		session, description, body = data[1:].split(LF, 2)
-		cfg: Config = Config()
-		isWordwrapping: bool = cfg.get("wordwrap", False)
 		with tempfile.NamedTemporaryFile(prefix="mume_editing_", suffix=".txt", delete=False) as fileObj:
 			fileName = fileObj.name
 			fileObj.write(body.replace(CR, b"").replace(LF, CR_LF))
@@ -104,7 +111,7 @@ class MPIProtocol(Protocol):
 			# The user closed the text editor without saving. Cancel the editing session.
 			response = b"C" + session
 		else:
-			if isWordwrapping:
+			if self.isWordWrapping:
 				with open(fileName, "r") as textFileObj:
 					text: str = str(textFileObj.read())
 				text = self.postprocess(text)

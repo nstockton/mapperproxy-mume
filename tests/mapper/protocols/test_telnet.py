@@ -31,6 +31,7 @@ from mapper.protocols.telnet_constants import (
 	WILL,
 	WONT,
 )
+from mapper.utils import escapeIAC
 
 
 class TestTelnetProtocol(TestCase):
@@ -210,6 +211,21 @@ class TestTelnetProtocol(TestCase):
 		self.telnet.dont(ECHO)
 		self.assertEqual((self.playerReceives, self.gameReceives), (b"", IAC + DONT + ECHO))
 		self.assertTrue(state.him.negotiating)
+
+	def testTelnetGetOptionState(self) -> None:
+		self.assertNotIn(ECHO, self.telnet._options)
+		self.telnet.getOptionState(ECHO)
+		self.assertIn(ECHO, self.telnet._options)
+		del self.telnet._options[ECHO]
+
+	def testTelnetRequestNegotiation(self) -> None:
+		data: bytes = IAC + b"hello"
+		expected: bytes = IAC + SB + ECHO + escapeIAC(data) + IAC + SE
+		self.telnet.requestNegotiation(ECHO, data)
+		self.assertEqual(self.playerReceives, b"")
+		self.assertEqual(self.gameReceives, expected)
+		self.gameReceives.clear()
+		self.assertEqual(self.telnet.state, "data")
 
 	@patch("mapper.protocols.telnet.logger")
 	@patch("mapper.protocols.telnet.TelnetProtocol.on_subnegotiation")

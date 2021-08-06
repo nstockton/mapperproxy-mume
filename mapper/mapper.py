@@ -24,6 +24,7 @@ from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config
 from .delays import OneShot
+from .protocols.mpi import MPIProtocol
 from .protocols.proxy import ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
 from .utils import decodeBytes, escapeXMLString, formatDocString, regexFuzzy, simplified, stripAnsi
@@ -146,9 +147,6 @@ class Mapper(threading.Thread, World):
 		self.findFormat: str = findFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
 		self.queue: SimpleQueue[MAPPER_QUEUE_TYPE] = SimpleQueue()
-		cfg: Config = Config()
-		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
-		del cfg
 		self.autoMapping: bool = False
 		self.autoMerging: bool = True
 		self.autoLinking: bool = True
@@ -210,6 +208,13 @@ class Mapper(threading.Thread, World):
 			mapperCommands=[func.encode("us-ascii") for func in self.userCommands],
 			eventCaller=self.queue.put,
 		)
+		cfg: Config = Config()
+		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
+		try:
+			self.mpiHandler.isWordWrapping = cfg.get("wordwrap", False)
+		except LookupError:
+			logger.exception("Unable to set initial value of MPI word wrap.")
+		del cfg
 		self.proxy.connect()
 		World.__init__(self, interface=self.interface)
 		self.emulationRoom: Room = self.currentRoom
@@ -246,6 +251,13 @@ class Mapper(threading.Thread, World):
 		cfg["autoUpdateRooms"] = self._autoUpdateRooms
 		cfg.save()
 		del cfg
+
+	@property
+	def mpiHandler(self) -> MPIProtocol:
+		for handler in self.proxy.game._handlers:
+			if isinstance(handler, MPIProtocol):
+				return handler
+		raise LookupError("MPI Handler not found")
 
 	def output(self, *args: Any, **kwargs: Any) -> None:
 		# Override World.output.
@@ -578,11 +590,16 @@ class Mapper(threading.Thread, World):
 		self.sendPlayer(self.doorflags(*args))
 
 	def user_command_wordwrap(self, *args: str) -> None:
-		cfg: Config = Config()
-		wordwrap: bool = not cfg.get("wordwrap", True)
-		self.sendPlayer(f"wordwrap {'enabled' if wordwrap else 'disabled'}")
-		cfg["wordwrap"] = wordwrap
-		cfg.save()
+		try:
+			value: bool = not self.mpiHandler.isWordWrapping
+			self.mpiHandler.isWordWrapping = value
+			cfg: Config = Config()
+			cfg["wordwrap"] = value
+			cfg.save()
+			del cfg
+			self.sendPlayer(f"Word Wrap {'enabled' if value else 'disabled'}.")
+		except LookupError as e:
+			self.sendPlayer(f"Unable to toggle word wrapping: {', '.join(e.args)}.")
 
 	def user_command_secret(self, *args: str) -> None:
 		self.sendPlayer(self.secret(*args))

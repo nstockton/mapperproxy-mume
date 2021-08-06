@@ -14,7 +14,7 @@ from unittest.mock import Mock, patch
 # Mapper Modules:
 from mapper.protocols.base import Protocol
 from mapper.protocols.manager import Manager
-from mapper.protocols.telnet_constants import CR, CR_LF, CR_NULL, IAC, LF
+from mapper.protocols.telnet_constants import CR, CR_LF, CR_NULL, GA, IAC, LF
 
 
 class FakeProtocol(Protocol):
@@ -57,6 +57,11 @@ class TestManager(TestCase):
 		self.gameReceives.clear()
 		return playerReceives, gameReceives
 
+	def testManagerInit(self) -> None:
+		manager: Manager = Manager(lambda *args: None, lambda *args: None, promptTerminator=None)
+		self.assertEqual(manager.promptTerminator, IAC + GA)
+		del manager
+
 	@patch("mapper.protocols.manager.Manager.disconnect")
 	@patch("mapper.protocols.manager.Manager.connect")
 	def testManagerAsContextManager(self, mockConnect: Mock, mockDisconnect: Mock) -> None:
@@ -79,6 +84,8 @@ class TestManager(TestCase):
 		self.assertEqual(self.parse(bufferedData), (b"", b""))
 		self.manager.register(FakeProtocol)
 		self.assertEqual(self.parse(data), (bufferedData + bufferedData + data, b""))
+		# If the protocol is registered and connected, calling parse with some data should not buffer.
+		self.assertEqual(self.parse(data), (data, b""))
 
 	def testManagerWrite(self) -> None:
 		data: bytes = b"Hello World!"

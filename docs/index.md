@@ -87,7 +87,7 @@ from mapper.main import main
 Auto mapping mode must be on for these commands to have any effect.
 
 * `autolink`  --  Toggle Auto linking on or off. If on, the mapper will attempt to link undefined exits in newly added rooms.
-* `automap`  --  Toggle automatic mapping mode on.
+* `automap`  --  Toggle automatic mapping mode on or off.
 * `automerge`  --  Toggle automatic merging of duplicate rooms on or off.
 * `autoupdate`  --  Toggle Automatic updating of room name/descriptions/dynamic descriptions on or off.
 
@@ -146,3 +146,4 @@ Auto mapping mode must be on for these commands to have any effect.
 * `sync [vnum|label]`  --  Manually sync the map to the room with vnum or label. If no vnum or label is given, mapper will be placed in an unsynced state, and will try to automatically sync to the current room.
 * `tvnum [player]`  --  Tell the vnum of the current room to another player.
 * `vnum`  --  Print the vnum of the current room.
+* `wordwrap`  --  Toggle word wrapping of remote edited text on or off.

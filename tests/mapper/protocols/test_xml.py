@@ -39,7 +39,8 @@ class TestXMLProtocol(TestCase):
 		line: bytes = b"Hello world!"
 		prompt: bytes = b"!f CW&gt;"
 		self.rawData: bytes = (
-			b"<room><name>" + name + b"</name>" + LF
+			b"<movement dir=east/>"
+			+ b"<room><name>" + name + b"</name>" + LF
 			+ b"<gratuitous><description>" + description + b"</description></gratuitous>"
 			+ b"<magic>" + detectMagic + b"</magic>" + LF
 			+ dynamic
@@ -68,6 +69,7 @@ class TestXMLProtocol(TestCase):
 		)
 		# fmt: on
 		self.expectedEvents: List[EVENT_CALLER_TYPE] = [
+			("movement", b"east"),
 			("name", name),
 			("description", description),
 			("magic", detectMagic),
@@ -79,12 +81,12 @@ class TestXMLProtocol(TestCase):
 		]
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.mapperEvents: List[EVENT_CALLER_TYPE] = []
+		self.receivedEvents: List[EVENT_CALLER_TYPE] = []
 		self.xml: XMLProtocol = XMLProtocol(
 			self.gameReceives.extend,
 			self.playerReceives.extend,
 			outputFormat="normal",
-			eventCaller=self.mapperEvents.append,
+			eventCaller=self.receivedEvents.append,
 		)
 
 	def tearDown(self) -> None:
@@ -112,20 +114,26 @@ class TestXMLProtocol(TestCase):
 		self.xml.outputFormat = "normal"
 		self.xml.on_connectionMade()
 		self.assertEqual(self.parse(data), (data, MPI_INIT + b"X2" + LF + b"3G" + LF, "data"))
-		self.assertEqual(self.mapperEvents, [("line", data.rstrip(LF))])
-		self.mapperEvents.clear()
+		self.assertEqual(self.receivedEvents, [("line", data.rstrip(LF))])
+		self.receivedEvents.clear()
+		# Insure that partial lines are properly buffered.
+		self.assertEqual(self.parse(b"partial"), (b"partial", b"", "data"))
+		self.assertFalse(self.receivedEvents)
+		self.assertEqual(self.parse(LF), (LF, b"", "data"))
+		self.assertEqual(self.receivedEvents, [("line", b"partial")])
+		self.receivedEvents.clear()
 		self.assertEqual(self.parse(LT + b"IncompleteTag"), (b"", b"", "tag"))
-		self.assertFalse(self.mapperEvents)
+		self.assertFalse(self.receivedEvents)
 		self.assertEqual(self.xml._tagBuffer, b"IncompleteTag")
 		self.assertEqual(self.xml._textBuffer, b"")
 		self.xml._tagBuffer.clear()
 		self.assertEqual(self.parse(self.rawData), (self.normalData, b"", "data"))
-		self.assertEqual(self.mapperEvents, self.expectedEvents)
-		self.mapperEvents.clear()
+		self.assertEqual(self.receivedEvents, self.expectedEvents)
+		self.receivedEvents.clear()
 		self.xml.outputFormat = "tintin"
 		self.assertEqual(self.parse(self.rawData), (self.tintinData, b"", "data"))
-		self.assertEqual(self.mapperEvents, self.expectedEvents)
-		self.mapperEvents.clear()
+		self.assertEqual(self.receivedEvents, self.expectedEvents)
+		self.receivedEvents.clear()
 		self.xml.outputFormat = "raw"
 		self.assertEqual(self.parse(self.rawData), (self.rawData, b"", "data"))
-		self.assertEqual(self.mapperEvents, self.expectedEvents)
+		self.assertEqual(self.receivedEvents, self.expectedEvents)
