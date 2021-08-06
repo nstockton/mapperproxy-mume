@@ -23,7 +23,7 @@ from typing import Dict, List, Match, Pattern, Tuple, Union
 
 # Third-party Modules:
 import PyInstaller.config  # type: ignore[import]
-import speechlight  # type: ignore[import]
+import speechlight
 from PyInstaller.archive.pyz_crypto import PyiBlockCipher  # type: ignore[import]
 from PyInstaller.building.api import COLLECT, EXE, PYZ  # type: ignore[import]
 from PyInstaller.building.build_main import Analysis  # type: ignore[import]
