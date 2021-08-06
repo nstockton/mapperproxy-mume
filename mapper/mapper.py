@@ -18,16 +18,20 @@ from queue import SimpleQueue
 from timeit import default_timer
 from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Set, Tuple, Union
 
+# Third-party Modules:
+from mudproto.mpi import MPIProtocol
+from mudproto.utils import escapeXMLString
+from mudproto.xml import EVENT_CALLER_TYPE
+
 # Local Modules:
-from . import EVENT_CALLER_TYPE, INTERFACES, OUTPUT_FORMATS
+from . import INTERFACES, OUTPUT_FORMATS
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config
 from .delays import OneShot
-from .protocols.mpi import MPIProtocol
-from .protocols.proxy import ProxyHandler
+from .proxy import ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
-from .utils import decodeBytes, escapeXMLString, formatDocString, regexFuzzy, simplified, stripAnsi
+from .utils import decodeBytes, formatDocString, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 

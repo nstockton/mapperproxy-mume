@@ -12,11 +12,9 @@ from typing import Any, List, Tuple
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-# Mapper Modules:
-from mapper import EVENT_CALLER_TYPE
-from mapper.protocols.mpi import MPI_INIT
-from mapper.protocols.proxy import Game, Player, ProxyHandler, Telnet
-from mapper.protocols.telnet_constants import (
+# Third-party Modules:
+from mudproto.mpi import MPI_INIT
+from mudproto.telnet_constants import (
 	CHARSET,
 	CHARSET_ACCEPTED,
 	CHARSET_REJECTED,
@@ -31,6 +29,10 @@ from mapper.protocols.telnet_constants import (
 	SE,
 	WILL,
 )
+from mudproto.xml import EVENT_CALLER_TYPE
+
+# Mapper Modules:
+from mapper.proxy import Game, Player, ProxyHandler, Telnet
 
 
 class TestTelnet(TestCase):
@@ -52,8 +54,8 @@ class TestTelnet(TestCase):
 		with self.assertRaises(ValueError):
 			Telnet(Mock(), Mock(), name="**junk**", proxy=Mock())
 
-	@patch("mapper.protocols.proxy.Telnet.on_unhandledCommand")
-	@patch("mapper.protocols.proxy.TelnetProtocol.on_command")
+	@patch("mapper.proxy.Telnet.on_unhandledCommand")
+	@patch("mapper.proxy.TelnetProtocol.on_command")
 	def testTelnetOn_command(self, mockOn_command: Mock, mockOn_unhandledCommand: Mock) -> None:
 		self.assertNotIn(CHARSET, self.telnet.subnegotiationMap)
 		self.telnet.subnegotiationMap[CHARSET] = Mock()
@@ -88,7 +90,7 @@ class TestPlayer(TestCase):
 		self.player.on_unhandledSubnegotiation(ECHO, b"hello")
 		self.proxy.game.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC + SE)
 
-	@patch("mapper.protocols.proxy.Telnet.on_enableLocal")
+	@patch("mapper.proxy.Telnet.on_enableLocal")
 	def testPlayerOn_enableLocal(self, mockOn_enableLocal: Mock) -> None:
 		self.proxy.game._handlers = [Mock()]
 		self.proxy.game._handlers[0].subnegotiationMap = {ECHO: None}
@@ -120,7 +122,7 @@ class TestGame(TestCase):
 		self.game.charset = b"UTF-8"
 		self.assertEqual(self.game.charset, b"UTF-8")
 
-	@patch("mapper.protocols.proxy.logger", Mock())
+	@patch("mapper.proxy.logger", Mock())
 	def testGameNegotiateCharset(self) -> None:
 		oldCharset: bytes = self.game.charset
 		self.game.negotiateCharset(b"**junk**")
@@ -131,8 +133,8 @@ class TestGame(TestCase):
 		self.game.negotiateCharset(b"UTF-8")
 		self.assertEqual(self.gameReceives, IAC + SB + CHARSET + CHARSET_REQUEST + b";" + b"UTF-8" + IAC + SE)
 
-	@patch("mapper.protocols.proxy.Game.wont")
-	@patch("mapper.protocols.proxy.logger")
+	@patch("mapper.proxy.Game.wont")
+	@patch("mapper.proxy.logger")
 	def testGameOn_charset(self, mockLogger: Mock, mockWont: Mock) -> None:
 		# self.game.charset is the charset the user requested.
 		self.game.charset = b"UTF-8"
@@ -165,7 +167,7 @@ class TestGame(TestCase):
 		self.game.on_ga(None)
 		self.proxy.player.write.assert_called_once_with(b"", prompt=True)
 
-	@patch("mapper.protocols.proxy.Telnet.on_connectionMade")
+	@patch("mapper.proxy.Telnet.on_connectionMade")
 	def testGameOn_connectionMade(self, mockOn_connectionMade: Mock) -> None:
 		self.game.on_connectionMade()
 		mockOn_connectionMade.assert_called_once()
@@ -182,16 +184,16 @@ class TestGame(TestCase):
 		self.game.on_unhandledSubnegotiation(ECHO, b"hello")
 		self.proxy.player.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC + SE)
 
-	@patch("mapper.protocols.proxy.logger", Mock())
-	@patch("mapper.protocols.proxy.Game.negotiateCharset")
-	@patch("mapper.protocols.proxy.Telnet.on_enableLocal")
+	@patch("mapper.proxy.logger", Mock())
+	@patch("mapper.proxy.Game.negotiateCharset")
+	@patch("mapper.proxy.Telnet.on_enableLocal")
 	def testGameOn_enableLocal(self, mockOn_enableLocal: Mock, mockNegotiateCharset: Mock) -> None:
 		self.assertTrue(self.game.on_enableLocal(CHARSET))
 		mockNegotiateCharset.assert_called_once_with(self.game.charset)
 		self.game.on_enableLocal(ECHO)
 		mockOn_enableLocal.assert_called_once_with(ECHO)
 
-	@patch("mapper.protocols.proxy.Telnet.on_disableLocal")
+	@patch("mapper.proxy.Telnet.on_disableLocal")
 	def testGameOn_disableLocal(self, mockOn_disableLocal: Mock) -> None:
 		result: Any = getattr(self.game, "on_disableLocal")(CHARSET)  # Called like this to please MyPy.
 		self.assertIsNone(result)
@@ -236,7 +238,7 @@ class TestProxyHandler(TestCase):
 		self.gameReceives.clear()
 		return playerReceives, gameReceives
 
-	@patch("mapper.protocols.proxy.ProxyHandler.disconnect")
+	@patch("mapper.proxy.ProxyHandler.disconnect")
 	def testProxyHandlerClose(self, mockDisconnect: Mock) -> None:
 		self.proxy.close()
 		mockDisconnect.assert_called_once()

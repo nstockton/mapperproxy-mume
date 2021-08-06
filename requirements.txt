@@ -2,6 +2,7 @@ boltons
 certifi
 fuzzywuzzy
 jsonschema
+git+https://github.com/nstockton/mud-protocols.git@master#egg=mud-protocols
 pyglet
 python-Levenshtein
 python-rapidjson

@@ -16,7 +16,6 @@ from unittest.mock import Mock, mock_open, patch
 
 # Mapper Modules:
 from mapper import utils
-from mapper.protocols.telnet_constants import IAC
 
 
 class TestUtils(TestCase):
@@ -58,11 +57,6 @@ class TestUtils(TestCase):
 		self.assertEqual(
 			utils.formatDocString(testFunction, width, prefix="  "), expectedOutputIndentTwoSpace
 		)
-
-	def test_escapeIAC(self) -> None:
-		sent: bytes = b"hello" + IAC + b"world"
-		expected: bytes = b"hello" + IAC + IAC + b"world"
-		self.assertEqual(utils.escapeIAC(sent), expected)
 
 	def test_stripAnsi(self) -> None:
 		sent: str = "\x1b[32mhello\x1b[0m"
@@ -173,23 +167,6 @@ class TestUtils(TestCase):
 		unfrozenOutput: str = os.path.realpath(os.path.join(unfrozenDirName, *subdirectory))
 		mockIsFrozen.return_value = False
 		self.assertEqual(utils.getDirectoryPath(*subdirectory), unfrozenOutput)
-
-	def test_multiReplace(self) -> None:
-		replacements: Tuple[Tuple[str, str], ...] = (("ll", "yy"), ("h", "x"), ("o", "z"))
-		text: str = "hello world"
-		expectedOutput: str = "xeyyz wzrld"
-		self.assertEqual(utils.multiReplace(text, replacements), expectedOutput)
-		self.assertEqual(utils.multiReplace(text, ()), text)
-
-	def test_escapeXMLString(self) -> None:
-		originalString: str = "<one&two>three"
-		expectedString: str = "&lt;one&amp;two&gt;three"
-		self.assertEqual(utils.escapeXMLString(originalString), expectedString)
-
-	def test_unescapeXMLBytes(self) -> None:
-		originalBytes: bytes = b"&lt;one&amp;two&gt;three"
-		expectedBytes: bytes = b"<one&two>three"
-		self.assertEqual(utils.unescapeXMLBytes(originalBytes), expectedBytes)
 
 	def test_decodeBytes(self) -> None:
 		with self.assertRaises(TypeError):

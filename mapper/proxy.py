@@ -10,12 +10,12 @@ from __future__ import annotations
 import logging
 from typing import Any, Callable, Dict, List, Tuple, Union
 
-# Local Modules:
-from .base import Protocol
-from .manager import Manager
-from .mpi import MPI_INIT, MPIProtocol
-from .telnet import TelnetProtocol
-from .telnet_constants import (
+# Third-party Modules:
+from mudproto.base import Protocol
+from mudproto.manager import Manager
+from mudproto.mpi import MPI_INIT, MPIProtocol
+from mudproto.telnet import TelnetProtocol
+from mudproto.telnet_constants import (
 	CHARSET,
 	CHARSET_ACCEPTED,
 	CHARSET_REJECTED,
@@ -28,8 +28,7 @@ from .telnet_constants import (
 	SB,
 	SE,
 )
-from .xml import XMLProtocol
-from .. import EVENT_CALLER_TYPE
+from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -43,7 +42,7 @@ class Telnet(TelnetProtocol):
 	"""
 
 	def __init__(self, *args: Any, name: str, proxy: ProxyHandler, **kwargs: Any) -> None:
-		super().__init__(*args, **kwargs)  # type: ignore[misc]
+		super().__init__(*args, **kwargs)
 		self.name: str = name
 		if self.name not in ("player", "game"):
 			raise ValueError("Name must be 'player' or 'game'")
@@ -60,7 +59,7 @@ class Telnet(TelnetProtocol):
 
 class Player(Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		super().__init__(*args, name="player", **kwargs)  # type: ignore[misc]
+		super().__init__(*args, name="player", **kwargs)
 
 	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
 		# Forward unhandled commands to the game.
@@ -91,7 +90,7 @@ class Game(Telnet):
 	"""Supported character sets."""
 
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		super().__init__(*args, name="game", **kwargs)  # type: ignore[misc]
+		super().__init__(*args, name="game", **kwargs)
 		self.commandMap[GA] = self.on_ga
 		self.subnegotiationMap[CHARSET] = self.on_charset
 		self._charset: bytes = self.charsets[0]
@@ -199,12 +198,12 @@ class ProxyHandler(object):
 		self.player: Manager = Manager(
 			playerWriter, self.on_playerReceived, promptTerminator=promptTerminator
 		)
-		self.player.register(Player, proxy=self)  # type: ignore[misc]
+		self.player.register(Player, proxy=self)
 		self.game: Manager = Manager(gameWriter, self.on_gameReceived, promptTerminator=promptTerminator)
-		self.game.register(Game, proxy=self)  # type: ignore[misc]
-		self.game.register(MPIProtocol, outputFormat=self.outputFormat)  # type: ignore[misc]
+		self.game.register(Game, proxy=self)
+		self.game.register(MPIProtocol, outputFormat=self.outputFormat)
 		self.game.register(
-			XMLProtocol,  # type: ignore[misc]
+			XMLProtocol,
 			outputFormat=self.outputFormat,
 			eventCaller=self.eventCaller,
 		)

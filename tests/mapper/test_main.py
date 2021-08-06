@@ -13,11 +13,9 @@ from typing import Callable, Sequence, Tuple
 from unittest import TestCase
 from unittest.mock import Mock, _Call, _CallList, call
 
-# Mapper Modules:
-from mapper.main import Game
-from mapper.protocols.mpi import MPI_INIT
-from mapper.protocols.proxy import ProxyHandler
-from mapper.protocols.telnet_constants import (
+# Third-party Modules:
+from mudproto.mpi import MPI_INIT
+from mudproto.telnet_constants import (
 	CHARSET,
 	CHARSET_ACCEPTED,
 	CR_LF,
@@ -32,6 +30,10 @@ from mapper.protocols.telnet_constants import (
 	TTYPE_SEND,
 	WILL,
 )
+
+# Mapper Modules:
+from mapper.main import Game
+from mapper.proxy import ProxyHandler
 
 
 # The initial output of MUME. Used by the server thread to detect connection success.

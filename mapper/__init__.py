@@ -16,7 +16,6 @@ from .config import Config
 
 INTERFACES: Tuple[str, str, str] = ("text", "hc", "sighted")
 OUTPUT_FORMATS: Tuple[str, str, str] = ("normal", "raw", "tintin")
-EVENT_CALLER_TYPE = Tuple[str, bytes]
 
 
 cfg: Config = Config()

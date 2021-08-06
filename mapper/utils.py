@@ -16,23 +16,12 @@ import sys
 import textwrap
 from collections.abc import ByteString
 from pydoc import pager
-from telnetlib import IAC
-from typing import Any, AnyStr, Callable, Generator, List, Optional, Pattern, Sequence, Tuple, Union
+from typing import Any, Callable, Generator, List, Optional, Pattern, Sequence, Union
 
 
 ANSI_COLOR_REGEX: Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
-ESCAPE_XML_STR_ENTITIES: Tuple[Tuple[str, str], ...] = (("&", "&amp;"), ("<", "&lt;"), (">", "&gt;"))
-UNESCAPE_XML_STR_ENTITIES: Tuple[Tuple[str, str], ...] = tuple(
-	(second, first) for first, second in ESCAPE_XML_STR_ENTITIES
-)
-ESCAPE_XML_BYTES_ENTITIES: Tuple[Tuple[bytes, bytes], ...] = tuple(
-	(first.encode("us-ascii"), second.encode("us-ascii")) for first, second in ESCAPE_XML_STR_ENTITIES
-)
-UNESCAPE_XML_BYTES_ENTITIES: Tuple[Tuple[bytes, bytes], ...] = tuple(
-	(second, first) for first, second in ESCAPE_XML_BYTES_ENTITIES
-)
 
 
 def iterBytes(data: bytes) -> Generator[bytes, None, None]:
@@ -121,19 +110,6 @@ def formatDocString(
 		docString, prefix=prefix if prefix is not None else ""
 	)  # Indent docstring lines with the prefix.
 	return docString
-
-
-def escapeIAC(data: bytes) -> bytes:
-	"""
-	Escapes IAC bytes of a bytes-like object.
-
-	Args:
-		data: The data to be escaped.
-
-	Returns:
-		The data with IAC bytes escaped.
-	"""
-	return data.replace(IAC, IAC + IAC)
 
 
 def stripAnsi(text: str) -> str:
@@ -322,50 +298,6 @@ def getDirectoryPath(*args: str) -> str:
 	else:
 		path = os.path.join(os.path.dirname(__file__), os.path.pardir)
 	return os.path.realpath(os.path.join(path, *args))
-
-
-def multiReplace(
-	data: AnyStr, replacements: Union[Sequence[Sequence[bytes]], Sequence[Sequence[str]]]
-) -> AnyStr:
-	"""
-	Performs multiple replacement operations on a string or bytes-like object.
-
-	Args:
-		data: The text to perform the replacements on.
-		replacements: A sequence of tuples, each containing the text to match and the replacement.
-
-	Returns:
-		The text with all the replacements applied.
-	"""
-	for item in replacements:
-		data = data.replace(*item)
-	return data
-
-
-def escapeXMLString(text: str) -> str:
-	"""
-	Escapes XML entities in a string.
-
-	Args:
-		text: The string to escape.
-
-	Returns:
-		A copy of the string with XML entities escaped.
-	"""
-	return multiReplace(text, ESCAPE_XML_STR_ENTITIES)
-
-
-def unescapeXMLBytes(data: bytes) -> bytes:
-	"""
-	Unescapes XML entities in a bytes-like object.
-
-	Args:
-		data: The data to unescape.
-
-	Returns:
-		A copy of the data with XML entities unescaped.
-	"""
-	return multiReplace(data, UNESCAPE_XML_BYTES_ENTITIES)
 
 
 def decodeBytes(data: bytes) -> str:
