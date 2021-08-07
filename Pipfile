@@ -19,12 +19,14 @@ PyInstaller = {version = "==4.1"}
 pytkdocs = {git = "https://github.com/nstockton/pytkdocs.git", ref = "tab-indentation-parser"}
 tan = {git = "https://github.com/nstockton/tan.git", ref = "personal"}
 types-certifi = "*"
+types-jsonschema = "*"
 
 [packages]
 boltons = "*"
 certifi = "*"
 fuzzywuzzy = "*"
 jsonschema = "*"
+mud-protocols = {git = "https://github.com/nstockton/mud-protocols.git", ref = "master"}
 pyglet = "*"
 python-Levenshtein = "*"
 python-rapidjson = "*"
