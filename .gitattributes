@@ -2,18 +2,18 @@
 .gitattributes text eol=crlf
 .gitignore text eol=crlf
 .flake8 text eol=crlf
-.pre-commit-config.yaml text eol=crlf
 Pipfile text eol=crlf
 *.txt text eol=crlf
 *.py text eol=crlf
-*.pyw text eol=crlf
 *.pys text eol=crlf
+*.pyw text eol=crlf
 *.md text eol=crlf
 *.spec text eol=crlf
 *.json.sample text eol=lf
 *.json.schema text eol=crlf
 data/config.json.sample text eol=crlf
 *.toml text eol=crlf
+*.yaml text eol=crlf
 *.yml text eol=crlf
 *.jpg -text
 *.png -text

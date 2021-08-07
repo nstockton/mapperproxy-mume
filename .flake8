@@ -33,14 +33,18 @@ ignore =
 
 exclude =
 	.git,
-	venv,
-	ENV,
 	__pycache__,
+	.env,
+	.venv,
 	env,
+	venv,
+	env.bak,
+	venv.bak,
+	ENV,
 	maps,
 
 filename =
 	*.py,
-	*.pyw,
 	*.pys,
+	*.pyw,
 	*.spec,

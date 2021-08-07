@@ -4,7 +4,7 @@
 	line-length = 110
 	target-version = ["py37", "py38"]
 	exclude = '(/(\.eggs|\.git|\.mypy_cache|\.tox|\.venv|build|dist)|__pycache__)'
-	include = '/((mapper|tests).*\.py|pyinstaller_windows.spec|start.py)$'
+	include = '/((mapper|tests).*\.py|pyinstaller_windows\.spec|start\.py)$'
 
 [tool.coverage.report]
 	precision = 0
@@ -29,7 +29,8 @@
 
 [tool.isort]
 	line_length = 110  # The max length of an import line (used for wrapping long imports).
-	supported_extensions = ["pxd", "py", "pyi", "pyx", "spec"]  # Specify what extensions isort can be ran against.
+	# Specify what extensions isort can be ran against.
+	supported_extensions = ["py", "pyi", "pys", "pyw", "pyx", "pxd", "spec"]
 	indent = "tab"  # String to place for indents.
 	multi_line_output = 3  # Vertical hanging indent for long sections of multiple imports.
 	include_trailing_comma = true  # Include a trailing comma on multi line imports that include parentheses.
