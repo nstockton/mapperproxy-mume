@@ -13,7 +13,7 @@ import os.path
 from typing import Any, Callable, Dict, List, Mapping, Tuple, Union
 
 # Third-party Modules:
-import jsonschema  # type: ignore[import]
+import jsonschema
 import rapidjson  # type: ignore[import]
 
 # Local Modules:
