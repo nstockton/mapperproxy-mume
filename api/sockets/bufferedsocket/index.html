@@ -1045,7 +1045,7 @@ only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.__init__">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="mi">32768</span><span class="p">,</span> <span class="n">recvsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">encrypt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="mi">32768</span><span class="p">,</span> <span class="n">recvsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">encrypt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -1080,7 +1080,7 @@ only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
 <p>The default timeout for <a href="https://docs.python.org/library/socket.html#socket.socket.send">send</a> and <a href="https://docs.python.org/library/socket.html#socket.socket.recv">recv</a>, in seconds.
 Set to <code>None</code> for no timeout, <code>0</code> for nonblocking.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 <tr>
 <td><code>maxsize</code></td>
@@ -1096,7 +1096,7 @@ Set to <code>None</code> for no timeout, <code>0</code> for nonblocking.</p>
 <td>
 <p>The number of bytes to receive for every lower-level <a href="https://docs.python.org/library/socket.html#socket.socket.recv"><code>socket.recv</code></a> call.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 <tr>
 <td><code>encrypt</code></td>
@@ -1480,7 +1480,7 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.peek">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1518,7 +1518,7 @@ see bytes in the recv buffer, use :meth:<code>getrecvbuffer</code>.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1559,7 +1559,7 @@ buffer and socket before <em>timeout</em> expires, then a
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1606,7 +1606,7 @@ the default, <code>0</code>, is valid.</p>
 timeout. Defaults to the value set in the constructor
 of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1665,7 +1665,7 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv_close">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1709,7 +1709,7 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv_size">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1746,7 +1746,7 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1819,7 +1819,7 @@ buffer and socket before <em>timeout</em> expires, then a
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv_until">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1857,7 +1857,7 @@ in the socket stream.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 <tr>
 <td><code>maxsize</code></td>
@@ -1866,7 +1866,7 @@ set in the constructor of BufferedSocket.</p>
 <p>The maximum size for the internal buffer.
 Defaults to the value set in the constructor.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 <tr>
 <td><code>with_delimiter</code></td>
@@ -1984,7 +1984,7 @@ forwarding the messages.</p>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.send">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -2032,7 +2032,7 @@ the default 0 is valid.</p>
 nonblocking and None for no timeout. Defaults to the value
 set in the constructor of BufferedSocket.</p>
 </td>
-<td><code>&lt;object object at 0x00983F10&gt;</code></td>
+<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -2094,7 +2094,7 @@ unsent.</p>
 <div class="doc doc-object doc-method">
 <h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.sendall">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x00983F10</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">Method</span> <span class="n">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>

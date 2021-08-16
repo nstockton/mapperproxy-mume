@@ -1252,12 +1252,12 @@ params: same as registerMudEventHandler.</p>
 
       <a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_at" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
-<p>mimic the /at command that the ainur use. Syntax: at [room label|room number][command]</p>
+<p>mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">"""mimic the /at command that the ainur use. Syntax: at [room label|room number] [command]"""</span>
+	<span class="sd">"""mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)"""</span>
 	<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
@@ -1375,12 +1375,12 @@ params: same as registerMudEventHandler.</p>
 
       <a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_go" title="Permanent link">&para;</a></h3>
 <div class="doc doc-contents ">
-<p>mimic the /go command that the ainur use. Syntax: go [room label|room number][command]</p>
+<p>mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)</p>
 <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="highlight">
 <pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">isJump</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">"""mimic the /go command that the ainur use. Syntax: go [room label|room number] [command]"""</span>
+	<span class="sd">"""mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)"""</span>
 	<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 	<span class="n">room</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Room</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
