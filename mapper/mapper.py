@@ -299,7 +299,7 @@ class Mapper(threading.Thread, World):
 		return args
 
 	def emulation_command_at(self, *args: str) -> Tuple[str, ...]:
-		"""mimic the /at command that the ainur use. Syntax: at <room label|room number> <command>"""
+		"""mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)"""
 		label: str = "".join(args[:1]).strip()
 		command: str = " ".join(args[1:]).strip()
 		if not label:
@@ -342,7 +342,7 @@ class Mapper(threading.Thread, World):
 		return args
 
 	def emulation_command_go(self, *args: str, isJump: bool = True) -> Tuple[str, ...]:
-		"""mimic the /go command that the ainur use. Syntax: go <room label|room number> <command>"""
+		"""mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)"""
 		label: str = "".join(args[:1]).strip()
 		args = args[1:]
 		room: Union[Room, None] = self.getRoomFromLabel(label)
