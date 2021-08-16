@@ -262,123 +262,11 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
       
       <label class="md-nav__link" for="nav-3-1">
-        protocols
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="protocols" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-1">
-          <span class="md-nav__icon md-icon"></span>
-          protocols
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/base/" class="md-nav__link">
-        base.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/manager/" class="md-nav__link">
-        manager.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/mpi/" class="md-nav__link">
-        mpi.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/proxy/" class="md-nav__link">
-        proxy.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/telnet/" class="md-nav__link">
-        telnet.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/telnet_constants/" class="md-nav__link">
-        telnet_constants.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/xml/" class="md-nav__link">
-        xml.py
-      </a>
-    </li>
-  
-
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
-      
-      <label class="md-nav__link" for="nav-3-2">
         roomdata
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="roomdata" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-2">
+        <label class="md-nav__title" for="nav-3-1">
           <span class="md-nav__icon md-icon"></span>
           roomdata
         </label>
@@ -423,14 +311,14 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
       
-      <label class="md-nav__link" for="nav-3-3">
+      <label class="md-nav__link" for="nav-3-2">
         sockets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="sockets" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-3">
+        <label class="md-nav__title" for="nav-3-2">
           <span class="md-nav__icon md-icon"></span>
           sockets
         </label>
@@ -1680,6 +1568,8 @@ from the args and kwargs arguments, respectively.</p>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre>
 </div>
 </details>
@@ -1994,6 +1884,8 @@ from the args and kwargs arguments, respectively.</p>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre>
 </div>
 </details>
@@ -2387,6 +2279,8 @@ from the args and kwargs arguments, respectively.</p>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre>
 </div>
 </details>
@@ -2780,6 +2674,8 @@ from the args and kwargs arguments, respectively.</p>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre>
 </div>
 </details>

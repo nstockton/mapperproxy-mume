@@ -407,123 +407,11 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
       
       <label class="md-nav__link" for="nav-3-1">
-        protocols
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="protocols" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-1">
-          <span class="md-nav__icon md-icon"></span>
-          protocols
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/base/" class="md-nav__link">
-        base.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/manager/" class="md-nav__link">
-        manager.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/mpi/" class="md-nav__link">
-        mpi.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/proxy/" class="md-nav__link">
-        proxy.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/telnet/" class="md-nav__link">
-        telnet.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/telnet_constants/" class="md-nav__link">
-        telnet_constants.py
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/protocols/xml/" class="md-nav__link">
-        xml.py
-      </a>
-    </li>
-  
-
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
-      
-      <label class="md-nav__link" for="nav-3-2">
         roomdata
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="roomdata" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-2">
+        <label class="md-nav__title" for="nav-3-1">
           <span class="md-nav__icon md-icon"></span>
           roomdata
         </label>
@@ -568,14 +456,14 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
       
-      <label class="md-nav__link" for="nav-3-3">
+      <label class="md-nav__link" for="nav-3-2">
         sockets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="sockets" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-3">
+        <label class="md-nav__title" for="nav-3-2">
           <span class="md-nav__icon md-icon"></span>
           sockets
         </label>
@@ -955,7 +843,7 @@ from mapper.main import main
 <p>Auto mapping mode must be on for these commands to have any effect.</p>
 <ul>
 <li><code>autolink</code>  --  Toggle Auto linking on or off. If on, the mapper will attempt to link undefined exits in newly added rooms.</li>
-<li><code>automap</code>  --  Toggle automatic mapping mode on.</li>
+<li><code>automap</code>  --  Toggle automatic mapping mode on or off.</li>
 <li><code>automerge</code>  --  Toggle automatic merging of duplicate rooms on or off.</li>
 <li><code>autoupdate</code>  --  Toggle Automatic updating of room name/descriptions/dynamic descriptions on or off.</li>
 </ul>
@@ -1014,6 +902,7 @@ from mapper.main import main
 <li><code>sync [vnum|label]</code>  --  Manually sync the map to the room with vnum or label. If no vnum or label is given, mapper will be placed in an unsynced state, and will try to automatically sync to the current room.</li>
 <li><code>tvnum [player]</code>  --  Tell the vnum of the current room to another player.</li>
 <li><code>vnum</code>  --  Print the vnum of the current room.</li>
+<li><code>wordwrap</code>  --  Toggle word wrapping of remote edited text on or off.</li>
 </ul>
                 
               
