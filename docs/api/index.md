@@ -14,14 +14,6 @@ Automatically generated API reference.
 * [Utils](utils.md)
 * [World](world.md)
 
-### Protocols
-
-* [Base](protocols/base.md)
-* [MPI](protocols/mpi.md)
-* [Telnet](protocols/telnet.md)
-* [Telnet Constants](protocols/telnet_constants.md)
-* [XML](protocols/xml.md)
-
 ### Room Data
 
 * [Database](roomdata/database.md)
