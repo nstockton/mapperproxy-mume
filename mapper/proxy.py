@@ -13,6 +13,7 @@ from typing import Any, Callable, Dict, List, Tuple, Union
 # Third-party Modules:
 from mudproto.base import Protocol
 from mudproto.manager import Manager
+from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.telnet import TelnetProtocol
 from mudproto.telnet_constants import (
@@ -81,7 +82,7 @@ class Player(Telnet):
 		return super().on_enableLocal(option)
 
 
-class Game(Telnet):
+class Game(MCCPMixIn, Telnet):
 	charsets: Tuple[bytes, ...] = (
 		b"US-ASCII",
 		b"ISO-8859-1",
