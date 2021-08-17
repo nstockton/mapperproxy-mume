@@ -24,7 +24,6 @@ from mudproto.telnet_constants import (
 	GA,
 	IAC,
 	LF,
-	MCCP2,
 	NEGOTIATION_BYTES,
 	SB,
 	SE,
@@ -50,7 +49,7 @@ class Telnet(TelnetProtocol):
 		self.proxy: ProxyHandler = proxy
 
 	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
-		if command in NEGOTIATION_BYTES and option not in self.subnegotiationMap and option != MCCP2:
+		if command in NEGOTIATION_BYTES and option not in self.subnegotiationMap:
 			# Treat any unhandled negotiation options the same as unhandled commands, so
 			# they are forwarded to the other end of the proxy.
 			self.on_unhandledCommand(command, option)
