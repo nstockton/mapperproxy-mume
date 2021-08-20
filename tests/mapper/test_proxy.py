@@ -8,27 +8,13 @@ from __future__ import annotations
 
 # Built-in Modules:
 import socket
-from typing import Any, List, Tuple
+from typing import List, Tuple
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
 # Third-party Modules:
 from mudproto.mpi import MPI_INIT
-from mudproto.telnet_constants import (
-	CHARSET,
-	CHARSET_ACCEPTED,
-	CHARSET_REJECTED,
-	CHARSET_REQUEST,
-	CR_LF,
-	CR_NULL,
-	ECHO,
-	GA,
-	IAC,
-	LF,
-	SB,
-	SE,
-	WILL,
-)
+from mudproto.telnet_constants import CHARSET, CR_LF, CR_NULL, ECHO, GA, IAC, LF, SB, SE, WILL
 from mudproto.xml import EVENT_CALLER_TYPE
 
 # Mapper Modules:
@@ -57,13 +43,13 @@ class TestTelnet(TestCase):
 	@patch("mapper.proxy.Telnet.on_unhandledCommand")
 	@patch("mapper.proxy.TelnetProtocol.on_command")
 	def testTelnetOn_command(self, mockOn_command: Mock, mockOn_unhandledCommand: Mock) -> None:
-		self.assertNotIn(CHARSET, self.telnet.subnegotiationMap)
-		self.telnet.subnegotiationMap[CHARSET] = Mock()
+		self.assertNotIn(ECHO, self.telnet.subnegotiationMap)
 		self.telnet.on_command(WILL, ECHO)
 		mockOn_unhandledCommand.assert_called_once_with(WILL, ECHO)
-		self.telnet.on_command(WILL, CHARSET)
-		mockOn_command.assert_called_once_with(WILL, CHARSET)
-		del self.telnet.subnegotiationMap[CHARSET]
+		self.telnet.subnegotiationMap[ECHO] = Mock()
+		self.telnet.on_command(WILL, ECHO)
+		mockOn_command.assert_called_once_with(WILL, ECHO)
+		del self.telnet.subnegotiationMap[ECHO]
 
 
 class TestPlayer(TestCase):
@@ -113,56 +99,6 @@ class TestGame(TestCase):
 		self.gameReceives.clear()
 		self.playerReceives.clear()
 
-	def testGameCharset(self) -> None:
-		oldCharset: bytes = self.game.charset
-		self.assertEqual(oldCharset, b"US-ASCII")
-		with self.assertRaises(ValueError):
-			self.game.charset = b"**junk**"
-		self.assertEqual(self.game.charset, oldCharset)
-		self.game.charset = b"UTF-8"
-		self.assertEqual(self.game.charset, b"UTF-8")
-
-	@patch("mapper.proxy.logger", Mock())
-	def testGameNegotiateCharset(self) -> None:
-		oldCharset: bytes = self.game.charset
-		self.game.negotiateCharset(b"**junk**")
-		self.assertEqual(
-			self.gameReceives, IAC + SB + CHARSET + CHARSET_REQUEST + b";" + oldCharset + IAC + SE
-		)
-		self.gameReceives.clear()
-		self.game.negotiateCharset(b"UTF-8")
-		self.assertEqual(self.gameReceives, IAC + SB + CHARSET + CHARSET_REQUEST + b";" + b"UTF-8" + IAC + SE)
-
-	@patch("mapper.proxy.Game.wont")
-	@patch("mapper.proxy.logger")
-	def testGameOn_charset(self, mockLogger: Mock, mockWont: Mock) -> None:
-		# self.game.charset is the charset the user requested.
-		self.game.charset = b"UTF-8"
-		# self.game._oldCharset is the charset the user was using before the request.
-		self.game._oldCharset = b"US-ASCII"
-		# Charset accepted.
-		self.game.on_charset(CHARSET_ACCEPTED + b"UTF-8")
-		mockLogger.debug.assert_called_once_with("Peer responds: Charset b'UTF-8' accepted.")
-		mockLogger.reset_mock()
-		# Charset rejected, and _oldCharset and charset are the same.
-		self.game._oldCharset = self.game.charset
-		self.game.on_charset(CHARSET_REJECTED + b"UTF-8")
-		mockLogger.warning.assert_called_with(
-			f"Unable to fall back to {self.game.charset!r}. Old and new charsets match."
-		)
-		mockLogger.reset_mock()
-		# Charset rejected, and _oldCharset and charset differ.
-		self.game._oldCharset = b"US-ASCII"
-		self.game.on_charset(CHARSET_REJECTED + b"UTF-8")
-		mockLogger.debug.assert_called_once_with("Falling back to b'US-ASCII'.")
-		self.assertEqual(self.game.charset, b"US-ASCII")
-		self.game.charset = b"UTF-8"
-		# Invalid response.
-		self.game._oldCharset = b"US-ASCII"
-		self.game.on_charset(b"**junk**")
-		self.assertEqual(self.game.charset, b"US-ASCII")
-		mockWont.assert_called_once_with(CHARSET)
-
 	def testGameOn_ga(self) -> None:
 		self.game.on_ga(None)
 		self.proxy.player.write.assert_called_once_with(b"", prompt=True)
@@ -183,22 +119,6 @@ class TestGame(TestCase):
 	def testGameOn_unhandledSubnegotiation(self) -> None:
 		self.game.on_unhandledSubnegotiation(ECHO, b"hello")
 		self.proxy.player.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC + SE)
-
-	@patch("mapper.proxy.logger", Mock())
-	@patch("mapper.proxy.Game.negotiateCharset")
-	@patch("mapper.proxy.Telnet.on_enableLocal")
-	def testGameOn_enableLocal(self, mockOn_enableLocal: Mock, mockNegotiateCharset: Mock) -> None:
-		self.assertTrue(self.game.on_enableLocal(CHARSET))
-		mockNegotiateCharset.assert_called_once_with(self.game.charset)
-		self.game.on_enableLocal(ECHO)
-		mockOn_enableLocal.assert_called_once_with(ECHO)
-
-	@patch("mapper.proxy.Telnet.on_disableLocal")
-	def testGameOn_disableLocal(self, mockOn_disableLocal: Mock) -> None:
-		result: Any = getattr(self.game, "on_disableLocal")(CHARSET)  # Called like this to please MyPy.
-		self.assertIsNone(result)
-		self.game.on_disableLocal(ECHO)
-		mockOn_disableLocal.assert_called_once_with(ECHO)
 
 
 class TestProxyHandler(TestCase):

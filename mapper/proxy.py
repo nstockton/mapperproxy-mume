@@ -8,26 +8,16 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Any, Callable, Dict, List, Tuple, Union
+from typing import Any, Callable, Dict, List, Union
 
 # Third-party Modules:
 from mudproto.base import Protocol
+from mudproto.charset import CharsetMixIn
 from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.telnet import TelnetProtocol
-from mudproto.telnet_constants import (
-	CHARSET,
-	CHARSET_ACCEPTED,
-	CHARSET_REJECTED,
-	CHARSET_REQUEST,
-	GA,
-	IAC,
-	LF,
-	NEGOTIATION_BYTES,
-	SB,
-	SE,
-)
+from mudproto.telnet_constants import GA, IAC, LF, NEGOTIATION_BYTES, SB, SE
 from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
 
 
@@ -81,70 +71,10 @@ class Player(Telnet):
 		return super().on_enableLocal(option)
 
 
-class Game(MCCPMixIn, Telnet):
-	charsets: Tuple[bytes, ...] = (
-		b"US-ASCII",
-		b"ISO-8859-1",
-		b"UTF-8",
-	)
-	"""Supported character sets."""
-
+class Game(MCCPMixIn, CharsetMixIn, Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, name="game", **kwargs)
 		self.commandMap[GA] = self.on_ga
-		self.subnegotiationMap[CHARSET] = self.on_charset
-		self._charset: bytes = self.charsets[0]
-
-	@property
-	def charset(self) -> bytes:
-		"""The character set to be used."""
-		return self._charset
-
-	@charset.setter
-	def charset(self, value: bytes) -> None:
-		if value not in self.charsets:
-			raise ValueError(f"'{value!r}' not in {self.charsets!r}")
-		self._charset = value
-
-	def negotiateCharset(self, name: bytes) -> None:
-		"""
-		Negotiates changing the character set.
-
-		Args:
-			name: The name of the character set to use.
-		"""
-		self._oldCharset = self.charset
-		try:
-			self.charset = name
-		except ValueError:
-			logger.warning(f"Invalid charset {name!r}: falling back to {self.charset!r}.")
-			name = self.charset
-		separator = b";"
-		logger.debug(f"Tell peer we would like to use the {name!r} charset.")
-		self.requestNegotiation(CHARSET, CHARSET_REQUEST + separator + name)
-
-	def on_charset(self, data: bytes) -> None:
-		"""
-		Called when a charset subnegotiation is received.
-
-		Args:
-			data: The payload.
-		"""
-		status, response = data[:1], data[1:]
-		if status == CHARSET_ACCEPTED:
-			logger.debug(f"Peer responds: Charset {response!r} accepted.")
-		elif status == CHARSET_REJECTED:
-			logger.warning("Peer responds: Charset rejected.")
-			if self.charset == self._oldCharset:
-				logger.warning(f"Unable to fall back to {self._oldCharset!r}. Old and new charsets match.")
-			else:
-				logger.debug(f"Falling back to {self._oldCharset!r}.")
-				self.charset = self._oldCharset
-		else:
-			logger.warning(f"Unknown charset negotiation response from peer: {data!r}")
-			self.charset = self._oldCharset
-			self.wont(CHARSET)
-		del self._oldCharset
 
 	def on_ga(self, *args: Union[bytes, None]) -> None:
 		"""Called when a Go Ahead command is received."""
@@ -152,8 +82,6 @@ class Game(MCCPMixIn, Telnet):
 
 	def on_connectionMade(self) -> None:
 		super().on_connectionMade()
-		# Offer to handle charset.
-		self.will(CHARSET)
 		# Tell the Mume server to put IAC-GA at end of prompts.
 		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
 
@@ -165,18 +93,6 @@ class Game(MCCPMixIn, Telnet):
 
 	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
 		self.proxy.player.write(IAC + SB + option + data + IAC + SE)
-
-	def on_enableLocal(self, option: bytes) -> bool:
-		if option == CHARSET:
-			logger.debug("Peer acknowledges our request and tells us to begin charset sub-negotiation.")
-			self.negotiateCharset(self.charset)
-			return True
-		return super().on_enableLocal(option)
-
-	def on_disableLocal(self, option: bytes) -> None:
-		if option == CHARSET:
-			return None
-		super().on_disableLocal(option)
 
 
 class ProxyHandler(object):
