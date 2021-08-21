@@ -19,11 +19,6 @@ from mapper import utils
 
 
 class TestUtils(TestCase):
-	def test_iterBytes(self) -> None:
-		sent: bytes = b"hello"
-		expected: Tuple[bytes, ...] = (b"h", b"e", b"l", b"l", b"o")
-		self.assertEqual(tuple(utils.iterBytes(sent)), expected)
-
 	def test_minIndent(self) -> None:
 		self.assertEqual(utils.minIndent("hello\nworld"), "")
 		self.assertEqual(utils.minIndent("\thello\n\t\tworld"), "\t")

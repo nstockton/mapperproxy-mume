@@ -16,26 +16,12 @@ import sys
 import textwrap
 from collections.abc import ByteString
 from pydoc import pager
-from typing import Any, Callable, Generator, List, Optional, Pattern, Sequence, Union
+from typing import Any, Callable, List, Optional, Pattern, Sequence, Union
 
 
 ANSI_COLOR_REGEX: Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
-
-
-def iterBytes(data: bytes) -> Generator[bytes, None, None]:
-	"""
-	A generator which yields each byte of a bytes-like object.
-
-	Args:
-		data: The data to process.
-
-	Yields:
-		Each byte of data as a bytes object.
-	"""
-	for i in range(len(data)):
-		yield data[i : i + 1]
 
 
 def minIndent(text: str) -> str:
