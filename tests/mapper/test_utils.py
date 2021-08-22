@@ -19,6 +19,10 @@ from mapper import utils
 
 
 class TestUtils(TestCase):
+	def test_camelCase(self) -> None:
+		self.assertEqual(utils.camelCase("", "_"), "")
+		self.assertEqual(utils.camelCase("this_is_a_test", "_"), "thisIsATest")
+
 	def test_minIndent(self) -> None:
 		self.assertEqual(utils.minIndent("hello\nworld"), "")
 		self.assertEqual(utils.minIndent("\thello\n\t\tworld"), "\t")

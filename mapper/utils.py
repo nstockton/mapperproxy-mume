@@ -24,6 +24,21 @@ WHITE_SPACE_REGEX: Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
 
 
+def camelCase(text: str, delimiter: str) -> str:
+	"""
+	converts text to camel case.
+
+	Args:
+		text: The text to be converted.
+		delimiter: The delimiter between words.
+
+	Returns:
+		The text in camel case.
+	"""
+	words = text.split(delimiter)
+	return "".join((*map(str.lower, words[:1]), *map(str.title, words[1:])))
+
+
 def minIndent(text: str) -> str:
 	"""
 	Retrieves the indention characters from the line with the least indention.
