@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import logging
 import socket
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -32,6 +33,7 @@ class HandlerWithoutType(Handler):
 class TestHandler(TestCase):
 	@patch.object(Mapper, "loadRooms", Mock())  # Speedup test execution.
 	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
 		self.mapper: Mapper = Mapper(
 			playerSocket=Mock(spec=socket.socket),
 			gameSocket=Mock(spec=socket.socket),
@@ -43,6 +45,9 @@ class TestHandler(TestCase):
 			isEmulatingOffline=False,
 		)
 		self.mapper.daemon = True  # Allow unittest to quit if mapper thread does not close properly.
+
+	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
 
 	def testMapper_handle(self) -> None:
 		dummy: DummyHandler = DummyHandler(self.mapper)

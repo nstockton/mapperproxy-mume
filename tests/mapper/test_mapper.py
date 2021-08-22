@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import logging
 import socket
 from contextlib import ExitStack
 from typing import Generator, Tuple
@@ -20,6 +21,7 @@ from mapper.mapper import MAPPER_QUEUE_TYPE, Mapper
 class TestMapper(TestCase):
 	@patch.object(Mapper, "loadRooms", Mock())  # Speedup test execution.
 	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
 		self.mapper: Mapper = Mapper(
 			playerSocket=Mock(spec=socket.socket),
 			gameSocket=Mock(spec=socket.socket),
@@ -31,6 +33,9 @@ class TestMapper(TestCase):
 			isEmulatingOffline=False,
 		)
 		self.mapper.daemon = True  # Allow unittest to quit if mapper thread does not close properly.
+
+	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
 
 	def testMapper_run(self) -> None:
 		cm: ExitStack
@@ -111,6 +116,7 @@ class TestMapper(TestCase):
 class TestMapper_handleMudEvent(TestCase):
 	@patch.object(Mapper, "loadRooms", Mock())  # Speedup test execution.
 	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
 		self.mapper = Mapper(
 			playerSocket=Mock(spec=socket.socket),
 			gameSocket=Mock(spec=socket.socket),
@@ -129,6 +135,9 @@ class TestMapper_handleMudEvent(TestCase):
 		)
 		for handlerName in self.legacyHandlerNames:
 			setattr(self.mapper, handlerName, Mock())
+
+	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
 
 	def test_legacyMudEventHandlers(self) -> None:
 		events: Generator[str, None, None] = (

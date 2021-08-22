@@ -18,35 +18,43 @@ INTERFACES: Tuple[str, str, str] = ("text", "hc", "sighted")
 OUTPUT_FORMATS: Tuple[str, str, str] = ("normal", "raw", "tintin")
 
 
+def levelName(level: Union[str, int, None]) -> str:
+	level = level.strip().upper() if isinstance(level, str) else level
+	if isinstance(level, int):
+		if level < 0 or level > 50:
+			return str(logging.getLevelName(0))
+		elif level <= 5:
+			return str(logging.getLevelName(level * 10))
+		else:
+			return str(logging.getLevelName(level - level % 10))
+	elif level is None or not isinstance(logging.getLevelName(level), int):
+		return str(logging.getLevelName(0))
+	return level
+
+
 cfg: Config = Config()
-debugLevel: Union[str, int, None] = cfg.get("debug_level")
-if isinstance(debugLevel, int):
-	if debugLevel < 0 or debugLevel > 50:
-		debugLevel = None
-	elif debugLevel <= 5:
-		debugLevel *= 10
-	else:
-		debugLevel -= debugLevel % 10
-elif isinstance(debugLevel, str):
-	if not isinstance(logging.getLevelName(debugLevel.upper()), int):
-		debugLevel = None
-else:
-	debugLevel = None
-if debugLevel is None and cfg.get("debug_level") is not None:  # Invalid value in the configuration file.
-	cfg["debug_level"] = debugLevel
+loggingLevel: str = levelName(cfg.get("logging_level"))
+if loggingLevel == logging.getLevelName(0) and cfg.get("logging_level") not in (
+	logging.getLevelName(0),
+	0,
+):  # Invalid value in the configuration file.
+	cfg["logging_level"] = loggingLevel
 	cfg.save()
 del cfg
 
+logFile = logging.FileHandler("debug.log", mode="a", encoding="utf-8")
+logFile.setLevel(loggingLevel)
+formatter = logging.Formatter(
+	'{levelname}: from {name} in {threadName}: "{message}" @ {asctime}.{msecs:0f}',
+	datefmt="%m/%d/%Y %H:%M:%S",
+	style="{",
+)
+logFile.setFormatter(formatter)
 
-if debugLevel is not None:
-	logging.basicConfig(
-		filename="debug.log",
-		filemode="w",
-		level=debugLevel,
-		format='{levelname}: from {name} in {threadName}: "{message}" @ {asctime}.{msecs:0f}',
-		style="{",
-		datefmt="%m/%d/%Y %H:%M:%S",
-	)
-	logging.info("Initializing")
-else:
-	del logging
+# Define a Handler which writes INFO messages or higher to sys.stderr.
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+formatter = logging.Formatter('{levelname}: from {name} in {threadName}: "{message}"', style="{")
+console.setFormatter(formatter)
+
+logging.basicConfig(level=logging.getLevelName(0), handlers=[logFile, console])

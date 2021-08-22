@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import logging
 import socket
 from queue import Empty, Queue
 from typing import Callable, Sequence, Tuple
@@ -45,6 +46,12 @@ WELCOME_MESSAGE: bytes = CR_LF + b"                              ***  MUME VIII 
 
 
 class TestGameThread(TestCase):
+	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
+
+	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
+
 	def testGameThread(self) -> None:
 		# fmt: off
 		initialConfiguration: bytes = (  # What the server thread sends MUME on connection success.
@@ -145,6 +152,7 @@ class TestGameThread(TestCase):
 
 class TestGameThreadThroughput(TestCase):
 	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
 		self.inputFromPlayer: Queue[bytes] = Queue()
 		self.outputToPlayer: Queue[bytes] = Queue()
 		self.inputToMume: Queue[bytes] = Queue()
@@ -173,6 +181,7 @@ class TestGameThreadThroughput(TestCase):
 		self.gameThread.start()
 
 	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
 		self.outputFromMume.put(b"")
 		del self.gameThread
 

@@ -90,6 +90,7 @@ class ArgumentParser(Tap):
 
 
 if __name__ == "__main__":
+	logging.info("Initializing")
 	parser: ArgumentParser = ArgumentParser(description="The accessible Mume mapper.")
 	args: ArgumentParser = parser.parse_args()
 	try:

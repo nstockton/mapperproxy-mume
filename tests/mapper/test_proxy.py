@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import logging
 import socket
 from typing import List, Tuple
 from unittest import TestCase
@@ -88,12 +89,14 @@ class TestPlayer(TestCase):
 
 class TestGame(TestCase):
 	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
 		self.game: Game = Game(self.gameReceives.extend, self.playerReceives.extend, proxy=self.proxy)
 
 	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
 		del self.game
 		del self.proxy
 		self.gameReceives.clear()
@@ -123,6 +126,7 @@ class TestGame(TestCase):
 
 class TestProxyHandler(TestCase):
 	def setUp(self) -> None:
+		logging.disable(logging.CRITICAL)
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
 		self.mapperEvents: List[EVENT_CALLER_TYPE] = []
@@ -144,6 +148,7 @@ class TestProxyHandler(TestCase):
 		self.gameReceives.clear()
 
 	def tearDown(self) -> None:
+		logging.disable(logging.NOTSET)
 		self.proxy.disconnect()
 		del self.proxy
 		self.gameReceives.clear()
