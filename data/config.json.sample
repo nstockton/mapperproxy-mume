@@ -1,5 +1,5 @@
 {
-  "debug_level": "NOTSET",
+  "logging_level": "INFO",
   "gui": {
     "blink": true,
     "blink_rate": 2,
