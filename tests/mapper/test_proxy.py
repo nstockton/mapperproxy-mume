@@ -15,7 +15,7 @@ from unittest.mock import Mock, patch
 
 # Third-party Modules:
 from mudproto.mpi import MPI_INIT
-from mudproto.telnet_constants import CHARSET, CR_LF, CR_NULL, ECHO, GA, IAC, LF, SB, SE, WILL
+from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, LF, SB, SE, WILL
 from mudproto.xml import EVENT_CALLER_TYPE
 
 # Mapper Modules:
@@ -110,7 +110,7 @@ class TestGame(TestCase):
 	def testGameOn_connectionMade(self, mockOn_connectionMade: Mock) -> None:
 		self.game.on_connectionMade()
 		mockOn_connectionMade.assert_called_once()
-		self.assertEqual(self.gameReceives, IAC + WILL + CHARSET + MPI_INIT + b"P2" + LF + b"G" + LF)
+		self.assertEqual(self.gameReceives, MPI_INIT + b"P2" + LF + b"G" + LF)
 
 	def testGameOn_unhandledCommand(self) -> None:
 		self.game.on_unhandledCommand(ECHO, None)

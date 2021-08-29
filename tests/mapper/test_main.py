@@ -29,7 +29,6 @@ from mudproto.telnet_constants import (
 	SE,
 	TTYPE,
 	TTYPE_SEND,
-	WILL,
 )
 
 # Mapper Modules:
@@ -55,9 +54,8 @@ class TestGameThread(TestCase):
 	def testGameThread(self) -> None:
 		# fmt: off
 		initialConfiguration: bytes = (  # What the server thread sends MUME on connection success.
-			IAC + WILL + CHARSET
 			# Tell the Mume server to put IAC-GA at end of prompts.
-			+ MPI_INIT + b"P2" + LF + b"G" + LF
+			MPI_INIT + b"P2" + LF + b"G" + LF
 			# Identify for Mume Remote Editing.
 			+ MPI_INIT + b"I" + LF
 			# Turn on XML mode.
