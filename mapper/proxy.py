@@ -18,6 +18,7 @@ from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.telnet import TelnetProtocol
 from mudproto.telnet_constants import GA, IAC, LF, NEGOTIATION_BYTES, SB, SE
+from mudproto.utils import escapeIAC
 from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
 
 
@@ -46,21 +47,23 @@ class Telnet(TelnetProtocol):
 		else:
 			super().on_command(command, option)
 
+	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
+		# Forward unhandled commands to the other side of the proxy.
+		writer = self.proxy.game.write if self.name == "player" else self.proxy.player.write
+		if option is None:
+			writer(IAC + command)
+		else:
+			writer(IAC + command + option)
+
+	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
+		# Forward unhandled subnegotiations to the other side of the proxy.
+		writer = self.proxy.game.write if self.name == "player" else self.proxy.player.write
+		writer(IAC + SB + option + escapeIAC(data) + IAC + SE)
+
 
 class Player(Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, name="player", **kwargs)
-
-	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
-		# Forward unhandled commands to the game.
-		if option is None:
-			self.proxy.game.write(IAC + command)
-		else:
-			self.proxy.game.write(IAC + command + option)
-
-	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
-		# Forward unhandled subnegotiations to the game.
-		self.proxy.game.write(IAC + SB + option + data + IAC + SE)
 
 	def on_enableLocal(self, option: bytes) -> bool:
 		gameSubnegotiationMap: Union[Dict[bytes, Callable[[bytes], None]], None]
@@ -84,15 +87,6 @@ class Game(MCCPMixIn, CharsetMixIn, Telnet):
 		super().on_connectionMade()
 		# Tell the Mume server to put IAC-GA at end of prompts.
 		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
-
-	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
-		if option is None:
-			self.proxy.player.write(IAC + command)
-		else:
-			self.proxy.player.write(IAC + command + option)
-
-	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
-		self.proxy.player.write(IAC + SB + option + data + IAC + SE)
 
 
 class ProxyHandler(object):

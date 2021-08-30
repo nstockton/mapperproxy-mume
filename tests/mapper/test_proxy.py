@@ -15,7 +15,7 @@ from unittest.mock import Mock, patch
 
 # Third-party Modules:
 from mudproto.mpi import MPI_INIT
-from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, LF, SB, SE, WILL
+from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, IAC_IAC, LF, SB, SE, WILL
 from mudproto.xml import EVENT_CALLER_TYPE
 
 # Mapper Modules:
@@ -52,6 +52,28 @@ class TestTelnet(TestCase):
 		mockOn_command.assert_called_once_with(WILL, ECHO)
 		del self.telnet.subnegotiationMap[ECHO]
 
+	def testTelnetOn_unhandledCommand(self) -> None:
+		self.telnet.name = "game"
+		self.telnet.on_unhandledCommand(ECHO, None)
+		self.proxy.player.write.assert_called_once_with(IAC + ECHO)
+		self.proxy.player.write.reset_mock()
+		self.telnet.on_unhandledCommand(WILL, ECHO)
+		self.proxy.player.write.assert_called_once_with(IAC + WILL + ECHO)
+		self.telnet.name = "player"
+		self.telnet.on_unhandledCommand(ECHO, None)
+		self.proxy.game.write.assert_called_once_with(IAC + ECHO)
+		self.proxy.game.write.reset_mock()
+		self.telnet.on_unhandledCommand(WILL, ECHO)
+		self.proxy.game.write.assert_called_once_with(IAC + WILL + ECHO)
+
+	def testTelnetOn_unhandledSubnegotiation(self) -> None:
+		self.telnet.name = "game"
+		self.telnet.on_unhandledSubnegotiation(ECHO, b"hello" + IAC)
+		self.proxy.player.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC_IAC + IAC + SE)
+		self.telnet.name = "player"
+		self.telnet.on_unhandledSubnegotiation(ECHO, b"hello" + IAC)
+		self.proxy.game.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC_IAC + IAC + SE)
+
 
 class TestPlayer(TestCase):
 	def setUp(self) -> None:
@@ -65,17 +87,6 @@ class TestPlayer(TestCase):
 		del self.proxy
 		self.gameReceives.clear()
 		self.playerReceives.clear()
-
-	def testPlayerOn_unhandledCommand(self) -> None:
-		self.player.on_unhandledCommand(ECHO, None)
-		self.proxy.game.write.assert_called_once_with(IAC + ECHO)
-		self.proxy.game.write.reset_mock()
-		self.player.on_unhandledCommand(WILL, ECHO)
-		self.proxy.game.write.assert_called_once_with(IAC + WILL + ECHO)
-
-	def testPlayerOn_unhandledSubnegotiation(self) -> None:
-		self.player.on_unhandledSubnegotiation(ECHO, b"hello")
-		self.proxy.game.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC + SE)
 
 	@patch("mapper.proxy.Telnet.on_enableLocal")
 	def testPlayerOn_enableLocal(self, mockOn_enableLocal: Mock) -> None:
@@ -111,17 +122,6 @@ class TestGame(TestCase):
 		self.game.on_connectionMade()
 		mockOn_connectionMade.assert_called_once()
 		self.assertEqual(self.gameReceives, MPI_INIT + b"P2" + LF + b"G" + LF)
-
-	def testGameOn_unhandledCommand(self) -> None:
-		self.game.on_unhandledCommand(ECHO, None)
-		self.proxy.player.write.assert_called_once_with(IAC + ECHO)
-		self.proxy.player.write.reset_mock()
-		self.game.on_unhandledCommand(WILL, ECHO)
-		self.proxy.player.write.assert_called_once_with(IAC + WILL + ECHO)
-
-	def testGameOn_unhandledSubnegotiation(self) -> None:
-		self.game.on_unhandledSubnegotiation(ECHO, b"hello")
-		self.proxy.player.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC + SE)
 
 
 class TestProxyHandler(TestCase):
