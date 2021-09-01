@@ -5,7 +5,7 @@ fuzzywuzzy-stubs
 isort==5.7.0
 mkdocs==1.2.2
 mkdocs-material==7.2.5
-mkdocstrings==0.14.0
+mkdocstrings==0.15.2
 mypy
 pre-commit
 PyInstaller==4.1
