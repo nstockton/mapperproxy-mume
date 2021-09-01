@@ -15,8 +15,8 @@
       
         <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/clock/">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.5">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.be71726b.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
         
       
     
@@ -37,13 +37,17 @@
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
     
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
     
       
+
+
     
     
   </head>
@@ -55,8 +59,9 @@
     
     
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-      
   
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -73,27 +78,25 @@
       
     </div>
     
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mapper Proxy" class="md-header__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
-      <div class="md-header-nav__ellipsis">
-        <div class="md-header-nav__topic">
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
           <span class="md-ellipsis">
             Mapper Proxy
           </span>
         </div>
-        <div class="md-header-nav__topic">
+        <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
               clock.py
@@ -103,22 +106,28 @@
       </div>
     </div>
     
-      <label class="md-header-nav__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
       </label>
       
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -134,12 +143,12 @@
 </div>
     
     
-      <div class="md-header-nav__source">
+      <div class="md-header__source">
         
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -160,20 +169,18 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
 
 
-
-
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
+    <a href="../.." title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
     Mapper Proxy
@@ -181,10 +188,10 @@
   
     <div class="md-nav__source">
       
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -237,19 +244,18 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
-      <label class="md-nav__link" for="nav-3">
+      <label class="md-nav__link" for="__nav_3">
         API Navigation
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="API Navigation" data-md-level="1">
-        <label class="md-nav__title" for="nav-3">
+        <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           API Navigation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -259,19 +265,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
       
-      <label class="md-nav__link" for="nav-3-1">
+      <label class="md-nav__link" for="__nav_3_1">
         roomdata
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="roomdata" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-1">
+        <label class="md-nav__title" for="__nav_3_1">
           <span class="md-nav__icon md-icon"></span>
           roomdata
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -311,19 +316,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
       
-      <label class="md-nav__link" for="nav-3-2">
+      <label class="md-nav__link" for="__nav_3_2">
         sockets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="sockets" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-2">
+        <label class="md-nav__title" for="__nav_3_2">
           <span class="md-nav__icon md-icon"></span>
           sockets
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -378,6 +382,9 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
+      
         <label class="md-nav__link md-nav__link--active" for="__toc">
           clock.py
           <span class="md-nav__icon md-icon"></span>
@@ -392,21 +399,16 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.clock" class="md-nav__link">
-    clock
-  </a>
-  
-    <nav class="md-nav" aria-label="clock">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#mapper.clock.Clock" class="md-nav__link">
     Clock
   </a>
@@ -439,8 +441,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.clock.MumeTime" class="md-nav__link">
     MumeTime
   </a>
@@ -662,23 +664,18 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.clock.deltaToTime" class="md-nav__link">
     deltaToTime()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.clock.timeToDelta" class="md-nav__link">
     timeToDelta()
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -803,7 +800,7 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -811,21 +808,16 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.clock" class="md-nav__link">
-    clock
-  </a>
-  
-    <nav class="md-nav" aria-label="clock">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#mapper.clock.Clock" class="md-nav__link">
     Clock
   </a>
@@ -858,8 +850,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.clock.MumeTime" class="md-nav__link">
     MumeTime
   </a>
@@ -1081,23 +1073,18 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.clock.deltaToTime" class="md-nav__link">
     deltaToTime()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.clock.timeToDelta" class="md-nav__link">
     timeToDelta()
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1109,114 +1096,182 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
+                  <a href="https://github.com/nstockton/mapperproxy-mume/blob/master/docs/api/clock.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
                 
                 <div class="doc doc-object doc-module">
-<h1 class="doc doc-heading" id="mapper.clock">
 
+
+
+<h1 id="mapper.clock" class="doc doc-heading">
         <code>Module mapper.clock</code>
 
 
 
-      <a class="headerlink" href="#mapper.clock" title="Permanent link">&para;</a></h1>
-<div class="doc doc-contents first">
-<div class="doc doc-children">
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.clock.Clock">
+<a href="#mapper.clock" class="headerlink" title="Permanent link">&para;</a></h1>
 
+    <div class="doc doc-contents first">
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.clock.Clock" class="doc doc-heading">
         <code>Class Clock</code>
 
 
 
-      <a class="headerlink" href="#mapper.clock.Clock" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.Clock.epoch">
+<a href="#mapper.clock.Clock" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.Clock.epoch" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.Clock.epoch" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The Mume epoch.</p>
+<a href="#mapper.clock.Clock.epoch" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The Mume epoch.</p>
 <p>The Mume epoch is the real life time (in seconds) when Mume time was last reset.</p>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.clock.Clock.setTime">
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.clock.Clock.setTime" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Sets the Mume epoch from the current Mume time.</p>
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.clock.Clock.setTime" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span></code>
+
+
+<a href="#mapper.clock.Clock.setTime" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Sets the Mume epoch from the current Mume time.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>year</code></td>
-<td><code>int</code></td>
-<td>
-<p>The year.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>month</code></td>
-<td><code>int</code></td>
-<td>
-<p>Month of the year (0 - 11).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>day</code></td>
-<td><code>int</code></td>
-<td>
-<p>Day of the month (1 - 30).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>hour</code></td>
-<td><code>int</code></td>
-<td>
-<p>Hour of day (0 - 23).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>minutes</code></td>
-<td><code>int</code></td>
-<td>
-<p>Minutes of the hour (0 - 59).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>year</code></td>
+        <td><code>int</code></td>
+        <td><p>The year.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>month</code></td>
+        <td><code>int</code></td>
+        <td><p>Month of the year (0 - 11).</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>day</code></td>
+        <td><code>int</code></td>
+        <td><p>Day of the month (1 - 30).</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>hour</code></td>
+        <td><code>int</code></td>
+        <td><p>Hour of day (0 - 23).</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>minutes</code></td>
+        <td><code>int</code></td>
+        <td><p>Minutes of the hour (0 - 59).</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Sets the Mume epoch from the current Mume time.</span>
 
 <span class="sd">	Args:</span>
@@ -1225,610 +1280,889 @@
 <span class="sd">		day: Day of the month (1 - 30).</span>
 <span class="sd">		hour: Hour of day (0 - 23).</span>
 <span class="sd">		minutes: Minutes of the hour (0 - 59).</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">delta</span> <span class="o">=</span> <span class="n">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="n">delta</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.clock.Clock.time">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.clock.Clock.time" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Outputs information about the current Mume time.</p>
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.clock.Clock.time" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#mapper.clock.Clock.time" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Outputs information about the current Mume time.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>action</code></td>
-<td><code>Optional[str]</code></td>
-<td>
-<p>An action to perform.
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>action</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>An action to perform.
 If 'pull', output commands for looting mystical.
 If not None, output first line of output, preceded by the action.
-Otherwise, output the full information.</p>
-</td>
-<td><code>None</code></td>
-</tr>
-</tbody>
+Otherwise, output the full information.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The requested output.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The requested output.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Outputs information about the current Mume time.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		action: An action to perform.</span>
-<span class="sd">			If 'pull', output commands for looting mystical.</span>
+<span class="sd">			If &#39;pull&#39;, output commands for looting mystical.</span>
 <span class="sd">			If not None, output first line of output, preceded by the action.</span>
 <span class="sd">			Otherwise, output the full information.</span>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The requested output.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">mt</span> <span class="o">=</span> <span class="n">MumeTime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">"pull"</span><span class="p">:</span>
-		<span class="k">return</span> <span class="sa">f</span><span class="s2">"pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="se">\n</span><span class="s2">pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">monthWestron</span><span class="si">}</span><span class="s2">"</span>
+	<span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;pull&quot;</span><span class="p">:</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="se">\n</span><span class="s2">pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">monthWestron</span><span class="si">}</span><span class="s2">&quot;</span>
 	<span class="k">elif</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
 	<span class="k">return</span> <span class="n">mt</span><span class="o">.</span><span class="n">info</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.clock.MumeTime">
+</code></pre></div>
+        </details>
+    </div>
 
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.clock.MumeTime" class="doc doc-heading">
         <code>Class MumeTime</code>
 
 
 
-      <a class="headerlink" href="#mapper.clock.MumeTime" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.amPm">
+<a href="#mapper.clock.MumeTime" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">amPm</span><span class="p">:</span> <span class="nb">str</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.amPm" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The AM - PM value.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.dawn">
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">dawn</span><span class="p">:</span> <span class="nb">int</span></code>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.dawn" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hour of dawn.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.dawnDuskState">
+  <div class="doc doc-children">
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">dawnDuskState</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span></code>
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.amPm" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">amPm</span><span class="p">:</span> <span class="nb">str</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.dawnDuskState" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A tuple containing the current state name, the next state name, and the game hours until next state.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.day">
+<a href="#mapper.clock.MumeTime.amPm" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The AM - PM value.</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.day" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The day of the month (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.dayOfYear">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">dayOfYear</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.dawn" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">dawn</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.dayOfYear" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The day of the year (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.daysSinceFullMoon">
+<a href="#mapper.clock.MumeTime.dawn" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daysSinceFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The hour of dawn.</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.daysSinceFullMoon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The days since last full moon (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.daysSinceMoonCycle">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daysSinceMoonCycle</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.dawnDuskState" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">dawnDuskState</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.daysSinceMoonCycle" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The days since last moon cycle (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.daysUntilFullMoon">
+<a href="#mapper.clock.MumeTime.dawnDuskState" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daysUntilFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>A tuple containing the current state name, the next state name, and the game hours until next state.</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.daysUntilFullMoon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The days until next full moon (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.daysUntilMoonCycle">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daysUntilMoonCycle</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.day" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.daysUntilMoonCycle" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The days until next moon cycle (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.daysUntilSeason">
+<a href="#mapper.clock.MumeTime.day" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daysUntilSeason</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The day of the month (1 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.daysUntilSeason" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The days until next season (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.daysUntilWinter">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daysUntilWinter</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.dayOfYear" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">dayOfYear</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.daysUntilWinter" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The days until next winter (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.delta">
+<a href="#mapper.clock.MumeTime.dayOfYear" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The day of the year (1 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.delta" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The time as a delta.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.dusk">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">dusk</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.daysSinceFullMoon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daysSinceFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.dusk" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hour of dusk.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.hour">
+<a href="#mapper.clock.MumeTime.daysSinceFullMoon" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The days since last full moon (0 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.hour" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hour of the day (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.hourOfMoonRise">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">hourOfMoonRise</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.daysSinceMoonCycle" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daysSinceMoonCycle</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.hourOfMoonRise" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hour of day when the moon will rise (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.hourOfYear">
+<a href="#mapper.clock.MumeTime.daysSinceMoonCycle" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">hourOfYear</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The days since last moon cycle (0 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.hourOfYear" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hour of the year (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.hoursSinceFullMoon">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">hoursSinceFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.daysUntilFullMoon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daysUntilFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.hoursSinceFullMoon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hours since last full moon (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.hoursUntilFullMoon">
+<a href="#mapper.clock.MumeTime.daysUntilFullMoon" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">hoursUntilFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The days until next full moon (1 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.hoursUntilFullMoon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The hours Until full moon (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.info">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">info</span><span class="p">:</span> <span class="nb">str</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.daysUntilMoonCycle" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daysUntilMoonCycle</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.info" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A summery of information about this moment in Mume time.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.minutes">
+<a href="#mapper.clock.MumeTime.daysUntilMoonCycle" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The days until next moon cycle (1 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.minutes" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The minutes of the hour (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.month">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.daysUntilSeason" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daysUntilSeason</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.month" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The month of the year (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.monthName">
+<a href="#mapper.clock.MumeTime.daysUntilSeason" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">monthName</span><span class="p">:</span> <span class="nb">str</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The days until next season (1 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.monthName" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The name of the month.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.monthSindarin">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">monthSindarin</span><span class="p">:</span> <span class="nb">str</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.daysUntilWinter" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daysUntilWinter</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.monthSindarin" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The name of the month in Sindarin.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.monthWestron">
+<a href="#mapper.clock.MumeTime.daysUntilWinter" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">monthWestron</span><span class="p">:</span> <span class="nb">str</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The days until next winter (1 or more).</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.monthWestron" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The name of the month in Westron.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.overallDay">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">overallDay</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.delta" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.overallDay" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The sum of all the elapsed years in days and the day of year (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.rlHoursUntilSeason">
+<a href="#mapper.clock.MumeTime.delta" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">rlHoursUntilSeason</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The time as a delta.</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.rlHoursUntilSeason" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The real life hours until next season (1 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.rlHoursUntilWinter">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">rlHoursUntilWinter</span><span class="p">:</span> <span class="nb">int</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.dusk" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">dusk</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.rlHoursUntilWinter" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The real life hours until next winter (0 or more).</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.season">
+<a href="#mapper.clock.MumeTime.dusk" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">season</span><span class="p">:</span> <span class="nb">str</span></code>
+    <div class="doc doc-contents ">
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
+      <p>The hour of dusk.</p>
+    </div>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.season" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The name of the season.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.weekday">
+  </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">weekday</span><span class="p">:</span> <span class="nb">str</span></code>
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.hour" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.weekday" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The name of the weekday.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.clock.MumeTime.year">
+<a href="#mapper.clock.MumeTime.hour" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span></code>
+    <div class="doc doc-contents ">
+
+      <p>The hour of the day (0 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.hourOfMoonRise" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">hourOfMoonRise</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-property"><code>property</code></small>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.clock.MumeTime.year" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>The year.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.clock.deltaToTime">
+<a href="#mapper.clock.MumeTime.hourOfMoonRise" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span></code>
+    <div class="doc doc-contents ">
+
+      <p>The hour of day when the moon will rise (0 or more).</p>
+    </div>
+
+  </div>
 
 
-      <a class="headerlink" href="#mapper.clock.deltaToTime" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Calculates the Mume time of a given delta.</p>
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.hourOfYear" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">hourOfYear</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.hourOfYear" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The hour of the year (0 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.hoursSinceFullMoon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">hoursSinceFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.hoursSinceFullMoon" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The hours since last full moon (0 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.hoursUntilFullMoon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">hoursUntilFullMoon</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.hoursUntilFullMoon" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The hours Until full moon (1 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.info" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">info</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.info" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A summery of information about this moment in Mume time.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.minutes" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.minutes" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The minutes of the hour (0 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.month" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.month" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The month of the year (0 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.monthName" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">monthName</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.monthName" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The name of the month.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.monthSindarin" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">monthSindarin</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.monthSindarin" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The name of the month in Sindarin.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.monthWestron" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">monthWestron</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.monthWestron" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The name of the month in Westron.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.overallDay" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">overallDay</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.overallDay" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The sum of all the elapsed years in days and the day of year (1 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.rlHoursUntilSeason" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">rlHoursUntilSeason</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.rlHoursUntilSeason" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The real life hours until next season (1 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.rlHoursUntilWinter" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">rlHoursUntilWinter</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.rlHoursUntilWinter" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The real life hours until next winter (0 or more).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.season" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">season</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.season" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The name of the season.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.weekday" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">weekday</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.weekday" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The name of the weekday.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.clock.MumeTime.year" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.clock.MumeTime.year" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The year.</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.clock.deltaToTime" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span></code>
+
+
+<a href="#mapper.clock.deltaToTime" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the Mume time of a given delta.</p>
 <p>The delta is the difference (in real seconds) between the last reset of Mume time and the given Mume time.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>delta</code></td>
-<td><code>int</code></td>
-<td>
-<p>The delta.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>delta</code></td>
+        <td><code>int</code></td>
+        <td><p>The delta.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Tuple[int, int, int, int, int]</code></td>
-<td>
-<p>A tuple containing the Mume year, month, day, hour, and minutes.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Tuple[int, int, int, int, int]</code></td>
+      <td><p>A tuple containing the Mume year, month, day, hour, and minutes.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculates the Mume time of a given delta.</span>
 
 <span class="sd">	The delta is the difference (in real seconds) between the last reset of Mume time and the given Mume time.</span>
@@ -1838,7 +2172,7 @@ Otherwise, output the full information.</p>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		A tuple containing the Mume year, month, day, hour, and minutes.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">year</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">//</span> <span class="n">MINUTES_PER_YEAR</span> <span class="o">+</span> <span class="n">FIRST_YEAR</span>
 	<span class="n">delta</span> <span class="o">%=</span> <span class="n">MINUTES_PER_YEAR</span>
 	<span class="n">month</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">//</span> <span class="n">MINUTES_PER_MONTH</span>  <span class="c1"># 0 - 11.</span>
@@ -1849,96 +2183,91 @@ Otherwise, output the full information.</p>
 	<span class="n">delta</span> <span class="o">%=</span> <span class="n">MINUTES_PER_HOUR</span>
 	<span class="n">minutes</span> <span class="o">=</span> <span class="n">delta</span>  <span class="c1"># 0 - 59.</span>
 	<span class="k">return</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.clock.timeToDelta">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.clock.timeToDelta" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Calculates the delta of a given Mume time.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.clock.timeToDelta" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span></code>
+
+
+<a href="#mapper.clock.timeToDelta" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the delta of a given Mume time.</p>
 <p>The delta is the difference (in real seconds) between the last reset of Mume time and the given Mume time.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>year</code></td>
-<td><code>int</code></td>
-<td>
-<p>The year.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>month</code></td>
-<td><code>int</code></td>
-<td>
-<p>Month of the year (0 - 11).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>day</code></td>
-<td><code>int</code></td>
-<td>
-<p>Day of the month (1 - 30).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>hour</code></td>
-<td><code>int</code></td>
-<td>
-<p>Hour of day (0 - 23).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>minutes</code></td>
-<td><code>int</code></td>
-<td>
-<p>Minutes of the hour (0 - 59).</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>year</code></td>
+        <td><code>int</code></td>
+        <td><p>The year.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>month</code></td>
+        <td><code>int</code></td>
+        <td><p>Month of the year (0 - 11).</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>day</code></td>
+        <td><code>int</code></td>
+        <td><p>Day of the month (1 - 30).</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>hour</code></td>
+        <td><code>int</code></td>
+        <td><p>Hour of day (0 - 23).</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>minutes</code></td>
+        <td><code>int</code></td>
+        <td><p>Minutes of the hour (0 - 59).</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>int</code></td>
-<td>
-<p>The delta.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>int</code></td>
+      <td><p>The delta.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculates the delta of a given Mume time.</span>
 
 <span class="sd">	The delta is the difference (in real seconds) between the last reset of Mume time and the given Mume time.</span>
@@ -1952,7 +2281,7 @@ Otherwise, output the full information.</p>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The delta.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="p">(</span>
 		<span class="p">(</span><span class="n">year</span> <span class="o">-</span> <span class="n">FIRST_YEAR</span><span class="p">)</span> <span class="o">*</span> <span class="n">MINUTES_PER_YEAR</span>
 		<span class="o">+</span> <span class="n">month</span> <span class="o">*</span> <span class="n">MINUTES_PER_MONTH</span>
@@ -1960,14 +2289,22 @@ Otherwise, output the full information.</p>
 		<span class="o">+</span> <span class="n">hour</span> <span class="o">*</span> <span class="n">MINUTES_PER_HOUR</span>
 		<span class="o">+</span> <span class="n">minutes</span>
 	<span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
                 
               
               
@@ -1978,6 +2315,7 @@ Otherwise, output the full information.</p>
             </article>
           </div>
         </div>
+        
       </main>
       
         
@@ -2003,19 +2341,13 @@ Otherwise, output the full information.</p>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
     
-      <script src="../../assets/javascripts/vendor.53cc9318.min.js"></script>
-      <script src="../../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
-      
-      <script>
-        app = initialize({
-          base: "../..",
-          features: [],
-          search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../../assets/javascripts/bundle.56a63758.min.js"></script>
       
         <script src="../../search/main.js"></script>
       

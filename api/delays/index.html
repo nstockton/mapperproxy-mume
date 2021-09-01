@@ -15,8 +15,8 @@
       
         <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/delays/">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.5">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.be71726b.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
         
       
     
@@ -37,13 +37,17 @@
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
     
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
     
       
+
+
     
     
   </head>
@@ -55,8 +59,9 @@
     
     
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-      
   
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -73,27 +78,25 @@
       
     </div>
     
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mapper Proxy" class="md-header__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
-      <div class="md-header-nav__ellipsis">
-        <div class="md-header-nav__topic">
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
           <span class="md-ellipsis">
             Mapper Proxy
           </span>
         </div>
-        <div class="md-header-nav__topic">
+        <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
               delays.py
@@ -103,22 +106,28 @@
       </div>
     </div>
     
-      <label class="md-header-nav__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
       </label>
       
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -134,12 +143,12 @@
 </div>
     
     
-      <div class="md-header-nav__source">
+      <div class="md-header__source">
         
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -160,20 +169,18 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
 
 
-
-
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
+    <a href="../.." title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
     Mapper Proxy
@@ -181,10 +188,10 @@
   
     <div class="md-nav__source">
       
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -237,19 +244,18 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
-      <label class="md-nav__link" for="nav-3">
+      <label class="md-nav__link" for="__nav_3">
         API Navigation
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="API Navigation" data-md-level="1">
-        <label class="md-nav__title" for="nav-3">
+        <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           API Navigation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -259,19 +265,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
       
-      <label class="md-nav__link" for="nav-3-1">
+      <label class="md-nav__link" for="__nav_3_1">
         roomdata
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="roomdata" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-1">
+        <label class="md-nav__title" for="__nav_3_1">
           <span class="md-nav__icon md-icon"></span>
           roomdata
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -311,19 +316,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
       
-      <label class="md-nav__link" for="nav-3-2">
+      <label class="md-nav__link" for="__nav_3_2">
         sockets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="sockets" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-2">
+        <label class="md-nav__title" for="__nav_3_2">
           <span class="md-nav__icon md-icon"></span>
           sockets
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -402,6 +406,9 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
+      
         <label class="md-nav__link md-nav__link--active" for="__toc">
           delays.py
           <span class="md-nav__icon md-icon"></span>
@@ -416,21 +423,16 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.delays" class="md-nav__link">
-    delays
-  </a>
-  
-    <nav class="md-nav" aria-label="delays">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#mapper.delays.BaseDelay" class="md-nav__link">
     BaseDelay
   </a>
@@ -460,6 +462,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.delays.BaseDelay.native_id" class="md-nav__link">
+    native_id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.delays.BaseDelay.__init__" class="md-nav__link">
     __init__()
   </a>
@@ -469,13 +478,6 @@
           <li class="md-nav__item">
   <a href="#mapper.delays.BaseDelay.is_alive" class="md-nav__link">
     is_alive()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.delays.BaseDelay.isAlive" class="md-nav__link">
-    isAlive()
   </a>
   
 </li>
@@ -512,8 +514,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.delays.Delay" class="md-nav__link">
     Delay
   </a>
@@ -543,15 +545,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.delays.Delay.is_alive" class="md-nav__link">
-    is_alive()
+  <a href="#mapper.delays.Delay.native_id" class="md-nav__link">
+    native_id
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.delays.Delay.isAlive" class="md-nav__link">
-    isAlive()
+  <a href="#mapper.delays.Delay.is_alive" class="md-nav__link">
+    is_alive()
   </a>
   
 </li>
@@ -588,8 +590,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.delays.OneShot" class="md-nav__link">
     OneShot
   </a>
@@ -619,6 +621,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.delays.OneShot.native_id" class="md-nav__link">
+    native_id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.delays.OneShot.__init__" class="md-nav__link">
     __init__()
   </a>
@@ -628,13 +637,6 @@
           <li class="md-nav__item">
   <a href="#mapper.delays.OneShot.is_alive" class="md-nav__link">
     is_alive()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.delays.OneShot.isAlive" class="md-nav__link">
-    isAlive()
   </a>
   
 </li>
@@ -671,8 +673,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.delays.Repeating" class="md-nav__link">
     Repeating
   </a>
@@ -702,6 +704,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.delays.Repeating.native_id" class="md-nav__link">
+    native_id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.delays.Repeating.__init__" class="md-nav__link">
     __init__()
   </a>
@@ -711,13 +720,6 @@
           <li class="md-nav__item">
   <a href="#mapper.delays.Repeating.is_alive" class="md-nav__link">
     is_alive()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.delays.Repeating.isAlive" class="md-nav__link">
-    isAlive()
   </a>
   
 </li>
@@ -747,11 +749,6 @@
   <a href="#mapper.delays.Repeating.stop" class="md-nav__link">
     stop()
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -857,7 +854,7 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -865,21 +862,16 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.delays" class="md-nav__link">
-    delays
-  </a>
-  
-    <nav class="md-nav" aria-label="delays">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#mapper.delays.BaseDelay" class="md-nav__link">
     BaseDelay
   </a>
@@ -909,6 +901,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.delays.BaseDelay.native_id" class="md-nav__link">
+    native_id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.delays.BaseDelay.__init__" class="md-nav__link">
     __init__()
   </a>
@@ -918,13 +917,6 @@
           <li class="md-nav__item">
   <a href="#mapper.delays.BaseDelay.is_alive" class="md-nav__link">
     is_alive()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.delays.BaseDelay.isAlive" class="md-nav__link">
-    isAlive()
   </a>
   
 </li>
@@ -961,8 +953,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.delays.Delay" class="md-nav__link">
     Delay
   </a>
@@ -992,15 +984,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.delays.Delay.is_alive" class="md-nav__link">
-    is_alive()
+  <a href="#mapper.delays.Delay.native_id" class="md-nav__link">
+    native_id
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.delays.Delay.isAlive" class="md-nav__link">
-    isAlive()
+  <a href="#mapper.delays.Delay.is_alive" class="md-nav__link">
+    is_alive()
   </a>
   
 </li>
@@ -1037,8 +1029,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.delays.OneShot" class="md-nav__link">
     OneShot
   </a>
@@ -1068,6 +1060,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.delays.OneShot.native_id" class="md-nav__link">
+    native_id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.delays.OneShot.__init__" class="md-nav__link">
     __init__()
   </a>
@@ -1077,13 +1076,6 @@
           <li class="md-nav__item">
   <a href="#mapper.delays.OneShot.is_alive" class="md-nav__link">
     is_alive()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.delays.OneShot.isAlive" class="md-nav__link">
-    isAlive()
   </a>
   
 </li>
@@ -1120,8 +1112,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.delays.Repeating" class="md-nav__link">
     Repeating
   </a>
@@ -1151,6 +1143,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.delays.Repeating.native_id" class="md-nav__link">
+    native_id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.delays.Repeating.__init__" class="md-nav__link">
     __init__()
   </a>
@@ -1160,13 +1159,6 @@
           <li class="md-nav__item">
   <a href="#mapper.delays.Repeating.is_alive" class="md-nav__link">
     is_alive()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.delays.Repeating.isAlive" class="md-nav__link">
-    isAlive()
   </a>
   
 </li>
@@ -1203,11 +1195,6 @@
     </nav>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
     </ul>
   
@@ -1217,36 +1204,70 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
+                  <a href="https://github.com/nstockton/mapperproxy-mume/blob/master/docs/api/delays.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
                 
                 <div class="doc doc-object doc-module">
-<h1 class="doc doc-heading" id="mapper.delays">
 
+
+
+<h1 id="mapper.delays" class="doc doc-heading">
         <code>Module mapper.delays</code>
 
 
 
-      <a class="headerlink" href="#mapper.delays" title="Permanent link">&para;</a></h1>
-<div class="doc doc-contents first">
-<div class="doc doc-children">
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.delays.BaseDelay">
+<a href="#mapper.delays" class="headerlink" title="Permanent link">&para;</a></h1>
 
+    <div class="doc doc-contents first">
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.delays.BaseDelay" class="doc doc-heading">
         <code>Class BaseDelay</code>
 
 
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Implements the base delay class.</p>
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.daemon">
+<a href="#mapper.delays.BaseDelay" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
+    <div class="doc doc-contents ">
+
+      <p>Implements the base delay class.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.BaseDelay.daemon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1254,20 +1275,28 @@
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.daemon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A boolean value indicating whether this thread is a daemon thread.</p>
+<a href="#mapper.delays.BaseDelay.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A boolean value indicating whether this thread is a daemon thread.</p>
 <p>This must be set before start() is called, otherwise RuntimeError is
 raised. Its initial value is inherited from the creating thread; the
 main thread is not a daemon thread and therefore all threads created in
 the main thread default to daemon = False.</p>
 <p>The entire Python program exits when only daemon threads are left.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.ident">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.BaseDelay.ident" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1275,18 +1304,26 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.ident" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Thread identifier of this thread or None if it has not been started.</p>
+<a href="#mapper.delays.BaseDelay.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Thread identifier of this thread or None if it has not been started.</p>
 <p>This is a nonzero integer. See the get_ident() function. Thread
 identifiers may be recycled when a thread exits and another thread is
 created. The identifier is available even after the thread has exited.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.name">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.BaseDelay.name" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1294,82 +1331,111 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.name" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A string used for identification purposes only.</p>
+<a href="#mapper.delays.BaseDelay.name" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.__init__">
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.BaseDelay.native_id" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.delays.BaseDelay.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
+<p>This is a non-negative integer. See the get_native_id() function.
+This represents the Thread ID as reported by the kernel.</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.BaseDelay.__init__" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.__init__" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Defines the constructor for the object.</p>
+<a href="#mapper.delays.BaseDelay.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Defines the constructor for the object.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>duration</code></td>
-<td><code>float</code></td>
-<td>
-<p>The amount of time (in seconds) to delay between iterations.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>count</code></td>
-<td><code>Union[int, None]</code></td>
-<td>
-<p>The number of iterations to delay, or None to repeat indefinitely.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>function</code></td>
-<td><code>Callable[..., Any]</code></td>
-<td>
-<p>The function to be called at each iteration.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>*args</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Positional arguments to be passed to the called function.</p>
-</td>
-<td><code>()</code></td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Key-word only arguments to be passed to the called function.</p>
-</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>duration</code></td>
+        <td><code>float</code></td>
+        <td><p>The amount of time (in seconds) to delay between iterations.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>count</code></td>
+        <td><code>Union[int, None]</code></td>
+        <td><p>The number of iterations to delay, or None to repeat indefinitely.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>function</code></td>
+        <td><code>Callable[..., Any]</code></td>
+        <td><p>The function to be called at each iteration.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>*args</code></td>
+        <td><code>Any</code></td>
+        <td><p>Positional arguments to be passed to the called function.</p></td>
+        <td><code>()</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Key-word only arguments to be passed to the called function.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
 	<span class="bp">self</span><span class="p">,</span>
 	<span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 	<span class="n">count</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
@@ -1377,7 +1443,7 @@ initial name is set by the constructor.</p>
 	<span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 	<span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -1386,9 +1452,9 @@ initial name is set by the constructor.</p>
 <span class="sd">		function: The function to be called at each iteration.</span>
 <span class="sd">		*args: Positional arguments to be passed to the called function.</span>
 <span class="sd">		**kwargs: Key-word only arguments to be passed to the called function.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"count must be a positive number or None."</span><span class="p">)</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;count must be a positive number or None.&quot;</span><span class="p">)</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">duration</span>
@@ -1397,89 +1463,75 @@ initial name is set by the constructor.</p>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.is_alive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.BaseDelay.is_alive" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.is_alive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
+<a href="#mapper.delays.BaseDelay.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. The module function enumerate()
-returns a list of all alive threads.</p>
-<details class="quote">
+after the run() method terminates. See also the module function
+enumerate().</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. The module function enumerate()</span>
-<span class="sd">    returns a list of all alive threads.</span>
+<span class="sd">    after the run() method terminates. See also the module function</span>
+<span class="sd">    enumerate().</span>
 
-<span class="sd">    """</span>
-    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">"Thread.__init__() not called"</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.isAlive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.isAlive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
-<p>This method is deprecated, use is_alive() instead.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
 
-<span class="sd">    This method is deprecated, use is_alive() instead.</span>
-<span class="sd">    """</span>
-    <span class="kn">import</span> <span class="nn">warnings</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'isAlive() is deprecated, use is_alive() instead'</span><span class="p">,</span>
-                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.join">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.BaseDelay.join" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.join" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Wait until the thread terminates.</p>
+<a href="#mapper.delays.BaseDelay.join" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Wait until the thread terminates.</p>
 <p>This blocks the calling thread until the thread whose join() method is
 called terminates -- either normally or through an unhandled exception
 or until the optional timeout occurs.</p>
@@ -1495,11 +1547,11 @@ block until the thread terminates.</p>
 thread as that would cause a deadlock. It is also an error to join() a
 thread before it has been started and attempts to do so raises the same
 exception.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Wait until the thread terminates.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -1521,42 +1573,49 @@ exception.</p>
 <span class="sd">    thread before it has been started and attempts to do so raises the same</span>
 <span class="sd">    exception.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Thread.__init__() not called&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join thread before it is started"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join thread before it is started&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">current_thread</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join current thread"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join current thread&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># the behavior of a negative timeout isn't documented, but</span>
+        <span class="c1"># the behavior of a negative timeout isn&#39;t documented, but</span>
         <span class="c1"># historically .join(timeout=x) for x&lt;0 has acted as if timeout=0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.run">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.run" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Method representing the thread's activity.</p>
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.BaseDelay.run" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#mapper.delays.BaseDelay.run" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Method representing the thread's activity.</p>
 <p>You may override this method in a subclass. The standard run() method
 invokes the callable object passed to the object's constructor as the
 target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -1570,45 +1629,55 @@ from the args and kwargs arguments, respectively.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.start">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.BaseDelay.start" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.start" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Start the thread's activity.</p>
+<a href="#mapper.delays.BaseDelay.start" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Start the thread's activity.</p>
 <p>It must be called at most once per thread object. It arranges for the
 object's run() method to be invoked in a separate thread of control.</p>
 <p>This method will raise a RuntimeError if called more than once on the
 same thread object.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Start the thread's activity.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
-<span class="sd">    object's run() method to be invoked in a separate thread of control.</span>
+<span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
 
 <span class="sd">    This method will raise a RuntimeError if called more than once on the</span>
 <span class="sd">    same thread object.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;thread.__init__() not called&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"threads can only be started once"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
+
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1618,49 +1687,82 @@ same thread object.</p>
             <span class="k">del</span> <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span>
         <span class="k">raise</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.BaseDelay.stop">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.delays.BaseDelay.stop" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Stops an active delay.</p>
-<details class="quote">
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.BaseDelay.stop" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#mapper.delays.BaseDelay.stop" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Stops an active delay.</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""Stops an active delay."""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.delays.Delay">
+</code></pre></div>
+        </details>
+    </div>
 
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.delays.Delay" class="doc doc-heading">
         <code>Class Delay</code>
 
 
 
-      <a class="headerlink" href="#mapper.delays.Delay" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Implements a delay which automatically starts upon creation.</p>
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.daemon">
+<a href="#mapper.delays.Delay" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
+    <div class="doc doc-contents ">
+
+      <p>Implements a delay which automatically starts upon creation.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Delay.daemon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1668,20 +1770,28 @@ same thread object.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.daemon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A boolean value indicating whether this thread is a daemon thread.</p>
+<a href="#mapper.delays.Delay.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A boolean value indicating whether this thread is a daemon thread.</p>
 <p>This must be set before start() is called, otherwise RuntimeError is
 raised. Its initial value is inherited from the creating thread; the
 main thread is not a daemon thread and therefore all threads created in
 the main thread default to daemon = False.</p>
 <p>The entire Python program exits when only daemon threads are left.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.ident">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Delay.ident" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1689,18 +1799,26 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.ident" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Thread identifier of this thread or None if it has not been started.</p>
+<a href="#mapper.delays.Delay.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Thread identifier of this thread or None if it has not been started.</p>
 <p>This is a nonzero integer. See the get_ident() function. Thread
 identifiers may be recycled when a thread exits and another thread is
 created. The identifier is available even after the thread has exited.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.name">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Delay.name" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1708,91 +1826,110 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.name" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A string used for identification purposes only.</p>
+<a href="#mapper.delays.Delay.name" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.is_alive">
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Delay.native_id" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.delays.Delay.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
+<p>This is a non-negative integer. See the get_native_id() function.
+This represents the Thread ID as reported by the kernel.</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Delay.is_alive" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.is_alive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
+<a href="#mapper.delays.Delay.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. The module function enumerate()
-returns a list of all alive threads.</p>
-<details class="quote">
+after the run() method terminates. See also the module function
+enumerate().</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. The module function enumerate()</span>
-<span class="sd">    returns a list of all alive threads.</span>
+<span class="sd">    after the run() method terminates. See also the module function</span>
+<span class="sd">    enumerate().</span>
 
-<span class="sd">    """</span>
-    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">"Thread.__init__() not called"</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.isAlive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.isAlive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
-<p>This method is deprecated, use is_alive() instead.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
 
-<span class="sd">    This method is deprecated, use is_alive() instead.</span>
-<span class="sd">    """</span>
-    <span class="kn">import</span> <span class="nn">warnings</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'isAlive() is deprecated, use is_alive() instead'</span><span class="p">,</span>
-                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.join">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Delay.join" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.join" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Wait until the thread terminates.</p>
+<a href="#mapper.delays.Delay.join" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Wait until the thread terminates.</p>
 <p>This blocks the calling thread until the thread whose join() method is
 called terminates -- either normally or through an unhandled exception
 or until the optional timeout occurs.</p>
@@ -1808,11 +1945,11 @@ block until the thread terminates.</p>
 thread as that would cause a deadlock. It is also an error to join() a
 thread before it has been started and attempts to do so raises the same
 exception.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Wait until the thread terminates.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -1834,45 +1971,52 @@ exception.</p>
 <span class="sd">    thread before it has been started and attempts to do so raises the same</span>
 <span class="sd">    exception.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Thread.__init__() not called&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join thread before it is started"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join thread before it is started&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">current_thread</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join current thread"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join current thread&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># the behavior of a negative timeout isn't documented, but</span>
+        <span class="c1"># the behavior of a negative timeout isn&#39;t documented, but</span>
         <span class="c1"># historically .join(timeout=x) for x&lt;0 has acted as if timeout=0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.run">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Delay.run" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.run" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Method representing the thread's activity.</p>
+<a href="#mapper.delays.Delay.run" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Method representing the thread's activity.</p>
 <p>You may override this method in a subclass. The standard run() method
 invokes the callable object passed to the object's constructor as the
 target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -1886,45 +2030,55 @@ from the args and kwargs arguments, respectively.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.start">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Delay.start" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.start" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Start the thread's activity.</p>
+<a href="#mapper.delays.Delay.start" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Start the thread's activity.</p>
 <p>It must be called at most once per thread object. It arranges for the
 object's run() method to be invoked in a separate thread of control.</p>
 <p>This method will raise a RuntimeError if called more than once on the
 same thread object.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Start the thread's activity.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
-<span class="sd">    object's run() method to be invoked in a separate thread of control.</span>
+<span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
 
 <span class="sd">    This method will raise a RuntimeError if called more than once on the</span>
 <span class="sd">    same thread object.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;thread.__init__() not called&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"threads can only be started once"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
+
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1934,52 +2088,85 @@ same thread object.</p>
             <span class="k">del</span> <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span>
         <span class="k">raise</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Delay.stop">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Delay.stop" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Delay.stop" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Stops an active delay.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""Stops an active delay."""</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.delays.OneShot">
+<a href="#mapper.delays.Delay.stop" class="headerlink" title="Permanent link">&para;</a></h3>
 
+    <div class="doc doc-contents ">
+
+      <p>Stops an active delay.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\delays.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.delays.OneShot" class="doc doc-heading">
         <code>Class OneShot</code>
 
 
 
-      <a class="headerlink" href="#mapper.delays.OneShot" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Implements a delay which is run only once.</p>
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.daemon">
+<a href="#mapper.delays.OneShot" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
+    <div class="doc doc-contents ">
+
+      <p>Implements a delay which is run only once.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.OneShot.daemon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1987,20 +2174,28 @@ same thread object.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.daemon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A boolean value indicating whether this thread is a daemon thread.</p>
+<a href="#mapper.delays.OneShot.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A boolean value indicating whether this thread is a daemon thread.</p>
 <p>This must be set before start() is called, otherwise RuntimeError is
 raised. Its initial value is inherited from the creating thread; the
 main thread is not a daemon thread and therefore all threads created in
 the main thread default to daemon = False.</p>
 <p>The entire Python program exits when only daemon threads are left.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.ident">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.OneShot.ident" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -2008,18 +2203,26 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.ident" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Thread identifier of this thread or None if it has not been started.</p>
+<a href="#mapper.delays.OneShot.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Thread identifier of this thread or None if it has not been started.</p>
 <p>This is a nonzero integer. See the get_ident() function. Thread
 identifiers may be recycled when a thread exits and another thread is
 created. The identifier is available even after the thread has exited.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.name">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.OneShot.name" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -2027,75 +2230,106 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.name" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A string used for identification purposes only.</p>
+<a href="#mapper.delays.OneShot.name" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.__init__">
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.OneShot.native_id" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.delays.OneShot.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
+<p>This is a non-negative integer. See the get_native_id() function.
+This represents the Thread ID as reported by the kernel.</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.OneShot.__init__" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.__init__" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Defines the constructor for the object.</p>
+<a href="#mapper.delays.OneShot.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Defines the constructor for the object.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>duration</code></td>
-<td><code>float</code></td>
-<td>
-<p>The amount of time (in seconds) to delay.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>function</code></td>
-<td><code>Callable[..., Any]</code></td>
-<td>
-<p>The function to be called when the delay completes.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>*args</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Positional arguments to be passed to the called function.</p>
-</td>
-<td><code>()</code></td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Key-word only arguments to be passed to the called function.</p>
-</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>duration</code></td>
+        <td><code>float</code></td>
+        <td><p>The amount of time (in seconds) to delay.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>function</code></td>
+        <td><code>Callable[..., Any]</code></td>
+        <td><p>The function to be called when the delay completes.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>*args</code></td>
+        <td><code>Any</code></td>
+        <td><p>Positional arguments to be passed to the called function.</p></td>
+        <td><code>()</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Key-word only arguments to be passed to the called function.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -2103,91 +2337,77 @@ initial name is set by the constructor.</p>
 <span class="sd">		function: The function to be called when the delay completes.</span>
 <span class="sd">		*args: Positional arguments to be passed to the called function.</span>
 <span class="sd">		**kwargs: Key-word only arguments to be passed to the called function.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.is_alive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.OneShot.is_alive" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.is_alive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
+<a href="#mapper.delays.OneShot.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. The module function enumerate()
-returns a list of all alive threads.</p>
-<details class="quote">
+after the run() method terminates. See also the module function
+enumerate().</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. The module function enumerate()</span>
-<span class="sd">    returns a list of all alive threads.</span>
+<span class="sd">    after the run() method terminates. See also the module function</span>
+<span class="sd">    enumerate().</span>
 
-<span class="sd">    """</span>
-    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">"Thread.__init__() not called"</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.isAlive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.isAlive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
-<p>This method is deprecated, use is_alive() instead.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
 
-<span class="sd">    This method is deprecated, use is_alive() instead.</span>
-<span class="sd">    """</span>
-    <span class="kn">import</span> <span class="nn">warnings</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'isAlive() is deprecated, use is_alive() instead'</span><span class="p">,</span>
-                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.join">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.OneShot.join" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.join" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Wait until the thread terminates.</p>
+<a href="#mapper.delays.OneShot.join" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Wait until the thread terminates.</p>
 <p>This blocks the calling thread until the thread whose join() method is
 called terminates -- either normally or through an unhandled exception
 or until the optional timeout occurs.</p>
@@ -2203,11 +2423,11 @@ block until the thread terminates.</p>
 thread as that would cause a deadlock. It is also an error to join() a
 thread before it has been started and attempts to do so raises the same
 exception.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Wait until the thread terminates.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -2229,45 +2449,52 @@ exception.</p>
 <span class="sd">    thread before it has been started and attempts to do so raises the same</span>
 <span class="sd">    exception.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Thread.__init__() not called&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join thread before it is started"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join thread before it is started&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">current_thread</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join current thread"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join current thread&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># the behavior of a negative timeout isn't documented, but</span>
+        <span class="c1"># the behavior of a negative timeout isn&#39;t documented, but</span>
         <span class="c1"># historically .join(timeout=x) for x&lt;0 has acted as if timeout=0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.run">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.OneShot.run" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.run" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Method representing the thread's activity.</p>
+<a href="#mapper.delays.OneShot.run" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Method representing the thread's activity.</p>
 <p>You may override this method in a subclass. The standard run() method
 invokes the callable object passed to the object's constructor as the
 target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -2281,45 +2508,55 @@ from the args and kwargs arguments, respectively.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.start">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.OneShot.start" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.start" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Start the thread's activity.</p>
+<a href="#mapper.delays.OneShot.start" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Start the thread's activity.</p>
 <p>It must be called at most once per thread object. It arranges for the
 object's run() method to be invoked in a separate thread of control.</p>
 <p>This method will raise a RuntimeError if called more than once on the
 same thread object.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Start the thread's activity.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
-<span class="sd">    object's run() method to be invoked in a separate thread of control.</span>
+<span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
 
 <span class="sd">    This method will raise a RuntimeError if called more than once on the</span>
 <span class="sd">    same thread object.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;thread.__init__() not called&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"threads can only be started once"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
+
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
@@ -2329,52 +2566,85 @@ same thread object.</p>
             <span class="k">del</span> <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span>
         <span class="k">raise</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.OneShot.stop">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.OneShot.stop" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.OneShot.stop" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Stops an active delay.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""Stops an active delay."""</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.delays.Repeating">
+<a href="#mapper.delays.OneShot.stop" class="headerlink" title="Permanent link">&para;</a></h3>
 
+    <div class="doc doc-contents ">
+
+      <p>Stops an active delay.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\delays.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.delays.Repeating" class="doc doc-heading">
         <code>Class Repeating</code>
 
 
 
-      <a class="headerlink" href="#mapper.delays.Repeating" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Implements a delay which runs indefinitely.</p>
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.daemon">
+<a href="#mapper.delays.Repeating" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
+    <div class="doc doc-contents ">
+
+      <p>Implements a delay which runs indefinitely.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Repeating.daemon" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -2382,20 +2652,28 @@ same thread object.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.daemon" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A boolean value indicating whether this thread is a daemon thread.</p>
+<a href="#mapper.delays.Repeating.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A boolean value indicating whether this thread is a daemon thread.</p>
 <p>This must be set before start() is called, otherwise RuntimeError is
 raised. Its initial value is inherited from the creating thread; the
 main thread is not a daemon thread and therefore all threads created in
 the main thread default to daemon = False.</p>
 <p>The entire Python program exits when only daemon threads are left.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.ident">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Repeating.ident" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -2403,18 +2681,26 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.ident" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Thread identifier of this thread or None if it has not been started.</p>
+<a href="#mapper.delays.Repeating.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Thread identifier of this thread or None if it has not been started.</p>
 <p>This is a nonzero integer. See the get_ident() function. Thread
 identifiers may be recycled when a thread exits and another thread is
 created. The identifier is available even after the thread has exited.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.name">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Repeating.name" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -2422,75 +2708,106 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.name" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A string used for identification purposes only.</p>
+<a href="#mapper.delays.Repeating.name" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.__init__">
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.delays.Repeating.native_id" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#mapper.delays.Repeating.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
+<p>This is a non-negative integer. See the get_native_id() function.
+This represents the Thread ID as reported by the kernel.</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Repeating.__init__" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.__init__" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Defines the constructor for the object.</p>
+<a href="#mapper.delays.Repeating.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Defines the constructor for the object.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>duration</code></td>
-<td><code>float</code></td>
-<td>
-<p>The amount of time (in seconds) to delay between iterations.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>function</code></td>
-<td><code>Callable[..., Any]</code></td>
-<td>
-<p>The function to be called at each iteration.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>*args</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Positional arguments to be passed to the called function.</p>
-</td>
-<td><code>()</code></td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Key-word only arguments to be passed to the called function.</p>
-</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>duration</code></td>
+        <td><code>float</code></td>
+        <td><p>The amount of time (in seconds) to delay between iterations.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>function</code></td>
+        <td><code>Callable[..., Any]</code></td>
+        <td><p>The function to be called at each iteration.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>*args</code></td>
+        <td><code>Any</code></td>
+        <td><p>Positional arguments to be passed to the called function.</p></td>
+        <td><code>()</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Key-word only arguments to be passed to the called function.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -2498,91 +2815,77 @@ initial name is set by the constructor.</p>
 <span class="sd">		function: The function to be called at each iteration.</span>
 <span class="sd">		*args: Positional arguments to be passed to the called function.</span>
 <span class="sd">		**kwargs: Key-word only arguments to be passed to the called function.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.is_alive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Repeating.is_alive" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.is_alive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
+<a href="#mapper.delays.Repeating.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. The module function enumerate()
-returns a list of all alive threads.</p>
-<details class="quote">
+after the run() method terminates. See also the module function
+enumerate().</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. The module function enumerate()</span>
-<span class="sd">    returns a list of all alive threads.</span>
+<span class="sd">    after the run() method terminates. See also the module function</span>
+<span class="sd">    enumerate().</span>
 
-<span class="sd">    """</span>
-    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">"Thread.__init__() not called"</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_stopped</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.isAlive">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
 
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.isAlive" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Return whether the thread is alive.</p>
-<p>This method is deprecated, use is_alive() instead.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Return whether the thread is alive.</span>
 
-<span class="sd">    This method is deprecated, use is_alive() instead.</span>
-<span class="sd">    """</span>
-    <span class="kn">import</span> <span class="nn">warnings</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'isAlive() is deprecated, use is_alive() instead'</span><span class="p">,</span>
-                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.join">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Repeating.join" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.join" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Wait until the thread terminates.</p>
+<a href="#mapper.delays.Repeating.join" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Wait until the thread terminates.</p>
 <p>This blocks the calling thread until the thread whose join() method is
 called terminates -- either normally or through an unhandled exception
 or until the optional timeout occurs.</p>
@@ -2598,11 +2901,11 @@ block until the thread terminates.</p>
 thread as that would cause a deadlock. It is also an error to join() a
 thread before it has been started and attempts to do so raises the same
 exception.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Wait until the thread terminates.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -2624,45 +2927,52 @@ exception.</p>
 <span class="sd">    thread before it has been started and attempts to do so raises the same</span>
 <span class="sd">    exception.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Thread.__init__() not called&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join thread before it is started"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join thread before it is started&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">current_thread</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot join current thread"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join current thread&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># the behavior of a negative timeout isn't documented, but</span>
+        <span class="c1"># the behavior of a negative timeout isn&#39;t documented, but</span>
         <span class="c1"># historically .join(timeout=x) for x&lt;0 has acted as if timeout=0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.run">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Repeating.run" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.run" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Method representing the thread's activity.</p>
+<a href="#mapper.delays.Repeating.run" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Method representing the thread's activity.</p>
 <p>You may override this method in a subclass. The standard run() method
 invokes the callable object passed to the object's constructor as the
 target argument, if any, with sequential and keyword arguments taken
 from the args and kwargs arguments, respectively.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -2676,45 +2986,55 @@ from the args and kwargs arguments, respectively.</p>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.start">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Repeating.start" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.start" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Start the thread's activity.</p>
+<a href="#mapper.delays.Repeating.start" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Start the thread's activity.</p>
 <p>It must be called at most once per thread object. It arranges for the
 object's run() method to be invoked in a separate thread of control.</p>
 <p>This method will raise a RuntimeError if called more than once on the
 same thread object.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Start the thread's activity.</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
-<span class="sd">    object's run() method to be invoked in a separate thread of control.</span>
+<span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
 
 <span class="sd">    This method will raise a RuntimeError if called more than once on the</span>
 <span class="sd">    same thread object.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"thread.__init__() not called"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;thread.__init__() not called&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"threads can only be started once"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
+
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
@@ -2724,40 +3044,63 @@ same thread object.</p>
             <span class="k">del</span> <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span>
         <span class="k">raise</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.delays.Repeating.stop">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.delays.Repeating.stop" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.delays.Repeating.stop" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Stops an active delay.</p>
-<details class="quote">
+<a href="#mapper.delays.Repeating.stop" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Stops an active delay.</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""Stops an active delay."""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
                 
               
               
@@ -2768,6 +3111,7 @@ same thread object.</p>
             </article>
           </div>
         </div>
+        
       </main>
       
         
@@ -2793,19 +3137,13 @@ same thread object.</p>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
     
-      <script src="../../assets/javascripts/vendor.53cc9318.min.js"></script>
-      <script src="../../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
-      
-      <script>
-        app = initialize({
-          base: "../..",
-          features: [],
-          search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../../assets/javascripts/bundle.56a63758.min.js"></script>
       
         <script src="../../search/main.js"></script>
       

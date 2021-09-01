@@ -15,8 +15,8 @@
       
         <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/utils/">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.5">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.be71726b.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
         
       
     
@@ -37,13 +37,17 @@
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
     
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
     
       
+
+
     
     
   </head>
@@ -55,8 +59,9 @@
     
     
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-      
   
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -73,27 +78,25 @@
       
     </div>
     
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mapper Proxy" class="md-header__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
-      <div class="md-header-nav__ellipsis">
-        <div class="md-header-nav__topic">
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
           <span class="md-ellipsis">
             Mapper Proxy
           </span>
         </div>
-        <div class="md-header-nav__topic">
+        <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
               utils.py
@@ -103,22 +106,28 @@
       </div>
     </div>
     
-      <label class="md-header-nav__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
       </label>
       
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -134,12 +143,12 @@
 </div>
     
     
-      <div class="md-header-nav__source">
+      <div class="md-header__source">
         
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -160,20 +169,18 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
 
 
-
-
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
+    <a href="../.." title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
     Mapper Proxy
@@ -181,10 +188,10 @@
   
     <div class="md-nav__source">
       
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -237,19 +244,18 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
-      <label class="md-nav__link" for="nav-3">
+      <label class="md-nav__link" for="__nav_3">
         API Navigation
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="API Navigation" data-md-level="1">
-        <label class="md-nav__title" for="nav-3">
+        <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           API Navigation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -259,19 +265,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
       
-      <label class="md-nav__link" for="nav-3-1">
+      <label class="md-nav__link" for="__nav_3_1">
         roomdata
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="roomdata" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-1">
+        <label class="md-nav__title" for="__nav_3_1">
           <span class="md-nav__icon md-icon"></span>
           roomdata
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -311,19 +316,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
       
-      <label class="md-nav__link" for="nav-3-2">
+      <label class="md-nav__link" for="__nav_3_2">
         sockets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="sockets" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-2">
+        <label class="md-nav__title" for="__nav_3_2">
           <span class="md-nav__icon md-icon"></span>
           sockets
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -450,6 +454,9 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
+      
         <label class="md-nav__link md-nav__link--active" for="__toc">
           utils.py
           <span class="md-nav__icon md-icon"></span>
@@ -464,134 +471,124 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.utils" class="md-nav__link">
-    utils
+  <a href="#mapper.utils.camelCase" class="md-nav__link">
+    camelCase()
   </a>
   
-    <nav class="md-nav" aria-label="utils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.decodeBytes" class="md-nav__link">
     decodeBytes()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.formatDocString" class="md-nav__link">
     formatDocString()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.getDirectoryPath" class="md-nav__link">
     getDirectoryPath()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.getFreezer" class="md-nav__link">
     getFreezer()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.humanSort" class="md-nav__link">
     humanSort()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.isFrozen" class="md-nav__link">
     isFrozen()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.utils.iterBytes" class="md-nav__link">
-    iterBytes()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.lpadList" class="md-nav__link">
     lpadList()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.minIndent" class="md-nav__link">
     minIndent()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.padList" class="md-nav__link">
     padList()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.page" class="md-nav__link">
     page()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.regexFuzzy" class="md-nav__link">
     regexFuzzy()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.roundHalfAwayFromZero" class="md-nav__link">
     roundHalfAwayFromZero()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.simplified" class="md-nav__link">
     simplified()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.stripAnsi" class="md-nav__link">
     stripAnsi()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.touch" class="md-nav__link">
     touch()
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -644,7 +641,7 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -652,134 +649,124 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.utils" class="md-nav__link">
-    utils
+  <a href="#mapper.utils.camelCase" class="md-nav__link">
+    camelCase()
   </a>
   
-    <nav class="md-nav" aria-label="utils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.decodeBytes" class="md-nav__link">
     decodeBytes()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.formatDocString" class="md-nav__link">
     formatDocString()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.getDirectoryPath" class="md-nav__link">
     getDirectoryPath()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.getFreezer" class="md-nav__link">
     getFreezer()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.humanSort" class="md-nav__link">
     humanSort()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.isFrozen" class="md-nav__link">
     isFrozen()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#mapper.utils.iterBytes" class="md-nav__link">
-    iterBytes()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.lpadList" class="md-nav__link">
     lpadList()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.minIndent" class="md-nav__link">
     minIndent()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.padList" class="md-nav__link">
     padList()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.page" class="md-nav__link">
     page()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.regexFuzzy" class="md-nav__link">
     regexFuzzy()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.roundHalfAwayFromZero" class="md-nav__link">
     roundHalfAwayFromZero()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.simplified" class="md-nav__link">
     simplified()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.stripAnsi" class="md-nav__link">
     stripAnsi()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.touch" class="md-nav__link">
     touch()
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -791,73 +778,172 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
+                  <a href="https://github.com/nstockton/mapperproxy-mume/blob/master/docs/api/utils.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
                 
                 <div class="doc doc-object doc-module">
-<h1 class="doc doc-heading" id="mapper.utils">
 
+
+
+<h1 id="mapper.utils" class="doc doc-heading">
         <code>Module mapper.utils</code>
 
 
 
-      <a class="headerlink" href="#mapper.utils" title="Permanent link">&para;</a></h1>
-<div class="doc doc-contents first">
-<div class="doc doc-children">
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.decodeBytes">
+<a href="#mapper.utils" class="headerlink" title="Permanent link">&para;</a></h1>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+    <div class="doc doc-contents first">
 
 
-      <a class="headerlink" href="#mapper.utils.decodeBytes" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Decodes UTF-8 or Latin-1 bytes into a string.</p>
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.camelCase" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">camelCase</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.camelCase" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>converts text to camel case.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>data</code></td>
-<td><code>bytes</code></td>
-<td>
-<p>The data to be decoded.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>text</code></td>
+        <td><code>str</code></td>
+        <td><p>The text to be converted.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>delimiter</code></td>
+        <td><code>str</code></td>
+        <td><p>The delimiter between words.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The decoded string.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The text in camel case.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">camelCase</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	converts text to camel case.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to be converted.</span>
+<span class="sd">		delimiter: The delimiter between words.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The text in camel case.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span>
+	<span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">words</span><span class="p">[:</span><span class="mi">1</span><span class="p">]),</span> <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.decodeBytes" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.decodeBytes" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Decodes UTF-8 or Latin-1 bytes into a string.</p>
+
+<p><strong>Parameters:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>data</code></td>
+        <td><code>bytes</code></td>
+        <td><p>The data to be decoded.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The decoded string.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Decodes UTF-8 or Latin-1 bytes into a string.</span>
 
 <span class="sd">	Args:</span>
@@ -865,88 +951,87 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The decoded string.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ByteString</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Data must be a bytes-like object."</span><span class="p">)</span>
+		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Data must be a bytes-like object.&quot;</span><span class="p">)</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 	<span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"latin-1"</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.formatDocString">
+		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;latin-1&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.formatDocString" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Formats a docstring for displaying.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.formatDocString" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">formatDocString</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.formatDocString" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Formats a docstring for displaying.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>functionOrString</code></td>
-<td><code>Union[str, Callable[..., Any]]</code></td>
-<td>
-<p>The function containing the docstring, or the docstring its self.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>width</code></td>
-<td><code>int</code></td>
-<td>
-<p>The number of characters to word wrap each line to.</p>
-</td>
-<td><code>79</code></td>
-</tr>
-<tr>
-<td><code>prefix</code></td>
-<td><code>Optional[str]</code></td>
-<td>
-<p>One or more characters to use for indention.</p>
-</td>
-<td><code>None</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>functionOrString</code></td>
+        <td><code>Union[str, Callable[..., Any]]</code></td>
+        <td><p>The function containing the docstring, or the docstring its self.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>int</code></td>
+        <td><p>The number of characters to word wrap each line to.</p></td>
+        <td><code>79</code></td>
+      </tr>
+      <tr>
+        <td><code>prefix</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>One or more characters to use for indention.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The formatted docstring.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The formatted docstring.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">formatDocString</span><span class="p">(</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">formatDocString</span><span class="p">(</span>
 	<span class="n">functionOrString</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Formats a docstring for displaying.</span>
 
 <span class="sd">	Args:</span>
@@ -956,26 +1041,26 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The formatted docstring.</span>
-<span class="sd">	"""</span>
-	<span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">):</span>  <span class="c1"># It's a function.</span>
-		<span class="n">docString</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="s2">"__doc__"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
-	<span class="k">else</span><span class="p">:</span>  <span class="c1"># It's a string.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">):</span>  <span class="c1"># It&#39;s a function.</span>
+		<span class="n">docString</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="s2">&quot;__doc__&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+	<span class="k">else</span><span class="p">:</span>  <span class="c1"># It&#39;s a string.</span>
 		<span class="n">docString</span> <span class="o">=</span> <span class="n">functionOrString</span>
 	<span class="c1"># Remove any empty lines from the beginning, while keeping indention.</span>
-	<span class="n">docString</span> <span class="o">=</span> <span class="n">docString</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">)</span>
+	<span class="n">docString</span> <span class="o">=</span> <span class="n">docString</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
 	<span class="n">match</span> <span class="o">=</span> <span class="n">INDENT_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">docString</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"indent"</span><span class="p">):</span>
+	<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;indent&quot;</span><span class="p">):</span>
 		<span class="c1"># The first line was not indented.</span>
 		<span class="c1"># Prefix the first line with the white space from the subsequent, non-empty</span>
 		<span class="c1"># line with the least amount of indention.</span>
 		<span class="c1"># This is needed so that textwrap.dedent will work.</span>
-		<span class="n">docString</span> <span class="o">=</span> <span class="n">minIndent</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">docString</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]))</span> <span class="o">+</span> <span class="n">docString</span>
+		<span class="n">docString</span> <span class="o">=</span> <span class="n">minIndent</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">docString</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]))</span> <span class="o">+</span> <span class="n">docString</span>
 	<span class="n">docString</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">docString</span><span class="p">)</span>  <span class="c1"># Remove common indention from lines.</span>
 	<span class="n">docString</span> <span class="o">=</span> <span class="n">docString</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>  <span class="c1"># Remove trailing white space from the end of the docstring.</span>
 	<span class="c1"># Word wrap long lines, while maintaining existing structure.</span>
 	<span class="n">wrappedLines</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">indentLevel</span> <span class="o">=</span> <span class="mi">0</span>
-	<span class="n">lastIndent</span> <span class="o">=</span> <span class="s2">""</span>
+	<span class="n">lastIndent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 	<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">docString</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
 		<span class="n">match</span> <span class="o">=</span> <span class="n">INDENT_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -990,69 +1075,72 @@
 		<span class="n">lines</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span>
 			<span class="n">text</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">linePrefix</span><span class="p">),</span> <span class="n">break_long_words</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">break_on_hyphens</span><span class="o">=</span><span class="kc">False</span>
 		<span class="p">)</span>
-		<span class="n">wrappedLines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linePrefix</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">linePrefix</span><span class="si">}</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
-	<span class="n">docString</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wrappedLines</span><span class="p">)</span>
+		<span class="n">wrappedLines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linePrefix</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">linePrefix</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+	<span class="n">docString</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wrappedLines</span><span class="p">)</span>
 	<span class="n">docString</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span>
-		<span class="n">docString</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">""</span>
+		<span class="n">docString</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 	<span class="p">)</span>  <span class="c1"># Indent docstring lines with the prefix.</span>
 	<span class="k">return</span> <span class="n">docString</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.getDirectoryPath">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.getDirectoryPath" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Retrieves the path of the directory where the program is located.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.getDirectoryPath" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.getDirectoryPath" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Retrieves the path of the directory where the program is located.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>*args</code></td>
-<td><code>str</code></td>
-<td>
-<p>Positional arguments to be passed to os.join after the directory path.</p>
-</td>
-<td><code>()</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>*args</code></td>
+        <td><code>str</code></td>
+        <td><p>Positional arguments to be passed to os.join after the directory path.</p></td>
+        <td><code>()</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The path.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The path.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieves the path of the directory where the program is located.</span>
 
 <span class="sd">	Args:</span>
@@ -1060,52 +1148,57 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The path.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">isFrozen</span><span class="p">():</span>
 		<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pardir</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.getFreezer">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">getFreezer</span><span class="p">()</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.getFreezer" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Determines the name of the library used to freeze the code.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.getFreezer" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">getFreezer</span><span class="p">()</span></code>
+
+
+<a href="#mapper.utils.getFreezer" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Determines the name of the library used to freeze the code.</p>
 <div class="admonition note">
 <p class="admonition-title">Note<p>https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py</p>
 </p>
 </div>
+
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Union[str, None]</code></td>
-<td>
-<p>The name of the library or None.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Union[str, None]</code></td>
+      <td><p>The name of the library or None.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getFreezer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getFreezer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determines the name of the library used to freeze the code.</span>
 
 <span class="sd">	Note:</span>
@@ -1113,80 +1206,83 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The name of the library or None.</span>
-<span class="sd">	"""</span>
-	<span class="n">frozen</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"frozen"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">frozen</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"_MEIPASS"</span><span class="p">):</span>
-		<span class="k">return</span> <span class="s2">"pyinstaller"</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">frozen</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;frozen&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">frozen</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;_MEIPASS&quot;</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;pyinstaller&quot;</span>
 	<span class="k">elif</span> <span class="n">frozen</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-		<span class="k">return</span> <span class="s2">"cx_freeze"</span>
-	<span class="k">elif</span> <span class="n">frozen</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"windows_exe"</span><span class="p">,</span> <span class="s2">"console_exe"</span><span class="p">,</span> <span class="s2">"dll"</span><span class="p">):</span>
-		<span class="k">return</span> <span class="s2">"py2exe"</span>
-	<span class="k">elif</span> <span class="n">frozen</span> <span class="o">==</span> <span class="s2">"macosx_app"</span><span class="p">:</span>
-		<span class="k">return</span> <span class="s2">"py2app"</span>
-	<span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"importers"</span><span class="p">):</span>
-		<span class="k">return</span> <span class="s2">"old_py2exe"</span>
-	<span class="k">elif</span> <span class="n">_imp</span><span class="o">.</span><span class="n">is_frozen</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">):</span>
-		<span class="k">return</span> <span class="s2">"tools/freeze"</span>
+		<span class="k">return</span> <span class="s2">&quot;cx_freeze&quot;</span>
+	<span class="k">elif</span> <span class="n">frozen</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;windows_exe&quot;</span><span class="p">,</span> <span class="s2">&quot;console_exe&quot;</span><span class="p">,</span> <span class="s2">&quot;dll&quot;</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;py2exe&quot;</span>
+	<span class="k">elif</span> <span class="n">frozen</span> <span class="o">==</span> <span class="s2">&quot;macosx_app&quot;</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s2">&quot;py2app&quot;</span>
+	<span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;importers&quot;</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;old_py2exe&quot;</span>
+	<span class="k">elif</span> <span class="n">_imp</span><span class="o">.</span><span class="n">is_frozen</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;tools/freeze&quot;</span>
 	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frozen</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-		<span class="k">return</span> <span class="sa">f</span><span class="s2">"unknown </span><span class="si">{</span><span class="n">frozen</span><span class="si">}</span><span class="s2">"</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;unknown </span><span class="si">{</span><span class="n">frozen</span><span class="si">}</span><span class="s2">&quot;</span>
 	<span class="k">return</span> <span class="kc">None</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.humanSort">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.humanSort" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Sorts a list of strings, with numbers sorted according to their numeric value.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.humanSort" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.humanSort" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Sorts a list of strings, with numbers sorted according to their numeric value.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>lst</code></td>
-<td><code>Sequence[str]</code></td>
-<td>
-<p>The list of strings to be sorted.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lst</code></td>
+        <td><code>Sequence[str]</code></td>
+        <td><p>The list of strings to be sorted.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>List[str]</code></td>
-<td>
-<p>The items of the list, with strings containing numbers sorted according to their numeric value.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>List[str]</code></td>
+      <td><p>The items of the list, with strings containing numbers sorted according to their numeric value.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Sorts a list of strings, with numbers sorted according to their numeric value.</span>
 
 <span class="sd">	Args:</span>
@@ -1194,190 +1290,138 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The items of the list, with strings containing numbers sorted according to their numeric value.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
 		<span class="n">lst</span><span class="p">,</span>
 		<span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">[</span>
-			<span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d+)"</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
+			<span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)&quot;</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
 		<span class="p">],</span>
 	<span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.isFrozen">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">isFrozen</span><span class="p">()</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.isFrozen" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Determines whether the program is running from a frozen copy or from source.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.isFrozen" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">isFrozen</span><span class="p">()</span></code>
+
+
+<a href="#mapper.utils.isFrozen" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Determines whether the program is running from a frozen copy or from source.</p>
+
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bool</code></td>
-<td>
-<p>True if frozen, False otherwise.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if frozen, False otherwise.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">isFrozen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isFrozen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determines whether the program is running from a frozen copy or from source.</span>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		True if frozen, False otherwise.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">getFreezer</span><span class="p">())</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.iterBytes">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">iterBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.iterBytes" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>A generator which yields each byte of a bytes-like object.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.lpadList" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.lpadList" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Pad the left side of a list.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>data</code></td>
-<td><code>bytes</code></td>
-<td>
-<p>The data to process.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-<div class="admonition yields">
-<p class="admonition-title">Yields<p>Each byte of data as a bytes object.</p>
-</p>
-</div>
-<details class="quote">
-          <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">iterBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-	<span class="sd">"""</span>
-<span class="sd">	A generator which yields each byte of a bytes-like object.</span>
-
-<span class="sd">	Args:</span>
-<span class="sd">		data: The data to process.</span>
-
-<span class="sd">	Yields:</span>
-<span class="sd">		Each byte of data as a bytes object.</span>
-<span class="sd">	"""</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
-		<span class="k">yield</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.lpadList">
-
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
-
-
-      <a class="headerlink" href="#mapper.utils.lpadList" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Pad the left side of a list.</p>
-<p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>lst</code></td>
-<td><code>Sequence[Any]</code></td>
-<td>
-<p>The list to be padded.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>padding</code></td>
-<td><code>Any</code></td>
-<td>
-<p>The item to use for padding.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>count</code></td>
-<td><code>int</code></td>
-<td>
-<p>The minimum size of the returned list.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>fixed</code></td>
-<td><code>bool</code></td>
-<td>
-<p>True if the maximum size of the returned list should be restricted to count, False otherwise.</p>
-</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lst</code></td>
+        <td><code>Sequence[Any]</code></td>
+        <td><p>The list to be padded.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>padding</code></td>
+        <td><code>Any</code></td>
+        <td><p>The item to use for padding.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>count</code></td>
+        <td><code>int</code></td>
+        <td><p>The minimum size of the returned list.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>fixed</code></td>
+        <td><code>bool</code></td>
+        <td><p>True if the maximum size of the returned list should be restricted to count, False otherwise.</p></td>
+        <td><code>False</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>List[Any]</code></td>
-<td>
-<p>A padded copy of the list.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>List[Any]</code></td>
+      <td><p>A padded copy of the list.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Pad the left side of a list.</span>
 
 <span class="sd">	Args:</span>
@@ -1388,68 +1432,71 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		A padded copy of the list.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">fixed</span><span class="p">:</span>
 		<span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="p">[</span><span class="n">padding</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)),</span> <span class="o">*</span><span class="n">lst</span><span class="p">][:</span><span class="n">count</span><span class="p">]</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="p">[</span><span class="n">padding</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)),</span> <span class="o">*</span><span class="n">lst</span><span class="p">]</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.minIndent">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.minIndent" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Retrieves the indention characters from the line with the least indention.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.minIndent" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.minIndent" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Retrieves the indention characters from the line with the least indention.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>text</code></td>
-<td><code>str</code></td>
-<td>
-<p>the text to process.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>text</code></td>
+        <td><code>str</code></td>
+        <td><p>the text to process.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The indention characters of the line with the least amount of indention.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The indention characters of the line with the least amount of indention.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieves the indention characters from the line with the least indention.</span>
 
 <span class="sd">	Args:</span>
@@ -1457,95 +1504,92 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The indention characters of the line with the least amount of indention.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">):</span>
 			<span class="n">match</span> <span class="o">=</span> <span class="n">INDENT_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"indent"</span><span class="p">))</span>
-	<span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.padList">
+				<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;indent&quot;</span><span class="p">))</span>
+	<span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.padList" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Pad the right side of a list.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.padList" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.padList" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Pad the right side of a list.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>lst</code></td>
-<td><code>Sequence[Any]</code></td>
-<td>
-<p>The list to be padded.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>padding</code></td>
-<td><code>Any</code></td>
-<td>
-<p>The item to use for padding.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>count</code></td>
-<td><code>int</code></td>
-<td>
-<p>The minimum size of the returned list.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>fixed</code></td>
-<td><code>bool</code></td>
-<td>
-<p>True if the maximum size of the returned list should be restricted to count, False otherwise.</p>
-</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lst</code></td>
+        <td><code>Sequence[Any]</code></td>
+        <td><p>The list to be padded.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>padding</code></td>
+        <td><code>Any</code></td>
+        <td><p>The item to use for padding.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>count</code></td>
+        <td><code>int</code></td>
+        <td><p>The minimum size of the returned list.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>fixed</code></td>
+        <td><code>bool</code></td>
+        <td><p>True if the maximum size of the returned list should be restricted to count, False otherwise.</p></td>
+        <td><code>False</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>List[Any]</code></td>
-<td>
-<p>A padded copy of the list.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>List[Any]</code></td>
+      <td><p>A padded copy of the list.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Pad the right side of a list.</span>
 
 <span class="sd">	Args:</span>
@@ -1556,120 +1600,128 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		A padded copy of the list.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">fixed</span><span class="p">:</span>
 		<span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">lst</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">padding</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">))][:</span><span class="n">count</span><span class="p">]</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">lst</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">padding</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">))]</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.page">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">page</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.page" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Displays lines using the pager if necessary.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.page" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">page</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.page" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Displays lines using the pager if necessary.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>lines</code></td>
-<td><code>Sequence[str]</code></td>
-<td>
-<p>The lines to be displayed.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lines</code></td>
+        <td><code>Sequence[str]</code></td>
+        <td><p>The lines to be displayed.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">page</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">page</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Displays lines using the pager if necessary.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		lines: The lines to be displayed.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="c1"># This is necessary in order for lines with embedded new line characters to be properly handled.</span>
-	<span class="n">lines</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+	<span class="n">lines</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 	<span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">get_terminal_size</span><span class="p">()</span>
 	<span class="c1"># Word wrapping to 1 less than the terminal width is necessary to prevent</span>
 	<span class="c1"># occasional blank lines in the terminal output.</span>
-	<span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
 	<span class="n">pager</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.regexFuzzy">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.regexFuzzy" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Creates a regular expression matching all or part of a string or sequence.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.regexFuzzy" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.regexFuzzy" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Creates a regular expression matching all or part of a string or sequence.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>text</code></td>
-<td><code>Union[str, Sequence[str]]</code></td>
-<td>
-<p>The text to be converted.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>text</code></td>
+        <td><code>Union[str, Sequence[str]]</code></td>
+        <td><p>The text to be converted.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>A regular expression string matching all or part of the text.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>A regular expression string matching all or part of the text.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Creates a regular expression matching all or part of a string or sequence.</span>
 
 <span class="sd">	Args:</span>
@@ -1677,84 +1729,85 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		A regular expression string matching all or part of the text.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)):</span>
-		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Text must be either a string or sequence of strings."</span><span class="p">)</span>
+		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Text must be either a string or sequence of strings.&quot;</span><span class="p">)</span>
 	<span class="k">elif</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
-		<span class="k">return</span> <span class="s2">""</span>
+		<span class="k">return</span> <span class="s2">&quot;&quot;</span>
 	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-		<span class="k">return</span> <span class="s2">"("</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">text</span><span class="p">))</span> <span class="o">+</span> <span class="s2">")?"</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">text</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;)?&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
-		<span class="k">return</span> <span class="s2">"|"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"("</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="o">+</span> <span class="s2">")?"</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">text</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.roundHalfAwayFromZero">
+		<span class="k">return</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;)?&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.roundHalfAwayFromZero" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Rounds a float away from 0 if the fractional is 5 or more.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.roundHalfAwayFromZero" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.roundHalfAwayFromZero" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Rounds a float away from 0 if the fractional is 5 or more.</p>
 <div class="admonition note">
 <p class="admonition-title">Note<p>https://realpython.com/python-rounding</p>
 </p>
 </div>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>number</code></td>
-<td><code>float</code></td>
-<td>
-<p>The number to round.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>decimals</code></td>
-<td><code>int</code></td>
-<td>
-<p>The number of fractional decimal places to round to.</p>
-</td>
-<td><code>0</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>number</code></td>
+        <td><code>float</code></td>
+        <td><p>The number to round.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>decimals</code></td>
+        <td><code>int</code></td>
+        <td><p>The number of fractional decimal places to round to.</p></td>
+        <td><code>0</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>float</code></td>
-<td>
-<p>The number after rounding.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>float</code></td>
+      <td><p>The number after rounding.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">decimals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">decimals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Rounds a float away from 0 if the fractional is 5 or more.</span>
 
 <span class="sd">	Note:</span>
@@ -1766,66 +1819,69 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The number after rounding.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">multiplier</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">decimals</span>
 	<span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="o">*</span> <span class="n">multiplier</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.simplified">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.simplified" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Replaces one or more consecutive white space characters with a single space.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.simplified" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.simplified" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Replaces one or more consecutive white space characters with a single space.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>text</code></td>
-<td><code>str</code></td>
-<td>
-<p>The text to process.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>text</code></td>
+        <td><code>str</code></td>
+        <td><p>The text to process.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The simplified version of the text.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The simplified version of the text.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Replaces one or more consecutive white space characters with a single space.</span>
 
 <span class="sd">	Args:</span>
@@ -1833,65 +1889,68 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The simplified version of the text.</span>
-<span class="sd">	"""</span>
-	<span class="k">return</span> <span class="n">WHITE_SPACE_REGEX</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.stripAnsi">
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">WHITE_SPACE_REGEX</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.stripAnsi" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Strips ANSI escape sequences from text.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.stripAnsi" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.stripAnsi" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Strips ANSI escape sequences from text.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>text</code></td>
-<td><code>str</code></td>
-<td>
-<p>The text to strip ANSI sequences from.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>text</code></td>
+        <td><code>str</code></td>
+        <td><p>The text to strip ANSI sequences from.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>str</code></td>
-<td>
-<p>The text with ANSI escape sequences stripped.</p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The text with ANSI escape sequences stripped.</p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Strips ANSI escape sequences from text.</span>
 
 <span class="sd">	Args:</span>
@@ -1899,66 +1958,79 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		The text with ANSI escape sequences stripped.</span>
-<span class="sd">	"""</span>
-	<span class="k">return</span> <span class="n">ANSI_COLOR_REGEX</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h2 class="doc doc-heading" id="mapper.utils.touch">
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">ANSI_COLOR_REGEX</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Function</span> <span class="n">touch</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.utils.touch" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<p>Touches a file.</p>
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.touch" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">touch</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.touch" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Touches a file.</p>
 <p>I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>name</code></td>
-<td><code>str</code></td>
-<td>
-<p>the file name to touch.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>str</code></td>
+        <td><p>the file name to touch.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">touch</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">touch</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Touches a file.</span>
 
-<span class="sd">	I.E. creates the file if it doesn't exist, or updates the modified time of the file if it does.</span>
+<span class="sd">	I.E. creates the file if it doesn&#39;t exist, or updates the modified time of the file if it does.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		name: the file name to touch.</span>
-<span class="sd">	"""</span>
-	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">):</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">):</span>
 		<span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
                 
               
               
@@ -1969,6 +2041,7 @@
             </article>
           </div>
         </div>
+        
       </main>
       
         
@@ -1994,19 +2067,13 @@
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
     
-      <script src="../../assets/javascripts/vendor.53cc9318.min.js"></script>
-      <script src="../../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
-      
-      <script>
-        app = initialize({
-          base: "../..",
-          features: [],
-          search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../../assets/javascripts/bundle.56a63758.min.js"></script>
       
         <script src="../../search/main.js"></script>
       

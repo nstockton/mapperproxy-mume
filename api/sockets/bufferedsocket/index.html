@@ -15,8 +15,8 @@
       
         <link rel="canonical" href="https://nstockton.github.io/mapperproxy-mume/api/sockets/bufferedsocket/">
       
-      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.5">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.cb6bc1d0.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.be71726b.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
         
       
     
@@ -37,13 +37,17 @@
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
     
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
     
       
+
+
     
     
   </head>
@@ -55,8 +59,9 @@
     
     
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-      
   
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -73,27 +78,25 @@
       
     </div>
     
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-header-nav__button md-logo" aria-label="Mapper Proxy">
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Mapper Proxy" class="md-header__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
-      <div class="md-header-nav__ellipsis">
-        <div class="md-header-nav__topic">
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
           <span class="md-ellipsis">
             Mapper Proxy
           </span>
         </div>
-        <div class="md-header-nav__topic">
+        <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
               bufferedsocket.py
@@ -103,22 +106,28 @@
       </div>
     </div>
     
-      <label class="md-header-nav__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
       </label>
       
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -134,12 +143,12 @@
 </div>
     
     
-      <div class="md-header-nav__source">
+      <div class="md-header__source">
         
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -160,20 +169,18 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
 
 
-
-
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://nstockton.github.io/mapperproxy-mume" title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy">
+    <a href="../../.." title="Mapper Proxy" class="md-nav__button md-logo" aria-label="Mapper Proxy" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
     Mapper Proxy
@@ -181,10 +188,10 @@
   
     <div class="md-nav__source">
       
-<a href="https://github.com/nstockton/mapperproxy-mume" title="Go to repository" class="md-source">
+<a href="https://github.com/nstockton/mapperproxy-mume/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     nstockton/mapperproxy-mume
@@ -237,19 +244,18 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
       
-      <label class="md-nav__link" for="nav-3">
+      <label class="md-nav__link" for="__nav_3">
         API Navigation
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="API Navigation" data-md-level="1">
-        <label class="md-nav__title" for="nav-3">
+        <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           API Navigation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -259,19 +265,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
       
-      <label class="md-nav__link" for="nav-3-1">
+      <label class="md-nav__link" for="__nav_3_1">
         roomdata
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="roomdata" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-1">
+        <label class="md-nav__title" for="__nav_3_1">
           <span class="md-nav__icon md-icon"></span>
           roomdata
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -313,19 +318,18 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" checked>
       
-      <label class="md-nav__link" for="nav-3-2">
+      <label class="md-nav__link" for="__nav_3_2">
         sockets
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="sockets" data-md-level="2">
-        <label class="md-nav__title" for="nav-3-2">
+        <label class="md-nav__title" for="__nav_3_2">
           <span class="md-nav__icon md-icon"></span>
           sockets
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
           
             
   
@@ -336,6 +340,9 @@
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
@@ -352,21 +359,16 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.sockets.bufferedsocket" class="md-nav__link">
-    bufferedsocket
-  </a>
-  
-    <nav class="md-nav" aria-label="bufferedsocket">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#mapper.sockets.bufferedsocket.BufferedSocket" class="md-nav__link">
     BufferedSocket
   </a>
@@ -553,11 +555,6 @@
   <a href="#mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL" class="md-nav__link">
     wrapSSL()
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -729,7 +726,7 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -737,21 +734,16 @@
   
   
   
+    
+  
+  
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mapper.sockets.bufferedsocket" class="md-nav__link">
-    bufferedsocket
-  </a>
-  
-    <nav class="md-nav" aria-label="bufferedsocket">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#mapper.sockets.bufferedsocket.BufferedSocket" class="md-nav__link">
     BufferedSocket
   </a>
@@ -945,11 +937,6 @@
     </nav>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
     </ul>
   
@@ -959,35 +946,71 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
+                  <a href="https://github.com/nstockton/mapperproxy-mume/blob/master/docs/api/sockets/bufferedsocket.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
                 
                 <div class="doc doc-object doc-module">
-<h1 class="doc doc-heading" id="mapper.sockets.bufferedsocket">
 
+
+
+<h1 id="mapper.sockets.bufferedsocket" class="doc doc-heading">
         <code>Module mapper.sockets.bufferedsocket</code>
 
 
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket" title="Permanent link">&para;</a></h1>
-<div class="doc doc-contents first">
-<div class="doc doc-children">
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket">
+<a href="#mapper.sockets.bufferedsocket" class="headerlink" title="Permanent link">&para;</a></h1>
 
+    <div class="doc doc-contents first">
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="mapper.sockets.bufferedsocket.BufferedSocket" class="doc doc-heading">
         <code>Class BufferedSocket</code>
 
 
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket" title="Permanent link">&para;</a></h2>
-<div class="doc doc-contents ">
-<div class="doc doc-children">
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.family">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket" class="headerlink" title="Permanent link">&para;</a></h2>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">family</span></code>
+    <div class="doc doc-contents ">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.family" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">family</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -995,19 +1018,27 @@
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.family" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A passthrough to the wrapped socket's family. BufferedSocket
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.family" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A passthrough to the wrapped socket's family. BufferedSocket
 supports all widely-used families, so this read-only attribute
 can be one of :data:<code>socket.AF_INET</code> for IP,
 :data:<code>socket.AF_INET6</code> for IPv6, and :data:<code>socket.AF_UNIX</code>
 for UDS.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.proto">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="n">proto</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.proto" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">proto</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1015,20 +1046,28 @@ for UDS.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.proto" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A passthrough to the wrapped socket's protocol. The <code>proto</code>
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.proto" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A passthrough to the wrapped socket's protocol. The <code>proto</code>
 attribute is very rarely used, so it's always 0, meaning "the
 default" protocol. Pretty much all the practical information
 is in :attr:<code>~BufferedSocket.type</code> and
 :attr:<code>~BufferedSocket.family</code>, so you can go back to never
 thinking about this.</p>
-</div>
-</div>
-<div class="doc doc-object doc-attribute">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.type">
+    </div>
 
-<code class="highlight language-python"><span class="n">Attribute</span> <span class="nb">type</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.type" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="nb">type</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1036,91 +1075,92 @@ thinking about this.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.type" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A passthrough to the wrapped socket's type. Valid usages should
-only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.__init__">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.type" class="headerlink" title="Permanent link">&para;</a></h3>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="mi">32768</span><span class="p">,</span> <span class="n">recvsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">encrypt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+    <div class="doc doc-contents ">
+
+      <p>A passthrough to the wrapped socket's type. Valid usages should
+only ever see :data:<code>socket.SOCK_STREAM</code>.</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.__init__" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="mi">32768</span><span class="p">,</span> <span class="n">recvsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">encrypt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.__init__" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Defines the constructor for the object.</p>
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Defines the constructor for the object.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>sock</code></td>
-<td><code>Union[socket.socket, FakeSocket]</code></td>
-<td>
-<p>The connected socket to be wrapped.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>Union[socketutils._UNSET, float, None]</code></td>
-<td>
-<p>The default timeout for <a href="https://docs.python.org/library/socket.html#socket.socket.send">send</a> and <a href="https://docs.python.org/library/socket.html#socket.socket.recv">recv</a>, in seconds.
-Set to <code>None</code> for no timeout, <code>0</code> for nonblocking.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-<tr>
-<td><code>maxsize</code></td>
-<td><code>int</code></td>
-<td>
-<p>The maximum number of bytes to be received into the buffer before it raises an exception.</p>
-</td>
-<td><code>32768</code></td>
-</tr>
-<tr>
-<td><code>recvsize</code></td>
-<td><code>Union[socketutils._UNSET, int]</code></td>
-<td>
-<p>The number of bytes to receive for every lower-level <a href="https://docs.python.org/library/socket.html#socket.socket.recv"><code>socket.recv</code></a> call.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-<tr>
-<td><code>encrypt</code></td>
-<td><code>bool</code></td>
-<td>
-<p>True if the socket should be wrapped in an <a href="https://docs.python.org/library/ssl.html#ssl.SSLContext">SSL context</a>, False otherwise.</p>
-</td>
-<td><code>False</code></td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Key-word only arguments to be passed to the
-<a href="#mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL">wrapSSL</a> method.</p>
-</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>sock</code></td>
+        <td><code>Union[socket.socket, FakeSocket]</code></td>
+        <td><p>The connected socket to be wrapped.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>Union[socketutils._UNSET, float, None]</code></td>
+        <td><p>The default timeout for <a href="https://docs.python.org/library/socket.html#socket.socket.send">send</a> and <a href="https://docs.python.org/library/socket.html#socket.socket.recv">recv</a>, in seconds.
+Set to <code>None</code> for no timeout, <code>0</code> for nonblocking.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+      <tr>
+        <td><code>maxsize</code></td>
+        <td><code>int</code></td>
+        <td><p>The maximum number of bytes to be received into the buffer before it raises an exception.</p></td>
+        <td><code>32768</code></td>
+      </tr>
+      <tr>
+        <td><code>recvsize</code></td>
+        <td><code>Union[socketutils._UNSET, int]</code></td>
+        <td><p>The number of bytes to receive for every lower-level <a href="https://docs.python.org/library/socket.html#socket.socket.recv"><code>socket.recv</code></a> call.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+      <tr>
+        <td><code>encrypt</code></td>
+        <td><code>bool</code></td>
+        <td><p>True if the socket should be wrapped in an <a href="https://docs.python.org/library/ssl.html#ssl.SSLContext">SSL context</a>, False otherwise.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Key-word only arguments to be passed to the
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL">wrapSSL</a> method.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-unimported]</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-unimported]</span>
 	<span class="bp">self</span><span class="p">,</span>
 	<span class="n">sock</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">FakeSocket</span><span class="p">],</span>
 	<span class="n">timeout</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">socketutils</span><span class="o">.</span><span class="n">_UNSET</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">socketutils</span><span class="o">.</span><span class="n">_UNSET</span><span class="p">,</span>
@@ -1129,7 +1169,7 @@ Set to <code>None</code> for no timeout, <code>0</code> for nonblocking.</p>
 	<span class="n">encrypt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 	<span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -1145,121 +1185,140 @@ Set to <code>None</code> for no timeout, <code>0</code> for nonblocking.</p>
 <span class="sd">			[1]: &lt;https://docs.python.org/library/ssl.html#ssl.SSLContext&gt;</span>
 <span class="sd">		**kwargs: Key-word only arguments to be passed to the</span>
 <span class="sd">			[wrapSSL][mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL] method.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">FakeSocket</span><span class="p">,</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">]</span>
 	<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">recvsize</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">encrypt</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.buffer">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.buffer" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.buffer" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Buffer <em>data</em> bytes for the next send operation.</p>
-<details class="quote">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.buffer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Buffer <em>data</em> bytes for the next send operation.</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="s2">"Buffer *data* bytes for the next send operation."</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="s2">&quot;Buffer *data* bytes for the next send operation.&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">return</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.close">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.close" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.close" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Closes the wrapped socket, and empties the internal buffers. The
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.close" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Closes the wrapped socket, and empties the internal buffers. The
 send buffer is not flushed automatically, so if you have been
 calling :meth:<code>~BufferedSocket.buffer</code>, be sure to call
 :meth:<code>~BufferedSocket.flush</code> before calling this
 method. After calling this method, future socket operations
 will raise :exc:<code>socket.error</code>.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Closes the wrapped socket, and empties the internal buffers. The</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Closes the wrapped socket, and empties the internal buffers. The</span>
 <span class="sd">    send buffer is not flushed automatically, so if you have been</span>
 <span class="sd">    calling :meth:`~BufferedSocket.buffer`, be sure to call</span>
 <span class="sd">    :meth:`~BufferedSocket.flush` before calling this</span>
 <span class="sd">    method. After calling this method, future socket operations</span>
 <span class="sd">    will raise :exc:`socket.error`.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">''</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rbuf_unconsumed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">return</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.doSSLHandshake">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.doSSLHandshake" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Performs an SSL handshake.</p>
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.doSSLHandshake" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">)</span></code>
+
+
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.doSSLHandshake" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Performs an SSL handshake.</p>
 <div class="admonition note">
 <p class="admonition-title">Note<p>The <a href="https://docs.python.org/library/ssl.html#ssl.SSLSocket.do_handshake"><code>SSLSocket.do_handshake</code></a> method is non-blocking and must be retried until it returns successfully.
 See <a href="https://docs.python.org/library/ssl.html#ssl-nonblocking">here</a> for further explanation.</p>
 </p>
 </div>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>sock</code></td>
-<td><code>ssl.SSLSocket</code></td>
-<td>
-<p>The socket to perform the handshake on.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>sock</code></td>
+        <td><code>ssl.SSLSocket</code></td>
+        <td><p>The socket to perform the handshake on.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Performs an SSL handshake.</span>
 
 <span class="sd">	Note:</span>
@@ -1270,7 +1329,7 @@ See <a href="https://docs.python.org/library/ssl.html#ssl-nonblocking">here</a> 
 
 <span class="sd">	Args:</span>
 <span class="sd">		sock: The socket to perform the handshake on.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 		<span class="k">try</span><span class="p">:</span>
 			<span class="n">sock</span><span class="o">.</span><span class="n">do_handshake</span><span class="p">()</span>
@@ -1279,259 +1338,312 @@ See <a href="https://docs.python.org/library/ssl.html#ssl-nonblocking">here</a> 
 			<span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">sock</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span>
 		<span class="k">except</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLWantWriteError</span><span class="p">:</span>
 			<span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([],</span> <span class="p">[</span><span class="n">sock</span><span class="p">],</span> <span class="p">[])</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.fileno">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.fileno" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.fileno" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Returns the file descriptor of the wrapped socket. -1 if it has
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.fileno" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns the file descriptor of the wrapped socket. -1 if it has
 been closed on this end.</p>
 <p>Note that this makes the BufferedSocket selectable, i.e.,
 usable for operating system event loops without any external
 libraries. Keep in mind that the operating system cannot know
 about data in BufferedSocket's internal buffer. Exercise
 discipline with calling <code>recv*</code> functions.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Returns the file descriptor of the wrapped socket. -1 if it has</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the file descriptor of the wrapped socket. -1 if it has</span>
 <span class="sd">    been closed on this end.</span>
 
 <span class="sd">    Note that this makes the BufferedSocket selectable, i.e.,</span>
 <span class="sd">    usable for operating system event loops without any external</span>
 <span class="sd">    libraries. Keep in mind that the operating system cannot know</span>
-<span class="sd">    about data in BufferedSocket's internal buffer. Exercise</span>
+<span class="sd">    about data in BufferedSocket&#39;s internal buffer. Exercise</span>
 <span class="sd">    discipline with calling ``recv*`` functions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.flush">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.flush" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.flush" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Send the contents of the internal send buffer.</p>
-<details class="quote">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.flush" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Send the contents of the internal send buffer.</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">"Send the contents of the internal send buffer."</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="s2">&quot;Send the contents of the internal send buffer.&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">''</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="k">return</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.getpeername">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.getpeername" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.getpeername" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Convenience function to return the remote address to which the
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.getpeername" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Convenience function to return the remote address to which the
 wrapped socket is connected.  See :meth:<code>socket.getpeername</code>
 for more details.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Convenience function to return the remote address to which the</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience function to return the remote address to which the</span>
 <span class="sd">    wrapped socket is connected.  See :meth:`socket.getpeername`</span>
 <span class="sd">    for more details.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.getrecvbuffer">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.getrecvbuffer" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.getrecvbuffer" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Returns the receive buffer bytestring (rbuf).</p>
-<details class="quote">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.getrecvbuffer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns the receive buffer bytestring (rbuf).</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">"Returns the receive buffer bytestring (rbuf)."</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="s2">&quot;Returns the receive buffer bytestring (rbuf).&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.getsendbuffer">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.getsendbuffer" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.getsendbuffer" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Returns a copy of the send buffer list.</p>
-<details class="quote">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.getsendbuffer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns a copy of the send buffer list.</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">"Returns a copy of the send buffer list."</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="s2">&quot;Returns a copy of the send buffer list.&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.getsockname">
+        <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.getsockname" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.getsockname" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Convenience function to return the wrapped socket's own address.
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.getsockname" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Convenience function to return the wrapped socket's own address.
 See :meth:<code>socket.getsockname</code> for more details.</p>
-<details class="quote">
-          <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">"""Convenience function to return the wrapped socket's own address.</span>
-<span class="sd">    See :meth:`socket.getsockname` for more details.</span>
-<span class="sd">    """</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.getsockopt">
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+        <details class="quote">
+          <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience function to return the wrapped socket&#39;s own address.</span>
+<span class="sd">    See :meth:`socket.getsockname` for more details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.getsockopt" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.getsockopt" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Convenience function passing through to the wrapped socket's
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.getsockopt" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Convenience function passing through to the wrapped socket's
 :meth:<code>socket.getsockopt</code>.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Convenience function passing through to the wrapped socket's</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience function passing through to the wrapped socket&#39;s</span>
 <span class="sd">    :meth:`socket.getsockopt`.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">buflen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">+=</span> <span class="p">(</span><span class="n">buflen</span><span class="p">,)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">getsockopt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.peek">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.peek" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.peek" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Returns <em>size</em> bytes from the socket and/or internal buffer. Bytes
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.peek" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns <em>size</em> bytes from the socket and/or internal buffer. Bytes
 are retained in BufferedSocket's internal recv buffer. To only
 see bytes in the recv buffer, use :meth:<code>getrecvbuffer</code>.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>size</code></td>
-<td><code>int</code></td>
-<td>
-<p>The exact number of bytes to peek at</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>float</code></td>
-<td>
-<p>The timeout for this operation. Can be 0 for
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>int</code></td>
+        <td><p>The exact number of bytes to peek at</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>float</code></td>
+        <td><p>The timeout for this operation. Can be 0 for
 nonblocking and None for no timeout. Defaults to the value
-set in the constructor of BufferedSocket.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<p>If the appropriate number of bytes cannot be fetched from the
+set in the constructor of BufferedSocket.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+  </tbody>
+</table>      <p>If the appropriate number of bytes cannot be fetched from the
 buffer and socket before <em>timeout</em> expires, then a
 :exc:<code>Timeout</code> will be raised. If the connection is closed, a
 :exc:<code>ConnectionClosed</code> will be raised.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
-    <span class="sd">"""Returns *size* bytes from the socket and/or internal buffer. Bytes</span>
-<span class="sd">    are retained in BufferedSocket's internal recv buffer. To only</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns *size* bytes from the socket and/or internal buffer. Bytes</span>
+<span class="sd">    are retained in BufferedSocket&#39;s internal recv buffer. To only</span>
 <span class="sd">    see bytes in the recv buffer, use :meth:`getrecvbuffer`.</span>
 
 <span class="sd">    Args:</span>
@@ -1544,82 +1656,83 @@ buffer and socket before <em>timeout</em> expires, then a
 <span class="sd">    buffer and socket before *timeout* expires, then a</span>
 <span class="sd">    :exc:`Timeout` will be raised. If the connection is closed, a</span>
 <span class="sd">    :exc:`ConnectionClosed` will be raised.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">[:</span><span class="n">size</span><span class="p">]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recv_size</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span>
     <span class="k">return</span> <span class="n">data</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.recv" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.recv" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Returns <strong>up to</strong> <em>size</em> bytes, using the internal buffer before
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.recv" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns <strong>up to</strong> <em>size</em> bytes, using the internal buffer before
 performing a single :meth:<code>socket.recv</code> operation.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>size</code></td>
-<td><code>int</code></td>
-<td>
-<p>The maximum number of bytes to receive.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>flags</code></td>
-<td><code>int</code></td>
-<td>
-<p>Kept for API compatibility with sockets. Only
-the default, <code>0</code>, is valid.</p>
-</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>float</code></td>
-<td>
-<p>The timeout for this operation. Can be
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>int</code></td>
+        <td><p>The maximum number of bytes to receive.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>flags</code></td>
+        <td><code>int</code></td>
+        <td><p>Kept for API compatibility with sockets. Only
+the default, <code>0</code>, is valid.</p></td>
+        <td><code>0</code></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>float</code></td>
+        <td><p>The timeout for this operation. Can be
 <code>0</code> for nonblocking and <code>None</code> for no
 timeout. Defaults to the value set in the constructor
-of BufferedSocket.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<p>If the operation does not complete in <em>timeout</em> seconds, a
+of BufferedSocket.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+  </tbody>
+</table>      <p>If the operation does not complete in <em>timeout</em> seconds, a
 :exc:<code>Timeout</code> is raised. Much like the built-in
 :class:<code>socket.socket</code>, if this method returns an empty string,
 then the socket is closed and recv buffer is empty. Further
 calls to recv will raise :exc:<code>socket.error</code>.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
-    <span class="sd">"""Returns **up to** *size* bytes, using the internal buffer before</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns **up to** *size* bytes, using the internal buffer before</span>
 <span class="sd">    performing a single :meth:`socket.recv` operation.</span>
 
 <span class="sd">    Args:</span>
@@ -1637,17 +1750,17 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
 <span class="sd">    then the socket is closed and recv buffer is empty. Further</span>
 <span class="sd">    calls to recv will raise :exc:`socket.error`.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="n">_UNSET</span><span class="p">:</span>
             <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span>
         <span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"non-zero flags not supported: </span><span class="si">%r</span><span class="s2">"</span> <span class="o">%</span> <span class="n">flags</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;non-zero flags not supported: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">flags</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="p">:</span>
             <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">[:</span><span class="n">size</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">[</span><span class="n">size</span><span class="p">:]</span>
             <span class="k">return</span> <span class="n">data</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">:</span>
-            <span class="n">ret</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">,</span> <span class="sa">b</span><span class="s1">''</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
             <span class="k">return</span> <span class="n">ret</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1657,35 +1770,42 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">size</span><span class="p">:</span>
             <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="n">size</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">size</span><span class="p">:]</span>
     <span class="k">return</span> <span class="n">data</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv_close">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.recv_close" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.recv_close" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Receive until the connection is closed, up to <em>maxsize</em> bytes. If
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.recv_close" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive until the connection is closed, up to <em>maxsize</em> bytes. If
 more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong</code>.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
-    <span class="sd">"""Receive until the connection is closed, up to *maxsize* bytes. If</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Receive until the connection is closed, up to *maxsize* bytes. If</span>
 <span class="sd">    more than *maxsize* bytes are received, raises :exc:`MessageTooLong`.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># recv_close works by using recv_size to request maxsize data,</span>
     <span class="c1"># and ignoring ConnectionClose, returning and clearing the</span>
     <span class="c1"># internal buffer instead. It raises an exception if</span>
-    <span class="c1"># ConnectionClosed isn't raised.</span>
+    <span class="c1"># ConnectionClosed isn&#39;t raised.</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">maxsize</span> <span class="ow">is</span> <span class="n">_UNSET</span><span class="p">:</span>
             <span class="n">maxsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxsize</span>
@@ -1694,71 +1814,74 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
         <span class="k">try</span><span class="p">:</span>
             <span class="n">recvd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recv_size</span><span class="p">(</span><span class="n">maxsize</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ConnectionClosed</span><span class="p">:</span>
-            <span class="n">ret</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">,</span> <span class="sa">b</span><span class="s1">''</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># put extra received bytes (now in rbuf) after recvd</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="n">recvd</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span>
             <span class="n">size_read</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">maxsize</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span><span class="p">))</span>
             <span class="k">raise</span> <span class="n">MessageTooLong</span><span class="p">(</span><span class="n">size_read</span><span class="p">)</span>  <span class="c1"># check receive buffer</span>
     <span class="k">return</span> <span class="n">ret</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv_size">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.recv_size" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.recv_size" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Read off of the internal buffer, then off the socket, until
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.recv_size" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Read off of the internal buffer, then off the socket, until
 <em>size</em> bytes have been read.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>size</code></td>
-<td><code>int</code></td>
-<td>
-<p>number of bytes to read before returning.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>float</code></td>
-<td>
-<p>The timeout for this operation. Can be 0 for
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>int</code></td>
+        <td><p>number of bytes to read before returning.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>float</code></td>
+        <td><p>The timeout for this operation. Can be 0 for
 nonblocking and None for no timeout. Defaults to the value
-set in the constructor of BufferedSocket.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<p>If the appropriate number of bytes cannot be fetched from the
+set in the constructor of BufferedSocket.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+  </tbody>
+</table>      <p>If the appropriate number of bytes cannot be fetched from the
 buffer and socket before <em>timeout</em> expires, then a
 :exc:<code>Timeout</code> will be raised. If the connection is closed, a
 :exc:<code>ConnectionClosed</code> will be raised.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
-    <span class="sd">"""Read off of the internal buffer, then off the socket, until</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read off of the internal buffer, then off the socket, until</span>
 <span class="sd">    *size* bytes have been read.</span>
 
 <span class="sd">    Args:</span>
@@ -1771,7 +1894,7 @@ buffer and socket before <em>timeout</em> expires, then a
 <span class="sd">    buffer and socket before *timeout* expires, then a</span>
 <span class="sd">    :exc:`Timeout` will be raised. If the connection is closed, a</span>
 <span class="sd">    :exc:`ConnectionClosed` will be raised.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="n">_UNSET</span><span class="p">:</span>
             <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span>
@@ -1793,95 +1916,94 @@ buffer and socket before <em>timeout</em> expires, then a
                     <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">cur_timeout</span><span class="p">)</span>
                 <span class="n">nxt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_recvsize</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'connection closed after reading </span><span class="si">%s</span><span class="s1"> of </span><span class="si">%s</span><span class="s1"> requested'</span>
-                       <span class="s1">' bytes'</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;connection closed after reading </span><span class="si">%s</span><span class="s1"> of </span><span class="si">%s</span><span class="s1"> requested&#39;</span>
+                       <span class="s1">&#39; bytes&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
                 <span class="k">raise</span> <span class="n">ConnectionClosed</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># check recv buffer</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">'read </span><span class="si">%s</span><span class="s1"> of </span><span class="si">%s</span><span class="s1"> bytes'</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;read </span><span class="si">%s</span><span class="s1"> of </span><span class="si">%s</span><span class="s1"> bytes&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>  <span class="c1"># check recv buffer</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="c1"># received data is still buffered in the case of errors</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="n">extra_bytes</span> <span class="o">=</span> <span class="n">total_bytes</span> <span class="o">-</span> <span class="n">size</span>
         <span class="k">if</span> <span class="n">extra_bytes</span><span class="p">:</span>
             <span class="n">last</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="n">nxt</span><span class="p">[:</span><span class="o">-</span><span class="n">extra_bytes</span><span class="p">],</span> <span class="n">nxt</span><span class="p">[</span><span class="o">-</span><span class="n">extra_bytes</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">last</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="n">nxt</span><span class="p">,</span> <span class="sa">b</span><span class="s1">''</span>
+            <span class="n">last</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="n">nxt</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
         <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.recv_until">
+    <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.recv_until" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.recv_until" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Receive until <em>delimiter</em> is found, <em>maxsize</em> bytes have been read,
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.recv_until" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Receive until <em>delimiter</em> is found, <em>maxsize</em> bytes have been read,
 or <em>timeout</em> is exceeded.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>delimiter</code></td>
-<td><code>bytes</code></td>
-<td>
-<p>One or more bytes to be searched for
-in the socket stream.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>float</code></td>
-<td>
-<p>The timeout for this operation. Can be 0 for
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>delimiter</code></td>
+        <td><code>bytes</code></td>
+        <td><p>One or more bytes to be searched for
+in the socket stream.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>float</code></td>
+        <td><p>The timeout for this operation. Can be 0 for
 nonblocking and None for no timeout. Defaults to the value
-set in the constructor of BufferedSocket.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-<tr>
-<td><code>maxsize</code></td>
-<td><code>int</code></td>
-<td>
-<p>The maximum size for the internal buffer.
-Defaults to the value set in the constructor.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-<tr>
-<td><code>with_delimiter</code></td>
-<td><code>bool</code></td>
-<td>
-<p>Whether or not to include the
+set in the constructor of BufferedSocket.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+      <tr>
+        <td><code>maxsize</code></td>
+        <td><code>int</code></td>
+        <td><p>The maximum size for the internal buffer.
+Defaults to the value set in the constructor.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+      <tr>
+        <td><code>with_delimiter</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether or not to include the
 delimiter in the output. <code>False</code> by default, but
 <code>True</code> is useful in cases where one is simply
-forwarding the messages.</p>
-</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-<p><code>recv_until</code> will raise the following exceptions:</p>
+forwarding the messages.</p></td>
+        <td><code>False</code></td>
+      </tr>
+  </tbody>
+</table>      <p><code>recv_until</code> will raise the following exceptions:</p>
 <ul>
 <li>:exc:<code>Timeout</code> if more than <em>timeout</em> seconds expire.</li>
 <li>:exc:<code>ConnectionClosed</code> if the underlying socket is closed
@@ -1892,12 +2014,12 @@ forwarding the messages.</p>
     (<em>timeout</em> equal to 0), or if some unexpected socket error
     occurs, such as operating on a closed socket.</li>
 </ul>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span>
                <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">"""Receive until *delimiter* is found, *maxsize* bytes have been read,</span>
+    <span class="sd">&quot;&quot;&quot;Receive until *delimiter* is found, *maxsize* bytes have been read,</span>
 <span class="sd">    or *timeout* is exceeded.</span>
 
 <span class="sd">    Args:</span>
@@ -1924,7 +2046,7 @@ forwarding the messages.</p>
 <span class="sd">        (*timeout* equal to 0), or if some unexpected socket error</span>
 <span class="sd">        occurs, such as operating on a closed socket.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">maxsize</span> <span class="ow">is</span> <span class="n">_UNSET</span><span class="p">:</span>
             <span class="n">maxsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxsize</span>
@@ -1961,14 +2083,14 @@ forwarding the messages.</p>
                 <span class="n">nxt</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_recvsize</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">nxt</span><span class="p">:</span>
                     <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">recvd</span><span class="p">),</span> <span class="n">delimiter</span><span class="p">)</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'connection closed after reading </span><span class="si">%s</span><span class="s1"> bytes'</span>
-                           <span class="s1">' without finding symbol: </span><span class="si">%r</span><span class="s1">'</span> <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;connection closed after reading </span><span class="si">%s</span><span class="s1"> bytes&#39;</span>
+                           <span class="s1">&#39; without finding symbol: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">ConnectionClosed</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># check the recv buffer</span>
                 <span class="n">recvd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nxt</span><span class="p">)</span>
                 <span class="n">find_offset_start</span> <span class="o">=</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">nxt</span><span class="p">)</span> <span class="o">-</span> <span class="n">len_delimiter</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">recvd</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'read </span><span class="si">%s</span><span class="s1"> bytes without finding delimiter: </span><span class="si">%r</span><span class="s1">'</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;read </span><span class="si">%s</span><span class="s1"> bytes without finding delimiter: </span><span class="si">%r</span><span class="s1">&#39;</span>
                    <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">recvd</span><span class="p">),</span> <span class="n">delimiter</span><span class="p">))</span>
             <span class="k">raise</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>  <span class="c1"># check the recv buffer</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -1976,75 +2098,76 @@ forwarding the messages.</p>
             <span class="k">raise</span>
         <span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">recvd</span><span class="p">[:</span><span class="n">offset</span><span class="p">]),</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">recvd</span><span class="p">[</span><span class="n">rbuf_offset</span><span class="p">:])</span>
     <span class="k">return</span> <span class="n">val</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.send">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.send" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.send" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Send the contents of the internal send buffer, as well as <em>data</em>,
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.send" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Send the contents of the internal send buffer, as well as <em>data</em>,
 to the receiving end of the connection. Returns the total
 number of bytes sent. If no exception is raised, all of <em>data</em> was
 sent and the internal send buffer is empty.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>data</code></td>
-<td><code>bytes</code></td>
-<td>
-<p>The bytes to send.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>flags</code></td>
-<td><code>int</code></td>
-<td>
-<p>Kept for API compatibility with sockets. Only
-the default 0 is valid.</p>
-</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>float</code></td>
-<td>
-<p>The timeout for this operation. Can be 0 for
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>data</code></td>
+        <td><code>bytes</code></td>
+        <td><p>The bytes to send.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>flags</code></td>
+        <td><code>int</code></td>
+        <td><p>Kept for API compatibility with sockets. Only
+the default 0 is valid.</p></td>
+        <td><code>0</code></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>float</code></td>
+        <td><p>The timeout for this operation. Can be 0 for
 nonblocking and None for no timeout. Defaults to the value
-set in the constructor of BufferedSocket.</p>
-</td>
-<td><code>&lt;object object at 0x01FD3F38&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<p>Will raise :exc:<code>Timeout</code> if the send operation fails to
+set in the constructor of BufferedSocket.</p></td>
+        <td><code>&lt;object object at 0x000002285C5BAA10&gt;</code></td>
+      </tr>
+  </tbody>
+</table>      <p>Will raise :exc:<code>Timeout</code> if the send operation fails to
 complete before <em>timeout</em>. In the event of an exception, use
 :meth:<code>BufferedSocket.getsendbuffer</code> to see which data was
 unsent.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
-    <span class="sd">"""Send the contents of the internal send buffer, as well as *data*,</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send the contents of the internal send buffer, as well as *data*,</span>
 <span class="sd">    to the receiving end of the connection. Returns the total</span>
 <span class="sd">    number of bytes sent. If no exception is raised, all of *data* was</span>
 <span class="sd">    sent and the internal send buffer is empty.</span>
@@ -2061,16 +2184,16 @@ unsent.</p>
 <span class="sd">    complete before *timeout*. In the event of an exception, use</span>
 <span class="sd">    :meth:`BufferedSocket.getsendbuffer` to see which data was</span>
 <span class="sd">    unsent.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="n">_UNSET</span><span class="p">:</span>
             <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span>
         <span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"non-zero flags not supported"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;non-zero flags not supported&quot;</span><span class="p">)</span>
         <span class="n">sbuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span>
         <span class="n">sbuf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbuf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">sbuf</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">b</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sbuf</span> <span class="k">if</span> <span class="n">s</span><span class="p">])]</span>
+            <span class="n">sbuf</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sbuf</span> <span class="k">if</span> <span class="n">s</span><span class="p">])]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
         <span class="n">start</span><span class="p">,</span> <span class="n">total_sent</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="mi">0</span>
         <span class="k">try</span><span class="p">:</span>
@@ -2084,126 +2207,162 @@ unsent.</p>
                         <span class="k">raise</span> <span class="n">socket</span><span class="o">.</span><span class="n">timeout</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">cur_timeout</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="s1">'</span><span class="si">%s</span><span class="s1"> bytes unsent'</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbuf</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">raise</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> bytes unsent&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbuf</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">total_sent</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.sendall">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01FD3F38</span><span class="o">&gt;</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.sendall" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002285C5BAA10</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.sendall" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>A passthrough to :meth:<code>~BufferedSocket.send</code>, retained for
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.sendall" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>A passthrough to :meth:<code>~BufferedSocket.send</code>, retained for
 parallelism to the :class:<code>socket.socket</code> API.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
-    <span class="sd">"""A passthrough to :meth:`~BufferedSocket.send`, retained for</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A passthrough to :meth:`~BufferedSocket.send`, retained for</span>
 <span class="sd">    parallelism to the :class:`socket.socket` API.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.setmaxsize">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span></code>
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.setmaxsize" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.setmaxsize" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Set the default maximum buffer size <em>maxsize</em> for future
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.setmaxsize" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Set the default maximum buffer size <em>maxsize</em> for future
 operations, in bytes. Does not truncate the current buffer.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
-    <span class="sd">"""Set the default maximum buffer size *maxsize* for future</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the default maximum buffer size *maxsize* for future</span>
 <span class="sd">    operations, in bytes. Does not truncate the current buffer.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">=</span> <span class="n">maxsize</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.setsockopt">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.setsockopt" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.setsockopt" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Convenience function passing through to the wrapped socket's
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.setsockopt" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Convenience function passing through to the wrapped socket's
 :meth:<code>socket.setsockopt</code>.</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">"""Convenience function passing through to the wrapped socket's</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience function passing through to the wrapped socket&#39;s</span>
 <span class="sd">    :meth:`socket.setsockopt`.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.settimeout">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.settimeout" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.settimeout" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Set the default <em>timeout</em> for future operations, in seconds.</p>
-<details class="quote">
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.settimeout" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Set the default <em>timeout</em> for future operations, in seconds.</p>
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
-    <span class="s2">"Set the default *timeout* for future operations, in seconds."</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+    <span class="s2">&quot;Set the default *timeout* for future operations, in seconds.&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.shutdown">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">)</span></code>
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.shutdown" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.shutdown" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Convenience method which passes through to the wrapped socket's
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.shutdown" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Convenience method which passes through to the wrapped socket's
 :meth:<code>~socket.shutdown</code>. Semantics vary by platform, so no
 special internal handling is done with the buffers. This
 method exists to facilitate the most common usage, wherein a
@@ -2211,11 +2370,11 @@ full <code>shutdown</code> is followed by a
 :meth:<code>~BufferedSocket.close</code>. Developers requiring more
 support, please open <code>an issue</code>_.</p>
 <p>.. _an issue: https://github.com/mahmoud/boltons/issues</p>
-<details class="quote">
+
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
-    <span class="sd">"""Convenience method which passes through to the wrapped socket's</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience method which passes through to the wrapped socket&#39;s</span>
 <span class="sd">    :meth:`~socket.shutdown`. Semantics vary by platform, so no</span>
 <span class="sd">    special internal handling is done with the buffers. This</span>
 <span class="sd">    method exists to facilitate the most common usage, wherein a</span>
@@ -2224,77 +2383,78 @@ support, please open <code>an issue</code>_.</p>
 <span class="sd">    support, please open `an issue`_.</span>
 
 <span class="sd">    .. _an issue: https://github.com/mahmoud/boltons/issues</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">how</span><span class="p">)</span>
     <span class="k">return</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-method">
-<h3 class="doc doc-heading" id="mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL">
+</code></pre></div>
+        </details>
+    </div>
 
-<code class="highlight language-python"><span class="n">Method</span> <span class="n">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  </div>
 
 
-      <a class="headerlink" href="#mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL" title="Permanent link">&para;</a></h3>
-<div class="doc doc-contents ">
-<p>Wraps a socket in an SSL context.</p>
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Wraps a socket in an SSL context.</p>
+
 <p><strong>Parameters:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>sock</code></td>
-<td><code>socket.socket</code></td>
-<td>
-<p>The unencrypted socket.</p>
-</td>
-<td><em>required</em></td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td><code>Any</code></td>
-<td>
-<p>Key-word only arguments to be passed to the <a href="https://docs.python.org/library/ssl.html#ssl.SSLContext.wrap_socket"><code>SSLContext.wrap_socket</code></a> method.</p>
-</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>sock</code></td>
+        <td><code>socket.socket</code></td>
+        <td><p>The unencrypted socket.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Key-word only arguments to be passed to the <a href="https://docs.python.org/library/ssl.html#ssl.SSLContext.wrap_socket"><code>SSLContext.wrap_socket</code></a> method.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
 </table>
 <p><strong>Returns:</strong></p>
-<table class="data" role="grid">
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ssl.SSLSocket</code></td>
-<td>
-<p>The socket wrapped in an
-<a href="https://docs.python.org/library/ssl.html#ssl.SSLContext">SSL context.</a></p>
-</td>
-</tr>
-</tbody>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ssl.SSLSocket</code></td>
+      <td><p>The socket wrapped in an
+<a href="https://docs.python.org/library/ssl.html#ssl.SSLContext">SSL context.</a></p></td>
+    </tr>
+  </tbody>
 </table>
-<details class="quote">
+        <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="highlight">
-<pre><span></span><code><span class="k">def</span> <span class="nf">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">:</span>
-	<span class="sd">"""</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Wraps a socket in an SSL context.</span>
 
 <span class="sd">	Args:</span>
@@ -2305,8 +2465,8 @@ support, please open <code>an issue</code>_.</p>
 <span class="sd">	Returns:</span>
 <span class="sd">		The socket wrapped in an</span>
 <span class="sd">		[SSL context.](https://docs.python.org/library/ssl.html#ssl.SSLContext)</span>
-<span class="sd">	"""</span>
-	<span class="n">kwargs</span><span class="p">[</span><span class="s2">"do_handshake_on_connect"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Avoid race condition.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;do_handshake_on_connect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Avoid race condition.</span>
 	<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
 		<span class="n">originalTimeout</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">gettimeout</span><span class="p">()</span>
 		<span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
@@ -2318,17 +2478,33 @@ support, please open <code>an issue</code>_.</p>
 		<span class="k">finally</span><span class="p">:</span>
 			<span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">originalTimeout</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">sock</span>
-</code></pre>
-</div>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
                 
               
               
@@ -2339,6 +2515,7 @@ support, please open <code>an issue</code>_.</p>
             </article>
           </div>
         </div>
+        
       </main>
       
         
@@ -2364,19 +2541,13 @@ support, please open <code>an issue</code>_.</p>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
     
-      <script src="../../../assets/javascripts/vendor.53cc9318.min.js"></script>
-      <script src="../../../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
-      
-      <script>
-        app = initialize({
-          base: "../../..",
-          features: [],
-          search: Object.assign({
-            worker: "../../../assets/javascripts/worker/search.9c0e82ba.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../../../assets/javascripts/bundle.56a63758.min.js"></script>
       
         <script src="../../../search/main.js"></script>
       
