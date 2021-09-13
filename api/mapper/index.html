@@ -486,13 +486,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.mapper.Mapper.native_id" class="md-nav__link">
-    native_id
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mapper.mapper.Mapper.createSpeedWalk" class="md-nav__link">
     createSpeedWalk()
   </a>
@@ -628,6 +621,13 @@
           <li class="md-nav__item">
   <a href="#mapper.mapper.Mapper.is_alive" class="md-nav__link">
     is_alive()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.mapper.Mapper.isAlive" class="md-nav__link">
+    isAlive()
   </a>
   
 </li>
@@ -820,13 +820,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.mapper.Mapper.native_id" class="md-nav__link">
-    native_id
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mapper.mapper.Mapper.createSpeedWalk" class="md-nav__link">
     createSpeedWalk()
   </a>
@@ -967,6 +960,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mapper.mapper.Mapper.isAlive" class="md-nav__link">
+    isAlive()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.mapper.Mapper.isBidirectional" class="md-nav__link">
     isBidirectional()
   </a>
@@ -1055,12 +1055,12 @@
 
 
 
-<h1 id="mapper.mapper" class="doc doc-heading">
+<h1 class="doc doc-heading" id="mapper.mapper">
         <code>Module mapper.mapper</code>
 
 
 
-<a href="#mapper.mapper" class="headerlink" title="Permanent link">&para;</a></h1>
+<a class="headerlink" href="#mapper.mapper" title="Permanent link">&para;</a></h1>
 
     <div class="doc doc-contents first">
 
@@ -1085,12 +1085,12 @@
 
 
 
-<h2 id="mapper.mapper.Mapper" class="doc doc-heading">
+<h2 class="doc doc-heading" id="mapper.mapper.Mapper">
         <code>Class Mapper</code>
 
 
 
-<a href="#mapper.mapper.Mapper" class="headerlink" title="Permanent link">&para;</a></h2>
+<a class="headerlink" href="#mapper.mapper.Mapper" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
@@ -1111,7 +1111,7 @@
 
 
 
-<h3 id="mapper.mapper.Mapper.daemon" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.daemon">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
@@ -1120,7 +1120,7 @@
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.daemon" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1140,7 +1140,7 @@ the main thread default to daemon = False.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.ident" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.ident">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
@@ -1149,7 +1149,7 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.ident" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1169,7 +1169,7 @@ created. The identifier is available even after the thread has exited.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.name" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.name">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
@@ -1178,39 +1178,13 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.name" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.name" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
       <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="mapper.mapper.Mapper.native_id" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
-
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
-
-<a href="#mapper.mapper.Mapper.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
-
-    <div class="doc doc-contents ">
-
-      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
-<p>This is a non-negative integer. See the get_native_id() function.
-This represents the Thread ID as reported by the kernel.</p>
     </div>
 
   </div>
@@ -1231,14 +1205,14 @@ This represents the Thread ID as reported by the kernel.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.createSpeedWalk" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.createSpeedWalk">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">createSpeedWalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directionsList</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.createSpeedWalk" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.createSpeedWalk" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1288,11 +1262,11 @@ This represents the Thread ID as reported by the kernel.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.deregisterMudEventHandler" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.deregisterMudEventHandler">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.deregisterMudEventHandler" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.deregisterMudEventHandler" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1322,11 +1296,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulate_leave" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulate_leave">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulate_leave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulate_leave" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulate_leave" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1360,11 +1334,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_at" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_at">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_at" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_at" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1403,11 +1377,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_brief" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_brief">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_brief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_brief" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_brief" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1432,11 +1406,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_dynamic" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_dynamic">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_dynamic" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_dynamic" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1461,11 +1435,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_examine" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_examine">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_examine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_examine" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_examine" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1489,11 +1463,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_exits" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_exits">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_exits" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_exits" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1518,11 +1492,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_go" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_go">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">isJump</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_go" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_go" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1556,11 +1530,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_help" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_help">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_help" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_help" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1611,11 +1585,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_look" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_look">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_look" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_look" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1645,11 +1619,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_quit" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_quit">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_quit" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_quit" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1673,11 +1647,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_rename" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_rename">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_rename" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_rename" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1706,11 +1680,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_return" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_return">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_return" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_return" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1737,11 +1711,11 @@ params: same as registerMudEventHandler.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.emulation_command_sync" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.emulation_command_sync">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">emulation_command_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.emulation_command_sync" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.emulation_command_sync" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1780,14 +1754,14 @@ When running in offline mode, is equivalent to the return command.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.getNeighborsFromCoordinates" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getNeighborsFromCoordinates">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">getNeighborsFromCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.getNeighborsFromCoordinates" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.getNeighborsFromCoordinates" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1821,14 +1795,14 @@ Each yielded result contains the vnum, room object reference, and difference in 
 
 
 
-<h3 id="mapper.mapper.Mapper.getNeighborsFromRoom" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getNeighborsFromRoom">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">getNeighborsFromRoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.getNeighborsFromRoom" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.getNeighborsFromRoom" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1865,14 +1839,14 @@ Each yielded result contains the vnum, room object reference, and difference in 
 
 
 
-<h3 id="mapper.mapper.Mapper.getNewExit" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.getNewExit">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">getNewExit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s1">&#39;undefined&#39;</span><span class="p">,</span> <span class="n">vnum</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.getNewExit" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.getNewExit" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1958,14 +1932,14 @@ Each yielded result contains the vnum, room object reference, and difference in 
 
 
 
-<h3 id="mapper.mapper.Mapper.GUIRefresh" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.GUIRefresh">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">GUIRefresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.GUIRefresh" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.GUIRefresh" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1991,21 +1965,21 @@ Each yielded result contains the vnum, room object reference, and difference in 
 
 
 
-<h3 id="mapper.mapper.Mapper.is_alive" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.is_alive">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.is_alive" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
       <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. See also the module function
-enumerate().</p>
+after the run() method terminates. The module function enumerate()
+returns a list of all alive threads.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
@@ -2013,8 +1987,8 @@ enumerate().</p>
     <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. See also the module function</span>
-<span class="sd">    enumerate().</span>
+<span class="sd">    after the run() method terminates. The module function enumerate()</span>
+<span class="sd">    returns a list of all alive threads.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
@@ -2034,14 +2008,51 @@ enumerate().</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.isBidirectional" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.isAlive">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+<a class="headerlink" href="#mapper.mapper.Mapper.isAlive" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
+<p>This method is deprecated, use is_alive() instead.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\mapper.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+
+<span class="sd">    This method is deprecated, use is_alive() instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;isAlive() is deprecated, use is_alive() instead&#39;</span><span class="p">,</span>
+                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.isBidirectional">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">isBidirectional</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitObj</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.isBidirectional" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.isBidirectional" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2079,14 +2090,14 @@ you just came from would put you back where you started, False otherwise.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.join" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.join">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.join" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.join" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2169,14 +2180,14 @@ exception.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.pathFind" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.pathFind">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">pathFind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.pathFind" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.pathFind" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2234,11 +2245,11 @@ exception.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.registerMudEventHandler" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.registerMudEventHandler">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.registerMudEventHandler" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.registerMudEventHandler" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2284,11 +2295,11 @@ and handler is a method that takes a single argument, text, which is the text re
 
 
 
-<h3 id="mapper.mapper.Mapper.run" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.run">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.run" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.run" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2336,14 +2347,14 @@ from the args and kwargs arguments, respectively.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.start" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.start">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.mapper.Mapper.start" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.start" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2370,7 +2381,6 @@ same thread object.</p>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
-
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
@@ -2413,11 +2423,11 @@ same thread object.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.user_command_maphelp" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.user_command_maphelp">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">user_command_maphelp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.user_command_maphelp" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.user_command_maphelp" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2492,11 +2502,11 @@ same thread object.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.user_command_tvnum" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.user_command_tvnum">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">user_command_tvnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.user_command_tvnum" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.user_command_tvnum" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2522,11 +2532,11 @@ same thread object.</p>
 
 
 
-<h3 id="mapper.mapper.Mapper.user_command_vnum" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.mapper.Mapper.user_command_vnum">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">user_command_vnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
 
 
-<a href="#mapper.mapper.Mapper.user_command_vnum" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.mapper.Mapper.user_command_vnum" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 

@@ -474,15 +474,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Game.native_id" class="md-nav__link">
-    native_id
+  <a href="#mapper.main.Game.is_alive" class="md-nav__link">
+    is_alive()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Game.is_alive" class="md-nav__link">
-    is_alive()
+  <a href="#mapper.main.Game.isAlive" class="md-nav__link">
+    isAlive()
   </a>
   
 </li>
@@ -543,15 +543,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Player.native_id" class="md-nav__link">
-    native_id
+  <a href="#mapper.main.Player.is_alive" class="md-nav__link">
+    is_alive()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Player.is_alive" class="md-nav__link">
-    is_alive()
+  <a href="#mapper.main.Player.isAlive" class="md-nav__link">
+    isAlive()
   </a>
   
 </li>
@@ -714,15 +714,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Game.native_id" class="md-nav__link">
-    native_id
+  <a href="#mapper.main.Game.is_alive" class="md-nav__link">
+    is_alive()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Game.is_alive" class="md-nav__link">
-    is_alive()
+  <a href="#mapper.main.Game.isAlive" class="md-nav__link">
+    isAlive()
   </a>
   
 </li>
@@ -783,15 +783,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Player.native_id" class="md-nav__link">
-    native_id
+  <a href="#mapper.main.Player.is_alive" class="md-nav__link">
+    is_alive()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.Player.is_alive" class="md-nav__link">
-    is_alive()
+  <a href="#mapper.main.Player.isAlive" class="md-nav__link">
+    isAlive()
   </a>
   
 </li>
@@ -843,12 +843,12 @@
 
 
 
-<h1 id="mapper.main" class="doc doc-heading">
+<h1 class="doc doc-heading" id="mapper.main">
         <code>Module mapper.main</code>
 
 
 
-<a href="#mapper.main" class="headerlink" title="Permanent link">&para;</a></h1>
+<a class="headerlink" href="#mapper.main" title="Permanent link">&para;</a></h1>
 
     <div class="doc doc-contents first">
 
@@ -869,12 +869,12 @@
 
 
 
-<h2 id="mapper.main.Game" class="doc doc-heading">
+<h2 class="doc doc-heading" id="mapper.main.Game">
         <code>Class Game</code>
 
 
 
-<a href="#mapper.main.Game" class="headerlink" title="Permanent link">&para;</a></h2>
+<a class="headerlink" href="#mapper.main.Game" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
@@ -893,7 +893,7 @@
 
 
 
-<h3 id="mapper.main.Game.daemon" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.daemon">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
@@ -902,7 +902,7 @@
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-<a href="#mapper.main.Game.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.daemon" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -922,7 +922,7 @@ the main thread default to daemon = False.</p>
 
 
 
-<h3 id="mapper.main.Game.ident" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.ident">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
@@ -931,7 +931,7 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-<a href="#mapper.main.Game.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.ident" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -949,7 +949,7 @@ created. The identifier is available even after the thread has exited.</p>
 
 
 
-<h3 id="mapper.main.Game.name" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.name">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
@@ -958,39 +958,13 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-<a href="#mapper.main.Game.name" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.name" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
       <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="mapper.main.Game.native_id" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
-
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
-
-<a href="#mapper.main.Game.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
-
-    <div class="doc doc-contents ">
-
-      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
-<p>This is a non-negative integer. See the get_native_id() function.
-This represents the Thread ID as reported by the kernel.</p>
     </div>
 
   </div>
@@ -1007,21 +981,21 @@ This represents the Thread ID as reported by the kernel.</p>
 
 
 
-<h3 id="mapper.main.Game.is_alive" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.is_alive">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.main.Game.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.is_alive" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
       <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. See also the module function
-enumerate().</p>
+after the run() method terminates. The module function enumerate()
+returns a list of all alive threads.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
@@ -1029,8 +1003,8 @@ enumerate().</p>
     <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. See also the module function</span>
-<span class="sd">    enumerate().</span>
+<span class="sd">    after the run() method terminates. The module function enumerate()</span>
+<span class="sd">    returns a list of all alive threads.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
@@ -1046,19 +1020,56 @@ enumerate().</p>
 
 
 
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="mapper.main.Game.isAlive">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+<a class="headerlink" href="#mapper.main.Game.isAlive" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
+<p>This method is deprecated, use is_alive() instead.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+
+<span class="sd">    This method is deprecated, use is_alive() instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;isAlive() is deprecated, use is_alive() instead&#39;</span><span class="p">,</span>
+                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
 
   <div class="doc doc-object doc-method">
 
 
 
-<h3 id="mapper.main.Game.join" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.join">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.main.Game.join" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.join" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1130,11 +1141,11 @@ exception.</p>
 
 
 
-<h3 id="mapper.main.Game.run" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.run">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
-<a href="#mapper.main.Game.run" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.run" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1177,14 +1188,14 @@ from the args and kwargs arguments, respectively.</p>
 
 
 
-<h3 id="mapper.main.Game.start" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Game.start">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.main.Game.start" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Game.start" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1211,7 +1222,6 @@ same thread object.</p>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
-
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1243,12 +1253,12 @@ same thread object.</p>
 
 
 
-<h2 id="mapper.main.Player" class="doc doc-heading">
+<h2 class="doc doc-heading" id="mapper.main.Player">
         <code>Class Player</code>
 
 
 
-<a href="#mapper.main.Player" class="headerlink" title="Permanent link">&para;</a></h2>
+<a class="headerlink" href="#mapper.main.Player" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
@@ -1267,7 +1277,7 @@ same thread object.</p>
 
 
 
-<h3 id="mapper.main.Player.daemon" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.daemon">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">daemon</span></code>
 
   <span class="doc doc-properties">
@@ -1276,7 +1286,7 @@ same thread object.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-<a href="#mapper.main.Player.daemon" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.daemon" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1296,7 +1306,7 @@ the main thread default to daemon = False.</p>
 
 
 
-<h3 id="mapper.main.Player.ident" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.ident">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">ident</span></code>
 
   <span class="doc doc-properties">
@@ -1305,7 +1315,7 @@ the main thread default to daemon = False.</p>
       <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
   </span>
 
-<a href="#mapper.main.Player.ident" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.ident" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1323,7 +1333,7 @@ created. The identifier is available even after the thread has exited.</p>
 
 
 
-<h3 id="mapper.main.Player.name" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.name">
 <code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">name</span></code>
 
   <span class="doc doc-properties">
@@ -1332,39 +1342,13 @@ created. The identifier is available even after the thread has exited.</p>
       <small class="doc doc-property doc-property-writable"><code>writable</code></small>
   </span>
 
-<a href="#mapper.main.Player.name" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.name" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
       <p>A string used for identification purposes only.</p>
 <p>It has no semantics. Multiple threads may be given the same name. The
 initial name is set by the constructor.</p>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="mapper.main.Player.native_id" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">native_id</span></code>
-
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-      <small class="doc doc-property doc-property-property"><code>property</code></small>
-      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
-  </span>
-
-<a href="#mapper.main.Player.native_id" class="headerlink" title="Permanent link">&para;</a></h3>
-
-    <div class="doc doc-contents ">
-
-      <p>Native integral thread ID of this thread, or None if it has not been started.</p>
-<p>This is a non-negative integer. See the get_native_id() function.
-This represents the Thread ID as reported by the kernel.</p>
     </div>
 
   </div>
@@ -1381,21 +1365,21 @@ This represents the Thread ID as reported by the kernel.</p>
 
 
 
-<h3 id="mapper.main.Player.is_alive" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.is_alive">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.main.Player.is_alive" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.is_alive" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
       <p>Return whether the thread is alive.</p>
 <p>This method returns True just before the run() method starts until just
-after the run() method terminates. See also the module function
-enumerate().</p>
+after the run() method terminates. The module function enumerate()
+returns a list of all alive threads.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
@@ -1403,8 +1387,8 @@ enumerate().</p>
     <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
-<span class="sd">    after the run() method terminates. See also the module function</span>
-<span class="sd">    enumerate().</span>
+<span class="sd">    after the run() method terminates. The module function enumerate()</span>
+<span class="sd">    returns a list of all alive threads.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">,</span> <span class="s2">&quot;Thread.__init__() not called&quot;</span>
@@ -1420,19 +1404,56 @@ enumerate().</p>
 
 
 
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="mapper.main.Player.isAlive">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
+  </span>
+
+<a class="headerlink" href="#mapper.main.Player.isAlive" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return whether the thread is alive.</p>
+<p>This method is deprecated, use is_alive() instead.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\main.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isAlive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+
+<span class="sd">    This method is deprecated, use is_alive() instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;isAlive() is deprecated, use is_alive() instead&#39;</span><span class="p">,</span>
+                  <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
 
   <div class="doc doc-object doc-method">
 
 
 
-<h3 id="mapper.main.Player.join" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.join">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.main.Player.join" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.join" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1504,11 +1525,11 @@ exception.</p>
 
 
 
-<h3 id="mapper.main.Player.run" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.run">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
-<a href="#mapper.main.Player.run" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.run" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1550,14 +1571,14 @@ from the args and kwargs arguments, respectively.</p>
 
 
 
-<h3 id="mapper.main.Player.start" class="doc doc-heading">
+<h3 class="doc doc-heading" id="mapper.main.Player.start">
 <code class="codehilite language-python"><span class="n">Method</span> <span class="n">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
   </span>
 
-<a href="#mapper.main.Player.start" class="headerlink" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#mapper.main.Player.start" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1584,7 +1605,6 @@ same thread object.</p>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_started</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;threads can only be started once&quot;</span><span class="p">)</span>
-
     <span class="k">with</span> <span class="n">_active_limbo_lock</span><span class="p">:</span>
         <span class="n">_limbo</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">try</span><span class="p">:</span>
