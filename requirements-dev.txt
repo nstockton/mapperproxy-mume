@@ -11,6 +11,7 @@ mkdocstrings==0.15.2
 mypy
 pre-commit
 PyInstaller==4.1
+pyproject-flake8==0.0.1a2
 git+https://github.com/nstockton/pytkdocs.git@tab-indentation-parser#egg=pytkdocs
 git+https://github.com/nstockton/tan.git@personal#egg=tan
 types-certifi
