@@ -56,6 +56,13 @@ repos:
         entry: "python -B -m mypy"
         types_or: [python, spec]
         pass_filenames: false
+      - id: mkdocs
+        name: MKDocs
+        stages: [commit]
+        language: system
+        entry: "python -B -m mkdocs build --clean --strict"
+        types_or: [markdown, python]
+        pass_filenames: false
       - id: coverage
         name: Coverage
         stages: [push]
