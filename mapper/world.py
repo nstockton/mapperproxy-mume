@@ -54,7 +54,7 @@ from .utils import regexFuzzy
 
 if TYPE_CHECKING:  # pragma: no cover
 	# Only import pyglet.window if type checking. Prevents slowdown during tests.
-	import pyglet.window  # type: ignore[import]
+	import pyglet.window
 
 
 GUI_QUEUE_TYPE = Union[Tuple[str], Tuple[str, Room], None]

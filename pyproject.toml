@@ -2,9 +2,9 @@
 	use-tabs = true
 	safe = true
 	line-length = 110
-	target-version = ["py37", "py38"]
+	target-version = ["py37", "py38", "py39"]
 	exclude = '(/(\.eggs|\.git|\.mypy_cache|\.tox|\.venv|build|dist)|__pycache__)'
-	include = '/((mapper|tests).*\.py|pyinstaller_windows\.spec|start\.py)$'
+	include = '/((mapper|tests).*\.py[isw]?|pyinstaller_windows\.spec|start\.py)$'
 
 [tool.coverage.report]
 	precision = 0
@@ -13,12 +13,12 @@
 	skip_covered = true
 	sort = "Cover"
 	exclude_lines = [
-		"pragma: no cover",
-		"raise AssertionError",
-		"raise NotImplementedError",
-		"def __repr__",
-		"def __str__",
-		"if __name__ == .__main__.:",
+		'\#\s*pragma: no cover',
+		'^\s*raise AssertionError\b',
+		'^\s*raise NotImplementedError\b',
+		'^\s*def __repr__',
+		'^\s*def __str__',
+		'^\s*if __name__ == .__main__.:',
 	]
 
 [tool.coverage.run]
@@ -80,7 +80,7 @@
 [tool.isort]
 	line_length = 110  # The max length of an import line (used for wrapping long imports).
 	# Specify what extensions isort can be ran against.
-	supported_extensions = ["py", "pyi", "pys", "pyw", "pyx", "pxd", "spec"]
+	supported_extensions = ["py", "pyi", "pys", "pyw", "spec"]
 	extend_skip = []  # List of files to skip.
 	indent = "tab"  # String to place for indents.
 	multi_line_output = 3  # Vertical hanging indent for long sections of multiple imports.
@@ -105,7 +105,19 @@
 	# The heading to display for third-party imports.
 	import_heading_thirdparty = "Third-party Modules:"
 	# Override known third-party imports.
-	known_third_party = ["boltons", "certifi", "fuzzywuzzy", "jsonschema", "mudproto", "pyglet", "PyInstaller", "rapidjson", "speechlight", "tap"]
+	known_third_party = [
+		"boltons",
+		"certifi",
+		"fuzzywuzzy",
+		"jsonschema",
+		"mudproto",
+		"pyglet",
+		"PyInstaller",
+		"rapidjson",
+		"setuptools",
+		"speechlight",
+		"tap",
+	]
 	# The heading to display for first-party imports.
 	import_heading_firstparty = "Mapper Modules:"
 	# Override known first-party imports.
@@ -115,6 +127,7 @@
 
 [tool.mypy]
 	files = ["mapper", "tests", "pyinstaller_windows.spec", "start.py"]
+	exclude = '^$'
 	local_partial_types = true
 	strict = true
 	disallow_any_unimported = true
@@ -126,3 +139,27 @@
 [[tool.mypy.overrides]]
 	module = "tests.*"
 	disallow_any_decorated = false
+
+[[tool.mypy.overrides]]
+	module = "_hashlib.*"
+	ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+	module = "boltons.*"
+	ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+	module = "pyglet.*"
+	ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+	module = "PyInstaller.*"
+	ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+	module = "rapidjson.*"
+	ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+	module = "setuptools.*"
+	ignore_missing_imports = true

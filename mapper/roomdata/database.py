@@ -14,7 +14,7 @@ from typing import Any, Callable, Dict, List, Mapping, Tuple, Union
 
 # Third-party Modules:
 import jsonschema
-import rapidjson  # type: ignore[import]
+import rapidjson
 
 # Local Modules:
 from ..utils import getDirectoryPath

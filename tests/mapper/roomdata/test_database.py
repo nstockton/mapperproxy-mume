@@ -13,7 +13,7 @@ from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
 # Third-party Modules:
-import rapidjson  # type: ignore[import]
+import rapidjson
 
 # Mapper Modules:
 from mapper.roomdata.database import (

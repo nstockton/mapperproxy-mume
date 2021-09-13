@@ -15,7 +15,7 @@ from queue import SimpleQueue
 from typing import TYPE_CHECKING, Dict, List, Tuple, Union
 
 # Third-party Modules:
-import pyglet  # type: ignore[import]
+import pyglet
 
 # Local Modules:
 from ..roomdata.objects import Room

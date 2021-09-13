@@ -22,7 +22,7 @@ from .utils import getDirectoryPath, touch
 
 
 try:
-	import pyglet  # type: ignore[import]
+	import pyglet
 except ImportError:
 	pyglet = None
 

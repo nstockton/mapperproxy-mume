@@ -15,7 +15,7 @@ from typing import Any, Union
 
 # Third-party Modules:
 import certifi
-from boltons import socketutils  # type: ignore[import]
+from boltons import socketutils
 
 # Local Modules:
 from .fakesocket import FakeSocket

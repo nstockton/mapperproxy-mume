@@ -22,7 +22,7 @@ from mapper import INTERFACES, OUTPUT_FORMATS
 
 
 try:
-	import pyglet  # type: ignore[import]
+	import pyglet
 except ImportError:
 	pyglet = None
 	print("Unable to import Pyglet. GUI will be disabled.")
