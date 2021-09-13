@@ -269,6 +269,7 @@ class TestGameThreadThroughput(TestCase):
 		# fmt: on
 		expectedData: Tuple[Callable[[int, Tuple[str, bytes]], _Call], ...] = (
 			call(("movement", b"down")),
+			call(("room", b"t=#")),
 			call(("name", b"Seagull Inn")),
 			call(("description", expectedDesc)),
 			call(("dynamic", expectedDynamicDesc)),
