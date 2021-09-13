@@ -29,6 +29,7 @@ ignore =
 	E203,  # whitespace before ':'. Caused by Black.
 	W191,  # indentation contains tabs
 	W503,  # line break before binary operator. We want W504(line break after binary operator)
+	ET113,  # (flake8-tabs) use of alignment as indentation, but option continuation-style=hanging does not permit this.
 	ET121,  # (flake8-tabs) unexpected number of tabs at start of definition line. Caused by Black.
 
 exclude =
