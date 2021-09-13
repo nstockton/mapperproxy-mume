@@ -15,7 +15,6 @@ import os
 import re
 import shutil
 import subprocess
-import sys
 import tempfile
 from _hashlib import HASH
 from contextlib import suppress
@@ -37,62 +36,51 @@ APP_NAME: str = "Mapper Proxy"
 APP_AUTHOR: str = "Nick Stockton"
 APP_VERSION: str
 APP_VERSION_TYPE: str
-VERSION_REGEX: Pattern[str] = re.compile(r"^[vV]([\d.]+)-(stable|beta)-?([\w-]*)$", re.IGNORECASE)
+VERSION_REGEX: Pattern[str] = re.compile(r"^[vV]([\d]+\.[\d]+\.[\d]+)(\-\d+\-g[\da-f]+)$", re.IGNORECASE)
 ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
 isTag: bool = False
 found_version: Union[str, None] = None
 match: Union[Match[str], None]
-for arg in sys.argv[1:]:
-	match = VERSION_REGEX.search(arg.strip().lower())
-	if match is not None:
-		APP_VERSION = match.groups()[0]
-		if match.groups()[2].startswith("0-g"):
-			APP_VERSION_TYPE = match.groups()[1]
-			isTag = True
-		else:
-			APP_VERSION_TYPE = "_".join(match.groups()[1:])
-		found_version = "command line"
-		break
-else:
-	if os.path.exists(
-		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
-	) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
-		with open(
-			os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "r", encoding="utf-8"
-		) as f:
-			match = VERSION_REGEX.search(f.read(30).strip().lower())
-			if match is not None:
-				APP_VERSION = match.groups()[0]
-				if match.groups()[2].startswith("0-g"):
-					APP_VERSION_TYPE = match.groups()[1]
-					isTag = True
-				else:
-					APP_VERSION_TYPE = "_".join(match.groups()[1:])
-				found_version = "version file"
-	elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(
-		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))
-	):
-		with suppress(subprocess.CalledProcessError):
-			match = VERSION_REGEX.search(
-				subprocess.check_output("git describe --tags --always --long", shell=True)
-				.decode("utf-8")
-				.strip()
-				.lower()
-			)
-			if match is not None:
-				APP_VERSION = match.groups()[0]
-				if match.groups()[2].startswith("0-g"):
-					APP_VERSION_TYPE = match.groups()[1]
-					isTag = True
-				else:
-					APP_VERSION_TYPE = "_".join(match.groups()[1:])
-				found_version = "latest Git tag"
+
+if os.path.exists(
+	os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
+) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
+	with open(
+		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "r", encoding="utf-8"
+	) as f:
+		match = VERSION_REGEX.search(f.read(30).strip().lower())
+		if match is not None:
+			APP_VERSION = match.group(1)
+			if match.group(2).startswith("-0-g"):
+				APP_VERSION_TYPE = ""
+				isTag = True
+			else:
+				APP_VERSION_TYPE = match.group(2)
+			found_version = "version file"
+elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(
+	os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))
+):
+	with suppress(subprocess.CalledProcessError):
+		match = VERSION_REGEX.search(
+			subprocess.check_output("git describe --tags --always --long", shell=True)
+			.decode("utf-8")
+			.strip()
+			.lower()
+		)
+		if match is not None:
+			APP_VERSION = match.group(1)
+			if match.group(2).startswith("-0-g"):
+				APP_VERSION_TYPE = ""
+				isTag = True
+			else:
+				APP_VERSION_TYPE = match.group(2)
+			found_version = "latest Git tag"
 if found_version:
-	print(f"Using version info from {found_version}. ({APP_VERSION}-{APP_VERSION_TYPE})")
+	print(f"Using version info from {found_version}. ({APP_VERSION}{APP_VERSION_TYPE})")
 else:
-	APP_VERSION = "0.0"
-	APP_VERSION_TYPE = "beta"
-	print(f"No version information found. Using default. ({APP_VERSION}-{APP_VERSION_TYPE})")
+	APP_VERSION = "0.0.0"
+	APP_VERSION_TYPE = ""
+	print(f"No version information found. Using default. ({APP_VERSION}{APP_VERSION_TYPE})")
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 APP_VERSION_CSV: str = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
@@ -100,7 +88,9 @@ APP_DEST: str = os.path.normpath(
 	os.path.join(
 		ORIG_DEST,
 		os.pardir,
-		f"{APP_NAME}_V{APP_VERSION}_{APP_VERSION_TYPE}".replace("-", "_").replace(" ", "_"),
+		(APP_NAME if not isTag else f"{APP_NAME}_V{APP_VERSION}{APP_VERSION_TYPE}")
+		.replace("-", "_")
+		.replace(" ", "_"),
 	)
 )
 ZIP_FILE: str
@@ -222,7 +212,7 @@ VSVersionInfo(
       StringTable(
         u'040904B0',
         [StringStruct(u'CompanyName', u'LFileDescript'),
-        StringStruct(u'', u'{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}'),
+        StringStruct(u'', u'{APP_NAME} V{APP_VERSION}{APP_VERSION_TYPE}'),
         StringStruct(u'FileVersion', u'{APP_VERSION}'),
         StringStruct(u'LegalCopyright', u'{APP_AUTHOR}'),
         StringStruct(u'OriginalFilename', u'{APP_NAME}.exe'),
@@ -249,7 +239,7 @@ with open(VERSION_FILE, "w", encoding="utf-8") as f:
 	f.write(version_data)
 
 with open(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "w", encoding="utf-8") as f:
-	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}-{APP_VERSION_TYPE}"')
+	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}{APP_VERSION_TYPE}"')
 
 a: Analysis = Analysis(  # type: ignore[no-any-unimported]
 	["start.py"],

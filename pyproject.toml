@@ -114,7 +114,6 @@
 		"pyglet",
 		"PyInstaller",
 		"rapidjson",
-		"setuptools",
 		"speechlight",
 		"tap",
 	]
@@ -158,8 +157,4 @@
 
 [[tool.mypy.overrides]]
 	module = "rapidjson.*"
-	ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-	module = "setuptools.*"
 	ignore_missing_imports = true
