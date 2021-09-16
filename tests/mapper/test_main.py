@@ -232,7 +232,7 @@ class TestGameThreadThroughput(TestCase):
 	def testProcessingEnteringRoom(self) -> None:
 		# fmt: off
 		threadInput: bytes = (
-			b"<movement dir=down/><room t=&#35;><name>Seagull Inn</name>" + CR_LF
+			b"<movement dir=down/><room terrain=city><name>Seagull Inn</name>" + CR_LF
 			+ b"<gratuitous><description>"
 			+ b"This is the most famous meeting-place in Harlond where people of all sorts" + CR_LF
 			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of" + CR_LF
@@ -269,7 +269,7 @@ class TestGameThreadThroughput(TestCase):
 		# fmt: on
 		expectedData: Tuple[Callable[[int, Tuple[str, bytes]], _Call], ...] = (
 			call(("movement", b"down")),
-			call(("room", b"t=#")),
+			call(("room", b"terrain=city")),
 			call(("name", b"Seagull Inn")),
 			call(("description", expectedDesc)),
 			call(("dynamic", expectedDynamicDesc)),
