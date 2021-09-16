@@ -69,11 +69,11 @@ TERRAIN_SYMBOLS: Dict[str, str] = {
 	".": "field",
 	"f": "forest",
 	"(": "hills",
-	"[": "indoors",
+	"[": "building",
 	"<": "mountains",
 	"W": "rapids",
 	"+": "road",
-	"%": "shallow",
+	"%": "shallows",
 	"=": "tunnel",
 	"?": "undefined",
 	"U": "underwater",
@@ -139,7 +139,9 @@ class World(object):
 		terrainReplacements: Dict[str, str] = {
 			"random": "undefined",
 			"death": "deathtrap",
-			"shallowwater": "shallow",
+			"shallowwater": "shallows",
+			"shallow": "shallows",
+			"indoors": "building",
 		}
 		mobFlagReplacements: Dict[str, str] = {
 			"any": "passive_mob",

@@ -91,7 +91,7 @@
         },
         "terrain": {
           "type": "string",
-          "pattern": "^(brush|cavern|city|deathtrap|field|forest|hills|indoors|mountains|rapids|road|shallow|tunnel|undefined|underwater|water)$"
+          "pattern": "^(indoors|shallow|brush|cavern|city|deathtrap|field|forest|hills|building|mountains|rapids|road|shallows|tunnel|undefined|underwater|water)$"
         },
         "x": {
           "type": "integer"
