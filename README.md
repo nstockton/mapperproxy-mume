@@ -10,7 +10,7 @@ A mapper proxy for playing [MUME,](https://mume.org "MUME Official Site") target
 
 ## License And Credits
 
-Mapper Proxy is licensed under the terms of the [Mozilla Public License, version 2.0.](license.md "License Page")
+Mapper Proxy is licensed under the terms of the [Mozilla Public License, version 2.0.](https://nstockton.github.io/mapperproxy-mume/license "License Page")
 
 The tiles of the GUI for sighted players are distributed under the [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/legalcode "CC-BY-SA 3.0 official site") license.
 They are a modified version of [fantasy-tileset.png](https://opengameart.org/content/32x32-fantasy-tileset "fantasy-tileset page on OpenGameArt") originally created by [Jerome.](http://jerom-bd.blogspot.fr/ "Jerome old site")
