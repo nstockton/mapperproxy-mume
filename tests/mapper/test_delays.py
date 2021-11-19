@@ -19,6 +19,10 @@ class TestDelays(TestCase):
 			BaseDelay(1, -1, lambda *args: None)
 		delay: BaseDelay = BaseDelay(60, 10, lambda *args: None)
 		self.assertFalse(delay._finished.is_set())
+		delay.stop()
+		self.assertTrue(delay._finished.is_set())
+		delay._finished.clear()
+		self.assertFalse(delay._finished.is_set())
 		mockWait: mock.Mock
 		with mock.patch.object(delay._finished, "wait") as mockWait:
 			delay.start()
