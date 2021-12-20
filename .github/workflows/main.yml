@@ -2,13 +2,13 @@ name: Main
 
 on:
   push:
-    branches:    
+    branches:
       - '**' # All branch names including slashes.
       - '!gh-pages' # Except for gh-pages.
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
-    branches:    
+    branches:
       - '**' # All branch names including slashes.
       - '!gh-pages' # Except for gh-pages.
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab.
@@ -21,7 +21,7 @@ jobs:
       max-parallel: 4
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
