@@ -101,7 +101,8 @@ class TestDatabase(TestCase):
 			)
 			_validate({"invalid": "invalid"}, schemaPath)
 			self.assertIn(
-				"Error: jsonschema did not raise an exception, whereas rapidjson raised", mockLogger.output
+				"Error: jsonschema did not raise an exception, whereas rapidjson raised",
+				mockLogger.output,  # type: ignore[union-attr]
 			)
 		with self.assertRaises(SchemaValidationError, msg="rapidjson and jsonschema fail validation"):
 			_validate({"invalid": "invalid"}, schemaPath)
