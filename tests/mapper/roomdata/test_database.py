@@ -95,14 +95,13 @@ class TestDatabase(TestCase):
 		cm: ExitStack
 		with ExitStack() as cm:
 			cm.enter_context(patch("mapper.roomdata.database.jsonschema.validate"))
-			mockLogger = cm.enter_context(self.assertLogs("mapper.roomdata.database", level="WARNING"))
+			mockLogger: Any = cm.enter_context(self.assertLogs("mapper.roomdata.database", level="WARNING"))
 			cm.enter_context(
 				self.assertRaises(SchemaValidationError, msg="rapidjson fails validation, jsonschema passes")
 			)
 			_validate({"invalid": "invalid"}, schemaPath)
 			self.assertIn(
-				"Error: jsonschema did not raise an exception, whereas rapidjson raised",
-				mockLogger.output,  # type: ignore[union-attr]
+				"Error: jsonschema did not raise an exception, whereas rapidjson raised", mockLogger.output
 			)
 		with self.assertRaises(SchemaValidationError, msg="rapidjson and jsonschema fail validation"):
 			_validate({"invalid": "invalid"}, schemaPath)
