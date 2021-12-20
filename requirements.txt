@@ -6,5 +6,6 @@ git+https://github.com/nstockton/mud-protocols.git@master#egg=mud-protocols
 pyglet
 python-Levenshtein
 python-rapidjson
+setuptools<60.0
 speechlight
 typed-argument-parser

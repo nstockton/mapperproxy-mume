@@ -32,5 +32,6 @@ mud-protocols = {git = "https://github.com/nstockton/mud-protocols.git", ref = "
 pyglet = "*"
 python-Levenshtein = "*"
 python-rapidjson = "*"
+setuptools = {version = "<60.0"}
 speechlight = "*"
 typed-argument-parser = "*"
