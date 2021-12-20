@@ -12,6 +12,7 @@ import heapq
 import itertools
 import operator
 import re
+import warnings
 from contextlib import suppress
 from queue import SimpleQueue
 from typing import (
@@ -50,6 +51,13 @@ from .roomdata.objects import (
 	Room,
 )
 from .utils import regexFuzzy
+
+
+# Ignore warning from Pyglet's Windows Imaging Component module.
+warnings.filterwarnings(
+	"ignore",
+	message=r"\[WinError -2147417850\] Cannot change thread mode after it is set",
+)
 
 
 if TYPE_CHECKING:  # pragma: no cover
