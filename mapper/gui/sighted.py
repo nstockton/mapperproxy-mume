@@ -12,7 +12,7 @@ import os.path
 import re
 from queue import Empty as QueueEmpty
 from queue import SimpleQueue
-from typing import TYPE_CHECKING, Dict, List, Tuple, Union
+from typing import TYPE_CHECKING
 
 # Third-party Modules:
 import pyglet
@@ -30,7 +30,7 @@ if TYPE_CHECKING:  # pragma: no cover
 FPS: int = 40
 TILESDIR: str = getDirectoryPath("tiles")
 
-TILES: Dict[str, pyglet.image.ImageData] = {  # type: ignore[no-any-unimported]
+TILES: dict[str, pyglet.image.ImageData] = {  # type: ignore[no-any-unimported]
 	# terrain
 	"field": pyglet.image.load(os.path.join(TILESDIR, "field.png")),
 	"brush": pyglet.image.load(os.path.join(TILESDIR, "brush.png")),
@@ -91,27 +91,27 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		# The center of the window
 		self.mcol: int = int(self.col / 2)
 		self.mrow: int = int(self.row / 2)
-		self.radius: Tuple[int, int, int] = (self.mcol, self.mrow, 1)
+		self.radius: tuple[int, int, int] = (self.mcol, self.mrow, 1)
 		# The size of a tile in pixels
 		self.square: int = 32
 		# The list of visible rooms:
 		# A dictionary using a tuple of coordinates (x, y) as keys
-		self.visibleRooms: Dict[Tuple[int, int], Room] = {}
+		self.visibleRooms: dict[tuple[int, int], Room] = {}
 		# Player position and central rooms
 		# They are set to None at startup.
-		self.playerRoom: Union[Room, None] = None
-		self.centerRoom: Union[Room, None] = None
+		self.playerRoom: Room | None = None
+		self.centerRoom: Room | None = None
 		# Pyglet window
 		super().__init__(self.col * self.square, self.row * self.square, caption="MPM", resizable=True)
 		logger.info(f"Creating window {self}")
 		self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = world._gui_queue
 		# Sprites
 		# The list of sprites
-		self.sprites: List[pyglet.sprite.Sprite] = []  # type: ignore[no-any-unimported]
+		self.sprites: list[pyglet.sprite.Sprite] = []  # type: ignore[no-any-unimported]
 		# Pyglet batch of sprites
 		self.batch: pyglet.graphics.Batch = pyglet.graphics.Batch()  # type: ignore[no-any-unimported]
 		# The list of visible layers (level 0 is covered by level 1)
-		self.layer: List[pyglet.graphics.OrderedGroup]  # type: ignore[no-any-unimported]
+		self.layer: list[pyglet.graphics.OrderedGroup]  # type: ignore[no-any-unimported]
 		self.layer = [pyglet.graphics.OrderedGroup(i) for i in range(4)]
 		# Define FPS
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)

@@ -10,7 +10,8 @@ from __future__ import annotations
 import json
 import logging
 import os.path
-from typing import Any, Callable, Dict, List, Mapping, Tuple, Union
+from collections.abc import Callable, Mapping
+from typing import Any
 
 # Third-party Modules:
 import jsonschema
@@ -59,7 +60,7 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 		schemaPath: The location of the schema.
 	"""
 	with open(schemaPath, "r", encoding="utf-8") as fileObj:
-		schema: Dict[str, Any] = json.load(fileObj)
+		schema: dict[str, Any] = json.load(fileObj)
 	validate: Callable[[str], None] = rapidjson.Validator(rapidjson.dumps(schema))
 	try:
 		validate(rapidjson.dumps(database))
@@ -75,7 +76,7 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 			raise SchemaValidationError(str(rapidjsonExc)) from rapidjsonExc
 
 
-def _load(databasePath: str, schemaPath: str) -> Union[Tuple[str, None], Tuple[None, Dict[str, Any]]]:
+def _load(databasePath: str, schemaPath: str) -> tuple[str, None] | tuple[None, dict[str, Any]]:
 	"""
 	Loads a database into memory.
 
@@ -92,7 +93,7 @@ def _load(databasePath: str, schemaPath: str) -> Union[Tuple[str, None], Tuple[N
 		return f"Error: '{databasePath}' is a directory, not a file.", None
 	try:
 		with open(databasePath, "r", encoding="utf-8") as fileObj:
-			database: Dict[str, Any] = json.load(fileObj)
+			database: dict[str, Any] = json.load(fileObj)
 		_validate(database, schemaPath)
 		return None, database
 	except IOError as e:
@@ -115,7 +116,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
 
 
-def loadLabels() -> Union[Tuple[str, None], Tuple[None, Dict[str, str]]]:
+def loadLabels() -> tuple[str, None] | tuple[None, dict[str, str]]:
 	"""
 	Loads the labels database into memory.
 
@@ -124,8 +125,8 @@ def loadLabels() -> Union[Tuple[str, None], Tuple[None, Dict[str, str]]]:
 	Returns:
 		An error message and None, or None and the loaded labels database.
 	"""
-	errorMessages: List[str] = []
-	labels: Dict[str, str] = {}
+	errorMessages: list[str] = []
+	labels: dict[str, str] = {}
 	for path in (SAMPLE_LABELS_FILE_PATH, LABELS_FILE_PATH):
 		errors, result = _load(path, LABELS_SCHEMA_FILE_PATH)
 		if result is None:
@@ -149,7 +150,7 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 	_dump(labels, LABELS_FILE_PATH, LABELS_SCHEMA_FILE_PATH)
 
 
-def loadRooms() -> Union[Tuple[str, None], Tuple[None, Dict[str, Dict[str, Any]]]]:
+def loadRooms() -> tuple[str, None] | tuple[None, dict[str, dict[str, Any]]]:
 	"""
 	Loads the rooms database into memory.
 
@@ -158,7 +159,7 @@ def loadRooms() -> Union[Tuple[str, None], Tuple[None, Dict[str, Dict[str, Any]]
 	Returns:
 		An error message and None, or None and the loaded rooms database.
 	"""
-	errorMessages: List[str] = []
+	errorMessages: list[str] = []
 	for path in (MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH):
 		errors, result = _load(path, MAP_SCHEMA_FILE_PATH)
 		if result is None:

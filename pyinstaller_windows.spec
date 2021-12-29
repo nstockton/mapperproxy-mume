@@ -18,7 +18,6 @@ import subprocess
 import tempfile
 from _hashlib import HASH
 from contextlib import suppress
-from typing import Dict, List, Match, Pattern, Tuple, Union
 
 # Third-party Modules:
 import PyInstaller.config
@@ -36,11 +35,11 @@ APP_NAME: str = "Mapper Proxy"
 APP_AUTHOR: str = "Nick Stockton"
 APP_VERSION: str
 APP_VERSION_TYPE: str
-VERSION_REGEX: Pattern[str] = re.compile(r"^[vV]([\d]+\.[\d]+\.[\d]+)(\-\d+\-g[\da-f]+)$", re.IGNORECASE)
+VERSION_REGEX: re.Pattern[str] = re.compile(r"^[vV]([\d]+\.[\d]+\.[\d]+)(\-\d+\-g[\da-f]+)$", re.IGNORECASE)
 ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
 isTag: bool = False
-found_version: Union[str, None] = None
-match: Union[Match[str], None]
+found_version: str | None = None
+match: re.Match[str] | None
 
 if os.path.exists(
 	os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
@@ -103,7 +102,7 @@ VERSION_FILE: str = os.path.normpath(
 )
 PyInstaller.config.CONF["distpath"] = APP_DEST
 
-excludes: List[str] = [
+excludes: list[str] = [
 	"_gtkagg",
 	"_tkagg",
 	"bsddb",
@@ -177,7 +176,7 @@ dll_excludes: TOC = TOC(  # type: ignore[no-any-unimported]
 	]
 )
 
-block_cipher: Union[PyiBlockCipher, None] = None  # type: ignore[no-any-unimported]
+block_cipher: PyiBlockCipher | None = None  # type: ignore[no-any-unimported]
 
 version_data: str = f"""
 # UTF-8
@@ -298,7 +297,7 @@ if os.path.exists(
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
 shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 
-include_files: List[Tuple[List[str], str]] = [
+include_files: list[tuple[list[str], str]] = [
 	(
 		[
 			os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")),
@@ -337,7 +336,7 @@ shutil.make_archive(
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
-hashes: Dict[str, HASH] = {  # type: ignore[no-any-unimported]
+hashes: dict[str, HASH] = {  # type: ignore[no-any-unimported]
 	"sha256": hashlib.sha256(),
 }
 block_size: int = 2 ** 16

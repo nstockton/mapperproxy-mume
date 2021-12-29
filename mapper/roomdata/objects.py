@@ -8,13 +8,12 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
-from typing import Dict, List, Pattern, Set, Tuple, Union
 
 # Local Modules:
 from ..gui.vec2d import Vec2d
 
 
-DIRECTIONS: Tuple[str, ...] = (
+DIRECTIONS: tuple[str, ...] = (
 	"north",
 	"east",
 	"south",
@@ -22,7 +21,7 @@ DIRECTIONS: Tuple[str, ...] = (
 	"up",
 	"down",
 )
-REVERSE_DIRECTIONS: Dict[str, str] = {
+REVERSE_DIRECTIONS: dict[str, str] = {
 	"north": "south",
 	"south": "north",
 	"east": "west",
@@ -30,7 +29,7 @@ REVERSE_DIRECTIONS: Dict[str, str] = {
 	"up": "down",
 	"down": "up",
 }
-DIRECTION_COORDINATES: Dict[str, Tuple[int, int, int]] = {
+DIRECTION_COORDINATES: dict[str, tuple[int, int, int]] = {
 	"north": (0, 1, 0),
 	"south": (0, -1, 0),
 	"west": (-1, 0, 0),
@@ -38,7 +37,7 @@ DIRECTION_COORDINATES: Dict[str, Tuple[int, int, int]] = {
 	"up": (0, 0, 1),
 	"down": (0, 0, -1),
 }
-COMPASS_DIRECTIONS: Tuple[str, ...] = (
+COMPASS_DIRECTIONS: tuple[str, ...] = (
 	"north",
 	"northeast",
 	"east",
@@ -48,7 +47,7 @@ COMPASS_DIRECTIONS: Tuple[str, ...] = (
 	"west",
 	"northwest",
 )
-AVOID_DYNAMIC_DESC_REGEX: Pattern[str] = re.compile(
+AVOID_DYNAMIC_DESC_REGEX: re.Pattern[str] = re.compile(
 	r"Some roots lie here waiting to ensnare weary travellers\.|"
 	r"The remains of a clump of roots lie here in a heap of rotting compost\.|"
 	r"A clump of roots is here, fighting|"
@@ -58,7 +57,7 @@ AVOID_DYNAMIC_DESC_REGEX: Pattern[str] = re.compile(
 	r"Massive roots shift uneasily all around you\.|"
 	r"rattlesnake"
 )
-TERRAIN_COSTS: Dict[str, float] = {
+TERRAIN_COSTS: dict[str, float] = {
 	"cavern": 0.75,
 	"city": 0.75,
 	"building": 0.75,
@@ -76,7 +75,7 @@ TERRAIN_COSTS: Dict[str, float] = {
 	"underwater": 100.0,
 	"deathtrap": 1000.0,
 }
-VALID_MOB_FLAGS: Tuple[str, ...] = (
+VALID_MOB_FLAGS: tuple[str, ...] = (
 	"rent",
 	"shop",
 	"weapon_shop",
@@ -95,7 +94,7 @@ VALID_MOB_FLAGS: Tuple[str, ...] = (
 	"elite_mob",
 	"super_mob",
 )
-VALID_LOAD_FLAGS: Tuple[str, ...] = (
+VALID_LOAD_FLAGS: tuple[str, ...] = (
 	"treasure",
 	"armour",
 	"weapon",
@@ -121,7 +120,7 @@ VALID_LOAD_FLAGS: Tuple[str, ...] = (
 	"coach",
 	"ferry",
 )
-VALID_EXIT_FLAGS: Tuple[str, ...] = (
+VALID_EXIT_FLAGS: tuple[str, ...] = (
 	"exit",
 	"door",
 	"road",
@@ -136,7 +135,7 @@ VALID_EXIT_FLAGS: Tuple[str, ...] = (
 	"fall",
 	"guarded",
 )
-VALID_DOOR_FLAGS: Tuple[str, ...] = (
+VALID_DOOR_FLAGS: tuple[str, ...] = (
 	"hidden",
 	"need_key",
 	"no_block",
@@ -158,11 +157,11 @@ class Exit(object):
 
 	def __init__(self) -> None:
 		self._direction: str = ""
-		self.vnum: Union[str, None] = None
+		self.vnum: str | None = None
 		self.to: str = "undefined"
-		self.exitFlags: Set[str] = set(["exit"])
+		self.exitFlags: set[str] = set(["exit"])
 		self.door: str = ""
-		self.doorFlags: Set[str] = set()
+		self.doorFlags: set[str] = set()
 
 	@property
 	def direction(self) -> str:
@@ -196,12 +195,12 @@ class Room(object):
 		self.portable: str = "undefined"
 		self.ridable: str = "undefined"
 		self.avoid: bool = False
-		self.mobFlags: Set[str] = set()
-		self.loadFlags: Set[str] = set()
+		self.mobFlags: set[str] = set()
+		self.loadFlags: set[str] = set()
 		self.x: int = 0
 		self.y: int = 0
 		self.z: int = 0
-		self.exits: Dict[str, Exit] = {}
+		self.exits: dict[str, Exit] = {}
 
 	def __lt__(self, other: Room) -> bool:
 		# Unlike in Python 2 where most objects are sortable by default, our
@@ -215,7 +214,7 @@ class Room(object):
 		return False
 
 	@property
-	def sortedExits(self) -> List[Tuple[str, Exit]]:
+	def sortedExits(self) -> list[tuple[str, Exit]]:
 		"""The room exits, sorted by direction."""
 		return sorted(
 			self.exits.items(),
@@ -225,7 +224,7 @@ class Room(object):
 	@property
 	def info(self) -> str:
 		"""A summery of the room info."""
-		output: List[str] = []
+		output: list[str] = []
 		output.append(f"vnum: '{self.vnum}'")
 		output.append(f"Name: '{self.name}'")
 		output.append("Description:")

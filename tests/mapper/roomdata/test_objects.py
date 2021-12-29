@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 # Built-in Modules:
-from typing import List, Tuple
 from unittest import TestCase
 
 # Mapper Modules:
@@ -42,7 +41,7 @@ class TestRoom(TestCase):
 		self.assertFalse(self.room < tempRoom)
 
 	def testRoomSortedExits(self) -> None:
-		exits: List[Tuple[str, Exit]] = [(direction, Exit()) for direction in DIRECTIONS]
+		exits: list[tuple[str, Exit]] = [(direction, Exit()) for direction in DIRECTIONS]
 		for direction, exitObj in reversed(exits):
 			self.room.exits[direction] = exitObj
 		self.assertEqual(self.room.sortedExits, exits)

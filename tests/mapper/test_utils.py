@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import sys
 import textwrap
-from typing import Callable, List, Tuple
+from collections.abc import Callable
 from unittest import TestCase
 from unittest.mock import Mock, mock_open, patch
 
@@ -74,7 +74,7 @@ class TestUtils(TestCase):
 		mockOs.utime.assert_called_once_with("path_1", None)
 
 	def test_padList(self) -> None:
-		lst: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+		lst: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 		padding: int = 0
 		# Non-fixed padding with 0's on the right.
 		# Returned list will be of length >= *count*.
@@ -88,7 +88,7 @@ class TestUtils(TestCase):
 		self.assertEqual(utils.padList(lst, padding, count=5, fixed=True), lst[:5])
 
 	def test_lpadList(self) -> None:
-		lst: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+		lst: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 		padding: int = 0
 		# Non-fixed padding with 0's on the left.
 		# Returned list will be of length >= *count*.
@@ -108,8 +108,8 @@ class TestUtils(TestCase):
 		self.assertEqual(utils.roundHalfAwayFromZero(-5.5), -6.0)
 
 	def test_humanSort(self) -> None:
-		expectedOutput: List[str] = [str(i) for i in range(1, 1001)]
-		badlySorted: List[str] = sorted(expectedOutput)
+		expectedOutput: list[str] = [str(i) for i in range(1, 1001)]
+		badlySorted: list[str] = sorted(expectedOutput)
 		self.assertEqual(badlySorted[:4], ["1", "10", "100", "1000"])
 		self.assertEqual(utils.humanSort(badlySorted), expectedOutput)
 
@@ -157,7 +157,7 @@ class TestUtils(TestCase):
 
 	@patch("mapper.utils.isFrozen")
 	def test_getDirectoryPath(self, mockIsFrozen: Mock) -> None:
-		subdirectory: Tuple[str, ...] = ("level1", "level2")
+		subdirectory: tuple[str, ...] = ("level1", "level2")
 		frozenDirName: str = os.path.dirname(sys.executable)
 		frozenOutput: str = os.path.realpath(os.path.join(frozenDirName, *subdirectory))
 		mockIsFrozen.return_value = True
@@ -180,7 +180,7 @@ class TestUtils(TestCase):
 		cols: int = 80
 		rows: int = 24
 		mockShutil.get_terminal_size.return_value = os.terminal_size((cols, rows))
-		lines: List[str] = [
+		lines: list[str] = [
 			"This is the first line.",
 			"this is the second line.",
 			"123456789 " * 10,

@@ -8,7 +8,8 @@ from __future__ import annotations
 
 # Built-in Modules:
 import threading
-from typing import Any, Callable, Dict, List, Tuple, Union
+from collections.abc import Callable
+from typing import Any
 
 
 class BaseDelay(threading.Thread):
@@ -16,12 +17,12 @@ class BaseDelay(threading.Thread):
 	Implements the base delay class.
 	"""
 
-	_delays: List[threading.Thread] = []
+	_delays: list[threading.Thread] = []
 
 	def __init__(
 		self,
 		duration: float,
-		count: Union[int, None],
+		count: int | None,
 		function: Callable[..., Any],
 		*args: Any,
 		**kwargs: Any,
@@ -41,10 +42,10 @@ class BaseDelay(threading.Thread):
 		super().__init__()
 		self.daemon: bool = True
 		self._duration: float = duration
-		self._count: Union[int, None] = count
+		self._count: int | None = count
 		self._function: Callable[..., Any] = function
-		self._args: Tuple[Any, ...] = args
-		self._kwargs: Dict[str, Any] = kwargs
+		self._args: tuple[Any, ...] = args
+		self._kwargs: dict[str, Any] = kwargs
 		self._finished: threading.Event = threading.Event()
 
 	def stop(self) -> None:

@@ -28,7 +28,7 @@ from __future__ import annotations
 # Built-in Modules:
 import math
 import operator
-from typing import NamedTuple, Tuple
+from typing import NamedTuple
 
 
 """This module contain the Vec2d class that is used in all of pymunk when a
@@ -79,7 +79,7 @@ class Vec2d(NamedTuple):
 		return "Vec2d(%s, %s)" % (self.x, self.y)
 
 	# Addition
-	def __add__(self, other: Tuple[float, float]) -> "Vec2d":  # type: ignore[override]
+	def __add__(self, other: tuple[float, float]) -> "Vec2d":  # type: ignore[override]
 		"""Add a Vec2d with another Vec2d or Tuple of size 2
 
 		>>> Vec2d(3,4) + Vec2d(1,2)
@@ -91,7 +91,7 @@ class Vec2d(NamedTuple):
 
 		return Vec2d(self.x + other[0], self.y + other[1])
 
-	def __radd__(self, other: Tuple[float, float]) -> "Vec2d":
+	def __radd__(self, other: tuple[float, float]) -> "Vec2d":
 		"""Add a Tuple of size 2 with a Vec2d
 
 		>>> (1,2) + Vec2d(3,4)
@@ -100,7 +100,7 @@ class Vec2d(NamedTuple):
 		return self.__add__(other)
 
 	# Subtraction
-	def __sub__(self, other: Tuple[float, float]) -> "Vec2d":
+	def __sub__(self, other: tuple[float, float]) -> "Vec2d":
 		"""Subtract a Vec2d with another Vec2d or Tuple of size 2
 
 		>>> Vec2d(3,4) - Vec2d(1,2)
@@ -110,7 +110,7 @@ class Vec2d(NamedTuple):
 		"""
 		return Vec2d(self.x - other[0], self.y - other[1])
 
-	def __rsub__(self, other: Tuple[float, float]) -> "Vec2d":
+	def __rsub__(self, other: tuple[float, float]) -> "Vec2d":
 		"""Subtract a Tuple of size 2 with a Vec2d
 
 		>>> (1,2) - Vec2d(3,4)
@@ -250,7 +250,7 @@ class Vec2d(NamedTuple):
 		"""Gets the angle (in degrees) of a vector"""
 		return math.degrees(self.angle)
 
-	def get_angle_between(self, other: Tuple[float, float]) -> float:
+	def get_angle_between(self, other: tuple[float, float]) -> float:
 		"""Get the angle between the vector and the other in radians
 
 		:return: The angle
@@ -278,7 +278,7 @@ class Vec2d(NamedTuple):
 			return self / length
 		return Vec2d(0, 0)
 
-	def normalized_and_length(self) -> Tuple["Vec2d", float]:
+	def normalized_and_length(self) -> tuple["Vec2d", float]:
 		"""Normalize the vector and return its length before the normalization
 
 		:return: The length before the normalization
@@ -297,7 +297,7 @@ class Vec2d(NamedTuple):
 			return Vec2d(-self.y / length, self.x / length)
 		return Vec2d(self.x, self.y)
 
-	def dot(self, other: Tuple[float, float]) -> float:
+	def dot(self, other: tuple[float, float]) -> float:
 		"""The dot product between the vector and other vector
 		    v1.dot(v2) -> v1.x*v2.x + v1.y*v2.y
 
@@ -306,7 +306,7 @@ class Vec2d(NamedTuple):
 		assert len(other) == 2
 		return float(self.x * other[0] + self.y * other[1])
 
-	def get_distance(self, other: Tuple[float, float]) -> float:
+	def get_distance(self, other: tuple[float, float]) -> float:
 		"""The distance between the vector and other vector
 
 		:return: The distance
@@ -314,7 +314,7 @@ class Vec2d(NamedTuple):
 		assert len(other) == 2
 		return math.sqrt((self.x - other[0]) ** 2 + (self.y - other[1]) ** 2)
 
-	def get_dist_sqrd(self, other: Tuple[float, float]) -> float:
+	def get_dist_sqrd(self, other: tuple[float, float]) -> float:
 		"""The squared distance between the vector and other vector
 		It is more efficent to use this method than to call get_distance()
 		first and then do a sqrt() on the result.
@@ -324,7 +324,7 @@ class Vec2d(NamedTuple):
 		assert len(other) == 2
 		return (self.x - other[0]) ** 2 + (self.y - other[1]) ** 2
 
-	def projection(self, other: Tuple[float, float]) -> "Vec2d":
+	def projection(self, other: tuple[float, float]) -> "Vec2d":
 		"""Project this vector on top of other vector"""
 		assert len(other) == 2
 		other_length_sqrd = other[0] * other[0] + other[1] * other[1]
@@ -334,7 +334,7 @@ class Vec2d(NamedTuple):
 		new_length = projected_length_times_other_length / other_length_sqrd
 		return Vec2d(other[0] * new_length, other[1] * new_length)
 
-	def cross(self, other: Tuple[float, float]) -> float:
+	def cross(self, other: tuple[float, float]) -> float:
 		"""The cross product between the vector and other vector
 		    v1.cross(v2) -> v1.x*v2.y - v1.y*v2.x
 
@@ -343,11 +343,11 @@ class Vec2d(NamedTuple):
 		assert len(other) == 2
 		return self.x * other[1] - self.y * other[0]
 
-	def interpolate_to(self, other: Tuple[float, float], range: float) -> "Vec2d":
+	def interpolate_to(self, other: tuple[float, float], range: float) -> "Vec2d":
 		assert len(other) == 2
 		return Vec2d(self.x + (other[0] - self.x) * range, self.y + (other[1] - self.y) * range)
 
-	def convert_to_basis(self, x_vector: Tuple[float, float], y_vector: Tuple[float, float]) -> "Vec2d":
+	def convert_to_basis(self, x_vector: tuple[float, float], y_vector: tuple[float, float]) -> "Vec2d":
 		assert len(x_vector) == 2
 		assert len(y_vector) == 2
 		x = self.dot(x_vector) / Vec2d(*x_vector).get_length_sqrd()
@@ -355,7 +355,7 @@ class Vec2d(NamedTuple):
 		return Vec2d(x, y)
 
 	@property
-	def int_tuple(self) -> Tuple[int, int]:
+	def int_tuple(self) -> tuple[int, int]:
 		"""The x and y values of this vector as a tuple of ints.
 		Uses round() to round to closest int.
 
@@ -392,12 +392,12 @@ class Vec2d(NamedTuple):
 		return Vec2d(1, 1)
 
 	# Extra functions, mainly for chipmunk
-	def cpvrotate(self, other: Tuple[float, float]) -> "Vec2d":
+	def cpvrotate(self, other: tuple[float, float]) -> "Vec2d":
 		"""Uses complex multiplication to rotate this vector by the other. """
 		assert len(other) == 2
 		return Vec2d(self.x * other[0] - self.y * other[1], self.x * other[1] + self.y * other[0])
 
-	def cpvunrotate(self, other: Tuple[float, float]) -> "Vec2d":
+	def cpvunrotate(self, other: tuple[float, float]) -> "Vec2d":
 		"""The inverse of cpvrotate"""
 		assert len(other) == 2
 		return Vec2d(self.x * other[0] + self.y * other[1], self.y * other[0] - self.x * other[1])

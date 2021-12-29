@@ -8,7 +8,6 @@ from __future__ import annotations
 
 # Built-in Modules:
 import os.path
-from typing import List
 from unittest import TestCase
 from unittest.mock import Mock, mock_open, patch
 
@@ -43,7 +42,7 @@ class TestConfig(TestCase):
 		cfg: Config = Config("testconfig")
 		cfg["test"] = "somevalue"
 		mockOpen: Mock = mock_open()
-		lines: List[str] = []
+		lines: list[str] = []
 		mockOpen.return_value.write.side_effect = lambda line: lines.append(line)
 		with patch("mapper.config.open", mockOpen):
 			cfg.save()

@@ -9,7 +9,6 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import socket
-from typing import List, Tuple
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
@@ -129,7 +128,7 @@ class TestProxyHandler(TestCase):
 		logging.disable(logging.CRITICAL)
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.mapperEvents: List[EVENT_CALLER_TYPE] = []
+		self.mapperEvents: list[EVENT_CALLER_TYPE] = []
 		playerSocket: Mock = Mock(spec=socket.socket)
 		playerSocket.sendall.side_effect = lambda data: self.playerReceives.extend(data)
 		gameSocket: Mock = Mock(spec=socket.socket)
@@ -155,7 +154,7 @@ class TestProxyHandler(TestCase):
 		self.playerReceives.clear()
 		self.mapperEvents.clear()
 
-	def parse(self, name: str, data: bytes) -> Tuple[bytes, bytes]:
+	def parse(self, name: str, data: bytes) -> tuple[bytes, bytes]:
 		getattr(self.proxy, name).parse(data)
 		playerReceives: bytes = bytes(self.playerReceives)
 		self.playerReceives.clear()

@@ -14,14 +14,14 @@ import re
 import shutil
 import sys
 import textwrap
-from collections.abc import ByteString
+from collections.abc import ByteString, Callable, Sequence
 from pydoc import pager
-from typing import Any, Callable, List, Optional, Pattern, Sequence, Union
+from typing import Any
 
 
-ANSI_COLOR_REGEX: Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
-WHITE_SPACE_REGEX: Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
-INDENT_REGEX: Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
+ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
+WHITE_SPACE_REGEX: re.Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
+INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
 
 
 def camelCase(text: str, delimiter: str) -> str:
@@ -59,7 +59,7 @@ def minIndent(text: str) -> str:
 
 
 def formatDocString(
-	functionOrString: Union[str, Callable[..., Any]], width: int = 79, prefix: Optional[str] = None
+	functionOrString: str | Callable[..., Any], width: int = 79, prefix: str | None = None
 ) -> str:
 	"""
 	Formats a docstring for displaying.
@@ -152,7 +152,7 @@ def touch(name: str) -> None:
 		os.utime(name, None)
 
 
-def padList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -> List[Any]:
+def padList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -> list[Any]:
 	"""
 	Pad the right side of a list.
 
@@ -171,7 +171,7 @@ def padList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -
 		return [*lst, *[padding] * (count - len(lst))]
 
 
-def lpadList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -> List[Any]:
+def lpadList(lst: Sequence[Any], padding: Any, count: int, fixed: bool = False) -> list[Any]:
 	"""
 	Pad the left side of a list.
 
@@ -208,7 +208,7 @@ def roundHalfAwayFromZero(number: float, decimals: int = 0) -> float:
 	return math.copysign(math.floor(abs(number) * multiplier + 0.5) / multiplier, number)
 
 
-def humanSort(lst: Sequence[str]) -> List[str]:
+def humanSort(lst: Sequence[str]) -> list[str]:
 	"""
 	Sorts a list of strings, with numbers sorted according to their numeric value.
 
@@ -226,7 +226,7 @@ def humanSort(lst: Sequence[str]) -> List[str]:
 	)
 
 
-def regexFuzzy(text: Union[str, Sequence[str]]) -> str:
+def regexFuzzy(text: str | Sequence[str]) -> str:
 	"""
 	Creates a regular expression matching all or part of a string or sequence.
 
@@ -246,7 +246,7 @@ def regexFuzzy(text: Union[str, Sequence[str]]) -> str:
 		return "|".join("(".join(list(item)) + ")?" * (len(item) - 1) for item in text)
 
 
-def getFreezer() -> Union[str, None]:
+def getFreezer() -> str | None:
 	"""
 	Determines the name of the library used to freeze the code.
 
@@ -256,7 +256,7 @@ def getFreezer() -> Union[str, None]:
 	Returns:
 		The name of the library or None.
 	"""
-	frozen: Union[str, bool, None] = getattr(sys, "frozen", None)
+	frozen: str | bool | None = getattr(sys, "frozen", None)
 	if frozen and hasattr(sys, "_MEIPASS"):
 		return "pyinstaller"
 	elif frozen is True:

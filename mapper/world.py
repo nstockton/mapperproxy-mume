@@ -13,25 +13,10 @@ import itertools
 import operator
 import re
 import warnings
+from collections.abc import Callable, Generator, MutableSequence, Sequence
 from contextlib import suppress
 from queue import SimpleQueue
-from typing import (
-	TYPE_CHECKING,
-	Any,
-	Callable,
-	Dict,
-	FrozenSet,
-	Generator,
-	List,
-	Match,
-	MutableSequence,
-	Optional,
-	Pattern,
-	Sequence,
-	Set,
-	Tuple,
-	Union,
-)
+from typing import TYPE_CHECKING, Any, Tuple, Union
 
 # Third-party Modules:
 from fuzzywuzzy import fuzz
@@ -66,10 +51,10 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 GUI_QUEUE_TYPE = Union[Tuple[str], Tuple[str, Room], None]
-LEAD_BEFORE_ENTERING_VNUMS: List[str] = ["196", "3473", "3474", "12138", "12637"]
-LIGHT_SYMBOLS: Dict[str, str] = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
-RUN_DESTINATION_REGEX: Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
-TERRAIN_SYMBOLS: Dict[str, str] = {
+LEAD_BEFORE_ENTERING_VNUMS: list[str] = ["196", "3473", "3474", "12138", "12637"]
+LIGHT_SYMBOLS: dict[str, str] = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
+RUN_DESTINATION_REGEX: re.Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
+TERRAIN_SYMBOLS: dict[str, str] = {
 	":": "brush",
 	"O": "cavern",
 	"#": "city",
@@ -92,8 +77,8 @@ TERRAIN_SYMBOLS: Dict[str, str] = {
 class World(object):
 	def __init__(self, interface: str = "text") -> None:
 		self.isSynced: bool = False
-		self.rooms: Dict[str, Room] = {}
-		self.labels: Dict[str, str] = {}
+		self.rooms: dict[str, Room] = {}
+		self.labels: dict[str, str] = {}
 		self._interface: str = interface
 		if interface != "text":
 			self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = SimpleQueue()
@@ -136,22 +121,22 @@ class World(object):
 		if gc.isenabled():
 			gc.disable()
 		self.output("Loading the database file.")
-		errors: Union[str, None]
-		db: Union[Dict[str, Dict[str, Any]], None]
+		errors: str | None
+		db: dict[str, dict[str, Any]] | None
 		errors, db = loadRooms()
 		if db is None:
 			if errors is not None:
 				self.output(errors)
 			return None
 		self.output("Creating room objects.")
-		terrainReplacements: Dict[str, str] = {
+		terrainReplacements: dict[str, str] = {
 			"random": "undefined",
 			"death": "deathtrap",
 			"shallowwater": "shallows",
 			"shallow": "shallows",
 			"indoors": "building",
 		}
-		mobFlagReplacements: Dict[str, str] = {
+		mobFlagReplacements: dict[str, str] = {
 			"any": "passive_mob",
 			"smob": "aggressive_mob",
 			"quest": "quest_mob",
@@ -165,8 +150,8 @@ class World(object):
 			"petshop": "pet_shop",
 			"weaponshop": "weapon_shop",
 		}
-		loadFlagReplacements: Dict[str, str] = {"packhorse": "pack_horse", "trainedhorse": "trained_horse"}
-		doorFlagReplacements: Dict[str, str] = {
+		loadFlagReplacements: dict[str, str] = {"packhorse": "pack_horse", "trainedhorse": "trained_horse"}
+		doorFlagReplacements: dict[str, str] = {
 			"noblock": "no_block",
 			"nobreak": "no_break",
 			"nopick": "no_pick",
@@ -212,9 +197,9 @@ class World(object):
 		if gc.isenabled():
 			gc.disable()
 		self.output("Creating dict from room objects.")
-		db: Dict[str, Dict[str, Any]] = {}
+		db: dict[str, dict[str, Any]] = {}
 		for vnum, roomObj in self.rooms.items():
-			newRoom: Dict[str, Any] = {}
+			newRoom: dict[str, Any] = {}
 			newRoom["name"] = roomObj.name
 			newRoom["desc"] = roomObj.desc
 			newRoom["dynamicDesc"] = roomObj.dynamicDesc
@@ -232,7 +217,7 @@ class World(object):
 			newRoom["z"] = roomObj.z
 			newRoom["exits"] = {}
 			for direction, exitObj in roomObj.exits.items():
-				newExit: Dict[str, Any] = {}
+				newExit: dict[str, Any] = {}
 				newExit["exitFlags"] = sorted(exitObj.exitFlags)
 				newExit["doorFlags"] = sorted(exitObj.doorFlags)
 				newExit["door"] = exitObj.door
@@ -247,22 +232,22 @@ class World(object):
 		self.output("Map Database saved.")
 
 	def loadLabels(self) -> None:
-		errors: Union[str, None]
-		labels: Union[Dict[str, str], None]
+		errors: str | None
+		labels: dict[str, str] | None
 		errors, labels = loadLabels()
 		if labels is None:
 			if errors is not None:
 				self.output(errors)
 			return None
 		self.labels.update(labels)
-		orphans: List[str] = [label for label, vnum in self.labels.items() if vnum not in self.rooms]
+		orphans: list[str] = [label for label, vnum in self.labels.items() if vnum not in self.rooms]
 		for label in orphans:
 			del self.labels[label]
 
 	def saveLabels(self) -> None:
 		dumpLabels(self.labels)
 
-	def getNewExit(self, direction: str, to: str = "undefined", vnum: Optional[str] = None) -> Exit:
+	def getNewExit(self, direction: str, to: str = "undefined", vnum: str | None = None) -> Exit:
 		"""
 		Creates a new exit object for a given direction.
 
@@ -298,7 +283,7 @@ class World(object):
 
 	def getNeighborsFromCoordinates(
 		self, start: Sequence[int], radius: Sequence[int]
-	) -> Generator[Tuple[str, Room, int, int, int], None, None]:
+	) -> Generator[tuple[str, Room, int, int, int], None, None]:
 		"""A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
 		x, y, z = start
@@ -312,7 +297,7 @@ class World(object):
 
 	def getNeighborsFromRoom(
 		self, start: Room, radius: Sequence[int]
-	) -> Generator[Tuple[str, Room, int, int, int], None, None]:
+	) -> Generator[tuple[str, Room, int, int, int], None, None]:
 		"""A generator which yields all rooms in the vicinity of a room object.
 		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
 		x, y, z = start.x, start.y, start.z
@@ -327,21 +312,21 @@ class World(object):
 			):
 				yield (vnum, obj, differenceX, differenceY, differenceZ)
 
-	def getVnum(self, roomObj: Room) -> Union[str, None]:
-		result: Union[str, None] = None
+	def getVnum(self, roomObj: Room) -> str | None:
+		result: str | None = None
 		for vnum, obj in self.rooms.items():
 			if obj is roomObj:
 				result = vnum
 				break
 		return result
 
-	def coordinatesSubtract(self, first: Sequence[int], second: Sequence[int]) -> Tuple[int, ...]:
+	def coordinatesSubtract(self, first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
 		return tuple(map(operator.sub, first, second))
 
-	def coordinatesAdd(self, first: Sequence[int], second: Sequence[int]) -> Tuple[int, ...]:
+	def coordinatesAdd(self, first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
 		return tuple(map(operator.add, first, second))
 
-	def coordinatesAddDirection(self, coordinates: Sequence[int], direction: str) -> Tuple[int, ...]:
+	def coordinatesAddDirection(self, coordinates: Sequence[int], direction: str) -> tuple[int, ...]:
 		if direction not in DIRECTIONS:
 			raise ValueError(f"Direction must be one of {DIRECTIONS}.")
 		return self.coordinatesAdd(coordinates, DIRECTION_COORDINATES[direction])
@@ -351,13 +336,13 @@ class World(object):
 
 	def revnum(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: Union[Match[str], None] = re.match(
+		match: re.Match[str] | None = re.match(
 			r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text
 		)
 		if match is None:
 			self.output("Syntax: 'revnum [Origin VNum] [Destination VNum]'.")
 			return None
-		matchDict: Dict[str, str] = match.groupdict()
+		matchDict: dict[str, str] = match.groupdict()
 		if not matchDict["destination"]:
 			self.output("Error: you need to supply a destination VNum.")
 			return None
@@ -400,8 +385,8 @@ class World(object):
 		self.GUIRefresh()
 		return output
 
-	def searchRooms(self, exactMatch: bool = False, **kwargs: str) -> List[Room]:
-		validArgs: Tuple[str, ...] = (
+	def searchRooms(self, exactMatch: bool = False, **kwargs: str) -> list[Room]:
+		validArgs: tuple[str, ...] = (
 			"name",
 			"desc",
 			"dynamicDesc",
@@ -426,7 +411,7 @@ class World(object):
 			for key, value in kwargs.items()
 			if key.strip() in validArgs and value.strip()
 		}
-		results: List[Room] = []
+		results: list[Room] = []
 		if not kwargs:
 			return results
 		for vnum, roomObj in self.rooms.items():
@@ -456,7 +441,7 @@ class World(object):
 	def fdoor(self, findFormat: str, text: str = "") -> str:
 		if not text.strip():
 			return "Usage: 'fdoor [text]'."
-		results: List[Room] = self.searchRooms(door=text)
+		results: list[Room] = self.searchRooms(door=text)
 		if not results:
 			return "Nothing found."
 		currentRoom: Room = self.currentRoom
@@ -479,7 +464,7 @@ class World(object):
 	def fdynamic(self, findFormat: str, text: str = "") -> str:
 		if not text.strip():
 			return "Usage: 'fdynamic [text]'."
-		results: List[Room] = self.searchRooms(dynamicDesc=text)
+		results: list[Room] = self.searchRooms(dynamicDesc=text)
 		if not results:
 			return "Nothing found."
 		currentRoom = self.currentRoom
@@ -499,7 +484,7 @@ class World(object):
 		if not self.labels:
 			return "No labels defined."
 		text = text.strip().lower()
-		results: Set[Room] = {
+		results: set[Room] = {
 			self.rooms[vnum]
 			for label, vnum in self.labels.items()
 			if text and text in label.strip().lower() or not text
@@ -521,7 +506,7 @@ class World(object):
 	def fname(self, findFormat: str, text: str = "") -> str:
 		if not text.strip():
 			return "Usage: 'fname [text]'."
-		results: List[Room] = self.searchRooms(name=text)
+		results: list[Room] = self.searchRooms(name=text)
 		if not results:
 			return "Nothing found."
 		currentRoom = self.currentRoom
@@ -540,7 +525,7 @@ class World(object):
 	def fnote(self, findFormat: str, text: str = "") -> str:
 		if not text.strip():
 			return "Usage: 'fnote [text]'."
-		results: List[Room] = self.searchRooms(note=text)
+		results: list[Room] = self.searchRooms(note=text)
 		if not results:
 			return "Nothing found."
 		currentRoom = self.currentRoom
@@ -578,7 +563,7 @@ class World(object):
 
 	def ralign(self, text: str = "") -> str:
 		text = text.strip().lower()
-		validValues: Tuple[str, ...] = ("good", "neutral", "evil", "undefined")
+		validValues: tuple[str, ...] = ("good", "neutral", "evil", "undefined")
 		if text not in validValues:
 			return (
 				f"Room alignment set to '{self.currentRoom.align}'. "
@@ -602,7 +587,7 @@ class World(object):
 
 	def rportable(self, text: str = "") -> str:
 		text = text.strip().lower()
-		validValues: Tuple[str, ...] = ("portable", "notportable", "undefined")
+		validValues: tuple[str, ...] = ("portable", "notportable", "undefined")
 		if text not in validValues:
 			return (
 				f"Room portable set to '{self.currentRoom.portable}'. "
@@ -613,7 +598,7 @@ class World(object):
 
 	def rridable(self, text: str = "") -> str:
 		text = text.strip().lower()
-		validValues: Tuple[str, ...] = ("ridable", "notridable", "undefined")
+		validValues: tuple[str, ...] = ("ridable", "notridable", "undefined")
 		if text not in validValues:
 			return (
 				f"Room ridable set to '{self.currentRoom.ridable}'. "
@@ -625,7 +610,7 @@ class World(object):
 
 	def ravoid(self, text: str = "") -> str:
 		text = text.strip().lower()
-		validValues: Tuple[str, ...] = ("+", "-")
+		validValues: tuple[str, ...] = ("+", "-")
 		if text not in validValues:
 			return (
 				f"Room avoid {'enabled' if self.currentRoom.avoid else 'disabled'}. "
@@ -689,9 +674,9 @@ class World(object):
 			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
 			+ fr"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
 		)
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is not None:
-			matchDict: Dict[str, str] = match.groupdict()
+			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.mobFlags:
 					self.currentRoom.mobFlags.remove(matchDict["flag"])
@@ -715,9 +700,9 @@ class World(object):
 			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
 			+ fr"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
 		)
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is not None:
-			matchDict: Dict[str, str] = match.groupdict()
+			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.loadFlags:
 					self.currentRoom.loadFlags.remove(matchDict["flag"])
@@ -741,9 +726,9 @@ class World(object):
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is not None:
-			matchDict: Dict[str, str] = match.groupdict()
+			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
@@ -772,9 +757,9 @@ class World(object):
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is not None:
-			matchDict: Dict[str, str] = match.groupdict()
+			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
@@ -803,9 +788,9 @@ class World(object):
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is not None:
-			matchDict: Dict[str, str] = match.groupdict()
+			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 			if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 				if not matchDict["name"]:
@@ -839,9 +824,9 @@ class World(object):
 			+ r"((?P<vnum>\d+|undefined)\s+)?"
 			+ fr"(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is not None:
-			matchDict: Dict[str, str] = match.groupdict()
+			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 			if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 				reversedDirection: str = REVERSE_DIRECTIONS[direction]
@@ -908,14 +893,14 @@ class World(object):
 	def rlabel(self, text: str = "") -> None:
 		text = text.strip().lower()
 		matchPattern: str = r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$"
-		match: Union[Match[str], None] = re.match(matchPattern, text)
+		match: re.Match[str] | None = re.match(matchPattern, text)
 		if match is None:
 			self.output(
 				"Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. "
 				+ "Leave it blank to use the current room's vnum. Use '_label info all' to get a list of all labels."
 			)
 			return None
-		matchDict: Dict[str, str] = match.groupdict()
+		matchDict: dict[str, str] = match.groupdict()
 		if not matchDict["label"]:
 			self.output("Error: you need to supply a label.")
 			return None
@@ -951,7 +936,7 @@ class World(object):
 			else:
 				self.output(f"Label '{label}' points to room '{self.labels[label]}'.")
 		elif matchDict["action"] == "search":
-			results: List[str] = sorted(
+			results: list[str] = sorted(
 				f"{name} - {self.rooms[vnum].name if vnum in self.rooms else 'VNum not in map'} - {vnum}"
 				for name, vnum in self.labels.items()
 				if label in name
@@ -973,8 +958,8 @@ class World(object):
 	def createSpeedWalk(self, directionsList: MutableSequence[str]) -> str:
 		"""Given a list of directions, return a string of the directions in standard speed walk format"""
 
-		def compressDirections(directionsBuffer: Sequence[str]) -> List[str]:
-			speedWalkDirs: List[str] = []
+		def compressDirections(directionsBuffer: Sequence[str]) -> list[str]:
+			speedWalkDirs: list[str] = []
 			for direction, group in itertools.groupby(directionsBuffer):
 				lenGroup: int = len(list(group))
 				if lenGroup == 1:
@@ -984,8 +969,8 @@ class World(object):
 			return speedWalkDirs
 
 		numDirections: int = len([d for d in directionsList if d in DIRECTIONS])
-		result: List[str] = []
-		directionsBuffer: List[str] = []
+		result: list[str] = []
+		directionsBuffer: list[str] = []
 		while directionsList:
 			item: str = directionsList.pop()
 			if item in DIRECTIONS:
@@ -1003,40 +988,40 @@ class World(object):
 
 	def path(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: Union[Match[str], None] = RUN_DESTINATION_REGEX.match(text)
+		match: re.Match[str] | None = RUN_DESTINATION_REGEX.match(text)
 		if match is None:
 			self.output("Usage: path [label|vnum]")
 			return None
 		destination: str = match.group("destination")
 		flags: str = match.group("flags")
-		result: List[str] = self.pathFind(destination=destination, flags=flags.split("|") if flags else None)
+		result: list[str] = self.pathFind(destination=destination, flags=flags.split("|") if flags else None)
 		if result:
 			self.output(self.createSpeedWalk(result))
 
 	def pathFind(
 		self,
-		origin: Optional[Room] = None,
-		destination: Optional[str] = None,
-		flags: Optional[Sequence[str]] = None,
-	) -> List[str]:
+		origin: Room | None = None,
+		destination: str | None = None,
+		flags: Sequence[str] | None = None,
+	) -> list[str]:
 		"""Find the path"""
 		if origin is None:
 			if self.currentRoom.vnum == "-1":
 				self.output("Error! The mapper has no location. Please use the sync command then try again.")
 				return []
 			origin = self.currentRoom
-		destinationRoom: Union[Room, None] = self.getRoomFromLabel(str(destination))
+		destinationRoom: Room | None = self.getRoomFromLabel(str(destination))
 		if destinationRoom is None:
 			return []
 		elif destinationRoom is origin:
 			self.output("You are already there!")
 			return []
-		avoidTerrains: FrozenSet[str]
+		avoidTerrains: frozenset[str]
 		if flags:
 			avoidTerrains = frozenset(terrain for terrain in TERRAIN_COSTS if f"no{terrain}" in flags)
 		else:
 			avoidTerrains = frozenset()
-		ignoreVnums: FrozenSet[str] = frozenset(("undefined", "death"))
+		ignoreVnums: frozenset[str] = frozenset(("undefined", "death"))
 		isDestinationFunc: Callable[[Room], bool] = lambda currentRoomObj: (  # NOQA: E731
 			currentRoomObj is destinationRoom
 		)
@@ -1052,22 +1037,22 @@ class World(object):
 	def _pathFind(
 		self,
 		origin: Room,
-		isDestinationFunc: Optional[Callable[[Room], bool]] = None,
-		exitIgnoreFunc: Optional[Callable[[Exit], bool]] = None,
-		exitCostFunc: Optional[Callable[[Exit, Room], int]] = None,
-		exitDestinationFunc: Optional[Callable[[Exit, Room], bool]] = None,
-	) -> List[str]:
+		isDestinationFunc: Callable[[Room], bool] | None = None,
+		exitIgnoreFunc: Callable[[Exit], bool] | None = None,
+		exitCostFunc: Callable[[Exit, Room], int] | None = None,
+		exitDestinationFunc: Callable[[Exit, Room], bool] | None = None,
+	) -> list[str]:
 		# Each key-value pare that gets added to this dict will be a parent room and child room respectively.
-		parents: Dict[Room, Tuple[Room, str]] = {origin: (origin, "")}
+		parents: dict[Room, tuple[Room, str]] = {origin: (origin, "")}
 		# unprocessed rooms.
-		opened: List[Tuple[float, Room]] = []
+		opened: list[tuple[float, Room]] = []
 		# Using a binary heap for storing unvisited rooms significantly increases performance.
 		# https://en.wikipedia.org/wiki/Binary_heap
 		heapq.heapify(opened)
 		# Put the origin cost and origin room on the opened rooms heap to be processed first.
 		heapq.heappush(opened, (origin.cost, origin))
 		# previously processed rooms.
-		closed: Dict[Room, float] = {}
+		closed: dict[Room, float] = {}
 		# Ignore the origin from the search by adding it to the closed rooms dict.
 		closed[origin] = origin.cost
 		# Search while there are rooms left in the opened heap.
@@ -1116,7 +1101,7 @@ class World(object):
 		# The while statement was broken prematurely, meaning that the destination was found.
 		# Find the path from the origin to the destination by traversing the hierarchy
 		# of room parents, starting with the current room.
-		results: List[str] = []
+		results: list[str] = []
 		while currentRoomObj is not origin:
 			currentRoomObj, direction = parents[currentRoomObj]
 			if (
@@ -1137,7 +1122,7 @@ class World(object):
 				)
 		return results
 
-	def getRoomFromLabel(self, text: str) -> Union[Room, None]:
+	def getRoomFromLabel(self, text: str) -> Room | None:
 		text = text.strip().lower()
 		vnum: str
 		if not text:
@@ -1153,6 +1138,6 @@ class World(object):
 				return self.rooms[vnum]
 			self.output(f"{text} is set to vnum {vnum}, but there is no room with that vnum")
 		else:  # The text is *not* an existing label.
-			similarLabels: List[str] = sorted(self.labels, key=lambda l: fuzz.ratio(l, text), reverse=True)
+			similarLabels: list[str] = sorted(self.labels, key=lambda l: fuzz.ratio(l, text), reverse=True)
 			self.output(f"Unknown label. Did you mean {', '.join(similarLabels[0:4])}?")
 		return None

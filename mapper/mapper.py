@@ -13,10 +13,11 @@ import socket
 import textwrap
 import threading
 import traceback
+from collections.abc import Callable
 from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer
-from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Set, Tuple, Union
+from typing import Any, Union
 
 # Third-party Modules:
 from mudproto.mpi import MPIProtocol
@@ -36,11 +37,11 @@ from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 
 MAPPER_QUEUE_TYPE = Union[EVENT_CALLER_TYPE, None]
-EXIT_TAGS_REGEX: Pattern[str] = re.compile(
+EXIT_TAGS_REGEX: re.Pattern[str] = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ fr"(?P<direction>{'|'.join(DIRECTIONS)})"
 )
-MOVEMENT_FORCED_REGEX: Pattern[str] = re.compile(
+MOVEMENT_FORCED_REGEX: re.Pattern[str] = re.compile(
 	"|".join(
 		[
 			r"You feel confused and move along randomly\.\.\.",
@@ -74,7 +75,7 @@ MOVEMENT_FORCED_REGEX: Pattern[str] = re.compile(
 		]
 	)
 )
-MOVEMENT_PREVENTED_REGEX: Pattern[str] = re.compile(
+MOVEMENT_PREVENTED_REGEX: re.Pattern[str] = re.compile(
 	"^(?:{lines})$".format(
 		lines="|".join(
 			[
@@ -120,7 +121,7 @@ MOVEMENT_PREVENTED_REGEX: Pattern[str] = re.compile(
 		)
 	)
 )
-PROMPT_REGEX: Pattern[str] = re.compile(
+PROMPT_REGEX: re.Pattern[str] = re.compile(
 	r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=<]?)"
 	+ r"(?P<weather>[*'\"~=-]{0,2})\s*(?P<movementFlags>[RrSsCcW]{0,4})[^\>]*\>$"
 )
@@ -136,7 +137,7 @@ class Mapper(threading.Thread, World):
 		gameSocket: socket.socket,
 		outputFormat: str,
 		interface: str,
-		promptTerminator: Union[bytes, None],
+		promptTerminator: bytes | None,
 		gagPrompts: bool,
 		findFormat: str,
 		isEmulatingOffline: bool,
@@ -155,14 +156,14 @@ class Mapper(threading.Thread, World):
 		self.autoMerging: bool = True
 		self.autoLinking: bool = True
 		self.autoWalk: bool = False
-		self.autoWalkDirections: List[str] = []
-		self.userCommands: List[str] = [
+		self.autoWalkDirections: list[str] = []
+		self.userCommands: list[str] = [
 			func[len("user_command_") :]
 			for func in dir(self)
 			if func.startswith("user_command_") and callable(getattr(self, func))
 		]
-		self.mudEventHandlers: Dict[str, Set[Callable[[str], None]]] = {}
-		self.unknownMudEvents: List[str] = []
+		self.mudEventHandlers: dict[str, set[Callable[[str], None]]] = {}
+		self.unknownMudEvents: list[str] = []
 		for legacyHandler in [
 			func[len("mud_event_") :]
 			for func in dir(self)
@@ -170,13 +171,13 @@ class Mapper(threading.Thread, World):
 		]:
 			self.registerMudEventHandler(legacyHandler, getattr(self, f"mud_event_{legacyHandler}"))
 		ExitsCleaner(self, "exits")
-		self.emulationCommands: List[str] = [
+		self.emulationCommands: list[str] = [
 			func[len("emulation_command_") :]
 			for func in dir(self)
 			if func.startswith("emulation_command_") and callable(getattr(self, func))
 		]
 		# Commands that should have priority when matching user input to an emulation command.
-		priorityCommands: List[str] = [
+		priorityCommands: list[str] = [
 			"exits",
 		]
 		self.emulationCommands.sort(
@@ -192,13 +193,13 @@ class Mapper(threading.Thread, World):
 		self.prompt: str = ""
 		self.clock: Clock = Clock()
 		self.scouting: bool = False
-		self.movement: Union[str, None] = None
-		self.moved: Union[str, None] = None
-		self.roomName: Union[str, None] = None
-		self.description: Union[str, None] = None
-		self.dynamic: Union[str, None] = None
-		self.exits: Union[str, None] = None
-		self.timeEvent: Union[str, None] = None
+		self.movement: str | None = None
+		self.moved: str | None = None
+		self.roomName: str | None = None
+		self.description: str | None = None
+		self.dynamic: str | None = None
+		self.exits: str | None = None
+		self.timeEvent: str | None = None
 		self.timeEventOffset: int = 0
 		self.parsedHour: int = 0
 		self.parsedMinutes: int = 0
@@ -222,7 +223,7 @@ class Mapper(threading.Thread, World):
 		self.proxy.connect()
 		World.__init__(self, interface=self.interface)
 		self.emulationRoom: Room = self.currentRoom
-		self.lastEmulatedJump: Union[str, None] = None
+		self.lastEmulatedJump: str | None = None
 
 	@property
 	def outputFormat(self) -> str:
@@ -293,19 +294,19 @@ class Mapper(threading.Thread, World):
 	def sendGame(self, msg: str) -> None:
 		self.proxy.game.write(msg.encode("utf-8") + b"\n", escape=True)
 
-	def emulation_command_quit(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_quit(self, *args: str) -> tuple[str, ...]:
 		"""Exits the program."""
 		self.proxy.game.write(b"quit")
 		return args
 
-	def emulation_command_at(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_at(self, *args: str) -> tuple[str, ...]:
 		"""mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)"""
 		label: str = "".join(args[:1]).strip()
 		command: str = " ".join(args[1:]).strip()
 		if not label:
 			self.sendPlayer("Please provide a room in which to execute commands.")
 		else:
-			room: Union[Room, None] = self.getRoomFromLabel(label)
+			room: Room | None = self.getRoomFromLabel(label)
 			if room is None:
 				pass  # Alternative suggestions were sent by the call to `getRoomFromLabel`.
 			elif not command:
@@ -318,34 +319,34 @@ class Mapper(threading.Thread, World):
 				self.emulationRoom = oldRoom
 		return ()
 
-	def emulation_command_brief(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_brief(self, *args: str) -> tuple[str, ...]:
 		"""toggles brief mode."""
 		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
 		self.output(f"Brief mode {'on' if self.isEmulatingBriefMode else 'off'}")
 		return args
 
-	def emulation_command_dynamic(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_dynamic(self, *args: str) -> tuple[str, ...]:
 		"""toggles automatic speaking of dynamic descs."""
 		self.isEmulatingDynamicDescs = not self.isEmulatingDynamicDescs
 		self.sendPlayer(f"dynamic descs {'on' if self.isEmulatingDynamicDescs else 'off'}")
 		return args
 
-	def emulation_command_examine(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_examine(self, *args: str) -> tuple[str, ...]:
 		"""shows the room's description."""
 		self.output(self.emulationRoom.desc)
 		return args
 
-	def emulation_command_exits(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_exits(self, *args: str) -> tuple[str, ...]:
 		"""shows the exits in the room."""
-		exits: List[str] = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
+		exits: list[str] = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
 		self.output(f"Exits: {', '.join(exits)}.")
 		return args
 
-	def emulation_command_go(self, *args: str, isJump: bool = True) -> Tuple[str, ...]:
+	def emulation_command_go(self, *args: str, isJump: bool = True) -> tuple[str, ...]:
 		"""mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)"""
 		label: str = "".join(args[:1]).strip()
 		args = args[1:]
-		room: Union[Room, None] = self.getRoomFromLabel(label)
+		room: Room | None = self.getRoomFromLabel(label)
 		if room is not None:
 			self.emulationRoom = room
 			self.emulation_command_look()
@@ -356,19 +357,19 @@ class Mapper(threading.Thread, World):
 				self.lastEmulatedJump = room.vnum
 		return args
 
-	def emulation_command_help(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_help(self, *args: str) -> tuple[str, ...]:
 		"""Shows documentation for mapper's emulation commands."""
-		helpTexts: List[Tuple[str, str]] = [
+		helpTexts: list[tuple[str, str]] = [
 			(funcName, getattr(self, "emulation_command_" + funcName).__doc__)
 			for funcName in self.emulationCommands
 		]
-		documentedFuncs: List[Tuple[str, str]] = [
+		documentedFuncs: list[tuple[str, str]] = [
 			(name, formatDocString(docString, prefix=" " * 8).strip())
 			for name, docString in helpTexts
 			if docString.strip()
 		]
-		undocumentedFuncs: List[Tuple[str, str]] = [text for text in helpTexts if not text[1].strip()]
-		result: List[str] = [
+		undocumentedFuncs: list[tuple[str, str]] = [text for text in helpTexts if not text[1].strip()]
+		result: list[str] = [
 			"The following commands allow you to emulate exploring the map without needing to move in game:",
 			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs),
 		]
@@ -388,7 +389,7 @@ class Mapper(threading.Thread, World):
 		self.output("\n".join(result))
 		return args
 
-	def emulation_command_look(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_look(self, *args: str) -> tuple[str, ...]:
 		"""looks at the room."""
 		self.output(self.emulationRoom.name)
 		if not self.isEmulatingBriefMode:
@@ -399,7 +400,7 @@ class Mapper(threading.Thread, World):
 			self.output(f"Note: {self.emulationRoom.note}")
 		return args
 
-	def emulation_command_return(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_return(self, *args: str) -> tuple[str, ...]:
 		"""returns to the last room jumped to with the go command."""
 		if self.lastEmulatedJump is not None:
 			self.emulation_command_go(self.lastEmulatedJump)
@@ -407,7 +408,7 @@ class Mapper(threading.Thread, World):
 			self.output("Cannot return anywhere until the go command has been used at least once.")
 		return args
 
-	def emulation_command_rename(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_rename(self, *args: str) -> tuple[str, ...]:
 		"""changes the room name. (useful for exploring places with many similar names)"""
 		name: str = " ".join(args).strip()
 		if name:
@@ -417,7 +418,7 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer("Error: You must specify a new room name.")
 		return ()
 
-	def emulation_command_sync(self, *args: str) -> Tuple[str, ...]:
+	def emulation_command_sync(self, *args: str) -> tuple[str, ...]:
 		"""
 		When emulating while connected to the mud, syncs the emulated location with the in-game location.
 		When running in offline mode, is equivalent to the return command.
@@ -428,7 +429,7 @@ class Mapper(threading.Thread, World):
 			self.emulation_command_go(self.currentRoom.vnum)
 		return args
 
-	def emulate_leave(self, direction: str, *args: str) -> Tuple[str, ...]:
+	def emulate_leave(self, direction: str, *args: str) -> tuple[str, ...]:
 		"""emulates leaving the room into a neighbouring room"""
 		if direction not in self.emulationRoom.exits:
 			self.output("Alas, you cannot go that way...")
@@ -447,17 +448,17 @@ class Mapper(threading.Thread, World):
 			self.output("What command do you want to emulate?")
 			return None
 		else:
-			words: Tuple[str, ...] = tuple(inputText.strip().split())
+			words: tuple[str, ...] = tuple(inputText.strip().split())
 			while words:
 				words = self.emulateCommands(*words)
 
-	def emulateCommands(self, *words: str) -> Tuple[str, ...]:
+	def emulateCommands(self, *words: str) -> tuple[str, ...]:
 		userCommand: str = words[0].lower()
-		userArgs: Tuple[str, ...] = words[1:]
+		userArgs: tuple[str, ...] = words[1:]
 		# Get the full name of the user's command.
 		for command in [*DIRECTIONS, *self.emulationCommands]:
 			if command.startswith(userCommand):
-				remainingArgs: Tuple[str, ...]
+				remainingArgs: tuple[str, ...]
 				if command in DIRECTIONS:
 					remainingArgs = self.emulate_leave(command, *userArgs)
 				else:
@@ -488,11 +489,11 @@ class Mapper(threading.Thread, World):
 
 	def user_command_secretaction(self, *args: str) -> None:
 		matchPattern: str = fr"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$"
-		match: Union[Match[str], None] = re.match(matchPattern, args[0].strip().lower())
+		match: re.Match[str] | None = re.match(matchPattern, args[0].strip().lower())
 		if match is None:
 			self.sendPlayer(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")
 			return None
-		matchDict: Dict[str, str] = match.groupdict()
+		matchDict: dict[str, str] = match.groupdict()
 		direction: str
 		if matchDict["direction"]:
 			direction = "".join(d for d in DIRECTIONS if d.startswith(matchDict["direction"]))
@@ -639,7 +640,7 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer("Usage: run [label|vnum]")
 			return None
 		self.stopRun()
-		match: Union[Match[str], None]
+		match: re.Match[str] | None
 		destination: str
 		argString: str = args[0].strip()
 		if argString.lower() == "t" or argString.lower().startswith("t "):
@@ -671,7 +672,7 @@ class Mapper(threading.Thread, World):
 				return None
 			destination = match.group("destination")
 		flags: str = match.group("flags")
-		result: Union[List[str], None] = self.pathFind(
+		result: list[str] | None = self.pathFind(
 			destination=destination, flags=flags.split("|") if flags else None
 		)
 		if result is not None:
@@ -688,11 +689,11 @@ class Mapper(threading.Thread, World):
 			return None
 		self.autoWalkDirections.clear()
 		argString: str = args[0].strip()
-		match: Union[Match[str], None] = RUN_DESTINATION_REGEX.match(argString)
+		match: re.Match[str] | None = RUN_DESTINATION_REGEX.match(argString)
 		if match is not None:
 			destination: str = match.group("destination")
 			flags: str = match.group("flags")
-			result: Union[List[str], None] = self.pathFind(
+			result: list[str] | None = self.pathFind(
 				destination=destination, flags=flags.split("|") if flags else None
 			)
 			if result is not None:
@@ -718,17 +719,17 @@ class Mapper(threading.Thread, World):
 
 	def user_command_maphelp(self, *args: str) -> None:
 		"""Shows documentation for mapper commands"""
-		helpTexts: List[Tuple[str, str]] = [
+		helpTexts: list[tuple[str, str]] = [
 			(funcName, getattr(self, "user_command_" + funcName).__doc__ or "")
 			for funcName in self.userCommands
 		]
-		documentedFuncs: List[Tuple[str, str]] = [
+		documentedFuncs: list[tuple[str, str]] = [
 			(name, formatDocString(docString, prefix=" " * 8).strip())
 			for name, docString in helpTexts
 			if docString.strip()
 		]
-		undocumentedFuncs: List[Tuple[str, str]] = [text for text in helpTexts if not text[1].strip()]
-		result: List[str] = [
+		undocumentedFuncs: list[tuple[str, str]] = [text for text in helpTexts if not text[1].strip()]
+		result: list[str] = [
 			"Mapper Commands",
 			"The following commands are used for viewing and editing map data:",
 			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs),
@@ -768,18 +769,16 @@ class Mapper(threading.Thread, World):
 		self.autoWalk = False
 		self.autoWalkDirections.clear()
 
-	def sync(
-		self, name: Optional[str] = None, desc: Optional[str] = None, vnum: Optional[str] = None
-	) -> bool:
+	def sync(self, name: str | None = None, desc: str | None = None, vnum: str | None = None) -> bool:
 		if vnum is not None:
-			roomObj: Union[Room, None] = self.getRoomFromLabel(vnum)
+			roomObj: Room | None = self.getRoomFromLabel(vnum)
 			if roomObj is not None:
 				self.currentRoom = roomObj
 				self.isSynced = True
 				self.sendPlayer(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
 		else:
-			nameVnums: List[str] = []
-			descVnums: List[str] = []
+			nameVnums: list[str] = []
+			descVnums: list[str] = []
 			for vnum, roomObj in self.rooms.items():
 				if name and roomObj.name == name:
 					nameVnums.append(vnum)
@@ -802,10 +801,10 @@ class Mapper(threading.Thread, World):
 		return self.isSynced
 
 	def roomDetails(self) -> None:
-		doors: List[str] = []
-		deathTraps: List[str] = []
-		oneWays: List[str] = []
-		undefineds: List[str] = []
+		doors: list[str] = []
+		deathTraps: list[str] = []
+		oneWays: list[str] = []
+		undefineds: list[str] = []
 		for direction, exitObj in self.currentRoom.exits.items():
 			if exitObj.door and exitObj.door != "exit":
 				doors.append(f"{direction}: {exitObj.door}")
@@ -830,11 +829,11 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer(f"Note: {self.currentRoom.note}", showPrompt=False)
 
 	def updateRoomFlags(self, prompt: str) -> None:
-		match: Union[Match[str], None] = PROMPT_REGEX.search(prompt)
+		match: re.Match[str] | None = PROMPT_REGEX.search(prompt)
 		if match is None:
 			return None
-		promptDict: Dict[str, str] = match.groupdict()
-		output: List[str] = []
+		promptDict: dict[str, str] = match.groupdict()
+		output: list[str] = []
 		with suppress(KeyError):
 			light: str = LIGHT_SYMBOLS[promptDict["light"]]
 			if light == "lit" and self.currentRoom.light != light:
@@ -853,8 +852,8 @@ class Mapper(threading.Thread, World):
 	def updateExitFlags(self, exits: str) -> None:
 		if not exits:
 			return None
-		output: List[str] = []
-		exitsOutput: List[str] = []
+		output: list[str] = []
+		exitsOutput: list[str] = []
 		for door, road, climb, portal, direction in EXIT_TAGS_REGEX.findall(exits):
 			# Portals aren't real exits.
 			if portal:
@@ -863,12 +862,12 @@ class Mapper(threading.Thread, World):
 				output.append(f"Adding exit '{direction}' to current room.")
 				self.currentRoom.exits[direction] = self.getNewExit(direction)
 				if self.autoLinking:
-					currentRoomCoords: Tuple[int, int, int] = (
+					currentRoomCoords: tuple[int, int, int] = (
 						self.currentRoom.x,
 						self.currentRoom.y,
 						self.currentRoom.z,
 					)
-					vnums: List[str] = [
+					vnums: list[str] = [
 						vnum
 						for vnum, roomObj in self.rooms.items()
 						if self.coordinatesAddDirection(currentRoomCoords, direction)
@@ -895,7 +894,7 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer("\n".join(output))
 
 	def autoMergeRoom(self, movement: str, roomObj: Room) -> None:
-		output: List[str] = []
+		output: list[str] = []
 		if (
 			self.autoLinking
 			and REVERSE_DIRECTIONS[movement] in roomObj.exits
@@ -975,8 +974,8 @@ class Mapper(threading.Thread, World):
 				self.sendPlayer(self.rridable("ridable"))
 
 	def syncTime(self, text: str) -> None:
-		clockMatch: Union[Match[str], None] = CLOCK_REGEX.match(text)
-		timeMatch: Union[Match[str], None] = TIME_REGEX.match(text)
+		clockMatch: re.Match[str] | None = CLOCK_REGEX.match(text)
+		timeMatch: re.Match[str] | None = TIME_REGEX.match(text)
 		if self.timeEvent is None:
 			if clockMatch is not None:
 				hour: int = int(clockMatch.group("hour"))
@@ -1053,7 +1052,7 @@ class Mapper(threading.Thread, World):
 	def mud_event_dynamic(self, text: str) -> None:
 		self.dynamic = text
 		self.moved = None
-		addedNewRoomFrom: Union[str, None] = None
+		addedNewRoomFrom: str | None = None
 		if not self.isSynced or self.movement is None:
 			return None
 		elif self.validateMovement(self.movement):
@@ -1063,7 +1062,7 @@ class Mapper(threading.Thread, World):
 			):
 				# Player has moved in a direction that either doesn't exist in the database
 				# or links to an invalid vnum (E.G. undefined).
-				duplicates: Union[List[Room], None]
+				duplicates: list[Room] | None
 				if self.autoMerging and self.roomName and self.description:
 					duplicates = self.searchRooms(exactMatch=True, name=self.roomName, desc=self.description)
 				else:

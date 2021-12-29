@@ -9,8 +9,8 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import socket
+from collections.abc import Generator
 from contextlib import ExitStack
-from typing import Generator, Tuple
 from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
@@ -44,7 +44,7 @@ class TestMapper(TestCase):
 			mockHandleUserData: Mock = cm.enter_context(patch.object(self.mapper, "handleUserData"))
 			self.mapper.start()
 			# feed data into the mapper queue
-			testMapperInput: Tuple[MAPPER_QUEUE_TYPE, ...] = (
+			testMapperInput: tuple[MAPPER_QUEUE_TYPE, ...] = (
 				("line", b"Welcome to mume"),
 				("prompt", b"hp:hurt mana:burning>"),
 				("userInput", b"rinfo"),
@@ -93,7 +93,7 @@ class TestMapper(TestCase):
 			)
 
 	def testMapper_handleUserData(self) -> None:
-		validUserInput: Tuple[Tuple[bytes, str, str], ...] = (
+		validUserInput: tuple[tuple[bytes, str, str], ...] = (
 			(b"rinfo", "user_command_rinfo", ""),
 			(b"rlabel add here", "user_command_rlabel", "add here"),
 			(b"emu go emoria", "user_command_emu", "go emoria"),
@@ -103,7 +103,7 @@ class TestMapper(TestCase):
 			with patch.object(self.mapper, handlerName) as handler:
 				self.mapper.handleUserData(command)
 				handler.assert_called_with(args)
-		junkUserInput: Tuple[bytes, ...] = (
+		junkUserInput: tuple[bytes, ...] = (
 			b"not_a_command",
 			b"test failure",
 			b"rinf",
@@ -162,7 +162,7 @@ class TestMapper_handleMudEvent(TestCase):
 			handler.assert_not_called()
 
 	def test_newMudEventHandlers(self) -> None:
-		events: Tuple[str, ...] = (
+		events: tuple[str, ...] = (
 			"sillyEvent",
 			"room",
 			"otherEvent",
@@ -184,7 +184,7 @@ class TestMapper_handleMudEvent(TestCase):
 			handler.assert_not_called()
 
 	def test_handleMudEvent_failsGracefullyWhenHandlingAnUnknownEvent(self) -> None:
-		unknownEvents: Tuple[str, ...] = (
+		unknownEvents: tuple[str, ...] = (
 			"unkk",
 			"New_game_event",
 			"room",

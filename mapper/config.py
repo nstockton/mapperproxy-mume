@@ -10,7 +10,8 @@ from __future__ import annotations
 import json
 import os.path
 import threading
-from typing import Any, Dict, Iterator, MutableMapping
+from collections.abc import Iterator
+from typing import Any, MutableMapping
 
 # Local Modules:
 from .utils import getDirectoryPath
@@ -39,7 +40,7 @@ class Config(MutableMapping[str, Any]):
 		"""
 		super().__init__()
 		self._name: str = name
-		self._config: Dict[str, Any] = dict()
+		self._config: dict[str, Any] = dict()
 		self.reload()
 
 	@property
@@ -47,7 +48,7 @@ class Config(MutableMapping[str, Any]):
 		"""The name of the configuration."""
 		return self._name
 
-	def _parse(self, filename: str) -> Dict[str, Any]:
+	def _parse(self, filename: str) -> dict[str, Any]:
 		filename = os.path.join(DATA_DIRECTORY, filename)
 		if not os.path.exists(filename):
 			return {}

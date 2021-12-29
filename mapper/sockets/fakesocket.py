@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import time
-from typing import Any, Dict, List, Union
+from typing import Any
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -21,13 +21,13 @@ class FakeSocketEmpty(Exception):
 
 class FakeSocket(object):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		self.inboundBuffer: Union[bytes, None] = None
-		self.timeout: Union[float, None] = None
+		self.inboundBuffer: bytes | None = None
+		self.timeout: float | None = None
 
-	def gettimeout(self) -> Union[float, None]:
+	def gettimeout(self) -> float | None:
 		return self.timeout
 
-	def settimeout(self, timeout: Union[float, None]) -> None:
+	def settimeout(self, timeout: float | None) -> None:
 		self.timeout = None if timeout is None else float(timeout)
 
 	def getblocking(self) -> bool:
@@ -42,7 +42,7 @@ class FakeSocket(object):
 	def setsockopt(self, *args: Any) -> None:  # pragma: no cover
 		pass
 
-	def getpeercert(self, *args: Any) -> Dict[str, List[List[str]]]:
+	def getpeercert(self, *args: Any) -> dict[str, list[list[str]]]:
 		return {"subject": [["commonName", "mume.org"]]}
 
 	def shutdown(self, *args: Any) -> None:  # pragma: no cover

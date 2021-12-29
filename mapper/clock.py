@@ -9,27 +9,26 @@ from __future__ import annotations
 # Built-in Modules:
 import re
 import time
-from typing import Dict, List, Optional, Pattern, Tuple, Union
 
 # Local Modules:
 from .config import Config
 
 
-CLOCK_REGEX: Pattern[str] = re.compile(
+CLOCK_REGEX: re.Pattern[str] = re.compile(
 	r"^The current time is (?P<hour>[1-9]|1[0-2])\:(?P<minutes>[0-5]\d) (?P<am_pm>[ap]m)\.$"
 )
-TIME_REGEX: Pattern[str] = re.compile(
+TIME_REGEX: re.Pattern[str] = re.compile(
 	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2]) (?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
 	+ r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
 )
-DAWN_REGEX: Pattern[str] = re.compile(
+DAWN_REGEX: re.Pattern[str] = re.compile(
 	r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$"
 )
-DAY_REGEX: Pattern[str] = re.compile(
+DAY_REGEX: re.Pattern[str] = re.compile(
 	r"^(?:It seems as if )?[Tt]he day has begun\.(?: You feel so weak under the cruel light\!)?$"
 )
-DUSK_REGEX: Pattern[str] = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
-NIGHT_REGEX: Pattern[str] = re.compile(
+DUSK_REGEX: re.Pattern[str] = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
+NIGHT_REGEX: re.Pattern[str] = re.compile(
 	r"^The last ray of light fades\, and all is swallowed up in darkness\.$|"
 	+ r"^(?:It seems as if )?[Tt]he night has begun\.(?: You feel stronger in the dark\!)?$"
 )
@@ -58,7 +57,7 @@ FIRST_MOON_CYCLE_HOUR: int = (FULL_MOON_HOUR - FULL_MOON_OFFSET) % HOURS_PER_DAY
 DK_OPEN_DURATION: int = 3  # The number of hours DK stays open.
 
 # fmt: off
-MONTHS: List[Dict[str, Union[str, int]]] = [
+MONTHS: list[dict[str, str | int]] = [
 	{
 		"name": "January",
 		"sindarin": "Ninui",
@@ -158,7 +157,7 @@ MONTHS: List[Dict[str, Union[str, int]]] = [
 ]
 # fmt: on
 
-WEEKDAYS: List[Dict[str, str]] = [
+WEEKDAYS: list[dict[str, str]] = [
 	{"name": "Sunday", "sindarin": "Oranor", "westron": "Sunday"},
 	{"name": "Monday", "sindarin": "Orithil", "westron": "Monday"},
 	{"name": "Tuesday", "sindarin": "Orgaladhad", "westron": "Trewsday"},
@@ -194,7 +193,7 @@ def timeToDelta(year: int, month: int, day: int, hour: int, minutes: int) -> int
 	)
 
 
-def deltaToTime(delta: int) -> Tuple[int, int, int, int, int]:
+def deltaToTime(delta: int) -> tuple[int, int, int, int, int]:
 	"""
 	Calculates the Mume time of a given delta.
 
@@ -308,7 +307,7 @@ class MumeTime(object):
 		return str(MONTHS[self.month]["sindarin"])
 
 	@property
-	def dawnDuskState(self) -> Tuple[str, str, int]:
+	def dawnDuskState(self) -> tuple[str, str, int]:
 		"""A tuple containing the current state name, the next state name, and the game hours until next state."""
 		if self.hour < self.dawn:
 			state = "NIGHT"
@@ -474,7 +473,7 @@ class MumeTime(object):
 
 class Clock(object):
 	def __init__(self) -> None:
-		self._epoch: Optional[int] = None
+		self._epoch: int | None = None
 
 	@property
 	def epoch(self) -> int:  # pragma: no cover
@@ -511,7 +510,7 @@ class Clock(object):
 		delta = timeToDelta(year, month, day, hour, minutes)
 		self.epoch = int(time.time()) - delta
 
-	def time(self, action: Optional[str] = None) -> str:
+	def time(self, action: str | None = None) -> str:
 		"""
 		Outputs information about the current Mume time.
 

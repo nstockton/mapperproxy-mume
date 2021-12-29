@@ -9,8 +9,8 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import socket
+from collections.abc import Callable, Sequence
 from queue import Empty, Queue
-from typing import Callable, Sequence, Tuple
 from unittest import TestCase
 from unittest.mock import Mock, _Call, _CallList, call
 
@@ -37,7 +37,7 @@ from mapper.proxy import ProxyHandler
 
 
 # The initial output of MUME. Used by the server thread to detect connection success.
-INITIAL_OUTPUT: Tuple[bytes, ...] = (
+INITIAL_OUTPUT: tuple[bytes, ...] = (
 	IAC + DO + TTYPE,
 	IAC + DO + NAWS,
 )
@@ -187,7 +187,7 @@ class TestGameThreadThroughput(TestCase):
 		self,
 		threadInput: bytes,
 		expectedOutput: bytes,
-		expectedData: Sequence[Callable[[int, Tuple[str, bytes]], _Call]],
+		expectedData: Sequence[Callable[[int, tuple[str, bytes]], _Call]],
 		inputDescription: str,
 	) -> None:
 		res: bytes
@@ -267,7 +267,7 @@ class TestGameThreadThroughput(TestCase):
 			+ b"An elven lamplighter is resting here." + LF
 		)
 		# fmt: on
-		expectedData: Tuple[Callable[[int, Tuple[str, bytes]], _Call], ...] = (
+		expectedData: tuple[Callable[[int, tuple[str, bytes]], _Call], ...] = (
 			call(("movement", b"down")),
 			call(("room", b'area="the Grey Havens" terrain="city"')),
 			call(("name", b"Seagull Inn")),

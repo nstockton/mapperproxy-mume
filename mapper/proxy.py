@@ -8,7 +8,8 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Any, Callable, Dict, List, Union
+from collections.abc import Callable
+from typing import Any
 
 # Third-party Modules:
 from mudproto.base import Protocol
@@ -39,7 +40,7 @@ class Telnet(TelnetProtocol):
 			raise ValueError("Name must be 'player' or 'game'")
 		self.proxy: ProxyHandler = proxy
 
-	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
+	def on_command(self, command: bytes, option: bytes | None) -> None:
 		if command in NEGOTIATION_BYTES and option not in self.subnegotiationMap:
 			# Treat any unhandled negotiation options the same as unhandled commands, so
 			# they are forwarded to the other end of the proxy.
@@ -47,7 +48,7 @@ class Telnet(TelnetProtocol):
 		else:
 			super().on_command(command, option)
 
-	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
+	def on_unhandledCommand(self, command: bytes, option: bytes | None) -> None:
 		# Forward unhandled commands to the other side of the proxy.
 		writer = self.proxy.game.write if self.name == "player" else self.proxy.player.write
 		if option is None:
@@ -66,7 +67,7 @@ class Player(Telnet):
 		super().__init__(*args, name="player", **kwargs)
 
 	def on_enableLocal(self, option: bytes) -> bool:
-		gameSubnegotiationMap: Union[Dict[bytes, Callable[[bytes], None]], None]
+		gameSubnegotiationMap: dict[bytes, Callable[[bytes], None]] | None
 		game: Protocol = self.proxy.game._handlers[0]
 		gameSubnegotiationMap = getattr(game, "subnegotiationMap", None)
 		if gameSubnegotiationMap is not None and option in gameSubnegotiationMap:
@@ -79,7 +80,7 @@ class Game(MCCPMixIn, CharsetMixIn, Telnet):
 		super().__init__(*args, name="game", **kwargs)
 		self.commandMap[GA] = self.on_ga
 
-	def on_ga(self, *args: Union[bytes, None]) -> None:
+	def on_ga(self, *args: bytes | None) -> None:
 		"""Called when a Go Ahead command is received."""
 		self.proxy.player.write(b"", prompt=True)
 
@@ -96,14 +97,14 @@ class ProxyHandler(object):
 		gameWriter: Callable[[bytes], None],
 		*,
 		outputFormat: str,
-		promptTerminator: Union[bytes, None],
+		promptTerminator: bytes | None,
 		isEmulatingOffline: bool,
-		mapperCommands: List[bytes],
+		mapperCommands: list[bytes],
 		eventCaller: Callable[[EVENT_CALLER_TYPE], None],
 	) -> None:
 		self.outputFormat: str = outputFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
-		self.mapperCommands: List[bytes] = mapperCommands
+		self.mapperCommands: list[bytes] = mapperCommands
 		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
 		self.player: Manager = Manager(
 			playerWriter, self.on_playerReceived, promptTerminator=promptTerminator

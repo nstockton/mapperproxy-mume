@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 from contextlib import ExitStack
-from typing import Any, Dict
+from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
@@ -34,7 +34,7 @@ from mapper.roomdata.database import (
 )
 
 
-ROOMS: Dict[str, Any] = {
+ROOMS: dict[str, Any] = {
 	"0": {
 		"align": "undefined",
 		"avoid": False,
@@ -157,7 +157,7 @@ class TestDatabase(TestCase):
 
 	@patch("mapper.roomdata.database._load")
 	def testLoadLabels(self, mockLoad: Mock) -> None:
-		database: Dict[str, str] = {"label1": "1", "label2": "2"}
+		database: dict[str, str] = {"label1": "1", "label2": "2"}
 		expectedErrors: str = "While loading sample labels: some_error\nWhile loading user labels: some_error"
 		mockLoad.return_value = ("some_error", None)
 		errors, labels = loadLabels()
@@ -182,7 +182,7 @@ class TestDatabase(TestCase):
 
 	@patch("mapper.roomdata.database._dump")
 	def testDumpLabels(self, mockDump: Mock) -> None:
-		database: Dict[str, str] = {"label1": "1", "label2": "2"}
+		database: dict[str, str] = {"label1": "1", "label2": "2"}
 		dumpLabels(database)
 		mockDump.assert_called_once_with(database, LABELS_FILE_PATH, LABELS_SCHEMA_FILE_PATH)
 

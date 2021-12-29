@@ -12,7 +12,6 @@ import os
 import socket
 import threading
 from contextlib import ExitStack, closing, suppress
-from typing import Tuple, Union
 
 # Local Modules:
 from .mapper import Mapper
@@ -96,7 +95,7 @@ def main(
 	outputFormat: str,
 	interface: str,
 	isEmulatingOffline: bool,
-	promptTerminator: Union[bytes, None],
+	promptTerminator: bytes | None,
 	gagPrompts: bool,
 	findFormat: str,
 	localHost: str,
@@ -114,14 +113,14 @@ def main(
 	proxySocket.listen(1)
 	touch(LISTENING_STATUS_FILE)
 	unbufferedPlayerSocket: socket.socket
-	playerAddress: Tuple[str, int]
+	playerAddress: tuple[str, int]
 	unbufferedPlayerSocket, playerAddress = proxySocket.accept()
 	playerSocket: BufferedSocket = BufferedSocket(
 		unbufferedPlayerSocket,
 		timeout=1.0,
 	)
 	# initialise server connection
-	unbufferedGameSocket: Union[socket.socket, FakeSocket]
+	unbufferedGameSocket: socket.socket | FakeSocket
 	try:
 		if isEmulatingOffline:
 			unbufferedGameSocket = FakeSocket()
