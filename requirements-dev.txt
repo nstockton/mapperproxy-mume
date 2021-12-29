@@ -10,7 +10,7 @@ mkdocs-material-extensions==1.0.3
 mkdocstrings==0.17.0
 mypy
 pre-commit
-PyInstaller==4.1
+PyInstaller==4.7
 pyproject-flake8==0.0.1a2
 git+https://github.com/nstockton/pytkdocs.git@tab-indentation-parser#egg=pytkdocs
 git+https://github.com/nstockton/tan.git@personal#egg=tan
