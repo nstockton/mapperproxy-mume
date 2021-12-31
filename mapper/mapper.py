@@ -23,6 +23,7 @@ from typing import Any, Union
 from mudproto.mpi import MPIProtocol
 from mudproto.utils import escapeXMLString
 from mudproto.xml import EVENT_CALLER_TYPE
+from typing_extensions import TypeAlias
 
 # Local Modules:
 from . import INTERFACES, OUTPUT_FORMATS
@@ -36,7 +37,7 @@ from .utils import decodeBytes, formatDocString, regexFuzzy, simplified, stripAn
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 
 
-MAPPER_QUEUE_TYPE = Union[EVENT_CALLER_TYPE, None]
+MAPPER_QUEUE_TYPE: TypeAlias = Union[EVENT_CALLER_TYPE, None]
 EXIT_TAGS_REGEX: re.Pattern[str] = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ fr"(?P<direction>{'|'.join(DIRECTIONS)})"

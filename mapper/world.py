@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING, Any, Tuple, Union
 
 # Third-party Modules:
 from fuzzywuzzy import fuzz
+from typing_extensions import TypeAlias
 
 # Local Modules:
 from .roomdata.database import dumpLabels, dumpRooms, loadLabels, loadRooms
@@ -50,7 +51,7 @@ if TYPE_CHECKING:  # pragma: no cover
 	import pyglet.window
 
 
-GUI_QUEUE_TYPE = Union[Tuple[str], Tuple[str, Room], None]
+GUI_QUEUE_TYPE: TypeAlias = Union[Tuple[str], Tuple[str, Room], None]
 LEAD_BEFORE_ENTERING_VNUMS: list[str] = ["196", "3473", "3474", "12138", "12637"]
 LIGHT_SYMBOLS: dict[str, str] = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
 RUN_DESTINATION_REGEX: re.Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")

@@ -116,6 +116,7 @@
 		"rapidjson",
 		"speechlight",
 		"tap",
+		"typing_extensions",
 	]
 	# The heading to display for first-party imports.
 	import_heading_firstparty = "Mapper Modules:"
