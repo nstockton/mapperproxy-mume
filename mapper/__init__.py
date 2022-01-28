@@ -8,6 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
+from typing import Union
 
 # Local Modules:
 from .config import Config
@@ -17,7 +18,7 @@ INTERFACES: tuple[str, str, str] = ("text", "hc", "sighted")
 OUTPUT_FORMATS: tuple[str, str, str] = ("normal", "raw", "tintin")
 
 
-def levelName(level: str | int | None) -> str:
+def levelName(level: Union[str, int, None]) -> str:
 	level = level.strip().upper() if isinstance(level, str) else level
 	if isinstance(level, int):
 		if level < 0 or level > 50:

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
+from typing import Union
 
 # Local Modules:
 from ..gui.vec2d import Vec2d
@@ -157,7 +158,7 @@ class Exit(object):
 
 	def __init__(self) -> None:
 		self._direction: str = ""
-		self.vnum: str | None = None
+		self.vnum: Union[str, None] = None
 		self.to: str = "undefined"
 		self.exitFlags: set[str] = set(["exit"])
 		self.door: str = ""

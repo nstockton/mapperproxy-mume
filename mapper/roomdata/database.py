@@ -11,7 +11,7 @@ import json
 import logging
 import os.path
 from collections.abc import Callable, Mapping
-from typing import Any
+from typing import Any, Union
 
 # Third-party Modules:
 import jsonschema
@@ -76,7 +76,7 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 			raise SchemaValidationError(str(rapidjsonExc)) from rapidjsonExc
 
 
-def _load(databasePath: str, schemaPath: str) -> tuple[str, None] | tuple[None, dict[str, Any]]:
+def _load(databasePath: str, schemaPath: str) -> Union[tuple[str, None], tuple[None, dict[str, Any]]]:
 	"""
 	Loads a database into memory.
 
@@ -116,7 +116,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
 
 
-def loadLabels() -> tuple[str, None] | tuple[None, dict[str, str]]:
+def loadLabels() -> Union[tuple[str, None], tuple[None, dict[str, str]]]:
 	"""
 	Loads the labels database into memory.
 
@@ -150,7 +150,7 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 	_dump(labels, LABELS_FILE_PATH, LABELS_SCHEMA_FILE_PATH)
 
 
-def loadRooms() -> tuple[str, None] | tuple[None, dict[str, dict[str, Any]]]:
+def loadRooms() -> Union[tuple[str, None], tuple[None, dict[str, dict[str, Any]]]]:
 	"""
 	Loads the rooms database into memory.
 

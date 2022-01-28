@@ -16,7 +16,7 @@ import warnings
 from collections.abc import Callable, Generator, MutableSequence, Sequence
 from contextlib import suppress
 from queue import SimpleQueue
-from typing import TYPE_CHECKING, Any, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
 
 # Third-party Modules:
 from fuzzywuzzy import fuzz
@@ -122,8 +122,8 @@ class World(object):
 		if gc.isenabled():
 			gc.disable()
 		self.output("Loading the database file.")
-		errors: str | None
-		db: dict[str, dict[str, Any]] | None
+		errors: Union[str, None]
+		db: Union[dict[str, dict[str, Any]], None]
 		errors, db = loadRooms()
 		if db is None:
 			if errors is not None:
@@ -233,8 +233,8 @@ class World(object):
 		self.output("Map Database saved.")
 
 	def loadLabels(self) -> None:
-		errors: str | None
-		labels: dict[str, str] | None
+		errors: Union[str, None]
+		labels: Union[dict[str, str], None]
 		errors, labels = loadLabels()
 		if labels is None:
 			if errors is not None:
@@ -248,7 +248,7 @@ class World(object):
 	def saveLabels(self) -> None:
 		dumpLabels(self.labels)
 
-	def getNewExit(self, direction: str, to: str = "undefined", vnum: str | None = None) -> Exit:
+	def getNewExit(self, direction: str, to: str = "undefined", vnum: Optional[str] = None) -> Exit:
 		"""
 		Creates a new exit object for a given direction.
 
@@ -313,8 +313,8 @@ class World(object):
 			):
 				yield (vnum, obj, differenceX, differenceY, differenceZ)
 
-	def getVnum(self, roomObj: Room) -> str | None:
-		result: str | None = None
+	def getVnum(self, roomObj: Room) -> Union[str, None]:
+		result: Union[str, None] = None
 		for vnum, obj in self.rooms.items():
 			if obj is roomObj:
 				result = vnum
@@ -337,7 +337,7 @@ class World(object):
 
 	def revnum(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: re.Match[str] | None = re.match(
+		match: Union[re.Match[str], None] = re.match(
 			r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text
 		)
 		if match is None:
@@ -675,7 +675,7 @@ class World(object):
 			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
 			+ fr"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
 		)
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
@@ -701,7 +701,7 @@ class World(object):
 			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
 			+ fr"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
 		)
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
@@ -727,7 +727,7 @@ class World(object):
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -758,7 +758,7 @@ class World(object):
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -789,7 +789,7 @@ class World(object):
 			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ fr"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -825,7 +825,7 @@ class World(object):
 			+ r"((?P<vnum>\d+|undefined)\s+)?"
 			+ fr"(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -894,7 +894,7 @@ class World(object):
 	def rlabel(self, text: str = "") -> None:
 		text = text.strip().lower()
 		matchPattern: str = r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$"
-		match: re.Match[str] | None = re.match(matchPattern, text)
+		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is None:
 			self.output(
 				"Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. "
@@ -989,7 +989,7 @@ class World(object):
 
 	def path(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: re.Match[str] | None = RUN_DESTINATION_REGEX.match(text)
+		match: Union[re.Match[str], None] = RUN_DESTINATION_REGEX.match(text)
 		if match is None:
 			self.output("Usage: path [label|vnum]")
 			return None
@@ -1001,9 +1001,9 @@ class World(object):
 
 	def pathFind(
 		self,
-		origin: Room | None = None,
-		destination: str | None = None,
-		flags: Sequence[str] | None = None,
+		origin: Optional[Room] = None,
+		destination: Optional[str] = None,
+		flags: Optional[Sequence[str]] = None,
 	) -> list[str]:
 		"""Find the path"""
 		if origin is None:
@@ -1011,7 +1011,7 @@ class World(object):
 				self.output("Error! The mapper has no location. Please use the sync command then try again.")
 				return []
 			origin = self.currentRoom
-		destinationRoom: Room | None = self.getRoomFromLabel(str(destination))
+		destinationRoom: Union[Room, None] = self.getRoomFromLabel(str(destination))
 		if destinationRoom is None:
 			return []
 		elif destinationRoom is origin:
@@ -1038,10 +1038,10 @@ class World(object):
 	def _pathFind(
 		self,
 		origin: Room,
-		isDestinationFunc: Callable[[Room], bool] | None = None,
-		exitIgnoreFunc: Callable[[Exit], bool] | None = None,
-		exitCostFunc: Callable[[Exit, Room], int] | None = None,
-		exitDestinationFunc: Callable[[Exit, Room], bool] | None = None,
+		isDestinationFunc: Optional[Callable[[Room], bool]] = None,
+		exitIgnoreFunc: Optional[Callable[[Exit], bool]] = None,
+		exitCostFunc: Optional[Callable[[Exit, Room], int]] = None,
+		exitDestinationFunc: Optional[Callable[[Exit, Room], bool]] = None,
 	) -> list[str]:
 		# Each key-value pare that gets added to this dict will be a parent room and child room respectively.
 		parents: dict[Room, tuple[Room, str]] = {origin: (origin, "")}
@@ -1123,7 +1123,7 @@ class World(object):
 				)
 		return results
 
-	def getRoomFromLabel(self, text: str) -> Room | None:
+	def getRoomFromLabel(self, text: str) -> Union[Room, None]:
 		text = text.strip().lower()
 		vnum: str
 		if not text:

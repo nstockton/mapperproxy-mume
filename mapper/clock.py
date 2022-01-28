@@ -9,6 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import re
 import time
+from typing import Optional, Union
 
 # Local Modules:
 from .config import Config
@@ -57,7 +58,7 @@ FIRST_MOON_CYCLE_HOUR: int = (FULL_MOON_HOUR - FULL_MOON_OFFSET) % HOURS_PER_DAY
 DK_OPEN_DURATION: int = 3  # The number of hours DK stays open.
 
 # fmt: off
-MONTHS: list[dict[str, str | int]] = [
+MONTHS: list[dict[str, Union[str, int]]] = [
 	{
 		"name": "January",
 		"sindarin": "Ninui",
@@ -473,7 +474,7 @@ class MumeTime(object):
 
 class Clock(object):
 	def __init__(self) -> None:
-		self._epoch: int | None = None
+		self._epoch: Optional[int] = None
 
 	@property
 	def epoch(self) -> int:  # pragma: no cover
@@ -510,7 +511,7 @@ class Clock(object):
 		delta = timeToDelta(year, month, day, hour, minutes)
 		self.epoch = int(time.time()) - delta
 
-	def time(self, action: str | None = None) -> str:
+	def time(self, action: Optional[str] = None) -> str:
 		"""
 		Outputs information about the current Mume time.
 

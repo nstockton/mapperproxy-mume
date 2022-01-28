@@ -8,6 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
+from typing import Union
 
 # Local Modules:
 from .mudevents import Handler
@@ -39,7 +40,7 @@ class ExitsCleaner(Handler):
 		if not self.mapper.autoUpdateRooms or text.startswith("Exits:"):
 			return None
 		for line in text.splitlines():
-			match: re.Match[str] | None = EXIT_REGEX.match(line)
+			match: Union[re.Match[str], None] = EXIT_REGEX.match(line)
 			if match is not None:
 				room: Room = self.mapper.currentRoom
 				direction: str = match.group("dir").lower()

@@ -18,6 +18,7 @@ import subprocess
 import tempfile
 from _hashlib import HASH
 from contextlib import suppress
+from typing import Union
 
 # Third-party Modules:
 import PyInstaller.config
@@ -38,8 +39,8 @@ APP_VERSION_TYPE: str
 VERSION_REGEX: re.Pattern[str] = re.compile(r"^[vV]([\d]+\.[\d]+\.[\d]+)(\-\d+\-g[\da-f]+)$", re.IGNORECASE)
 ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
 isTag: bool = False
-found_version: str | None = None
-match: re.Match[str] | None
+found_version: Union[str, None] = None
+match: Union[re.Match[str], None]
 
 if os.path.exists(
 	os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
@@ -176,7 +177,7 @@ dll_excludes: TOC = TOC(  # type: ignore[no-any-unimported]
 	]
 )
 
-block_cipher: PyiBlockCipher | None = None  # type: ignore[no-any-unimported]
+block_cipher: Union[PyiBlockCipher, None] = None  # type: ignore[no-any-unimported]
 
 version_data: str = f"""
 # UTF-8

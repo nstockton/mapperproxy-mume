@@ -16,7 +16,7 @@ import sys
 import textwrap
 from collections.abc import ByteString, Callable, Sequence
 from pydoc import pager
-from typing import Any
+from typing import Any, Optional, Union
 
 
 ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
@@ -59,7 +59,7 @@ def minIndent(text: str) -> str:
 
 
 def formatDocString(
-	functionOrString: str | Callable[..., Any], width: int = 79, prefix: str | None = None
+	functionOrString: Union[str, Callable[..., Any]], width: int = 79, prefix: Optional[str] = None
 ) -> str:
 	"""
 	Formats a docstring for displaying.
@@ -226,7 +226,7 @@ def humanSort(lst: Sequence[str]) -> list[str]:
 	)
 
 
-def regexFuzzy(text: str | Sequence[str]) -> str:
+def regexFuzzy(text: Union[str, Sequence[str]]) -> str:
 	"""
 	Creates a regular expression matching all or part of a string or sequence.
 
@@ -246,7 +246,7 @@ def regexFuzzy(text: str | Sequence[str]) -> str:
 		return "|".join("(".join(list(item)) + ")?" * (len(item) - 1) for item in text)
 
 
-def getFreezer() -> str | None:
+def getFreezer() -> Union[str, None]:
 	"""
 	Determines the name of the library used to freeze the code.
 
@@ -256,7 +256,7 @@ def getFreezer() -> str | None:
 	Returns:
 		The name of the library or None.
 	"""
-	frozen: str | bool | None = getattr(sys, "frozen", None)
+	frozen: Union[str, bool, None] = getattr(sys, "frozen", None)
 	if frozen and hasattr(sys, "_MEIPASS"):
 		return "pyinstaller"
 	elif frozen is True:

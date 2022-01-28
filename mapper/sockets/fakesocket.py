@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import time
-from typing import Any
+from typing import Any, Union
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -21,13 +21,13 @@ class FakeSocketEmpty(Exception):
 
 class FakeSocket(object):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		self.inboundBuffer: bytes | None = None
-		self.timeout: float | None = None
+		self.inboundBuffer: Union[bytes, None] = None
+		self.timeout: Union[float, None] = None
 
-	def gettimeout(self) -> float | None:
+	def gettimeout(self) -> Union[float, None]:
 		return self.timeout
 
-	def settimeout(self, timeout: float | None) -> None:
+	def settimeout(self, timeout: Union[float, None]) -> None:
 		self.timeout = None if timeout is None else float(timeout)
 
 	def getblocking(self) -> bool:

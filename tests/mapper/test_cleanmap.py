@@ -8,6 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
+from typing import Union
 from unittest import TestCase
 from unittest.mock import Mock
 
@@ -35,7 +36,7 @@ class test_exitRegex(TestCase):
 			" ~[Down]~   - A closed 'azZeuZjoec'",
 		)
 		for item in exits:
-			match: re.Match[str] | None = EXIT_REGEX.match(item)
+			match: Union[re.Match[str], None] = EXIT_REGEX.match(item)
 			self.assertIsNotNone(match, f"{item} does not match EXIT_REGEX.")
 			if match is not None:
 				direction: str = match.group("dir").lower()
@@ -50,7 +51,7 @@ class test_exitRegex(TestCase):
 			"Exits: north, east, south, west." "Exits: none.",
 		)
 		for item in exits:
-			match: re.Match[str] | None = EXIT_REGEX.match(item)
+			match: Union[re.Match[str], None] = EXIT_REGEX.match(item)
 			self.assertIsNone(match, f"{item} should not match EXIT_REGEX, but it does.")
 
 
@@ -100,7 +101,7 @@ class TestExitsCleaner(TestCase):
 		)
 		for room, exitStr in junkExits:
 			self.mapper.currentRoom = room
-			match: re.Match[str] | None = EXIT_REGEX.match(exitStr)
+			match: Union[re.Match[str], None] = EXIT_REGEX.match(exitStr)
 			self.assertIsNotNone(match, "Regex does not match exit string.")
 			if match is not None:
 				direction = match.group("dir").lower()

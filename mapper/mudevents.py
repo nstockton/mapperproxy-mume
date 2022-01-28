@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -17,7 +17,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class Handler(ABC):
-	def __init__(self, mapper: Mapper, event: str | None = None) -> None:
+	def __init__(self, mapper: Mapper, event: Optional[str] = None) -> None:
 		"""
 		Initialises a mud event handler in the given mapper instance.
 

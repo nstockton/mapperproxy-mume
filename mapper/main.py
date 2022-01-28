@@ -12,6 +12,7 @@ import os
 import socket
 import threading
 from contextlib import ExitStack, closing, suppress
+from typing import Union
 
 # Local Modules:
 from .mapper import Mapper
@@ -95,7 +96,7 @@ def main(
 	outputFormat: str,
 	interface: str,
 	isEmulatingOffline: bool,
-	promptTerminator: bytes | None,
+	promptTerminator: Union[bytes, None],
 	gagPrompts: bool,
 	findFormat: str,
 	localHost: str,
@@ -120,7 +121,7 @@ def main(
 		timeout=1.0,
 	)
 	# initialise server connection
-	unbufferedGameSocket: socket.socket | FakeSocket
+	unbufferedGameSocket: Union[socket.socket, FakeSocket]
 	try:
 		if isEmulatingOffline:
 			unbufferedGameSocket = FakeSocket()

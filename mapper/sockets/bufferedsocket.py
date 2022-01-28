@@ -11,7 +11,7 @@ import logging
 import select
 import socket
 import ssl
-from typing import Any
+from typing import Any, Union
 
 # Third-party Modules:
 import certifi
@@ -30,10 +30,10 @@ logger: logging.Logger = logging.getLogger(__name__)
 class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-unimported]
 	def __init__(  # type: ignore[no-any-unimported]
 		self,
-		sock: socket.socket | FakeSocket,
-		timeout: socketutils._UNSET | float | None = socketutils._UNSET,
+		sock: Union[socket.socket, FakeSocket],
+		timeout: Union[socketutils._UNSET, float, None] = socketutils._UNSET,
 		maxsize: int = socketutils.DEFAULT_MAXSIZE,
-		recvsize: socketutils._UNSET | int = socketutils._UNSET,
+		recvsize: Union[socketutils._UNSET, int] = socketutils._UNSET,
 		encrypt: bool = False,
 		**kwargs: Any,
 	) -> None:
@@ -54,7 +54,7 @@ class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-u
 			**kwargs: Key-word only arguments to be passed to the
 				[wrapSSL][mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL] method.
 		"""
-		self.sock: socket.socket | FakeSocket | ssl.SSLSocket
+		self.sock: Union[socket.socket, FakeSocket, ssl.SSLSocket]
 		super().__init__(sock, timeout, maxsize, recvsize)
 		if encrypt and isinstance(self.sock, socket.socket):
 			self.sock = self.wrapSSL(self.sock, **kwargs)
@@ -74,7 +74,7 @@ class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-u
 		"""
 		kwargs["do_handshake_on_connect"] = False  # Avoid race condition.
 		with self._recv_lock, self._send_lock:
-			originalTimeout: float | None = sock.gettimeout()
+			originalTimeout: Union[float, None] = sock.gettimeout()
 			sock.settimeout(None)
 			try:
 				context: ssl.SSLContext = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)

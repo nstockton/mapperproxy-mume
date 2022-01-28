@@ -12,7 +12,7 @@ import os.path
 import re
 from queue import Empty as QueueEmpty
 from queue import SimpleQueue
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 # Third-party Modules:
 import pyglet
@@ -99,8 +99,8 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		self.visibleRooms: dict[tuple[int, int], Room] = {}
 		# Player position and central rooms
 		# They are set to None at startup.
-		self.playerRoom: Room | None = None
-		self.centerRoom: Room | None = None
+		self.playerRoom: Union[Room, None] = None
+		self.centerRoom: Union[Room, None] = None
 		# Pyglet window
 		super().__init__(self.col * self.square, self.row * self.square, caption="MPM", resizable=True)
 		logger.info(f"Creating window {self}")
