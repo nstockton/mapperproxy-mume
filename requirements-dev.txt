@@ -13,6 +13,6 @@ pre-commit
 PyInstaller==4.7
 pyproject-flake8==0.0.1a2
 git+https://github.com/nstockton/pytkdocs.git@tab-indentation-parser#egg=pytkdocs
-git+https://github.com/nstockton/tan.git@personal#egg=tan
+tan==21.14
 types-certifi
 types-jsonschema
