@@ -40,7 +40,7 @@ from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
 MAPPER_QUEUE_TYPE: TypeAlias = Union[EVENT_CALLER_TYPE, None]
 EXIT_TAGS_REGEX: re.Pattern[str] = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
-	+ fr"(?P<direction>{'|'.join(DIRECTIONS)})"
+	+ rf"(?P<direction>{'|'.join(DIRECTIONS)})"
 )
 MOVEMENT_FORCED_REGEX: re.Pattern[str] = re.compile(
 	"|".join(
@@ -489,7 +489,7 @@ class Mapper(threading.Thread, World):
 			self.sendGame(self.clock.time(args[0].strip().lower()))
 
 	def user_command_secretaction(self, *args: str) -> None:
-		matchPattern: str = fr"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$"
+		matchPattern: str = rf"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$"
 		match: Union[re.Match[str], None] = re.match(matchPattern, args[0].strip().lower())
 		if match is None:
 			self.sendPlayer(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")

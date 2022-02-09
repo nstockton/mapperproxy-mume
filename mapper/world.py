@@ -672,8 +672,8 @@ class World(object):
 	def rmobflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
-			+ fr"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
+			rf"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
+			+ rf"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
 		)
 		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
@@ -698,8 +698,8 @@ class World(object):
 	def rloadflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			fr"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
-			+ fr"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
+			rf"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
+			+ rf"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
 		)
 		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
@@ -724,8 +724,8 @@ class World(object):
 	def exitflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ fr"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ rf"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
@@ -734,7 +734,9 @@ class World(object):
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
 			elif not matchDict["mode"]:
-				return f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
+				return (
+					f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
+				)
 			elif "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 					self.currentRoom.exits[direction].exitFlags.remove(matchDict["flag"])
@@ -755,8 +757,8 @@ class World(object):
 	def doorflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ fr"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ rf"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
@@ -765,7 +767,9 @@ class World(object):
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
 			elif not matchDict["mode"]:
-				return f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
+				return (
+					f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
+				)
 			elif "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 					self.currentRoom.exits[direction].doorFlags.remove(matchDict["flag"])
@@ -786,8 +790,8 @@ class World(object):
 	def secret(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ fr"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ rf"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
@@ -820,10 +824,10 @@ class World(object):
 	def rlink(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			fr"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ fr"((?P<oneway>{regexFuzzy('oneway')})\s+)?"
+			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
+			+ rf"((?P<oneway>{regexFuzzy('oneway')})\s+)?"
 			+ r"((?P<vnum>\d+|undefined)\s+)?"
-			+ fr"(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			+ rf"(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
 		match: Union[re.Match[str], None] = re.match(matchPattern, text)
 		if match is not None:
@@ -876,7 +880,9 @@ class World(object):
 					toName = self.rooms[self.currentRoom.exits[direction].to].name
 				else:
 					toName = ""
-				return f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' with name '{toName}'."
+				return (
+					f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' with name '{toName}'."
+				)
 			elif "remove".startswith(matchDict["mode"]):
 				del self.currentRoom.exits[direction]
 				self.GUIRefresh()

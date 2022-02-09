@@ -393,7 +393,7 @@ class Vec2d(NamedTuple):
 
 	# Extra functions, mainly for chipmunk
 	def cpvrotate(self, other: tuple[float, float]) -> "Vec2d":
-		"""Uses complex multiplication to rotate this vector by the other. """
+		"""Uses complex multiplication to rotate this vector by the other."""
 		assert len(other) == 2
 		return Vec2d(self.x * other[0] - self.y * other[1], self.x * other[1] + self.y * other[0])
 

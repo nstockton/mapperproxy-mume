@@ -16,7 +16,7 @@ from .roomdata.objects import DIRECTIONS, Room
 
 
 DIRECTION_TITLES: str = "|".join(d.title() for d in DIRECTIONS)
-EXIT_REGEX: re.Pattern[str] = re.compile(fr".*?(?<![#(])(?P<dir>{DIRECTION_TITLES})(?![#)]).*?[ ]+[-] .+")
+EXIT_REGEX: re.Pattern[str] = re.compile(rf".*?(?<![#(])(?P<dir>{DIRECTION_TITLES})(?![#)]).*?[ ]+[-] .+")
 
 
 class ExitsCleaner(Handler):
