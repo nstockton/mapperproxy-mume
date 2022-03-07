@@ -141,21 +141,11 @@
 	disallow_any_decorated = false
 
 [[tool.mypy.overrides]]
-	module = "_hashlib.*"
-	ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-	module = "boltons.*"
-	ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-	module = "pyglet.*"
-	ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-	module = "PyInstaller.*"
-	ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-	module = "rapidjson.*"
+	module = [
+		"_hashlib.*",
+		"boltons.*",
+		"pyglet.*",
+		"PyInstaller.*",
+		"rapidjson.*",
+	]
 	ignore_missing_imports = true
