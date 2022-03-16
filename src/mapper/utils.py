@@ -19,6 +19,7 @@ from pydoc import pager
 from typing import Any, Optional, Union
 
 
+DATA_DIRECTORY: str = "mapper_data"
 ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: re.Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
@@ -299,6 +300,19 @@ def getDirectoryPath(*args: str) -> str:
 	else:
 		path = os.path.join(os.path.dirname(__file__), os.path.pardir)
 	return os.path.realpath(os.path.join(path, *args))
+
+
+def getDataPath(*args: str) -> str:
+	"""
+	Retrieves the path of the data directory.
+
+	Args:
+		*args: Positional arguments to be passed to os.join after the data path.
+
+	Returns:
+		The path.
+	"""
+	return os.path.realpath(os.path.join(getDirectoryPath(DATA_DIRECTORY), *args))
 
 
 def decodeBytes(data: bytes) -> str:

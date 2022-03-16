@@ -19,7 +19,7 @@ import pyglet
 
 # Local Modules:
 from ..roomdata.objects import Room
-from ..utils import getDirectoryPath
+from ..utils import getDataPath
 
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -28,7 +28,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 FPS: int = 40
-TILESDIR: str = getDirectoryPath("tiles")
+TILESDIR: str = getDataPath("tiles")
 
 TILES: dict[str, pyglet.image.ImageData] = {  # type: ignore[no-any-unimported]
 	# terrain

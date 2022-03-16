@@ -14,10 +14,10 @@ from collections.abc import Iterator
 from typing import Any, MutableMapping
 
 # Local Modules:
-from .utils import getDirectoryPath
+from .utils import getDataPath
 
 
-DATA_DIRECTORY: str = getDirectoryPath("data")
+DATA_DIRECTORY: str = getDataPath()
 
 
 class ConfigError(Exception):

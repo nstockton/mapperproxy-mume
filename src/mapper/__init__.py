@@ -14,6 +14,9 @@ from typing import Union
 from .config import Config
 
 
+__version__: str = "0.0.0"
+
+
 INTERFACES: tuple[str, str, str] = ("text", "hc", "sighted")
 OUTPUT_FORMATS: tuple[str, str, str] = ("normal", "raw", "tintin")
 

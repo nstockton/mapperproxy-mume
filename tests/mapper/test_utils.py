@@ -167,6 +167,13 @@ class TestUtils(TestCase):
 		mockIsFrozen.return_value = False
 		self.assertEqual(utils.getDirectoryPath(*subdirectory), unfrozenOutput)
 
+	def test_getDataPath(self) -> None:
+		subdirectory: tuple[str, ...] = ("level1", "level2")
+		output: str = os.path.realpath(
+			os.path.join(utils.getDirectoryPath(utils.DATA_DIRECTORY), *subdirectory)
+		)
+		self.assertEqual(utils.getDataPath(*subdirectory), output)
+
 	def test_decodeBytes(self) -> None:
 		with self.assertRaises(TypeError):
 			utils.decodeBytes(None)  # type: ignore[arg-type]

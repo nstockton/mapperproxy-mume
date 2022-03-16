@@ -12,12 +12,9 @@ from __future__ import annotations
 import glob
 import hashlib
 import os
-import re
 import shutil
-import subprocess
 import tempfile
 from _hashlib import HASH
-from contextlib import suppress
 from typing import Union
 
 # Third-party Modules:
@@ -29,58 +26,26 @@ from PyInstaller.building.build_main import Analysis
 from PyInstaller.building.datastruct import TOC
 
 # Mapper Modules:
+from mapper import __version__ as APP_VERSION
 from mapper.utils import padList
 
 
 APP_NAME: str = "Mapper Proxy"
 APP_AUTHOR: str = "Nick Stockton"
-APP_VERSION: str
 APP_VERSION_TYPE: str
-VERSION_REGEX: re.Pattern[str] = re.compile(r"^[vV]([\d]+\.[\d]+\.[\d]+)(\-\d+\-g[\da-f]+)$", re.IGNORECASE)
 ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
+RUN_FILE: str = "run_mapper_proxy.py"
 isTag: bool = False
-found_version: Union[str, None] = None
-match: Union[re.Match[str], None]
 
-if os.path.exists(
-	os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))
-) and not os.path.isdir(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore"))):
-	with open(
-		os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "version.ignore")), "r", encoding="utf-8"
-	) as f:
-		match = VERSION_REGEX.search(f.read(30).strip().lower())
-		if match is not None:
-			APP_VERSION = match.group(1)
-			if match.group(2).startswith("-0-g"):
-				APP_VERSION_TYPE = ""
-				isTag = True
-			else:
-				APP_VERSION_TYPE = match.group(2)
-			found_version = "version file"
-elif os.path.exists(os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))) and os.path.isdir(
-	os.path.normpath(os.path.join(ORIG_DEST, os.pardir, ".git"))
-):
-	with suppress(subprocess.CalledProcessError):
-		match = VERSION_REGEX.search(
-			subprocess.check_output("git describe --tags --always --long", shell=True)
-			.decode("utf-8")
-			.strip()
-			.lower()
-		)
-		if match is not None:
-			APP_VERSION = match.group(1)
-			if match.group(2).startswith("-0-g"):
-				APP_VERSION_TYPE = ""
-				isTag = True
-			else:
-				APP_VERSION_TYPE = match.group(2)
-			found_version = "latest Git tag"
-if found_version:
-	print(f"Using version info from {found_version}. ({APP_VERSION}{APP_VERSION_TYPE})")
+
+if "+" in APP_VERSION:
+	APP_VERSION, APP_VERSION_TYPE = APP_VERSION.split("+", 1)
+	APP_VERSION_TYPE = "+" + APP_VERSION_TYPE
 else:
-	APP_VERSION = "0.0.0"
-	APP_VERSION_TYPE = ""
-	print(f"No version information found. Using default. ({APP_VERSION}{APP_VERSION_TYPE})")
+	isTag = True
+print(f"Using version {APP_VERSION}{APP_VERSION_TYPE}.")
+
+
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 APP_VERSION_CSV: str = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
@@ -224,25 +189,31 @@ VSVersionInfo(
 )
 """
 
-# Remove old dist directory and old version file.
+# Remove old build files.
 shutil.rmtree(ORIG_DEST, ignore_errors=True)
 shutil.rmtree(APP_DEST, ignore_errors=True)
+if os.path.exists(RUN_FILE) and not os.path.isdir(RUN_FILE):
+	os.remove(RUN_FILE)
 if os.path.exists(ZIP_FILE) and not os.path.isdir(ZIP_FILE):
 	os.remove(ZIP_FILE)
-if os.path.exists(
-	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))
-) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
-	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(VERSION_FILE, ignore_errors=True)
 
 with open(VERSION_FILE, "w", encoding="utf-8") as f:
 	f.write(version_data)
 
-with open(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")), "w", encoding="utf-8") as f:
-	f.write(f'VERSION = "{APP_NAME} V{APP_VERSION}{APP_VERSION_TYPE}"')
+run_data: str = """
+from __future__ import annotations
+
+from mapper.main import run
+
+if __name__ == "__main__":
+	run()
+""".lstrip()
+with open(RUN_FILE, "w", encoding="utf-8") as f:
+	f.write(run_data)
 
 a: Analysis = Analysis(  # type: ignore[no-any-unimported]
-	["start.py"],
+	[RUN_FILE],
 	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
 	binaries=[],
 	datas=[],
@@ -291,10 +262,6 @@ shutil.rmtree(wp, ignore_errors=True)
 # The directory above workpath should now be empty.
 # Using os.rmdir to remove it instead of shutil.rmtree for safety.
 os.rmdir(os.path.normpath(os.path.join(wp, os.pardir)))
-if os.path.exists(
-	os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))
-) and not os.path.isdir(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py"))):
-	os.remove(os.path.normpath(os.path.join(APP_DEST, os.pardir, "mpm_version.py")))
 shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
 shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
 
@@ -310,10 +277,18 @@ include_files: list[tuple[list[str], str]] = [
 		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.LIB_DIRECTORY)), "*.dll")),
 		"speech_libs",
 	),
-	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "maps", "*.sample"))), "maps"),
-	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.sample"))), "data"),
-	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "data", "*.schema"))), "data"),
-	(glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "tiles", "*"))), "tiles"),
+	(
+		glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "src", "mapper_data", "*.sample"))),
+		"mapper_data",
+	),
+	(
+		glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "src", "mapper_data", "*.schema"))),
+		"mapper_data",
+	),
+	(
+		glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "src", "mapper_data", "tiles", "*"))),
+		"mapper_data/tiles",
+	),
 ]
 
 dest_dir: str
@@ -334,6 +309,9 @@ shutil.make_archive(
 	owner=None,
 	group=None,
 )
+
+if os.path.exists(RUN_FILE) and not os.path.isdir(RUN_FILE):
+	os.remove(RUN_FILE)
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")

@@ -36,15 +36,15 @@ Install the [Python interpreter,](https://python.org "Python Home Page") and mak
 
 After Python is installed, execute the following commands from the top level directory of this repository to install the module dependencies.
 ```
-python -m venv venv
-venv\Scripts\activate.bat
-pip install -Ur requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+pip install poetry
+poetry install
 ```
 
 If you wish to contribute to this project, install the development dependencies with the following commands.
 ```
-venv\Scripts\activate.bat
-pip install -Ur requirements-dev.txt
+source .venv/bin/activate
 pre-commit install -t pre-commit
 pre-commit install -t pre-push
 ```
@@ -53,7 +53,7 @@ pre-commit install -t pre-push
 
 ### Manual Startup
 
-To start Mapper Proxy, activate the virtual environment by running `venv\Scripts\activate.bat`, and then run `python start.py` from the root directory of this project. It accepts the following arguments:
+To start Mapper Proxy, activate the virtual environment by running `source .venv/bin/activate`, and then run `mapper` from the root directory of this project. It accepts the following arguments:
 
 - `-h`, `--help` Show program's help and exit.
 - `-v`, `--version` Show program's version number and exit.

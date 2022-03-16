@@ -16,12 +16,15 @@ on:
 jobs:
   build:
     name: Build And Test
-    runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 4
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -33,30 +36,40 @@ jobs:
           python-version: ${{ matrix.python-version }}
           # Optional - x64 or x86 architecture, defaults to x64.
           architecture: x64
-      - name: Install Dependencies
-        shell: bash
+      - name: Setup Virtual Environment
+        id: cache-virtualenv
+        uses: syphar/restore-virtualenv@v1
+      - name: Restore Pip Cache
+        uses: syphar/restore-pip-download-cache@v1
+        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+      - name: Install dependencies
+        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools wheel
-          python -m pip install --upgrade -r requirements.txt
-          python -m pip install --upgrade -r requirements-dev.txt
+          python -m pip install --upgrade "poetry==1.1.13"
+          poetry install --no-interaction --no-root
+      - name: Install library
+        run: |
+          poetry install --no-interaction
+      - name: Lint And Test
+        run: |
           python -m pre_commit install -t pre-commit
           python -m pre_commit install -t pre-push
-      - name: Lint And Test
-        shell: bash
-        run: |
           python -m pre_commit run --all-files --show-diff-on-failure --hook-stage commit
           python -m pre_commit run --all-files --show-diff-on-failure --hook-stage push
+          poetry build --no-interaction
       - name: Test Documentation
         if: matrix.python-version == '3.10'
-        shell: bash
         run: |
-          python -m pre_commit run --all-files --show-diff-on-failure --hook-stage manual
+          # Re-examine this once Python 10.3 is released.
+          #python -m pre_commit run --all-files --show-diff-on-failure --hook-stage manual
   deploy:
     needs: build
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     name: Deploy Release
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -64,7 +77,6 @@ jobs:
           fetch-depth: 0 # All history for all branches and tags.
       - name: Get Project Info
         id: project_info
-        shell: bash
         run: |
           NAME='Mapper Proxy'
           VERSION=${GITHUB_REF#refs/tags/v} # Everything after the v.
@@ -77,17 +89,19 @@ jobs:
           # Optional - x64 or x86 architecture, defaults to x64.
           architecture: x64
       - name: Install Dependencies
-        shell: bash
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools wheel
-          python -m pip install --upgrade -r requirements.txt
-          python -m pip install --upgrade -r requirements-dev.txt
-      - name: Build Distribution
+          python -m pip install --upgrade "poetry==1.1.13"
+          poetry install --no-interaction --no-root
+      - name: Build Wheel And Source Archive
         id: build_dist
-        shell: bash
         run: |
+          poetry build --no-interaction
+          whlfiles=(dist/*.whl)
+          pip install --upgrade "${whlfiles[@]}"
+          pip uninstall --yes poetry poetry-core
           python -O -m PyInstaller pyinstaller_windows.spec --clean
+          python -m pip install --upgrade "poetry==1.1.13"
+          poetry install --no-interaction
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -102,8 +116,8 @@ jobs:
             Mapper_Proxy_V*.zip
             Mapper_Proxy_V*.zip.sha256
       - name: Publish Documentation
-        shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          mkdocs gh-deploy --force
+          # Re-examine this once Python 10.3 is released.
+          #mkdocs gh-deploy --force

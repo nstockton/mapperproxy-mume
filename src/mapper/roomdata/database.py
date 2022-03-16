@@ -18,22 +18,21 @@ import jsonschema
 import rapidjson
 
 # Local Modules:
-from ..utils import getDirectoryPath
+from ..utils import getDataPath
 
 
-DATA_DIRECTORY: str = getDirectoryPath("data")
+DATA_DIRECTORY: str = getDataPath()
 LABELS_FILE: str = "room_labels.json"
-SAMPLE_LABELS_FILE: str = "room_labels.json.sample"
-LABELS_SCHEMA_FILE: str = "room_labels.json.schema"
-LABELS_SCHEMA_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_SCHEMA_FILE)
 LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_FILE)
+SAMPLE_LABELS_FILE: str = LABELS_FILE + ".sample"
 SAMPLE_LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_LABELS_FILE)
-MAP_FILE: str = "arda.json"
-SAMPLE_MAP_FILE: str = "arda.json.sample"
-MAP_DIRECTORY: str = getDirectoryPath("maps")
-MAP_FILE_PATH: str = os.path.join(MAP_DIRECTORY, MAP_FILE)
-SAMPLE_MAP_FILE_PATH: str = os.path.join(MAP_DIRECTORY, SAMPLE_MAP_FILE)
-MAP_SCHEMA_FILE: str = "map.json.schema"
+LABELS_SCHEMA_FILE: str = LABELS_FILE + ".schema"
+LABELS_SCHEMA_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_SCHEMA_FILE)
+MAP_FILE: str = "map.json"
+MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, MAP_FILE)
+SAMPLE_MAP_FILE: str = MAP_FILE + ".sample"
+SAMPLE_MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_MAP_FILE)
+MAP_SCHEMA_FILE: str = MAP_FILE + ".schema"
 MAP_SCHEMA_FILE_PATH: str = os.path.join(DATA_DIRECTORY, MAP_SCHEMA_FILE)
 
 
