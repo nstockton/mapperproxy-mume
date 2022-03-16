@@ -72,7 +72,7 @@
 	mypy = "^0.931"
 	poetry-dynamic-versioning = "^0.13.1"
 	pre-commit = "^2.17"
-	PyInstaller = {version = "4.7", markers = "python_version >= '3.7' and python_version < '3.11' and platform_system == 'Windows'"}
+	PyInstaller = {version = "4.10", python = "< 3.11", platform = "win32"}
 	pyproject-flake8 = "^0.0.1-alpha.2"
 	pytkdocs = {git = "https://github.com/nstockton/pytkdocs.git", rev = "9991d493b408c403ac5691074e2af2e509f22926"}
 	tan = "^21.14"
