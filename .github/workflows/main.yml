@@ -91,13 +91,13 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m venv .venv
-          source .venv/bin/activate
+          source .venv/Scripts/activate
           python -m pip install --upgrade "poetry==1.1.13"
           poetry install --no-interaction --no-root
       - name: Build Wheel And Source Archive
         id: build_dist
         run: |
-          source .venv/bin/activate
+          source .venv/Scripts/activate
           poetry build --no-interaction
           whlfiles=(dist/*.whl)
           pip install --upgrade "${whlfiles[@]}"
@@ -124,7 +124,7 @@ jobs:
             Mapper_Proxy_V*.zip.sha256
       - name: Publish Documentation
         run: |
-          source .venv/bin/activate
+          source .venv/Scripts/activate
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           # Re-examine this once Python 10.3 is released.
