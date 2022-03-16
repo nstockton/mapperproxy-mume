@@ -90,16 +90,23 @@ jobs:
           architecture: x64
       - name: Install Dependencies
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade "poetry==1.1.13"
           poetry install --no-interaction --no-root
       - name: Build Wheel And Source Archive
         id: build_dist
         run: |
+          source .venv/bin/activate
           poetry build --no-interaction
           whlfiles=(dist/*.whl)
           pip install --upgrade "${whlfiles[@]}"
           pip uninstall --yes poetry poetry-core
+          export PYTHONHASHSEED=1
+          export SOURCE_DATE_EPOCH=$(git for-each-ref --count=1 --sort="-refname" --format="%(creatordate:unix)" refs/tags)
           python -O -m PyInstaller pyinstaller_windows.spec --clean
+          unset PYTHONHASHSEED
+          unset SOURCE_DATE_EPOCH
           python -m pip install --upgrade "poetry==1.1.13"
           poetry install --no-interaction
       - name: Create Release
@@ -117,6 +124,7 @@ jobs:
             Mapper_Proxy_V*.zip.sha256
       - name: Publish Documentation
         run: |
+          source .venv/bin/activate
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           # Re-examine this once Python 10.3 is released.
