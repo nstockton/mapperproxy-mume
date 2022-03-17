@@ -42,6 +42,7 @@ if "+" in APP_VERSION:
 	APP_VERSION, APP_VERSION_TYPE = APP_VERSION.split("+", 1)
 	APP_VERSION_TYPE = "+" + APP_VERSION_TYPE
 else:
+	APP_VERSION_TYPE = ""
 	isTag = True
 print(f"Using version {APP_VERSION}{APP_VERSION_TYPE}.")
 
