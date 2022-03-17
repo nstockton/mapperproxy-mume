@@ -12,9 +12,11 @@ from __future__ import annotations
 import glob
 import hashlib
 import os
+import pathlib
 import shutil
 import tempfile
 from _hashlib import HASH
+from datetime import datetime
 from typing import Union
 
 # Third-party Modules:
@@ -300,6 +302,14 @@ for files, destination in include_files:
 	for src in files:
 		if os.path.exists(src) and not os.path.isdir(src):
 			shutil.copy(src, dest_dir)
+
+# Oldest allowed date for zip is 1980-01-01 0:00.
+zip_epoch: int = int(datetime(1980, 1, 1, 0, 0, 0).timestamp())
+source_epoch: int = int(os.getenv("SOURCE_DATE_EPOCH", zip_epoch))
+pdest = pathlib.Path(APP_DEST)
+os.utime(pdest.resolve(), times=(source_epoch, source_epoch))
+for child in pdest.rglob("*"):
+	os.utime(child.resolve(), times=(source_epoch, source_epoch))
 
 print(f"Compressing the distribution to {ZIP_FILE}.")
 shutil.make_archive(
