@@ -6,7 +6,7 @@ site_url: "https://nstockton.github.io/mapperproxy-mume"
 repo_name: "nstockton/mapperproxy-mume"
 repo_url: "https://github.com/nstockton/mapperproxy-mume"
 edit_uri: "blob/master/docs/"
-copyright: "Copyright \xa9 2020 Nick Stockton"
+copyright: "Copyright \xa9 2022 Nick Stockton"
 docs_dir: "docs"
 site_dir: "site"
 
@@ -87,4 +87,4 @@ plugins:
               - "^__init__$"  # Except for __init__.
       custom_templates: "mkdocstrings_templates"
       watch:
-        - "mapper"
+        - "src/mapper"
