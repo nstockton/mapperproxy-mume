@@ -4,7 +4,7 @@ A mapper proxy for playing [MUME,](https://mume.org "MUME Official Site") target
 
 ---
 
-![screenshot of the sighted GUI](https://github.com/nstockton/mapperproxy-mume/raw/master/tiles/screenshot-multi.png?raw=true "screenshot of the sighted GUI")
+![screenshot of the sighted GUI](https://github.com/nstockton/mapperproxy-mume/raw/master/src/mapper_data/tiles/screenshot-multi.png?raw=true "screenshot of the sighted GUI")
 
 ---
 
