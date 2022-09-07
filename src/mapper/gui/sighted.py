@@ -49,6 +49,24 @@ TILES: dict[str, pyglet.image.ImageData] = {  # type: ignore[no-any-unimported]
 	"random": pyglet.image.load(os.path.join(TILESDIR, "random.png")),
 	"undefined": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
 	"deathtrap": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
+	# dark terrain
+	"field-dark": pyglet.image.load(os.path.join(TILESDIR, "field-dark.png")),
+	"brush-dark": pyglet.image.load(os.path.join(TILESDIR, "brush-dark.png")),
+	"forest-dark": pyglet.image.load(os.path.join(TILESDIR, "forest-dark.png")),
+	"hills-dark": pyglet.image.load(os.path.join(TILESDIR, "hill-dark.png")),
+	"mountains-dark": pyglet.image.load(os.path.join(TILESDIR, "mountain-dark.png")),
+	"shallows-dark": pyglet.image.load(os.path.join(TILESDIR, "swamp-dark.png")),
+	"water-dark": pyglet.image.load(os.path.join(TILESDIR, "water-dark.png")),
+	"rapids-dark": pyglet.image.load(os.path.join(TILESDIR, "rapid-dark.png")),
+	"underwater-dark": pyglet.image.load(os.path.join(TILESDIR, "underwater-dark.png")),
+	"cavern-dark": pyglet.image.load(os.path.join(TILESDIR, "cavern-dark.png")),
+	"tunnel-dark": pyglet.image.load(os.path.join(TILESDIR, "tunnel-dark.png")),
+	"road-dark": pyglet.image.load(os.path.join(TILESDIR, "road-dark.png")),
+	"city-dark": pyglet.image.load(os.path.join(TILESDIR, "city-dark.png")),
+	"building-dark": pyglet.image.load(os.path.join(TILESDIR, "indoor-dark.png")),
+	"random-dark": pyglet.image.load(os.path.join(TILESDIR, "random-dark.png")),
+	"undefined-dark": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
+	"deathtrap-dark": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
 	# exits
 	"wallnorth": pyglet.image.load(os.path.join(TILESDIR, "wallnorth.png")),
 	"walleast": pyglet.image.load(os.path.join(TILESDIR, "walleast.png")),
@@ -186,7 +204,10 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		logger.debug(f"Drawing room: {x} {y} {room}")
 		self.visibleRooms[x, y] = room
 		# draw the terrain on layer 0
-		self.draw_tile(x, y, 0, room.terrain)
+		if room.light == "dark":
+			self.draw_tile(x, y, 0, room.terrain + "-dark")
+		else:
+			self.draw_tile(x, y, 0, room.terrain)
 		# draw the walls on layer 1
 		direction: str
 		for direction in ("north", "east", "south", "west"):
