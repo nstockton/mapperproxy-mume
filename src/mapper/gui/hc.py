@@ -160,7 +160,11 @@ class Window(pyglet.window.Window):
 		self.highlight = None
 		self.current_room = None
 		super(Window, self).__init__(
-			caption="MPM", resizable=True, vsync=False, fullscreen=self._cfg["fullscreen"]
+			caption="MPM",
+			resizable=True,
+			style=pyglet.window.Window.WINDOW_STYLE_OVERLAY,
+			fullscreen=self._cfg["fullscreen"],
+			vsync=False,
 		)
 		logger.info(f"Created window {self}")
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
