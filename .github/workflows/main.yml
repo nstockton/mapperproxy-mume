@@ -6,7 +6,7 @@ on:
       - '**' # All branch names including slashes.
       - '!gh-pages' # Except for gh-pages.
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - 'v[0-9]+.[0-9]+.[0-9]+'
   pull_request:
     branches:
       - '**' # All branch names including slashes.
@@ -20,7 +20,7 @@ jobs:
       max-parallel: 4
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "~3.10.4"]
+        python-version: ["3.7", "3.8", "3.9", "~3.10.4", "3.11"]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -30,22 +30,23 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # All history for all branches and tags.
+          submodules: 'recursive' # All submodules.
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           # Optional - x64 or x86 architecture, defaults to x64.
           architecture: x64
       - name: Setup Virtual Environment
         id: cache-virtualenv
-        uses: syphar/restore-virtualenv@v1.2
+        uses: syphar/restore-virtualenv@v1
       - name: Restore Pip Cache
         uses: syphar/restore-pip-download-cache@v1
         if: steps.cache-virtualenv.outputs.cache-hit != 'true'
       - name: Install dependencies
         if: steps.cache-virtualenv.outputs.cache-hit != 'true'
         run: |
-          python -m pip install --upgrade "poetry==1.1.13"
+          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-poetry.txt
           poetry install --no-interaction --no-root
       - name: Install library
         run: |
@@ -58,7 +59,7 @@ jobs:
           python -m pre_commit run --all-files --show-diff-on-failure --hook-stage push
           poetry build --no-interaction
       - name: Test Documentation
-        if: matrix.python-version == '~3.10.4'
+        if: contains(fromJson('["~3.10.4", "3.11"]'), matrix.python-version)
         run: |
           python -m pre_commit run --all-files --show-diff-on-failure --hook-stage manual
   deploy:
@@ -74,15 +75,16 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # All history for all branches and tags.
+          submodules: 'recursive' # All submodules.
       - name: Get Project Info
         id: project_info
         run: |
           NAME='Mapper Proxy'
           VERSION=${GITHUB_REF#refs/tags/v} # Everything after the v.
-          echo ::set-output name=name::${NAME}
-          echo ::set-output name=version::${VERSION}
+          echo "name=${NAME}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "~3.10.4"
           # Optional - x64 or x86 architecture, defaults to x64.
@@ -91,7 +93,7 @@ jobs:
         run: |
           python -m venv .venv
           source .venv/Scripts/activate
-          python -m pip install --upgrade "poetry==1.1.13"
+          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-poetry.txt
           poetry install --no-interaction --no-root
       - name: Build Wheel And Source Archive
         id: build_dist
@@ -106,7 +108,7 @@ jobs:
           python -O -m PyInstaller pyinstaller_windows.spec --clean
           unset PYTHONHASHSEED
           unset SOURCE_DATE_EPOCH
-          python -m pip install --upgrade "poetry==1.1.13"
+          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-poetry.txt
           poetry install --no-interaction
       - name: Create Release
         id: create_release
