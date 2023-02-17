@@ -1,0 +1,210 @@
+{
+  "id": "mapper_data/map_v0.json.schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Map V1",
+  "description": "Map database, version 1.",
+  "type": "object",
+  "patternProperties": {
+    "^schema_version$": {
+      "type": "integer"
+    },
+    "^[0-9]+$": {
+      "type": "object",
+      "properties": {
+        "alignment": {
+          "enum": ["undefined", "good", "neutral", "evil"]
+        },
+        "avoid": {
+          "type": "boolean"
+        },
+        "contents": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "integer"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "exits": {
+          "type": "object",
+          "patternProperties": {
+            "^(north|east|south|west|up|down)$": {
+              "type": "object",
+              "properties": {
+                "door": {
+                  "type": "string"
+                },
+                "door_flags": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "hidden",
+                      "need_key",
+                      "no_block",
+                      "no_break",
+                      "no_pick",
+                      "delayed",
+                      "callable",
+                      "knockable",
+                      "magic",
+                      "action",
+                      "no_bash"
+                    ]
+                  }
+                },
+                "exit_flags": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "avoid",
+                      "exit",
+                      "door",
+                      "road",
+                      "climb",
+                      "random",
+                      "special",
+                      "no_match",
+                      "flow",
+                      "no_flee",
+                      "damage",
+                      "fall",
+                      "guarded"
+                    ]
+                  }
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^([0-9]+|death|undefined)$"
+                }
+              },
+              "required": ["door", "door_flags", "exit_flags", "to"],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "light": {
+          "enum": ["undefined", "lit", "dark"]
+        },
+        "load_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "treasure",
+              "armour",
+              "weapon",
+              "water",
+              "food",
+              "herb",
+              "key",
+              "mule",
+              "horse",
+              "pack_horse",
+              "trained_horse",
+              "rohirrim",
+              "warg",
+              "boat",
+              "attention",
+              "tower",
+              "clock",
+              "mail",
+              "stable",
+              "white_word",
+              "dark_word",
+              "equipment",
+              "coach",
+              "ferry"
+            ]
+          }
+        },
+        "mob_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "rent",
+              "shop",
+              "weapon_shop",
+              "armour_shop",
+              "food_shop",
+              "pet_shop",
+              "guild",
+              "scout_guild",
+              "mage_guild",
+              "cleric_guild",
+              "warrior_guild",
+              "ranger_guild",
+              "aggressive_mob",
+              "quest_mob",
+              "passive_mob",
+              "elite_mob",
+              "super_mob"
+            ]
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "portable": {
+          "enum": ["undefined", "portable", "not_portable"]
+        },
+        "ridable": {
+          "enum": ["undefined", "ridable", "not_ridable"]
+        },
+        "sundeath": {
+          "enum": ["undefined", "sundeath", "no_sundeath"]
+        },
+        "terrain": {
+          "enum": [
+            "undefined",
+            "brush",
+            "building",
+            "cavern",
+            "city",
+            "field",
+            "forest",
+            "hills",
+            "mountains",
+            "rapids",
+            "road",
+            "shallows",
+            "tunnel",
+            "underwater",
+            "water"
+          ]
+        }
+      },
+      "required": [
+        "alignment",
+        "avoid",
+        "contents",
+        "coordinates",
+        "description",
+        "exits",
+        "light",
+        "load_flags",
+        "mob_flags",
+        "name",
+        "note",
+        "portable",
+        "ridable",
+        "sundeath",
+        "terrain"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

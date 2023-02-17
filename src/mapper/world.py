@@ -23,7 +23,14 @@ from fuzzywuzzy import fuzz
 from typing_extensions import TypeAlias
 
 # Local Modules:
-from .roomdata.database import dumpLabels, dumpRooms, loadLabels, loadRooms
+from .roomdata.database import (
+	LABELS_SCHEMA_VERSION,
+	MAP_SCHEMA_VERSION,
+	dumpLabels,
+	dumpRooms,
+	loadLabels,
+	loadRooms,
+)
 from .roomdata.objects import (
 	DIRECTION_COORDINATES,
 	DIRECTIONS,
@@ -117,23 +124,16 @@ class World(object):
 	def output(self, text: str) -> None:
 		print(text)
 
-	def loadRooms(self) -> None:
-		if gc.isenabled():
-			gc.disable()
-		self.output("Loading the database file.")
-		errors: Union[str, None]
-		db: Union[dict[str, dict[str, Any]], None]
-		errors, db, schemaVersion = loadRooms()
-		if db is None:
-			if errors is not None:
-				self.output(errors)
-			return None
-		self.output("Creating room objects.")
+	def loadRoomsV0(self, db: dict[str, dict[str, Any]]) -> None:
 		terrainReplacements: dict[str, str] = {
-			"random": "undefined",
-			"shallowwater": "shallows",
-			"shallow": "shallows",
 			"indoors": "building",
+			"random": "undefined",
+			"shallow": "shallows",
+			"shallowwater": "shallows",
+		}
+		loadFlagReplacements: dict[str, str] = {
+			"packhorse": "pack_horse",
+			"trainedhorse": "trained_horse",
 		}
 		mobFlagReplacements: dict[str, str] = {
 			"any": "passive_mob",
@@ -148,10 +148,6 @@ class World(object):
 			"foodshop": "food_shop",
 			"petshop": "pet_shop",
 			"weaponshop": "weapon_shop",
-		}
-		loadFlagReplacements: dict[str, str] = {
-			"packhorse": "pack_horse",
-			"trainedhorse": "trained_horse",
 		}
 		doorFlagReplacements: dict[str, str] = {
 			"noblock": "no_block",
@@ -176,37 +172,84 @@ class World(object):
 				continue
 			newRoom: Room = Room()
 			newRoom.vnum = vnum
-			newRoom.name = roomDict["name"]
+			newRoom.align = roomDict["align"]
+			with suppress(KeyError):
+				newRoom.avoid = roomDict["avoid"]
 			newRoom.desc = roomDict["desc"]
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
-			newRoom.note = roomDict["note"]
-			terrain: str = roomDict["terrain"]
-			newRoom.terrain = terrainReplacements.get(terrain, terrain)
+			for direction, exitDict in roomDict["exits"].items():
+				newExit: Exit = self.getNewExit(direction, exitDict["to"], vnum)
+				newExit.door = exitDict["door"]
+				newExit.doorFlags = {doorFlagReplacements.get(flag, flag) for flag in exitDict["doorFlags"]}
+				newExit.exitFlags = set(exitDict["exitFlags"])
+				newRoom.exits[direction] = newExit
+				exitDict.clear()
 			newRoom.light = roomDict["light"]
-			newRoom.align = roomDict["align"]
+			newRoom.loadFlags = {loadFlagReplacements.get(flag, flag) for flag in roomDict["loadFlags"]}
+			newRoom.mobFlags = {mobFlagReplacements.get(flag, flag) for flag in roomDict["mobFlags"]}
+			newRoom.name = roomDict["name"]
+			newRoom.note = roomDict["note"]
 			portable: str = roomDict["portable"]
 			newRoom.portable = portableReplacements.get(portable, portable)
 			ridable: str = roomDict["ridable"]
 			newRoom.ridable = ridableReplacements.get(ridable, ridable)
 			with suppress(KeyError):
 				newRoom.sundeath = roomDict["sundeath"]
-			with suppress(KeyError):
-				newRoom.avoid = roomDict["avoid"]
-			newRoom.mobFlags = {mobFlagReplacements.get(flag, flag) for flag in roomDict["mobFlags"]}
-			newRoom.loadFlags = {loadFlagReplacements.get(flag, flag) for flag in roomDict["loadFlags"]}
-			newRoom.x = roomDict["x"]
-			newRoom.y = roomDict["y"]
-			newRoom.z = roomDict["z"]
+			terrain: str = roomDict["terrain"]
+			newRoom.terrain = terrainReplacements.get(terrain, terrain)
+			coordinates = (roomDict["x"], roomDict["y"], roomDict["z"])
+			newRoom.x, newRoom.y, newRoom.z = coordinates
 			newRoom.calculateCost()
-			for direction, exitDict in roomDict["exits"].items():
-				newExit: Exit = self.getNewExit(direction, exitDict["to"], vnum)
-				newExit.exitFlags = set(exitDict["exitFlags"])
-				newExit.doorFlags = {doorFlagReplacements.get(flag, flag) for flag in exitDict["doorFlags"]}
-				newExit.door = exitDict["door"]
-				newRoom.exits[direction] = newExit
 			self.rooms[vnum] = newRoom
 			roomDict.clear()
-			del roomDict
+
+	def loadRoomsV1(self, db: dict[str, dict[str, Any]]) -> None:
+		for vnum, roomDict in db.items():
+			newRoom: Room = Room()
+			newRoom.vnum = vnum
+			newRoom.align = roomDict["alignment"]
+			newRoom.avoid = roomDict["avoid"]
+			newRoom.desc = roomDict["description"]
+			newRoom.dynamicDesc = roomDict["contents"]
+			for direction, exitDict in roomDict["exits"].items():
+				newExit: Exit = self.getNewExit(direction, exitDict["to"], vnum)
+				newExit.door = exitDict["door"]
+				newExit.doorFlags = set(exitDict["door_flags"])
+				newExit.exitFlags = set(exitDict["exit_flags"])
+				newRoom.exits[direction] = newExit
+				exitDict.clear()
+			newRoom.light = roomDict["light"]
+			newRoom.loadFlags = set(roomDict["load_flags"])
+			newRoom.mobFlags = set(roomDict["mob_flags"])
+			newRoom.name = roomDict["name"]
+			newRoom.note = roomDict["note"]
+			newRoom.portable = roomDict["portable"]
+			newRoom.ridable = roomDict["ridable"]
+			newRoom.sundeath = roomDict["sundeath"]
+			newRoom.terrain = roomDict["terrain"]
+			newRoom.x, newRoom.y, newRoom.z = roomDict["coordinates"]
+			newRoom.calculateCost()
+			self.rooms[vnum] = newRoom
+			roomDict.clear()
+
+	def loadRooms(self) -> None:
+		if gc.isenabled():
+			gc.disable()
+		self.output("Loading the database file.")
+		errors: Union[str, None]
+		db: Union[dict[str, dict[str, Any]], None]
+		errors, db, schemaVersion = loadRooms()
+		if db is None:
+			if errors is not None:
+				self.output(errors)
+			return None
+		schemaVersionOutput: str = "latest" if schemaVersion == MAP_SCHEMA_VERSION else f"V{schemaVersion}"
+		self.output(f"Creating room objects with {schemaVersionOutput} schema.")
+		if schemaVersion < 1:
+			self.loadRoomsV0(db)
+		else:
+			self.loadRoomsV1(db)
+		db.clear()
 		self.currentRoom = self.rooms["0"]
 		if not gc.isenabled():
 			gc.enable()
@@ -220,30 +263,28 @@ class World(object):
 		db: dict[str, dict[str, Any]] = {}
 		for vnum, roomObj in self.rooms.items():
 			newRoom: dict[str, Any] = {}
-			newRoom["name"] = roomObj.name
-			newRoom["desc"] = roomObj.desc
-			newRoom["dynamicDesc"] = roomObj.dynamicDesc
-			newRoom["note"] = roomObj.note
-			newRoom["terrain"] = roomObj.terrain
-			newRoom["light"] = roomObj.light
-			newRoom["align"] = roomObj.align
-			newRoom["portable"] = roomObj.portable
-			newRoom["ridable"] = roomObj.ridable
-			newRoom["sundeath"] = roomObj.sundeath
+			newRoom["alignment"] = roomObj.align
 			newRoom["avoid"] = roomObj.avoid
-			newRoom["mobFlags"] = sorted(roomObj.mobFlags)
-			newRoom["loadFlags"] = sorted(roomObj.loadFlags)
-			newRoom["x"] = roomObj.x
-			newRoom["y"] = roomObj.y
-			newRoom["z"] = roomObj.z
+			newRoom["contents"] = roomObj.dynamicDesc
+			newRoom["coordinates"] = (roomObj.x, roomObj.y, roomObj.z)
+			newRoom["description"] = roomObj.desc
 			newRoom["exits"] = {}
 			for direction, exitObj in roomObj.exits.items():
 				newExit: dict[str, Any] = {}
-				newExit["exitFlags"] = sorted(exitObj.exitFlags)
-				newExit["doorFlags"] = sorted(exitObj.doorFlags)
 				newExit["door"] = exitObj.door
+				newExit["door_flags"] = sorted(exitObj.doorFlags)
+				newExit["exit_flags"] = sorted(exitObj.exitFlags)
 				newExit["to"] = exitObj.to
 				newRoom["exits"][direction] = newExit
+			newRoom["light"] = roomObj.light
+			newRoom["load_flags"] = sorted(roomObj.loadFlags)
+			newRoom["mob_flags"] = sorted(roomObj.mobFlags)
+			newRoom["name"] = roomObj.name
+			newRoom["note"] = roomObj.note
+			newRoom["portable"] = roomObj.portable
+			newRoom["ridable"] = roomObj.ridable
+			newRoom["sundeath"] = roomObj.sundeath
+			newRoom["terrain"] = roomObj.terrain
 			db[vnum] = newRoom
 		self.output("Saving the database.")
 		dumpRooms(db)
@@ -261,9 +302,14 @@ class World(object):
 				self.output(errors)
 			return None
 		self.labels.update(labels)
+		schemaVersionOutput: str = "latest" if schemaVersion == LABELS_SCHEMA_VERSION else f"V{schemaVersion}"
+		self.output(f"Loaded room labels with {schemaVersionOutput} schema.")
 		orphans: list[str] = [label for label, vnum in self.labels.items() if vnum not in self.rooms]
-		for label in orphans:
-			del self.labels[label]
+		if orphans:
+			for label in orphans:
+				del self.labels[label]
+			self.output(f"Detected orphan labels: {', '.join(orphans)}")
+			self.output(f"{len(orphans)} orphan labels removed.")
 
 	def saveLabels(self) -> None:
 		dumpLabels(self.labels)

@@ -18,7 +18,9 @@ import rapidjson
 # Mapper Modules:
 from mapper.roomdata.database import (
 	LABELS_FILE_PATH,
+	LABELS_SCHEMA_VERSION,
 	MAP_FILE_PATH,
+	MAP_SCHEMA_VERSION,
 	SAMPLE_LABELS_FILE_PATH,
 	SAMPLE_MAP_FILE_PATH,
 	SchemaValidationError,
@@ -201,8 +203,10 @@ class TestDatabase(TestCase):
 	def testDumpLabels(self, mockDump: Mock) -> None:
 		database: dict[str, str] = {"label1": "1", "label2": "2"}
 		dumpLabels(database)
+		output: dict[str, Any] = dict(database)  # Shallow copy.
+		output["schema_version"] = LABELS_SCHEMA_VERSION
 		mockDump.assert_called_once_with(
-			{**database, **{"schema_version": 0}}, LABELS_FILE_PATH, LABELS_SCHEMA_FILE_PATH
+			output, LABELS_FILE_PATH, getSchemaPath(LABELS_FILE_PATH, LABELS_SCHEMA_VERSION)
 		)
 
 	@patch("mapper.roomdata.database._load")
@@ -234,6 +238,8 @@ class TestDatabase(TestCase):
 	@patch("mapper.roomdata.database._dump")
 	def testDumpRooms(self, mockDump: Mock) -> None:
 		dumpRooms(self.rooms)
+		output: dict[str, Any] = dict(self.rooms)  # Shallow copy.
+		output["schema_version"] = MAP_SCHEMA_VERSION
 		mockDump.assert_called_once_with(
-			{**self.rooms, **{"schema_version": 0}}, MAP_FILE_PATH, MAP_SCHEMA_FILE_PATH
+			output, MAP_FILE_PATH, getSchemaPath(MAP_FILE_PATH, MAP_SCHEMA_VERSION)
 		)

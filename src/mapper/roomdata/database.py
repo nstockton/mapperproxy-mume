@@ -22,7 +22,7 @@ from ..utils import getDataPath
 
 
 LABELS_SCHEMA_VERSION: int = 0  # Increment this when the labels schema changes.
-MAP_SCHEMA_VERSION: int = 0  # Increment this when the map schema changes.
+MAP_SCHEMA_VERSION: int = 1  # Increment this when the map schema changes.
 DATA_DIRECTORY: str = getDataPath()
 LABELS_FILE: str = "room_labels.json"
 LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_FILE)
@@ -161,7 +161,8 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 	Args:
 		labels: The labels database to be saved.
 	"""
-	output: dict[str, Union[int, str]] = {**labels, **{"schema_version": LABELS_SCHEMA_VERSION}}
+	output: dict[str, Any] = dict(labels)  # Shallow copy.
+	output["schema_version"] = LABELS_SCHEMA_VERSION
 	_dump(output, LABELS_FILE_PATH, getSchemaPath(LABELS_FILE_PATH, LABELS_SCHEMA_VERSION))
 
 
@@ -192,5 +193,6 @@ def dumpRooms(rooms: Mapping[str, Mapping[str, Any]]) -> None:
 	Args:
 		rooms: The rooms database to be saved.
 	"""
-	output: dict[str, Any] = {**rooms, **{"schema_version": MAP_SCHEMA_VERSION}}
+	output: dict[str, Any] = dict(rooms)  # Shallow copy.
+	output["schema_version"] = MAP_SCHEMA_VERSION
 	_dump(output, MAP_FILE_PATH, getSchemaPath(MAP_FILE_PATH, MAP_SCHEMA_VERSION))
