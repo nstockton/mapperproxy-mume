@@ -36,16 +36,44 @@
                   "type": "array",
                   "uniqueItems": true,
                   "items": {
-                    "type": "string",
-                    "pattern": "^(hidden|need_key|no_block|no_break|no_pick|delayed|callable|knockable|magic|action|no_bash)$"
+                    "enum": [
+                      "noblock",
+                      "nobreak",
+                      "nopick",
+                      "needkey",
+                      "hidden",
+                      "need_key",
+                      "no_block",
+                      "no_break",
+                      "no_pick",
+                      "delayed",
+                      "callable",
+                      "knockable",
+                      "magic",
+                      "action",
+                      "no_bash"
+                    ]
                   }
                 },
                 "exitFlags": {
                   "type": "array",
                   "uniqueItems": true,
                   "items": {
-                    "type": "string",
-                    "pattern": "^(exit|door|road|climb|random|special|avoid|no_match|flow|no_flee|damage|fall|guarded)$"
+                    "enum": [
+                      "avoid",
+                      "exit",
+                      "door",
+                      "road",
+                      "climb",
+                      "random",
+                      "special",
+                      "no_match",
+                      "flow",
+                      "no_flee",
+                      "damage",
+                      "fall",
+                      "guarded"
+                    ]
                   }
                 },
                 "to": {
@@ -66,16 +94,71 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "type": "string",
-            "pattern": "^(treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach|ferry)$"
+            "enum": [
+              "packhorse",
+              "trainedhorse",
+              "treasure",
+              "armour",
+              "weapon",
+              "water",
+              "food",
+              "herb",
+              "key",
+              "mule",
+              "horse",
+              "pack_horse",
+              "trained_horse",
+              "rohirrim",
+              "warg",
+              "boat",
+              "attention",
+              "tower",
+              "clock",
+              "mail",
+              "stable",
+              "white_word",
+              "dark_word",
+              "equipment",
+              "coach",
+              "ferry"
+            ]
           }
         },
         "mobFlags": {
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "type": "string",
-            "pattern": "^(rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob)$"
+            "enum": [
+              "any",
+              "smob",
+              "quest",
+              "scoutguild",
+              "mageguild",
+              "clericguild",
+              "warriorguild",
+              "rangerguild",
+              "armourshop",
+              "foodshop",
+              "petshop",
+              "weaponshop",
+              "rent",
+              "shop",
+              "weapon_shop",
+              "armour_shop",
+              "food_shop",
+              "pet_shop",
+              "guild",
+              "scout_guild",
+              "mage_guild",
+              "cleric_guild",
+              "warrior_guild",
+              "ranger_guild",
+              "aggressive_mob",
+              "quest_mob",
+              "passive_mob",
+              "elite_mob",
+              "super_mob"
+            ]
           }
         },
         "name": {
@@ -94,7 +177,27 @@
           "enum": ["undefined", "sundeath", "no_sundeath"]
         },
         "terrain": {
-          "enum": ["indoors", "shallow", "undefined", "brush", "building", "cavern", "city", "field", "forest", "hills", "mountains", "rapids", "road", "shallows", "tunnel", "underwater", "water"]
+          "enum": [
+            "indoors",
+            "random",
+            "shallow",
+            "shallowwater",
+            "undefined",
+            "brush",
+            "building",
+            "cavern",
+            "city",
+            "field",
+            "forest",
+            "hills",
+            "mountains",
+            "rapids",
+            "road",
+            "shallows",
+            "tunnel",
+            "underwater",
+            "water"
+          ]
         },
         "x": {
           "type": "integer"
