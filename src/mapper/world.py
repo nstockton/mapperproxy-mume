@@ -16,6 +16,7 @@ import warnings
 from collections.abc import Callable, Generator, MutableSequence, Sequence
 from contextlib import suppress
 from queue import SimpleQueue
+from timeit import default_timer as defaultTimer
 from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
 
 # Third-party Modules:
@@ -233,6 +234,7 @@ class World(object):
 			roomDict.clear()
 
 	def loadRooms(self) -> None:
+		startTime: float = defaultTimer()
 		if gc.isenabled():
 			gc.disable()
 		self.output("Loading the database file.")
@@ -254,7 +256,8 @@ class World(object):
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
-		self.output("Map database loaded.")
+		elapsedTime: float = defaultTimer() - startTime
+		self.output(f"Map database loaded in {elapsedTime:.1f} seconds.")
 
 	def saveRooms(self) -> None:
 		if gc.isenabled():
