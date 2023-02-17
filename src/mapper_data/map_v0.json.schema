@@ -1,16 +1,18 @@
 {
-  "id": "data/map.schema.json",
+  "id": "mapper_data/map_v0.json.schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Map",
-  "description": "The map database.",
+  "title": "Map V0",
+  "description": "Map database, version 0.",
   "type": "object",
   "patternProperties": {
+    "^schema_version$": {
+      "type": "integer"
+    },
     "^[0-9]+$": {
       "type": "object",
       "properties": {
         "align": {
-          "type": "string",
-          "pattern": "^(good|neutral|evil|undefined)$"
+          "enum": ["undefined", "good", "neutral", "evil"]
         },
         "avoid": {
           "type": "boolean"
@@ -50,14 +52,15 @@
                   "type": "string",
                   "pattern": "^([0-9]+|death|undefined)$"
                 }
-              }
+              },
+              "required": ["door", "doorFlags", "exitFlags", "to"],
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
         },
         "light": {
-          "type": "string",
-          "pattern": "^(lit|dark|undefined)$"
+          "enum": ["undefined", "lit", "dark"]
         },
         "loadFlags": {
           "type": "array",
@@ -82,16 +85,16 @@
           "type": "string"
         },
         "portable": {
-          "type": "string",
-          "pattern": "^(portable|notportable|undefined)$"
+          "enum": ["notportable", "undefined", "portable", "not_portable"]
         },
         "ridable": {
-          "type": "string",
-          "pattern": "^(ridable|notridable|undefined)$"
+          "enum": ["notridable", "undefined", "ridable", "not_ridable"]
+        },
+        "sundeath": {
+          "enum": ["undefined", "sundeath", "no_sundeath"]
         },
         "terrain": {
-          "type": "string",
-          "pattern": "^(indoors|shallow|brush|cavern|city|deathtrap|field|forest|hills|building|mountains|rapids|road|shallows|tunnel|undefined|underwater|water)$"
+          "enum": ["indoors", "shallow", "undefined", "brush", "building", "cavern", "city", "field", "forest", "hills", "mountains", "rapids", "road", "shallows", "tunnel", "underwater", "water"]
         },
         "x": {
           "type": "integer"
@@ -103,6 +106,24 @@
           "type": "integer"
         }
       },
+      "required": [
+        "align",
+        "avoid",
+        "desc",
+        "dynamicDesc",
+        "exits",
+        "light",
+        "loadFlags",
+        "mobFlags",
+        "name",
+        "note",
+        "portable",
+        "ridable",
+        "terrain",
+        "x",
+        "y",
+        "z"
+      ],
       "additionalProperties": false
     }
   },

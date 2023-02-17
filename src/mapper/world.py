@@ -57,13 +57,12 @@ LIGHT_SYMBOLS: dict[str, str] = {"@": "lit", "*": "lit", "!": "undefined", ")": 
 RUN_DESTINATION_REGEX: re.Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 TERRAIN_SYMBOLS: dict[str, str] = {
 	":": "brush",
+	"[": "building",
 	"O": "cavern",
 	"#": "city",
-	"!": "deathtrap",
 	".": "field",
 	"f": "forest",
 	"(": "hills",
-	"[": "building",
 	"<": "mountains",
 	"W": "rapids",
 	"+": "road",
@@ -124,7 +123,7 @@ class World(object):
 		self.output("Loading the database file.")
 		errors: Union[str, None]
 		db: Union[dict[str, dict[str, Any]], None]
-		errors, db = loadRooms()
+		errors, db, schemaVersion = loadRooms()
 		if db is None:
 			if errors is not None:
 				self.output(errors)
@@ -132,7 +131,6 @@ class World(object):
 		self.output("Creating room objects.")
 		terrainReplacements: dict[str, str] = {
 			"random": "undefined",
-			"death": "deathtrap",
 			"shallowwater": "shallows",
 			"shallow": "shallows",
 			"indoors": "building",
@@ -151,14 +149,31 @@ class World(object):
 			"petshop": "pet_shop",
 			"weaponshop": "weapon_shop",
 		}
-		loadFlagReplacements: dict[str, str] = {"packhorse": "pack_horse", "trainedhorse": "trained_horse"}
+		loadFlagReplacements: dict[str, str] = {
+			"packhorse": "pack_horse",
+			"trainedhorse": "trained_horse",
+		}
 		doorFlagReplacements: dict[str, str] = {
 			"noblock": "no_block",
 			"nobreak": "no_break",
 			"nopick": "no_pick",
 			"needkey": "need_key",
 		}
+		portableReplacements: dict[str, str] = {
+			"notportable": "not_portable",
+		}
+		ridableReplacements: dict[str, str] = {
+			"notridable": "not_ridable",
+		}
 		for vnum, roomDict in db.items():
+			if not vnum.isdigit():
+				# This should never happen, but safe to ignore if it does.
+				# Todo: add a warning to alert the user here.
+				continue
+			elif roomDict["terrain"].startswith("death"):  # handles "death" and "deathtrap".
+				# This should never happen, but safe to ignore if it does.
+				# Todo: add a warning to alert the user here.
+				continue
 			newRoom: Room = Room()
 			newRoom.vnum = vnum
 			newRoom.name = roomDict["name"]
@@ -166,11 +181,15 @@ class World(object):
 			newRoom.dynamicDesc = roomDict["dynamicDesc"]
 			newRoom.note = roomDict["note"]
 			terrain: str = roomDict["terrain"]
-			newRoom.terrain = terrain if terrain not in terrainReplacements else terrainReplacements[terrain]
+			newRoom.terrain = terrainReplacements.get(terrain, terrain)
 			newRoom.light = roomDict["light"]
 			newRoom.align = roomDict["align"]
-			newRoom.portable = roomDict["portable"]
-			newRoom.ridable = roomDict["ridable"]
+			portable: str = roomDict["portable"]
+			newRoom.portable = portableReplacements.get(portable, portable)
+			ridable: str = roomDict["ridable"]
+			newRoom.ridable = ridableReplacements.get(ridable, ridable)
+			with suppress(KeyError):
+				newRoom.sundeath = roomDict["sundeath"]
 			with suppress(KeyError):
 				newRoom.avoid = roomDict["avoid"]
 			newRoom.mobFlags = {mobFlagReplacements.get(flag, flag) for flag in roomDict["mobFlags"]}
@@ -210,6 +229,7 @@ class World(object):
 			newRoom["align"] = roomObj.align
 			newRoom["portable"] = roomObj.portable
 			newRoom["ridable"] = roomObj.ridable
+			newRoom["sundeath"] = roomObj.sundeath
 			newRoom["avoid"] = roomObj.avoid
 			newRoom["mobFlags"] = sorted(roomObj.mobFlags)
 			newRoom["loadFlags"] = sorted(roomObj.loadFlags)
@@ -235,7 +255,7 @@ class World(object):
 	def loadLabels(self) -> None:
 		errors: Union[str, None]
 		labels: Union[dict[str, str], None]
-		errors, labels = loadLabels()
+		errors, labels, schemaVersion = loadLabels()
 		if labels is None:
 			if errors is not None:
 				self.output(errors)
@@ -397,6 +417,7 @@ class World(object):
 			"align",
 			"portable",
 			"ridable",
+			"sundeath",
 			"x",
 			"y",
 			"z",
@@ -423,7 +444,7 @@ class World(object):
 					if not exactMatch and value in roomData or roomData == value:
 						keysMatched += 1
 				elif (
-					key in ("terrain", "light", "align", "portable", "ridable", "x", "y", "z")
+					key in ("terrain", "light", "align", "portable", "ridable", "sundeath", "x", "y", "z")
 					and getattr(roomObj, key, "").strip().lower() == value
 				):
 					keysMatched += 1
@@ -588,7 +609,7 @@ class World(object):
 
 	def rportable(self, text: str = "") -> str:
 		text = text.strip().lower()
-		validValues: tuple[str, ...] = ("portable", "notportable", "undefined")
+		validValues: tuple[str, ...] = ("portable", "not_portable", "undefined")
 		if text not in validValues:
 			return (
 				f"Room portable set to '{self.currentRoom.portable}'. "
@@ -599,7 +620,11 @@ class World(object):
 
 	def rridable(self, text: str = "") -> str:
 		text = text.strip().lower()
-		validValues: tuple[str, ...] = ("ridable", "notridable", "undefined")
+		validValues: tuple[str, ...] = (
+			"ridable",
+			"not_ridable",
+			"undefined",
+		)
 		if text not in validValues:
 			return (
 				f"Room ridable set to '{self.currentRoom.ridable}'. "
@@ -608,6 +633,17 @@ class World(object):
 		self.currentRoom.ridable = text
 		self.currentRoom.calculateCost()
 		return f"Setting room ridable to '{self.currentRoom.ridable}'."
+
+	def rsundeath(self, text: str = "") -> str:
+		text = text.strip().lower()
+		validValues: tuple[str, ...] = ("sundeath", "no_sundeath", "undefined")
+		if text not in validValues:
+			return (
+				f"Room sundeath set to '{self.currentRoom.sundeath}'. "
+				+ f"Use 'rsundeath [{' | '.join(validValues)}]' to change it."
+			)
+		self.currentRoom.sundeath = text
+		return f"Setting room sundeath to '{self.currentRoom.sundeath}'."
 
 	def ravoid(self, text: str = "") -> str:
 		text = text.strip().lower()
@@ -910,6 +946,9 @@ class World(object):
 		matchDict: dict[str, str] = match.groupdict()
 		if not matchDict["label"]:
 			self.output("Error: you need to supply a label.")
+			return None
+		elif matchDict["label"] == "schema_version":
+			self.output("Error: 'schema_version' not allowed as label.")
 			return None
 		label: str = matchDict["label"]
 		if label.isdecimal():

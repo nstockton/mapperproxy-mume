@@ -61,7 +61,8 @@ class TestRoom(TestCase):
 		self.room.dynamicDesc = "Vig the Dwarven smelter stands here, overseeing his store.\n"
 		self.room.terrain = "city"
 		self.room.light = "dark"
-		self.room.ridable = "notridable"
+		self.room.ridable = "not_ridable"
+		self.room.sundeath = "no_sundeath"
 		self.room.mobFlags.add("shop")
 		self.room.x = 22
 		self.room.y = 225
@@ -88,6 +89,7 @@ class TestRoom(TestCase):
 			+ f"Align: '{self.room.align}'\n"
 			+ f"Portable: '{self.room.portable}'\n"
 			+ f"Ridable: '{self.room.ridable}'\n"
+			+ f"Sundeath: '{self.room.sundeath}'\n"
 			+ f"Mob Flags: '{', '.join(self.room.mobFlags)}'\n"
 			+ f"Load Flags: '{', '.join(self.room.loadFlags)}'\n"
 			+ f"Coordinates (X, Y, Z): '{self.room.x}', '{self.room.y}', '{self.room.z}'\n"
@@ -108,7 +110,7 @@ class TestRoom(TestCase):
 		self.room.avoid = True
 		self.room.calculateCost()
 		self.assertEqual(self.room.cost, 1000.75)
-		self.room.ridable = "notridable"
+		self.room.ridable = "not_ridable"
 		self.room.calculateCost()
 		self.assertEqual(self.room.cost, 1005.75)
 

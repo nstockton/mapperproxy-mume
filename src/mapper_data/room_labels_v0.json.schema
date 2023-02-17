@@ -1,10 +1,13 @@
 {
-  "id": "data/room_labels.schema.json",
+  "id": "mapper_data/room_labels_v0.json.schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Labels",
-  "description": "The room labels database.",
+  "description": "Labels database, version 0.",
   "type": "object",
   "patternProperties": {
+    "^schema_version$": {
+      "type": "integer"
+    },
     "^[a-zA-Z]": {
       "type": "string",
       "pattern": "^[0-9]+$"

@@ -94,6 +94,7 @@ VALID_MOB_FLAGS: tuple[str, ...] = (
 	"passive_mob",
 	"elite_mob",
 	"super_mob",
+	"milkable",
 )
 VALID_LOAD_FLAGS: tuple[str, ...] = (
 	"treasure",
@@ -122,13 +123,13 @@ VALID_LOAD_FLAGS: tuple[str, ...] = (
 	"ferry",
 )
 VALID_EXIT_FLAGS: tuple[str, ...] = (
+	"avoid",
 	"exit",
 	"door",
 	"road",
 	"climb",
 	"random",
 	"special",
-	"avoid",
 	"no_match",
 	"flow",
 	"no_flee",
@@ -195,6 +196,7 @@ class Room(object):
 		self.align: str = "undefined"
 		self.portable: str = "undefined"
 		self.ridable: str = "undefined"
+		self.sundeath: str = "undefined"
 		self.avoid: bool = False
 		self.mobFlags: set[str] = set()
 		self.loadFlags: set[str] = set()
@@ -243,6 +245,7 @@ class Room(object):
 		output.append(f"Align: '{self.align}'")
 		output.append(f"Portable: '{self.portable}'")
 		output.append(f"Ridable: '{self.ridable}'")
+		output.append(f"Sundeath: '{self.sundeath}'")
 		output.append(f"Mob Flags: '{', '.join(self.mobFlags)}'")
 		output.append(f"Load Flags: '{', '.join(self.loadFlags)}'")
 		output.append(f"Coordinates (X, Y, Z): '{self.x}', '{self.y}', '{self.z}'")
@@ -261,7 +264,7 @@ class Room(object):
 		self.cost = TERRAIN_COSTS[self.terrain]
 		if self.avoid or AVOID_DYNAMIC_DESC_REGEX.search(self.dynamicDesc):
 			self.cost += 1000.0
-		if self.ridable == "notridable":
+		if self.ridable == "not_ridable":
 			self.cost += 5.0
 
 	def manhattanDistance(self, other: Room) -> int:

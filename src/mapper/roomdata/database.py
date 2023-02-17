@@ -21,19 +21,17 @@ import rapidjson
 from ..utils import getDataPath
 
 
+LABELS_SCHEMA_VERSION: int = 0  # Increment this when the labels schema changes.
+MAP_SCHEMA_VERSION: int = 0  # Increment this when the map schema changes.
 DATA_DIRECTORY: str = getDataPath()
 LABELS_FILE: str = "room_labels.json"
 LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_FILE)
 SAMPLE_LABELS_FILE: str = LABELS_FILE + ".sample"
 SAMPLE_LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_LABELS_FILE)
-LABELS_SCHEMA_FILE: str = LABELS_FILE + ".schema"
-LABELS_SCHEMA_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_SCHEMA_FILE)
 MAP_FILE: str = "map.json"
 MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, MAP_FILE)
 SAMPLE_MAP_FILE: str = MAP_FILE + ".sample"
 SAMPLE_MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_MAP_FILE)
-MAP_SCHEMA_FILE: str = MAP_FILE + ".schema"
-MAP_SCHEMA_FILE_PATH: str = os.path.join(DATA_DIRECTORY, MAP_SCHEMA_FILE)
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -41,6 +39,22 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 class SchemaValidationError(ValueError):
 	"""Raised if there was an error validating an object's schema."""
+
+
+def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
+	"""
+	Determines the schema file path from a schema version.
+
+	Args:
+		databasePath: The path of the database file.
+		schemaVersion: The schema version.
+
+	Returns:
+		The schema file path.
+	"""
+	if databasePath.endswith(".sample"):
+		databasePath = databasePath[: -len(".sample")]
+	return "{}_v{ver}{}.schema".format(*os.path.splitext(databasePath), ver=schemaVersion)
 
 
 def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
@@ -75,30 +89,31 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 			raise SchemaValidationError(str(rapidjsonExc)) from rapidjsonExc
 
 
-def _load(databasePath: str, schemaPath: str) -> Union[tuple[str, None], tuple[None, dict[str, Any]]]:
+def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[str, Any], int]]:
 	"""
 	Loads a database into memory.
 
 	Args:
 		databasePath: The location of the database.
-		schemaPath: The location of the schema.
 
 	Returns:
-		An error message or None, and the loaded database or None.
+		An error message or None, the loaded database or None, and the schema version.
 	"""
 	if not os.path.exists(databasePath):
-		return f"Error: '{databasePath}' doesn't exist.", None
+		return f"Error: '{databasePath}' doesn't exist.", None, 0
 	elif os.path.isdir(databasePath):
-		return f"Error: '{databasePath}' is a directory, not a file.", None
+		return f"Error: '{databasePath}' is a directory, not a file.", None, 0
 	try:
 		with open(databasePath, "r", encoding="utf-8") as fileObj:
 			database: dict[str, Any] = json.load(fileObj)
+		schemaVersion: int = database.pop("schema_version", 0)
+		schemaPath = getSchemaPath(databasePath, schemaVersion)
 		_validate(database, schemaPath)
-		return None, database
+		return None, database, schemaVersion
 	except IOError as e:
-		return f"{e.strerror}: '{e.filename}'", None
+		return f"{e.strerror}: '{e.filename}'", None, 0
 	except ValueError:
-		return f"Corrupted database file: {databasePath}", None
+		return f"Corrupted database file: {databasePath}", None, 0
 
 
 def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> None:
@@ -115,28 +130,28 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
 
 
-def loadLabels() -> Union[tuple[str, None], tuple[None, dict[str, str]]]:
+def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int]]:
 	"""
 	Loads the labels database into memory.
 
 	The default label definitions are first loaded, then the user's label definitions are merged in.
 
 	Returns:
-		An error message and None, or None and the loaded labels database.
+		An error message or None, the labels database or None, and the schema version.
 	"""
 	errorMessages: list[str] = []
 	labels: dict[str, str] = {}
 	for path in (SAMPLE_LABELS_FILE_PATH, LABELS_FILE_PATH):
-		errors, result = _load(path, LABELS_SCHEMA_FILE_PATH)
+		errors, result, schemaVersion = _load(path)
 		if result is None:
 			dataType: str = "sample" if path.endswith("sample") else "user"
 			errorMessages.append(f"While loading {dataType} labels: {errors}")
 		else:
 			labels.update(result)
 	if labels:
-		return None, labels
+		return None, labels, schemaVersion
 	else:
-		return "\n".join(errorMessages), None
+		return "\n".join(errorMessages), None, 0
 
 
 def dumpLabels(labels: Mapping[str, str]) -> None:
@@ -146,27 +161,28 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 	Args:
 		labels: The labels database to be saved.
 	"""
-	_dump(labels, LABELS_FILE_PATH, LABELS_SCHEMA_FILE_PATH)
+	output: dict[str, Union[int, str]] = {**labels, **{"schema_version": LABELS_SCHEMA_VERSION}}
+	_dump(output, LABELS_FILE_PATH, getSchemaPath(LABELS_FILE_PATH, LABELS_SCHEMA_VERSION))
 
 
-def loadRooms() -> Union[tuple[str, None], tuple[None, dict[str, dict[str, Any]]]]:
+def loadRooms() -> Union[tuple[str, None, int], tuple[None, dict[str, dict[str, Any]], int]]:
 	"""
 	Loads the rooms database into memory.
 
 	An attempt to load the user's database is made first, otherwise the sample database is loaded.
 
 	Returns:
-		An error message and None, or None and the loaded rooms database.
+		An error message or None, the rooms database or None, and the schema version.
 	"""
 	errorMessages: list[str] = []
 	for path in (MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH):
-		errors, result = _load(path, MAP_SCHEMA_FILE_PATH)
+		errors, result, schemaVersion = _load(path)
 		if result is None:
 			dataType: str = "sample" if path.endswith("sample") else "user"
 			errorMessages.append(f"While loading {dataType} map: {errors}")
 		else:
-			return None, result
-	return "\n".join(errorMessages), None
+			return None, result, schemaVersion
+	return "\n".join(errorMessages), None, 0
 
 
 def dumpRooms(rooms: Mapping[str, Mapping[str, Any]]) -> None:
@@ -176,4 +192,5 @@ def dumpRooms(rooms: Mapping[str, Mapping[str, Any]]) -> None:
 	Args:
 		rooms: The rooms database to be saved.
 	"""
-	_dump(rooms, MAP_FILE_PATH, MAP_SCHEMA_FILE_PATH)
+	output: dict[str, Any] = {**rooms, **{"schema_version": MAP_SCHEMA_VERSION}}
+	_dump(output, MAP_FILE_PATH, getSchemaPath(MAP_FILE_PATH, MAP_SCHEMA_VERSION))

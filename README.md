@@ -105,11 +105,12 @@ Auto mapping mode must be on for these commands to have any effect.
 * `rlight [lit|dark|undefined]`  --  Modify the light flag of the current room.
 * `rlink [add|remove] [oneway] [vnum] [north|east|south|west|up|down]`  --  Manually manage links from the current room to room with vnum. If oneway is given, treat the link as unidirectional.
 * `rloadflags [add|remove] [treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach]`  --  Modify the load flags of the current room.
-* `rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob]`  --  Modify the mob flags of the current room.
+* `rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob|milkable]`  --  Modify the mob flags of the current room.
 * `rnote [-a|-r] [text]`  --  Modify the note for the current room. If '-a' is given, append text to the current note. If '-r' is given, remove the note.
-* `rportable [portable|notportable|undefined]`  --  Modify the portable flag of the current room.
-* `rridable [ridable|notridable|undefined]`  --  Modify the ridable flag of the current room.
-* `rterrain [death|city|shallowwater|forest|hills|road|cavern|field|water|underwater|rapids|indoors|brush|tunnel|mountains|random|undefined]`  --  Modify the terrain of the current room.
+* `rportable [portable|not_portable|undefined]`  --  Modify the portable flag of the current room.
+* `rridable [ridable|not_ridable|undefined]`  --  Modify the ridable flag of the current room.
+* `rsundeath [sundeath|no_sundeath|undefined]`  --  Modify the sundeath flag of the current room.
+* `rterrain [brush|building|cavern|city|field|forest|hills|mountains|rapids|road|shallows|tunnel|undefined|underwater|water]`  --  Modify the terrain of the current room.
 * `rx [number]`  --  Modify the X coordinate of the current room.
 * `ry [number]`  --  Modify the Y coordinate of the current room.
 * `rz [number]`  --  Modify the Z coordinate of the current room.

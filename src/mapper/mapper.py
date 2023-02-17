@@ -568,6 +568,9 @@ class Mapper(threading.Thread, World):
 	def user_command_rridable(self, *args: str) -> None:
 		self.sendPlayer(self.rridable(*args))
 
+	def user_command_rsundeath(self, *args: str) -> None:
+		self.sendPlayer(self.rsundeath(*args))
+
 	def user_command_ravoid(self, *args: str) -> None:
 		self.sendPlayer(self.ravoid(*args))
 
@@ -846,7 +849,7 @@ class Mapper(threading.Thread, World):
 				output.append(self.rlight("lit"))
 		with suppress(KeyError):
 			terrain: str = TERRAIN_SYMBOLS[promptDict["terrain"]]
-			if self.currentRoom.terrain not in (terrain, "deathtrap"):
+			if self.currentRoom.terrain != terrain:
 				output.append(self.rterrain(terrain))
 		with suppress(KeyError):
 			ridable: bool = "r" in promptDict["movementFlags"].lower()
@@ -974,8 +977,8 @@ class Mapper(threading.Thread, World):
 		if MOVEMENT_FORCED_REGEX.search(text) or MOVEMENT_PREVENTED_REGEX.search(text):
 			self.stopRun()
 		if self.isSynced and self.autoMapping:
-			if text == "It's too difficult to ride here." and self.currentRoom.ridable != "notridable":
-				self.sendPlayer(self.rridable("notridable"))
+			if text == "It's too difficult to ride here." and self.currentRoom.ridable != "not_ridable":
+				self.sendPlayer(self.rridable("not_ridable"))
 			elif text == "You are already riding." and self.currentRoom.ridable != "ridable":
 				self.sendPlayer(self.rridable("ridable"))
 
