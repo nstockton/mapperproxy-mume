@@ -66,8 +66,7 @@ class TestExitsCleaner(TestCase):
 		room: Room = Room()
 		room.vnum = "0"
 		for direction, isHidden in exits:
-			if direction not in DIRECTIONS:
-				raise ValueError(f"Invalid direction {direction}. Cannot create room.")
+			self.assertIn(direction, DIRECTIONS, f"Invalid direction {direction}. Cannot create room.")
 			room.exits[direction] = Exit()
 			if isHidden:
 				room.exits[direction].doorFlags.add("hidden")

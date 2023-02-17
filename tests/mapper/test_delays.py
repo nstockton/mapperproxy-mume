@@ -27,8 +27,7 @@ class TestDelays(TestCase):
 		with mock.patch.object(delay._finished, "wait") as mockWait:
 			delay.start()
 		delay.join(timeout=1.0)
-		if delay.is_alive():
-			raise TimeoutError("BaseDelay thread failed to terminate.")
+		self.assertFalse(delay.is_alive(), "BaseDelay thread failed to terminate.")
 		mockWait.assert_called_with(60)
 		self.assertEqual(mockWait.call_count, 10)
 		self.assertTrue(delay._finished.is_set())
