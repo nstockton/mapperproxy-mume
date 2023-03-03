@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import json
 import logging
 import re
 import socket
@@ -14,7 +15,6 @@ import textwrap
 import threading
 import traceback
 from collections.abc import Callable
-from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer
 from typing import Any, Optional, Union
@@ -34,10 +34,11 @@ from .delays import OneShot
 from .proxy import ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
 from .utils import decodeBytes, formatDocString, regexFuzzy, simplified, stripAnsi
-from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, TERRAIN_SYMBOLS, World
+from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 
 MAPPER_QUEUE_TYPE: TypeAlias = Union[EVENT_CALLER_TYPE, None]
+ROOM_TAGS_REGEX: re.Pattern[str] = re.compile(r"(?P<attribute>area|terrain)=\"(?P<value>[^\"]+)\"")
 EXIT_TAGS_REGEX: re.Pattern[str] = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ rf"(?P<direction>{'|'.join(DIRECTIONS)})"
@@ -122,10 +123,6 @@ MOVEMENT_PREVENTED_REGEX: re.Pattern[str] = re.compile(
 		)
 	)
 )
-PROMPT_REGEX: re.Pattern[str] = re.compile(
-	r"^(?P<light>[@*!\)o]?)(?P<terrain>[\#\(\[\+\.%fO~UW:=<]?)"
-	+ r"(?P<weather>[*'\"~=-]{0,2})\s*(?P<movementFlags>[RrSsCcW]{0,4})[^\>]*\>$"
-)
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -200,6 +197,8 @@ class Mapper(threading.Thread, World):
 		self.description: Union[str, None] = None
 		self.dynamic: Union[str, None] = None
 		self.exits: Union[str, None] = None
+		self.xmlRoomAttributes: dict[str, str] = {}
+		self.gmcpCharVitals: dict[str, Any] = {}
 		self.timeEvent: Union[str, None] = None
 		self.timeEventOffset: int = 0
 		self.parsedHour: int = 0
@@ -837,24 +836,16 @@ class Mapper(threading.Thread, World):
 		if self.currentRoom.note:
 			self.sendPlayer(f"Note: {self.currentRoom.note}", showPrompt=False)
 
-	def updateRoomFlags(self, prompt: str) -> None:
-		match: Union[re.Match[str], None] = PROMPT_REGEX.search(prompt)
-		if match is None:
-			return None
-		promptDict: dict[str, str] = match.groupdict()
+	def updateRoomFlags(self) -> None:
 		output: list[str] = []
-		with suppress(KeyError):
-			light: str = LIGHT_SYMBOLS[promptDict["light"]]
+		lightSymbol: Union[str, None] = self.gmcpCharVitals.get("light")
+		if lightSymbol is not None and lightSymbol in LIGHT_SYMBOLS:
+			light: str = LIGHT_SYMBOLS[lightSymbol]
 			if light == "lit" and self.currentRoom.light != light:
 				output.append(self.rlight("lit"))
-		with suppress(KeyError):
-			terrain: str = TERRAIN_SYMBOLS[promptDict["terrain"]]
-			if self.currentRoom.terrain != terrain:
-				output.append(self.rterrain(terrain))
-		with suppress(KeyError):
-			ridable: bool = "r" in promptDict["movementFlags"].lower()
-			if ridable and self.currentRoom.ridable != "ridable":
-				output.append(self.rridable("ridable"))
+		ridable: bool = bool(self.gmcpCharVitals.get("ride") or self.gmcpCharVitals.get("ridden"))
+		if ridable and self.currentRoom.ridable != "ridable":
+			output.append(self.rridable("ridable"))
 		if output:
 			self.sendPlayer("\n".join(output))
 
@@ -932,11 +923,17 @@ class Mapper(threading.Thread, World):
 			self.currentRoom.exits[movement].to = vnum
 		self.sendPlayer(f"Adding room '{newRoom.name}' with vnum '{vnum}'")
 
+	def mud_event_gmcp_char_vitals(self, text: str) -> None:
+		newValues: dict[str, Any] = json.loads(text)
+		self.gmcpCharVitals.update(newValues)
+		if self.autoMapping:
+			self.updateRoomFlags()
+
 	def mud_event_prompt(self, text: str) -> None:
 		self.prompt = text
 		if self.isSynced:
 			if self.autoMapping and self.moved:
-				self.updateRoomFlags(self.prompt)
+				self.updateRoomFlags()
 		elif self.roomName:
 			self.sync(self.roomName, self.description)
 		if self.isSynced and self.dynamic is not None:
@@ -1031,6 +1028,11 @@ class Mapper(threading.Thread, World):
 			self.timeSynchronized = True
 			self.sendPlayer(f"Synchronized with epoch {self.clock.epoch}.", showPrompt=False)
 
+	def mud_event_room(self, text: str) -> None:
+		newValues: dict[str, str] = dict(ROOM_TAGS_REGEX.findall(text))
+		self.xmlRoomAttributes.clear()
+		self.xmlRoomAttributes.update(newValues)
+
 	def mud_event_name(self, text: str) -> None:
 		if text not in ("You just see a dense fog around you...", "It is pitch black..."):
 			self.roomName = simplified(text)
@@ -1099,6 +1101,9 @@ class Mapper(threading.Thread, World):
 				if self.dynamic and self.currentRoom.dynamicDesc != self.dynamic:
 					self.currentRoom.dynamicDesc = self.dynamic
 					self.sendPlayer("Updating room dynamic description.")
+				terrain: Union[str, None] = self.xmlRoomAttributes.get("terrain")
+				if terrain is not None and self.currentRoom.terrain != terrain:
+					self.sendPlayer(self.rterrain(terrain))
 		if self.autoMapping and self.isSynced and self.moved and self.exits:
 			if addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in self.exits:
 				self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(

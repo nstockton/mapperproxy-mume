@@ -61,7 +61,12 @@ if TYPE_CHECKING:  # pragma: no cover
 
 GUI_QUEUE_TYPE: TypeAlias = Union[Tuple[str], Tuple[str, Room], None]
 LEAD_BEFORE_ENTERING_VNUMS: list[str] = ["196", "3473", "3474", "12138", "12637"]
-LIGHT_SYMBOLS: dict[str, str] = {"@": "lit", "*": "lit", "!": "undefined", ")": "lit", "o": "dark"}
+LIGHT_SYMBOLS: dict[str, str] = {
+	"*": "lit",  # Sunlight, either direct or indirect.
+	"!": "undefined",  # Artificial light.
+	")": "lit",  # Moonlight, either direct or indirect.
+	"o": "dark",  # Darkness.
+}
 RUN_DESTINATION_REGEX: re.Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 TERRAIN_SYMBOLS: dict[str, str] = {
 	":": "brush",
@@ -645,10 +650,15 @@ class World(object):
 
 	def rlight(self, text: str = "") -> str:
 		text = text.strip()
-		if text not in LIGHT_SYMBOLS and text.lower() not in LIGHT_SYMBOLS.values():
+		if not text:
 			return (
 				f"Room light set to '{self.currentRoom.light}'. "
 				+ f"Use 'rlight [{' | '.join(set(LIGHT_SYMBOLS.values()))}]' to change it."
+			)
+		elif text not in LIGHT_SYMBOLS and text.lower() not in LIGHT_SYMBOLS.values():
+			return (
+				f"Invalid value for room light ({text}). "
+				+ f"Valid values are [{' | '.join(set(LIGHT_SYMBOLS.values()))}]."
 			)
 		try:
 			self.currentRoom.light = LIGHT_SYMBOLS[text]
@@ -708,10 +718,15 @@ class World(object):
 
 	def rterrain(self, text: str = "") -> str:
 		text = text.strip()
-		if text not in TERRAIN_SYMBOLS and text.lower() not in TERRAIN_SYMBOLS.values():
+		if not text:
 			return (
 				f"Room terrain set to '{self.currentRoom.terrain}'. "
 				+ f"Use 'rterrain [{' | '.join(sorted(TERRAIN_SYMBOLS.values()))}]' to change it."
+			)
+		elif text not in TERRAIN_SYMBOLS and text.lower() not in TERRAIN_SYMBOLS.values():
+			return (
+				f"Invalid value for room terrain ({text}). "
+				+ f"Valid values are [{' | '.join(sorted(TERRAIN_SYMBOLS.values()))}]."
 			)
 		try:
 			self.currentRoom.terrain = TERRAIN_SYMBOLS[text]

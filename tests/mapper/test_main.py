@@ -22,6 +22,7 @@ from mudproto.telnet_constants import (
 	CR_LF,
 	DO,
 	GA,
+	GMCP,
 	IAC,
 	LF,
 	NAWS,
@@ -29,6 +30,7 @@ from mudproto.telnet_constants import (
 	SE,
 	TTYPE,
 	TTYPE_SEND,
+	WILL,
 )
 
 # Mapper Modules:
@@ -82,6 +84,10 @@ class TestGameThread(TestCase):
 			eventCaller=mapperThread.queue.put,
 		)
 		proxy.connect()
+		with outputToPlayer.mutex:
+			if IAC + WILL + GMCP in outputToPlayer.queue:
+				# Clear IAC WILL GMCP from the queue.
+				outputToPlayer.queue.remove(IAC + WILL + GMCP)
 		mapperThread.proxy = proxy
 		gameThread: Game = Game(mumeSocket, mapperThread)
 		gameThread.daemon = True  # Allow unittest to quit if game thread does not close properly.
@@ -173,6 +179,10 @@ class TestGameThreadThroughput(TestCase):
 			eventCaller=self.mapperThread.queue.put,
 		)
 		proxy.connect()
+		with self.outputToPlayer.mutex:
+			if IAC + WILL + GMCP in self.outputToPlayer.queue:
+				# Clear IAC WILL GMCP from the queue.
+				self.outputToPlayer.queue.remove(IAC + WILL + GMCP)
 		self.mapperThread.proxy = proxy
 		self.gameThread: Game = Game(mumeSocket, self.mapperThread)
 		self.gameThread.daemon = True  # Allow unittest to quit if game thread does not close properly.

@@ -9,18 +9,21 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 from collections.abc import Callable
-from typing import Any, Union
+from typing import Any, Union, cast
 
 # Third-party Modules:
-from mudproto.base import Protocol
 from mudproto.charset import CharsetMixIn
+from mudproto.gmcp import GMCPMixIn
 from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.telnet import TelnetProtocol
-from mudproto.telnet_constants import GA, IAC, LF, NEGOTIATION_BYTES, SB, SE
+from mudproto.telnet_constants import GA, GMCP, IAC, LF, NEGOTIATION_BYTES, SB, SE
 from mudproto.utils import escapeIAC
 from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
+
+# Local Modules:
+from . import __version__
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -62,32 +65,77 @@ class Telnet(TelnetProtocol):
 		writer(IAC + SB + option + escapeIAC(data) + IAC + SE)
 
 
-class Player(Telnet):
+class Player(GMCPMixIn, Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, name="player", **kwargs)
 
+	@property
+	def game(self) -> Game:
+		return cast(Game, self.proxy.game._handlers[0])
+
+	def gmcpSend(self, *args: Any, **kwargs: Any) -> None:
+		if self.isGMCPInitialized:
+			# Only send GMCP messages from game if player's client has enabled GMCP.
+			super().gmcpSend(*args, **kwargs)
+
+	def on_gmcpMessage(self, package: str, value: bytes) -> None:
+		if package == "core.supports.set":
+			# Player's client may append, but not replace packages.
+			package = "Core.Supports.Add"
+		elif package == "core.supports.remove":
+			# Player's client may not remove packages.
+			# Change this in future to allow player's client to only remove packages it previously added.
+			return None
+		if self.game.isGMCPInitialized:
+			self.game.gmcpSend(package, value, isSerialized=True)
+		else:
+			self.game._gmcpBuffer.append((package, value, True))
+
 	def on_enableLocal(self, option: bytes) -> bool:
-		gameSubnegotiationMap: Union[dict[bytes, Callable[[bytes], None]], None]
-		game: Protocol = self.proxy.game._handlers[0]
-		gameSubnegotiationMap = getattr(game, "subnegotiationMap", None)
-		if gameSubnegotiationMap is not None and option in gameSubnegotiationMap:
+		if option != GMCP and option in self.game.subnegotiationMap:
 			return False
 		return super().on_enableLocal(option)
 
 
-class Game(MCCPMixIn, CharsetMixIn, Telnet):
+class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
-		super().__init__(*args, name="game", **kwargs)
+		super().__init__(*args, name="game", gmcpClientInfo=("MPM", __version__), **kwargs)
+		self._gmcpBuffer: list[tuple[str, bytes, bool]] = []
 		self.commandMap[GA] = self.on_ga
+
+	@property
+	def player(self) -> Player:
+		return cast(Player, self.proxy.player._handlers[0])
 
 	def on_ga(self, *args: Union[bytes, None]) -> None:
 		"""Called when a Go Ahead command is received."""
 		self.proxy.player.write(b"", prompt=True)
 
+	def on_gmcpMessage(self, package: str, value: bytes) -> None:
+		if package == "char.vitals":
+			self.proxy.eventCaller(("gmcp_char_vitals", value))
+		self.player.gmcpSend(package, value, isSerialized=True)
+
 	def on_connectionMade(self) -> None:
 		super().on_connectionMade()
 		# Tell the Mume server to put IAC-GA at end of prompts.
 		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
+
+	def on_optionEnabled(self, option: bytes) -> None:
+		super().on_optionEnabled(option)  # pragma: no cover
+		if option == GMCP:
+			# We just sent GMCP Hello to the game.
+			supportedPackages: dict[str, int] = {
+				"Char": 1,
+				"Comm.Channel": 1,
+				"External.Discord": 1,
+				"Room": 1,
+				"Room.Chars": 1,
+			}
+			self.gmcpSetPackages(supportedPackages)
+			while self._gmcpBuffer:
+				package, value, isSerialized = self._gmcpBuffer.pop(0)
+				super().gmcpSend(package, value, isSerialized=isSerialized)
 
 
 class ProxyHandler(object):
