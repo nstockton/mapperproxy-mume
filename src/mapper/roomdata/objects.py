@@ -95,6 +95,7 @@ VALID_MOB_FLAGS: tuple[str, ...] = (
 	"elite_mob",
 	"super_mob",
 	"milkable",
+	"rattlesnake",
 )
 VALID_LOAD_FLAGS: tuple[str, ...] = (
 	"treasure",
