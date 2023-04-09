@@ -22,7 +22,7 @@ from ..utils import getDataPath
 
 
 LABELS_SCHEMA_VERSION: int = 0  # Increment this when the labels schema changes.
-MAP_SCHEMA_VERSION: int = 1  # Increment this when the map schema changes.
+MAP_SCHEMA_VERSION: int = 2  # Increment this when the map schema changes.
 DATA_DIRECTORY: str = getDataPath()
 LABELS_FILE: str = "room_labels.json"
 LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_FILE)

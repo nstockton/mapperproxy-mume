@@ -23,6 +23,32 @@ DATA_DIRECTORY: str = "mapper_data"
 ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: re.Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
+XML_ATTRIBUTE_REGEX: re.Pattern[str] = re.compile(r"([\w-]+)(\s*=+\s*('[^']*'|\"[^\"]*\"|(?!['\"])[^\s]*))?")
+
+
+def getXMLAttributes(text: str) -> dict[str, Union[str, None]]:
+	"""
+	Extracts XML attributes from a tag.
+
+	The supplied string must only contain attributes, not the tag name.
+
+		Note:
+			Adapted from the html.parser module of the Python standard library.
+
+	Args:
+		text: The text to be parsed.
+
+	Returns:
+		The extracted attributes.
+	"""
+	attributes: dict[str, Union[str, None]] = {}
+	for name, rest, value in XML_ATTRIBUTE_REGEX.findall(text):
+		if not rest:
+			value = None
+		elif value[:1] == "'" == value[-1:] or value[:1] == '"' == value[-1:]:
+			value = value[1:-1]
+		attributes[name.lower()] = value
+	return attributes
 
 
 def camelCase(text: str, delimiter: str) -> str:

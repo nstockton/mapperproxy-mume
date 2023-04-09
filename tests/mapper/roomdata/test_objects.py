@@ -48,6 +48,8 @@ class TestRoom(TestCase):
 
 	def testRoomInfo(self) -> None:
 		self.room.vnum = "0"
+		self.room.area = "The Blue Mountains"
+		self.room.serverID = "1234"  # Fake server room ID.
 		self.room.name = "Vig's Shop"
 		self.room.desc = (
 			"This dim tunnel is unfinished and unadorned, the walls still scarred by the "
@@ -74,6 +76,7 @@ class TestRoom(TestCase):
 		expectedOutput: str = (
 			f"vnum: '{self.room.vnum}'\n"
 			+ f"Name: '{self.room.name}'\n"
+			+ f"Server ID: '{self.room.serverID}'\n"
 			+ "Description:\n"
 			+ "-----\n"
 			+ f"{self.room.desc}\n"
@@ -83,6 +86,7 @@ class TestRoom(TestCase):
 			+ f"{self.room.dynamicDesc.rstrip()}\n"
 			+ "-----\n"
 			+ f"Note: '{self.room.note}'\n"
+			+ f"Area: '{self.room.area}'\n"
 			+ f"Terrain: '{self.room.terrain}'\n"
 			+ f"Cost: '{self.room.cost}'\n"
 			+ f"Light: '{self.room.light}'\n"

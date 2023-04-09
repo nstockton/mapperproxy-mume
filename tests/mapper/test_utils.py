@@ -19,6 +19,12 @@ from mapper import utils
 
 
 class TestUtils(TestCase):
+	def test_getXMLAttributes(self) -> None:
+		self.assertEqual(
+			utils.getXMLAttributes('test1=value1 test2="value2" test3 /'),
+			{"test1": "value1", "test2": "value2", "test3": None},
+		)
+
 	def test_camelCase(self) -> None:
 		self.assertEqual(utils.camelCase("", "_"), "")
 		self.assertEqual(utils.camelCase("this_is_a_test", "_"), "thisIsATest")

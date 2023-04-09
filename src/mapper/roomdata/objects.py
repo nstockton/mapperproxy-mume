@@ -187,6 +187,8 @@ class Room(object):
 
 	def __init__(self) -> None:
 		self.vnum: str = "-1"
+		self.serverID: str = "0"  # Server room IDs are in range 1-0x7fffffff.
+		self.area: str = ""
 		self.name: str = ""
 		self.desc: str = ""
 		self.dynamicDesc: str = ""
@@ -231,6 +233,7 @@ class Room(object):
 		output: list[str] = []
 		output.append(f"vnum: '{self.vnum}'")
 		output.append(f"Name: '{self.name}'")
+		output.append(f"Server ID: '{self.serverID}'")
 		output.append("Description:")
 		output.append("-" * 5)
 		output.extend(self.desc.splitlines())
@@ -240,6 +243,7 @@ class Room(object):
 		output.extend(self.dynamicDesc.splitlines())
 		output.append("-" * 5)
 		output.append(f"Note: '{self.note}'")
+		output.append(f"Area: '{self.area}'")
 		output.append(f"Terrain: '{self.terrain}'")
 		output.append(f"Cost: '{self.cost}'")
 		output.append(f"Light: '{self.light}'")

@@ -209,7 +209,7 @@ class World(object):
 			self.rooms[vnum] = newRoom
 			roomDict.clear()
 
-	def loadRoomsV1(self, db: dict[str, dict[str, Any]]) -> None:
+	def loadRoomsV1Through2(self, db: dict[str, dict[str, Any]], schemaVersion: int) -> None:
 		for vnum, roomDict in db.items():
 			newRoom: Room = Room()
 			newRoom.vnum = vnum
@@ -234,6 +234,9 @@ class World(object):
 			newRoom.sundeath = roomDict["sundeath"]
 			newRoom.terrain = roomDict["terrain"]
 			newRoom.x, newRoom.y, newRoom.z = roomDict["coordinates"]
+			if schemaVersion >= 2:
+				newRoom.area = roomDict["area"]
+				newRoom.serverID = roomDict["server_id"]
 			newRoom.calculateCost()
 			self.rooms[vnum] = newRoom
 			roomDict.clear()
@@ -255,7 +258,7 @@ class World(object):
 		if schemaVersion < 1:
 			self.loadRoomsV0(db)
 		else:
-			self.loadRoomsV1(db)
+			self.loadRoomsV1Through2(db, schemaVersion)
 		db.clear()
 		self.currentRoom = self.rooms["0"]
 		if not gc.isenabled():
@@ -272,6 +275,7 @@ class World(object):
 		for vnum, roomObj in self.rooms.items():
 			newRoom: dict[str, Any] = {}
 			newRoom["alignment"] = roomObj.align
+			newRoom["area"] = roomObj.area
 			newRoom["avoid"] = roomObj.avoid
 			newRoom["contents"] = roomObj.dynamicDesc
 			newRoom["coordinates"] = (roomObj.x, roomObj.y, roomObj.z)
@@ -291,6 +295,7 @@ class World(object):
 			newRoom["note"] = roomObj.note
 			newRoom["portable"] = roomObj.portable
 			newRoom["ridable"] = roomObj.ridable
+			newRoom["server_id"] = roomObj.serverID
 			newRoom["sundeath"] = roomObj.sundeath
 			newRoom["terrain"] = roomObj.terrain
 			db[vnum] = newRoom
@@ -462,6 +467,8 @@ class World(object):
 
 	def searchRooms(self, exactMatch: bool = False, **kwargs: str) -> list[Room]:
 		validArgs: tuple[str, ...] = (
+			"area",
+			"serverID",
 			"name",
 			"desc",
 			"dynamicDesc",
@@ -482,6 +489,19 @@ class World(object):
 			"to",
 			"door",
 		)
+		observeExactMatch: tuple[str, ...] = ("area", "name", "desc", "dynamicDesc", "note")
+		alwaysExactMatch: tuple[str, ...] = (
+			"serverID",
+			"terrain",
+			"light",
+			"align",
+			"portable",
+			"ridable",
+			"sundeath",
+			"x",
+			"y",
+			"z",
+		)
 		kwargs = {
 			key: value.strip().lower()
 			for key, value in kwargs.items()
@@ -493,23 +513,22 @@ class World(object):
 		for vnum, roomObj in self.rooms.items():
 			keysMatched = 0
 			for key, value in kwargs.items():
-				if key in ("name", "desc", "dynamicDesc", "note"):
-					roomData = getattr(roomObj, key, "").strip().lower()
+				if key in observeExactMatch:
+					roomData = getattr(roomObj, key).strip().lower()
 					if not exactMatch and value in roomData or roomData == value:
 						keysMatched += 1
-				elif (
-					key in ("terrain", "light", "align", "portable", "ridable", "sundeath", "x", "y", "z")
-					and getattr(roomObj, key, "").strip().lower() == value
-				):
+				elif key in alwaysExactMatch and getattr(roomObj, key).strip().lower() == value:
 					keysMatched += 1
 				elif key in ("mobFlags", "loadFlags") and getattr(roomObj, key, set()).intersection(value):
 					keysMatched += 1
-			for direction, exitObj in roomObj.exits.items():
-				for key, value in kwargs.items():
-					if key in ("exitFlags", "doorFlags") and getattr(exitObj, key, set()).intersection(value):
-						keysMatched += 1
-					elif key in ("to", "door") and getattr(exitObj, key, "").strip().lower() == value:
-						keysMatched += 1
+				else:
+					for direction, exitObj in roomObj.exits.items():
+						if key in ("exitFlags", "doorFlags") and getattr(exitObj, key, set()).intersection(
+							value
+						):
+							keysMatched += 1
+						elif key in ("to", "door") and getattr(exitObj, key, "").strip().lower() == value:
+							keysMatched += 1
 			if len(kwargs) == keysMatched:
 				results.append(roomObj)
 		return results
@@ -609,6 +628,44 @@ class World(object):
 		return "\n".join(
 			findFormat.format(
 				attribute=roomObj.note,
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj),
+			)
+			for roomObj in reversed(results[:20])
+		)
+
+	def farea(self, findFormat: str, text: str = "") -> str:
+		if not text.strip():
+			return "Usage: 'farea [text]'."
+		results: list[Room] = self.searchRooms(area=text)
+		if not results:
+			return "Nothing found."
+		currentRoom = self.currentRoom
+		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
+		return "\n".join(
+			findFormat.format(
+				attribute=roomObj.area,
+				direction=currentRoom.directionTo(roomObj),
+				clockPosition=currentRoom.clockPositionTo(roomObj),
+				distance=currentRoom.manhattanDistance(roomObj),
+				**vars(roomObj),
+			)
+			for roomObj in reversed(results[:20])
+		)
+
+	def fsid(self, findFormat: str, text: str = "") -> str:
+		if not text.strip().isdigit():
+			return "Usage: 'fsid [number]'."
+		results: list[Room] = self.searchRooms(serverID=text)
+		if not results:
+			return "Nothing found."
+		currentRoom = self.currentRoom
+		results.sort(key=lambda roomObj: roomObj.manhattanDistance(currentRoom))
+		return "\n".join(
+			findFormat.format(
+				attribute=roomObj.serverID,
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),

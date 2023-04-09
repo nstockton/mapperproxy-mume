@@ -33,12 +33,11 @@ from .config import Config
 from .delays import OneShot
 from .proxy import ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
-from .utils import decodeBytes, formatDocString, regexFuzzy, simplified, stripAnsi
+from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 
 MAPPER_QUEUE_TYPE: TypeAlias = Union[EVENT_CALLER_TYPE, None]
-ROOM_TAGS_REGEX: re.Pattern[str] = re.compile(r"(?P<attribute>area|terrain)=\"(?P<value>[^\"]+)\"")
 EXIT_TAGS_REGEX: re.Pattern[str] = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ rf"(?P<direction>{'|'.join(DIRECTIONS)})"
@@ -197,7 +196,7 @@ class Mapper(threading.Thread, World):
 		self.description: Union[str, None] = None
 		self.dynamic: Union[str, None] = None
 		self.exits: Union[str, None] = None
-		self.xmlRoomAttributes: dict[str, str] = {}
+		self.xmlRoomAttributes: dict[str, Union[str, None]] = {}
 		self.gmcpCharVitals: dict[str, Any] = {}
 		self.timeEvent: Union[str, None] = None
 		self.timeEventOffset: int = 0
@@ -551,6 +550,12 @@ class Mapper(threading.Thread, World):
 
 	def user_command_fnote(self, *args: str) -> None:
 		self.sendPlayer(self.fnote(self.findFormat, *args))
+
+	def user_command_farea(self, *args: str) -> None:
+		self.sendPlayer(self.farea(self.findFormat, *args))
+
+	def user_command_fsid(self, *args: str) -> None:
+		self.sendPlayer(self.fsid(self.findFormat, *args))
 
 	def user_command_rnote(self, *args: str) -> None:
 		self.sendPlayer(self.rnote(*args))
@@ -1029,9 +1034,8 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer(f"Synchronized with epoch {self.clock.epoch}.", showPrompt=False)
 
 	def mud_event_room(self, text: str) -> None:
-		newValues: dict[str, str] = dict(ROOM_TAGS_REGEX.findall(text))
 		self.xmlRoomAttributes.clear()
-		self.xmlRoomAttributes.update(newValues)
+		self.xmlRoomAttributes.update(getXMLAttributes(text))
 
 	def mud_event_name(self, text: str) -> None:
 		if text not in ("You just see a dense fog around you...", "It is pitch black..."):
@@ -1059,6 +1063,28 @@ class Mapper(threading.Thread, World):
 			return True
 		self.isSynced = False
 		return False
+
+	def updateRooms(self) -> None:
+		if self.roomName and self.currentRoom.name != self.roomName:
+			self.currentRoom.name = self.roomName
+			self.sendPlayer("Updating room name.")
+		if self.description and self.currentRoom.desc != self.description:
+			self.currentRoom.desc = self.description
+			self.sendPlayer("Updating room description.")
+		if self.dynamic and self.currentRoom.dynamicDesc != self.dynamic:
+			self.currentRoom.dynamicDesc = self.dynamic
+			self.sendPlayer("Updating room dynamic description.")
+		terrain: Union[str, None] = self.xmlRoomAttributes.get("terrain")
+		if terrain is not None and self.currentRoom.terrain != terrain:
+			self.sendPlayer(self.rterrain(terrain))
+		area: Union[str, None] = self.xmlRoomAttributes.get("area")
+		if area is not None and self.currentRoom.area != area:
+			self.currentRoom.area = area
+			self.sendPlayer(f"Setting room area to '{area}'.")
+		serverID: Union[str, None] = self.xmlRoomAttributes.get("id")
+		if serverID is not None and serverID.isdigit() and self.currentRoom.serverID != serverID:
+			self.currentRoom.serverID = serverID
+			self.sendPlayer(f"Setting room server ID to '{serverID}'.")
 
 	def mud_event_dynamic(self, text: str) -> None:
 		self.dynamic = text
@@ -1092,18 +1118,7 @@ class Mapper(threading.Thread, World):
 			self.moved = self.movement
 			self.movement = None
 			if self.autoMapping and self.autoUpdateRooms:
-				if self.roomName and self.currentRoom.name != self.roomName:
-					self.currentRoom.name = self.roomName
-					self.sendPlayer("Updating room name.")
-				if self.description and self.currentRoom.desc != self.description:
-					self.currentRoom.desc = self.description
-					self.sendPlayer("Updating room description.")
-				if self.dynamic and self.currentRoom.dynamicDesc != self.dynamic:
-					self.currentRoom.dynamicDesc = self.dynamic
-					self.sendPlayer("Updating room dynamic description.")
-				terrain: Union[str, None] = self.xmlRoomAttributes.get("terrain")
-				if terrain is not None and self.currentRoom.terrain != terrain:
-					self.sendPlayer(self.rterrain(terrain))
+				self.updateRooms()
 		if self.autoMapping and self.isSynced and self.moved and self.exits:
 			if addedNewRoomFrom and REVERSE_DIRECTIONS[self.moved] in self.exits:
 				self.currentRoom.exits[REVERSE_DIRECTIONS[self.moved]] = self.getNewExit(
