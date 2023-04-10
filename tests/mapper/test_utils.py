@@ -183,9 +183,13 @@ class TestUtils(TestCase):
 	def test_decodeBytes(self) -> None:
 		with self.assertRaises(TypeError):
 			utils.decodeBytes(None)  # type: ignore[arg-type]
-		characters: str = "".join(chr(i) for i in range(256))
-		self.assertEqual(utils.decodeBytes(characters.encode("utf-8")), characters)
-		self.assertEqual(utils.decodeBytes(characters.encode("latin-1")), characters)
+		asciiChars: str = "".join(chr(i) for i in range(128))
+		latinChars: str = "".join(chr(i) for i in range(128, 256))
+		latinReplacements: str = "".join(
+			utils.LATIN_CHARACTER_REPLACEMENTS.get(char, "?") for char in latinChars
+		)
+		self.assertEqual(utils.decodeBytes(bytes(asciiChars, "latin-1")), asciiChars)
+		self.assertEqual(utils.decodeBytes(bytes(latinChars, "latin-1")), latinReplacements)
 
 	@patch("mapper.utils.pager")
 	@patch("mapper.utils.shutil")

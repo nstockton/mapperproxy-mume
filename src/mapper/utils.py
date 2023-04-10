@@ -8,6 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import _imp
+import codecs
 import math
 import os
 import re
@@ -24,6 +25,116 @@ ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: re.Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
 XML_ATTRIBUTE_REGEX: re.Pattern[str] = re.compile(r"([\w-]+)(\s*=+\s*('[^']*'|\"[^\"]*\"|(?!['\"])[^\s]*))?")
+# Latin-1 replacement values taken from MUME's help page.
+LATIN_CHARACTER_REPLACEMENTS: dict[Union[str, int], str] = {
+	"\u00a0": "",
+	"\u00a1": "!",
+	"\u00a2": "c",
+	"\u00a3": "L",
+	"\u00a4": "$",
+	"\u00a5": "Y",
+	"\u00a6": "|",
+	"\u00a7": "P",
+	"\u00a8": '"',
+	"\u00a9": "C",
+	"\u00aa": "a",
+	"\u00ab": "<",
+	"\u00ac": ",",
+	"\u00ad": "-",
+	"\u00ae": "R",
+	"\u00af": "-",
+	"\u00b0": "d",
+	"\u00b1": "+",
+	"\u00b2": "2",
+	"\u00b3": "3",
+	"\u00b4": "'",
+	"\u00b5": "u",
+	"\u00b6": "P",
+	"\u00b7": "*",
+	"\u00b8": ",",
+	"\u00b9": "1",
+	"\u00ba": "o",
+	"\u00bb": ">",
+	"\u00bc": "4",
+	"\u00bd": "2",
+	"\u00be": "3",
+	"\u00bf": "?",
+	"\u00c0": "A",
+	"\u00c1": "A",
+	"\u00c2": "A",
+	"\u00c3": "A",
+	"\u00c4": "A",
+	"\u00c5": "A",
+	"\u00c6": "A",
+	"\u00c7": "C",
+	"\u00c8": "E",
+	"\u00c9": "E",
+	"\u00ca": "E",
+	"\u00cb": "E",
+	"\u00cc": "I",
+	"\u00cd": "I",
+	"\u00ce": "I",
+	"\u00cf": "I",
+	"\u00d0": "D",
+	"\u00d1": "N",
+	"\u00d2": "O",
+	"\u00d3": "O",
+	"\u00d4": "O",
+	"\u00d5": "O",
+	"\u00d6": "O",
+	"\u00d7": "*",
+	"\u00d8": "O",
+	"\u00d9": "U",
+	"\u00da": "U",
+	"\u00db": "U",
+	"\u00dc": "U",
+	"\u00dd": "Y",
+	"\u00de": "T",
+	"\u00df": "s",
+	"\u00e0": "a",
+	"\u00e1": "a",
+	"\u00e2": "a",
+	"\u00e3": "a",
+	"\u00e4": "a",
+	"\u00e5": "a",
+	"\u00e6": "a",
+	"\u00e7": "c",
+	"\u00e8": "e",
+	"\u00e9": "e",
+	"\u00ea": "e",
+	"\u00eb": "e",
+	"\u00ec": "i",
+	"\u00ed": "i",
+	"\u00ee": "i",
+	"\u00ef": "i",
+	"\u00f0": "d",
+	"\u00f1": "n",
+	"\u00f2": "o",
+	"\u00f3": "o",
+	"\u00f4": "o",
+	"\u00f5": "o",
+	"\u00f6": "o",
+	"\u00f7": "/",
+	"\u00f8": "o",
+	"\u00f9": "u",
+	"\u00fa": "u",
+	"\u00fb": "u",
+	"\u00fc": "u",
+	"\u00fd": "y",
+	"\u00fe": "t",
+	"\u00ff": "y",
+}
+# Add the ordinal translations.
+LATIN_CHARACTER_REPLACEMENTS.update(
+	{ord(k): v for k, v in list(LATIN_CHARACTER_REPLACEMENTS.items()) if not isinstance(k, int)}
+)
+
+
+def latin2ascii(error: Any) -> tuple[str, int]:
+	return LATIN_CHARACTER_REPLACEMENTS.get(error.object[error.start], "?"), error.start + 1
+
+
+codecs.register_error("latin2ascii", latin2ascii)
 
 
 def getXMLAttributes(text: str) -> dict[str, Union[str, None]]:
@@ -343,7 +454,9 @@ def getDataPath(*args: str) -> str:
 
 def decodeBytes(data: bytes) -> str:
 	"""
-	Decodes UTF-8 or Latin-1 bytes into a string.
+	Decodes bytes into a string.
+
+	If data contains Latin-1 characters, they will be replaced with ASCII equivalents.
 
 	Args:
 		data: The data to be decoded.
@@ -353,10 +466,7 @@ def decodeBytes(data: bytes) -> str:
 	"""
 	if not isinstance(data, ByteString):
 		raise TypeError("Data must be a bytes-like object.")
-	try:
-		return data.decode("utf-8")
-	except UnicodeDecodeError:
-		return data.decode("latin-1")
+	return str(data, "ascii", "latin2ascii")
 
 
 def page(lines: Sequence[str]) -> None:
