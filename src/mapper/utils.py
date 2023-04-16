@@ -27,7 +27,7 @@ INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flag
 XML_ATTRIBUTE_REGEX: re.Pattern[str] = re.compile(r"([\w-]+)(\s*=+\s*('[^']*'|\"[^\"]*\"|(?!['\"])[^\s]*))?")
 # Latin-1 replacement values taken from MUME's help page.
 LATIN_CHARACTER_REPLACEMENTS: dict[Union[str, int], str] = {
-	"\u00a0": "",
+	"\u00a0": " ",
 	"\u00a1": "!",
 	"\u00a2": "c",
 	"\u00a3": "L",
