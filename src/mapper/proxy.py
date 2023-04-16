@@ -127,10 +127,7 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, Telnet):
 			# We just sent GMCP Hello to the game.
 			supportedPackages: dict[str, int] = {
 				"Char": 1,
-				"Comm.Channel": 1,
-				"External.Discord": 1,
-				"Room": 1,
-				"Room.Chars": 1,
+				"Event": 1,
 			}
 			self.gmcpSetPackages(supportedPackages)
 			while self._gmcpBuffer:
