@@ -15,6 +15,7 @@ import textwrap
 import threading
 import traceback
 from collections.abc import Callable
+from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer
 from typing import Any, Optional, Union
@@ -268,30 +269,32 @@ class Mapper(threading.Thread, World):
 		self.sendPlayer(*args, **kwargs)
 
 	def sendPlayer(self, msg: str, showPrompt: bool = True) -> None:
-		if self.outputFormat == "raw":
-			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{escapeXMLString(msg)}\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
-				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
+		with suppress(ConnectionError):
+			if self.outputFormat == "raw":
+				if showPrompt and self.prompt and not self.gagPrompts:
+					msg = f"{escapeXMLString(msg)}\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
+					self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
+				else:
+					msg = f"\n{escapeXMLString(msg)}\n"
+					self.proxy.player.write(msg.encode("utf-8"), escape=True)
+			elif self.outputFormat == "tintin":
+				if showPrompt and self.prompt and not self.gagPrompts:
+					msg = f"{msg}\nPROMPT:{self.prompt}:PROMPT"
+					self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
+				else:
+					msg = f"\n{msg}\n"
+					self.proxy.player.write(msg.encode("utf-8"), escape=True)
 			else:
-				msg = f"\n{escapeXMLString(msg)}\n"
-				self.proxy.player.write(msg.encode("utf-8"), escape=True)
-		elif self.outputFormat == "tintin":
-			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{msg}\nPROMPT:{self.prompt}:PROMPT"
-				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
-			else:
-				msg = f"\n{msg}\n"
-				self.proxy.player.write(msg.encode("utf-8"), escape=True)
-		else:
-			if showPrompt and self.prompt and not self.gagPrompts:
-				msg = f"{msg}\n{self.prompt}"
-				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
-			else:
-				msg = f"\n{msg}\n"
-				self.proxy.player.write(msg.encode("utf-8"), escape=True)
+				if showPrompt and self.prompt and not self.gagPrompts:
+					msg = f"{msg}\n{self.prompt}"
+					self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
+				else:
+					msg = f"\n{msg}\n"
+					self.proxy.player.write(msg.encode("utf-8"), escape=True)
 
 	def sendGame(self, msg: str) -> None:
-		self.proxy.game.write(msg.encode("utf-8") + b"\n", escape=True)
+		with suppress(ConnectionError):
+			self.proxy.game.write(msg.encode("utf-8") + b"\n", escape=True)
 
 	def emulation_command_quit(self, *args: str) -> tuple[str, ...]:
 		"""Exits the program."""
