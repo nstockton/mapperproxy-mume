@@ -16,6 +16,7 @@ import shutil
 import sys
 import textwrap
 from collections.abc import ByteString, Callable, Sequence
+from contextlib import suppress
 from pydoc import pager
 from typing import Any, Optional, Union
 
@@ -25,113 +26,118 @@ ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
 WHITE_SPACE_REGEX: re.Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
 INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
 XML_ATTRIBUTE_REGEX: re.Pattern[str] = re.compile(r"([\w-]+)(\s*=+\s*('[^']*'|\"[^\"]*\"|(?!['\"])[^\s]*))?")
-# Latin-1 replacement values taken from MUME's help page.
-LATIN_CHARACTER_REPLACEMENTS: dict[Union[str, int], str] = {
-	"\u00a0": " ",
-	"\u00a1": "!",
-	"\u00a2": "c",
-	"\u00a3": "L",
-	"\u00a4": "$",
-	"\u00a5": "Y",
-	"\u00a6": "|",
-	"\u00a7": "P",
-	"\u00a8": '"',
-	"\u00a9": "C",
-	"\u00aa": "a",
-	"\u00ab": "<",
-	"\u00ac": ",",
-	"\u00ad": "-",
-	"\u00ae": "R",
-	"\u00af": "-",
-	"\u00b0": "d",
-	"\u00b1": "+",
-	"\u00b2": "2",
-	"\u00b3": "3",
-	"\u00b4": "'",
-	"\u00b5": "u",
-	"\u00b6": "P",
-	"\u00b7": "*",
-	"\u00b8": ",",
-	"\u00b9": "1",
-	"\u00ba": "o",
-	"\u00bb": ">",
-	"\u00bc": "4",
-	"\u00bd": "2",
-	"\u00be": "3",
-	"\u00bf": "?",
-	"\u00c0": "A",
-	"\u00c1": "A",
-	"\u00c2": "A",
-	"\u00c3": "A",
-	"\u00c4": "A",
-	"\u00c5": "A",
-	"\u00c6": "A",
-	"\u00c7": "C",
-	"\u00c8": "E",
-	"\u00c9": "E",
-	"\u00ca": "E",
-	"\u00cb": "E",
-	"\u00cc": "I",
-	"\u00cd": "I",
-	"\u00ce": "I",
-	"\u00cf": "I",
-	"\u00d0": "D",
-	"\u00d1": "N",
-	"\u00d2": "O",
-	"\u00d3": "O",
-	"\u00d4": "O",
-	"\u00d5": "O",
-	"\u00d6": "O",
-	"\u00d7": "*",
-	"\u00d8": "O",
-	"\u00d9": "U",
-	"\u00da": "U",
-	"\u00db": "U",
-	"\u00dc": "U",
-	"\u00dd": "Y",
-	"\u00de": "T",
-	"\u00df": "s",
-	"\u00e0": "a",
-	"\u00e1": "a",
-	"\u00e2": "a",
-	"\u00e3": "a",
-	"\u00e4": "a",
-	"\u00e5": "a",
-	"\u00e6": "a",
-	"\u00e7": "c",
-	"\u00e8": "e",
-	"\u00e9": "e",
-	"\u00ea": "e",
-	"\u00eb": "e",
-	"\u00ec": "i",
-	"\u00ed": "i",
-	"\u00ee": "i",
-	"\u00ef": "i",
-	"\u00f0": "d",
-	"\u00f1": "n",
-	"\u00f2": "o",
-	"\u00f3": "o",
-	"\u00f4": "o",
-	"\u00f5": "o",
-	"\u00f6": "o",
-	"\u00f7": "/",
-	"\u00f8": "o",
-	"\u00f9": "u",
-	"\u00fa": "u",
-	"\u00fb": "u",
-	"\u00fc": "u",
-	"\u00fd": "y",
-	"\u00fe": "t",
-	"\u00ff": "y",
+# Latin-1 replacement values taken from the MUME help page.
+# https://mume.org/help/latin1
+LATIN_ENCODING_REPLACEMENTS: dict[str, bytes] = {
+	"\u00a0": b" ",
+	"\u00a1": b"!",
+	"\u00a2": b"c",
+	"\u00a3": b"L",
+	"\u00a4": b"$",
+	"\u00a5": b"Y",
+	"\u00a6": b"|",
+	"\u00a7": b"P",
+	"\u00a8": b'"',
+	"\u00a9": b"C",
+	"\u00aa": b"a",
+	"\u00ab": b"<",
+	"\u00ac": b",",
+	"\u00ad": b"-",
+	"\u00ae": b"R",
+	"\u00af": b"-",
+	"\u00b0": b"d",
+	"\u00b1": b"+",
+	"\u00b2": b"2",
+	"\u00b3": b"3",
+	"\u00b4": b"'",
+	"\u00b5": b"u",
+	"\u00b6": b"P",
+	"\u00b7": b"*",
+	"\u00b8": b",",
+	"\u00b9": b"1",
+	"\u00ba": b"o",
+	"\u00bb": b">",
+	"\u00bc": b"4",
+	"\u00bd": b"2",
+	"\u00be": b"3",
+	"\u00bf": b"?",
+	"\u00c0": b"A",
+	"\u00c1": b"A",
+	"\u00c2": b"A",
+	"\u00c3": b"A",
+	"\u00c4": b"A",
+	"\u00c5": b"A",
+	"\u00c6": b"A",
+	"\u00c7": b"C",
+	"\u00c8": b"E",
+	"\u00c9": b"E",
+	"\u00ca": b"E",
+	"\u00cb": b"E",
+	"\u00cc": b"I",
+	"\u00cd": b"I",
+	"\u00ce": b"I",
+	"\u00cf": b"I",
+	"\u00d0": b"D",
+	"\u00d1": b"N",
+	"\u00d2": b"O",
+	"\u00d3": b"O",
+	"\u00d4": b"O",
+	"\u00d5": b"O",
+	"\u00d6": b"O",
+	"\u00d7": b"*",
+	"\u00d8": b"O",
+	"\u00d9": b"U",
+	"\u00da": b"U",
+	"\u00db": b"U",
+	"\u00dc": b"U",
+	"\u00dd": b"Y",
+	"\u00de": b"T",
+	"\u00df": b"s",
+	"\u00e0": b"a",
+	"\u00e1": b"a",
+	"\u00e2": b"a",
+	"\u00e3": b"a",
+	"\u00e4": b"a",
+	"\u00e5": b"a",
+	"\u00e6": b"a",
+	"\u00e7": b"c",
+	"\u00e8": b"e",
+	"\u00e9": b"e",
+	"\u00ea": b"e",
+	"\u00eb": b"e",
+	"\u00ec": b"i",
+	"\u00ed": b"i",
+	"\u00ee": b"i",
+	"\u00ef": b"i",
+	"\u00f0": b"d",
+	"\u00f1": b"n",
+	"\u00f2": b"o",
+	"\u00f3": b"o",
+	"\u00f4": b"o",
+	"\u00f5": b"o",
+	"\u00f6": b"o",
+	"\u00f7": b"/",
+	"\u00f8": b"o",
+	"\u00f9": b"u",
+	"\u00fa": b"u",
+	"\u00fb": b"u",
+	"\u00fc": b"u",
+	"\u00fd": b"y",
+	"\u00fe": b"t",
+	"\u00ff": b"y",
 }
-# Add the ordinal translations.
-LATIN_CHARACTER_REPLACEMENTS.update(
-	{ord(k): v for k, v in list(LATIN_CHARACTER_REPLACEMENTS.items()) if not isinstance(k, int)}
-)
+LATIN_DECODING_REPLACEMENTS: dict[int, str] = {
+	ord(k): str(v, "us-ascii") for k, v in LATIN_ENCODING_REPLACEMENTS.items()
+}
 
 
-def latin2ascii(error: Any) -> tuple[str, int]:
-	return LATIN_CHARACTER_REPLACEMENTS.get(error.object[error.start], "?"), error.start + 1
+def latin2ascii(error: Any) -> tuple[Union[bytes, str], int]:
+	if isinstance(error, UnicodeEncodeError):
+		# Return value can be bytes or a string.
+		return LATIN_ENCODING_REPLACEMENTS.get(error.object[error.start], b"?"), error.start + 1
+	else:  # UnicodeDecodeError.
+		# Return value must be a string.
+		return LATIN_DECODING_REPLACEMENTS.get(error.object[error.start], "?"), error.start + 1
 
 
 codecs.register_error("latin2ascii", latin2ascii)
@@ -466,7 +472,14 @@ def decodeBytes(data: bytes) -> str:
 	"""
 	if not isinstance(data, ByteString):
 		raise TypeError("Data must be a bytes-like object.")
-	return str(data, "ascii", "latin2ascii")
+	with suppress(UnicodeDecodeError):
+		return str(data, "us-ascii")
+	try:
+		# If UTF-8, re-encode the data before decoding because of multi-byte code points.
+		return data.decode("utf-8").encode("us-ascii", "latin2ascii").decode("us-ascii")
+	except UnicodeDecodeError:
+		# Assume data is Latin-1.
+		return str(data, "us-ascii", "latin2ascii")
 
 
 def page(lines: Sequence[str]) -> None:
