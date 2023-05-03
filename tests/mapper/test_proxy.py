@@ -27,7 +27,7 @@ class TestTelnet(TestCase):
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
 		self.telnet: Telnet = Telnet(
-			self.playerReceives.extend, self.gameReceives.extend, name="game", proxy=self.proxy
+			self.playerReceives.extend, self.gameReceives.extend, name="game", proxy=self.proxy, isClient=True
 		)
 
 	def tearDown(self) -> None:
@@ -38,7 +38,7 @@ class TestTelnet(TestCase):
 
 	def testTelnet__init__(self) -> None:
 		with self.assertRaises(ValueError):
-			Telnet(Mock(), Mock(), name="**junk**", proxy=Mock())
+			Telnet(Mock(), Mock(), name="**junk**", proxy=Mock(), isClient=True)
 
 	@patch("mapper.proxy.Telnet.on_unhandledCommand")
 	@patch("mapper.proxy.TelnetProtocol.on_command")
@@ -79,7 +79,9 @@ class TestPlayer(TestCase):
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
-		self.player: Player = Player(self.playerReceives.extend, self.gameReceives.extend, proxy=self.proxy)
+		self.player: Player = Player(
+			self.playerReceives.extend, self.gameReceives.extend, proxy=self.proxy, isClient=False
+		)
 
 	def tearDown(self) -> None:
 		del self.player
@@ -103,7 +105,9 @@ class TestGame(TestCase):
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
-		self.game: Game = Game(self.gameReceives.extend, self.playerReceives.extend, proxy=self.proxy)
+		self.game: Game = Game(
+			self.gameReceives.extend, self.playerReceives.extend, proxy=self.proxy, isClient=True
+		)
 
 	def tearDown(self) -> None:
 		logging.disable(logging.NOTSET)

@@ -437,8 +437,8 @@ typing-extensions = "^4.1"
 [package.source]
 type = "git"
 url = "https://github.com/nstockton/mud-protocols.git"
-reference = "v0.3.0"
-resolved_reference = "2ab6aec4f28ebd5650c01e0c625ab3e4c0bda525"
+reference = "v0.4.0"
+resolved_reference = "c5d5bc87ab5818a76c7e7a5f572eedcd4d4a8d61"
 
 [[package]]
 name = "mypy"
@@ -2809,7 +2809,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 	python-versions = "^3.7"
-content-hash = "1a0b67890bb98b20fa73de8ddd1e1adf1dfaff6e38660f6b30c27045fd8a4a5f"
+content-hash = "760c18708e6ac5fdccc89132e26f918cd0b6e38ea0ceda7d7980103e093bb7ea"
 
 [metadata.files]
 altgraph = [

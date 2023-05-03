@@ -17,8 +17,9 @@ from mudproto.gmcp import GMCPMixIn
 from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
+from mudproto.naws import NAWSMixIn
 from mudproto.telnet import TelnetProtocol
-from mudproto.telnet_constants import GA, GMCP, IAC, LF, NEGOTIATION_BYTES, SB, SE
+from mudproto.telnet_constants import GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
 from mudproto.utils import escapeIAC
 from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
 
@@ -97,7 +98,7 @@ class Player(GMCPMixIn, Telnet):
 		return super().on_enableLocal(option)
 
 
-class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, Telnet):
+class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, name="game", gmcpClientInfo=("MPM", __version__), **kwargs)
 		self._gmcpBuffer: list[tuple[str, bytes, bool]] = []
@@ -123,6 +124,9 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, Telnet):
 
 	def on_optionEnabled(self, option: bytes) -> None:
 		super().on_optionEnabled(option)  # pragma: no cover
+		if option == NAWS:
+			# NAWS was enabled.
+			self.nawsDimensions = (80, 0xFFFF)  # 80 character width, max line hight.
 		if option == GMCP:
 			# We just sent GMCP Hello to the game.
 			supportedPackages: dict[str, int] = {
@@ -152,10 +156,12 @@ class ProxyHandler(object):
 		self.mapperCommands: list[bytes] = mapperCommands
 		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
 		self.player: Manager = Manager(
-			playerWriter, self.on_playerReceived, promptTerminator=promptTerminator
+			playerWriter, self.on_playerReceived, isClient=False, promptTerminator=promptTerminator
 		)
 		self.player.register(Player, proxy=self)
-		self.game: Manager = Manager(gameWriter, self.on_gameReceived, promptTerminator=promptTerminator)
+		self.game: Manager = Manager(
+			gameWriter, self.on_gameReceived, isClient=True, promptTerminator=promptTerminator
+		)
 		self.game.register(Game, proxy=self)
 		self.game.register(MPIProtocol, outputFormat=self.outputFormat)
 		self.game.register(

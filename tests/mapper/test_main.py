@@ -25,7 +25,6 @@ from mudproto.telnet_constants import (
 	GMCP,
 	IAC,
 	LF,
-	NAWS,
 	SB,
 	SE,
 	TTYPE,
@@ -39,10 +38,7 @@ from mapper.proxy import ProxyHandler
 
 
 # The initial output of MUME. Used by the server thread to detect connection success.
-INITIAL_OUTPUT: tuple[bytes, ...] = (
-	IAC + DO + TTYPE,
-	IAC + DO + NAWS,
-)
+INITIAL_OUTPUT: tuple[bytes, ...] = (IAC + DO + TTYPE,)
 WELCOME_MESSAGE: bytes = CR_LF + b"                              ***  MUME VIII  ***" + CR_LF + CR_LF
 
 
