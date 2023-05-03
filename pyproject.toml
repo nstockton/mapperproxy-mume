@@ -57,7 +57,7 @@
 	fuzzywuzzy = {version = "0.18", extras = ["speedup"]}
 	jsonschema = "^4.4"
 	mud-protocols = {git = "https://github.com/nstockton/mud-protocols.git", tag = "v0.4.0"}
-	pyglet = "^1.5"
+	pyglet = "1.5.26"
 	python-rapidjson = "^1.5"
 	speechlight = "^1.7"
 	typed-argument-parser = "^1.7"

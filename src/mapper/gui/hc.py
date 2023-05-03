@@ -162,7 +162,7 @@ class Window(pyglet.window.Window):
 		super(Window, self).__init__(
 			caption="MPM",
 			resizable=True,
-			style=pyglet.window.Window.WINDOW_STYLE_OVERLAY,
+			style=pyglet.window.Window.WINDOW_STYLE_DEFAULT,
 			fullscreen=self._cfg["fullscreen"],
 			vsync=False,
 		)
