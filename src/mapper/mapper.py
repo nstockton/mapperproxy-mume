@@ -32,7 +32,7 @@ from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .config import Config
 from .delays import OneShot
-from .proxy import ProxyHandler
+from .proxy import Player, ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
 from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
@@ -264,12 +264,24 @@ class Mapper(threading.Thread, World):
 				return handler
 		raise LookupError("MPI Handler not found")
 
+	@property
+	def playerTelnetHandler(self) -> Player:
+		for handler in self.proxy.player._handlers:
+			if isinstance(handler, Player):
+				return handler
+		raise LookupError("Player Telnet Handler not found")
+
 	def output(self, *args: Any, **kwargs: Any) -> None:
 		# Override World.output.
 		self.sendPlayer(*args, **kwargs)
 
 	def sendPlayer(self, msg: str, showPrompt: bool = True) -> None:
 		with suppress(ConnectionError):
+			with suppress(LookupError):
+				gmcpMessageOutput: bool = self.playerTelnetHandler.mpmMessageSend({"text": msg})
+				if gmcpMessageOutput:
+					# Player is receiving messages through GMCP.
+					return None
 			if self.outputFormat == "raw":
 				if showPrompt and self.prompt and not self.gagPrompts:
 					msg = f"{escapeXMLString(msg)}\n<prompt>{escapeXMLString(self.prompt)}</prompt>"

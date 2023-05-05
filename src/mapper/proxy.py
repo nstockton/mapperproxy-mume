@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+import json
 import logging
 from collections.abc import Callable
 from typing import Any, Union, cast
@@ -69,6 +70,7 @@ class Telnet(TelnetProtocol):
 class Player(GMCPMixIn, Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, name="player", **kwargs)
+		self._mpmGMCP: bool = False
 
 	@property
 	def game(self) -> Game:
@@ -79,14 +81,36 @@ class Player(GMCPMixIn, Telnet):
 			# Only send GMCP messages from game if player's client has enabled GMCP.
 			super().gmcpSend(*args, **kwargs)
 
+	def mpmMessageSend(self, value: Any) -> bool:
+		if self._mpmGMCP:
+			self.gmcpSend("mpm.message", value, isSerialized=False)
+			return True
+		return False
+
+	def mpmEventSend(self, value: Any) -> bool:
+		if self._mpmGMCP:
+			self.gmcpSend("mpm.event", value, isSerialized=False)
+			return True
+		return False
+
 	def on_gmcpMessage(self, package: str, value: bytes) -> None:
 		if package == "core.supports.set":
 			# Player's client may append, but not replace packages.
-			package = "Core.Supports.Add"
+			package = "core.supports.add"
 		elif package == "core.supports.remove":
 			# Player's client may not remove packages.
 			# Change this in future to allow player's client to only remove packages it previously added.
 			return None
+		if package == "core.supports.add":
+			addedPackages = json.loads(value)
+			for item in list(addedPackages):
+				p = item.split(None, 1)[0].lower()
+				if p == "mpm":
+					self._mpmGMCP = True
+					addedPackages.remove(item)
+			value = bytes(
+				json.dumps(addedPackages, ensure_ascii=False, indent=None, separators=(", ", ": ")), "utf-8"
+			)
 		if self.game.isGMCPInitialized:
 			self.game.gmcpSend(package, value, isSerialized=True)
 		else:
