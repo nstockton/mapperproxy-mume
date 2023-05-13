@@ -17,8 +17,6 @@ class BaseDelay(threading.Thread):
 	Implements the base delay class.
 	"""
 
-	_delays: list[threading.Thread] = []
-
 	def __init__(
 		self,
 		duration: float,
@@ -54,7 +52,6 @@ class BaseDelay(threading.Thread):
 
 	def run(self) -> None:
 		try:
-			self._delays.append(self)
 			while not self._finished.is_set() and self._count != 0:
 				self._finished.wait(self._duration)
 				if not self._finished.is_set():
@@ -63,7 +60,6 @@ class BaseDelay(threading.Thread):
 					self._count -= 1
 		finally:
 			del self._function, self._args, self._kwargs
-			self._delays.remove(self)
 			if not self._finished.is_set():
 				self.stop()
 

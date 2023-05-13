@@ -26,11 +26,11 @@ class TestDelays(TestCase):
 		mockWait: mock.Mock
 		with mock.patch.object(delay._finished, "wait") as mockWait:
 			delay.start()
-		delay.join(timeout=1.0)
-		self.assertFalse(delay.is_alive(), "BaseDelay thread failed to terminate.")
-		mockWait.assert_called_with(60)
-		self.assertEqual(mockWait.call_count, 10)
-		self.assertTrue(delay._finished.is_set())
+			delay.join(timeout=1.0)
+			self.assertFalse(delay.is_alive(), "BaseDelay thread failed to terminate.")
+			mockWait.assert_called_with(60)
+			self.assertEqual(mockWait.call_count, 10)
+			self.assertTrue(delay._finished.is_set())
 
 	@mock.patch("mapper.delays.Delay.start")
 	def testDelay(self, mockStart: mock.Mock) -> None:
