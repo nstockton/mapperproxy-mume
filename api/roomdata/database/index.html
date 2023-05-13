@@ -350,6 +350,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mapper.roomdata.database.getSchemaPath" class="md-nav__link">
+    getSchemaPath()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.roomdata.database.loadLabels" class="md-nav__link">
     loadLabels()
   </a>
@@ -649,6 +656,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mapper.roomdata.database.getSchemaPath" class="md-nav__link">
+    getSchemaPath()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.roomdata.database.loadLabels" class="md-nav__link">
     loadLabels()
   </a>
@@ -715,8 +729,6 @@
 
 
 
-
-
   <div class="doc doc-object doc-class">
 
 
@@ -735,7 +747,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\database.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">SchemaValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;Raised if there was an error validating an object&#39;s schema.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Raised if there was an error validating an object&#39;s schema.&quot;&quot;&quot;</span>
 </code></pre></div>
         </details>
 
@@ -783,13 +795,15 @@
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\database.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">dumpLabels</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Saves the labels database to disk.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		labels: The labels database to be saved.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">_dump</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">LABELS_SCHEMA_FILE_PATH</span><span class="p">)</span>
+	<span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>  <span class="c1"># Shallow copy.</span>
+	<span class="n">output</span><span class="p">[</span><span class="s2">&quot;schema_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LABELS_SCHEMA_VERSION</span>
+	<span class="n">_dump</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">getSchemaPath</span><span class="p">(</span><span class="n">LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">LABELS_SCHEMA_VERSION</span><span class="p">))</span>
 </code></pre></div>
         </details>
     </div>
@@ -834,13 +848,93 @@
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\database.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">dumpRooms</span><span class="p">(</span><span class="n">rooms</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Saves the rooms database to disk.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		rooms: The rooms database to be saved.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">_dump</span><span class="p">(</span><span class="n">rooms</span><span class="p">,</span> <span class="n">MAP_FILE_PATH</span><span class="p">,</span> <span class="n">MAP_SCHEMA_FILE_PATH</span><span class="p">)</span>
+	<span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span>  <span class="c1"># Shallow copy.</span>
+	<span class="n">output</span><span class="p">[</span><span class="s2">&quot;schema_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MAP_SCHEMA_VERSION</span>
+	<span class="n">_dump</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">MAP_FILE_PATH</span><span class="p">,</span> <span class="n">getSchemaPath</span><span class="p">(</span><span class="n">MAP_FILE_PATH</span><span class="p">,</span> <span class="n">MAP_SCHEMA_VERSION</span><span class="p">))</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.roomdata.database.getSchemaPath" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">getSchemaPath</span><span class="p">(</span><span class="n">databasePath</span><span class="p">,</span> <span class="n">schemaVersion</span><span class="p">)</span></code>
+
+
+<a href="#mapper.roomdata.database.getSchemaPath" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Determines the schema file path from a schema version.</p>
+
+<p><strong>Parameters:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>databasePath</code></td>
+        <td><code>str</code></td>
+        <td><p>The path of the database file.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>schemaVersion</code></td>
+        <td><code>int</code></td>
+        <td><p>The schema version.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The schema file path.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\roomdata\database.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getSchemaPath</span><span class="p">(</span><span class="n">databasePath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">schemaVersion</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Determines the schema file path from a schema version.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		databasePath: The path of the database file.</span>
+<span class="sd">		schemaVersion: The schema version.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The schema file path.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">databasePath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.sample&quot;</span><span class="p">):</span>
+		<span class="n">databasePath</span> <span class="o">=</span> <span class="n">databasePath</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;.sample&quot;</span><span class="p">)]</span>
+	<span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_v</span><span class="si">{ver}{}</span><span class="s2">.schema&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">databasePath</span><span class="p">),</span> <span class="n">ver</span><span class="o">=</span><span class="n">schemaVersion</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -874,35 +968,35 @@
   </thead>
   <tbody>
     <tr>
-      <td><code>Union[tuple[str, None], tuple[None, dict[str, str]]]</code></td>
-      <td><p>An error message and None, or None and the loaded labels database.</p></td>
+      <td><code>Union[tuple[str, None, int], tuple[None, dict[str, str], int]]</code></td>
+      <td><p>An error message or None, the labels database or None, and the schema version.</p></td>
     </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\database.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">loadLabels</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">loadLabels</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Loads the labels database into memory.</span>
 
 <span class="sd">	The default label definitions are first loaded, then the user&#39;s label definitions are merged in.</span>
 
 <span class="sd">	Returns:</span>
-<span class="sd">		An error message and None, or None and the loaded labels database.</span>
+<span class="sd">		An error message or None, the labels database or None, and the schema version.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">errorMessages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">labels</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 	<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">SAMPLE_LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">LABELS_FILE_PATH</span><span class="p">):</span>
-		<span class="n">errors</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">LABELS_SCHEMA_FILE_PATH</span><span class="p">)</span>
+		<span class="n">errors</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">schemaVersion</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">dataType</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;user&quot;</span>
 			<span class="n">errorMessages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;While loading </span><span class="si">{</span><span class="n">dataType</span><span class="si">}</span><span class="s2"> labels: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">labels</span><span class="p">:</span>
-		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">labels</span>
+		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">schemaVersion</span>
 	<span class="k">else</span><span class="p">:</span>
-		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errorMessages</span><span class="p">),</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errorMessages</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span>
 </code></pre></div>
         </details>
     </div>
@@ -936,31 +1030,31 @@
   </thead>
   <tbody>
     <tr>
-      <td><code>Union[tuple[str, None], tuple[None, dict[str, dict[str, Any]]]]</code></td>
-      <td><p>An error message and None, or None and the loaded rooms database.</p></td>
+      <td><code>Union[tuple[str, None, int], tuple[None, dict[str, dict[str, Any]], int]]</code></td>
+      <td><p>An error message or None, the rooms database or None, and the schema version.</p></td>
     </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\database.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">loadRooms</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">loadRooms</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Loads the rooms database into memory.</span>
 
 <span class="sd">	An attempt to load the user&#39;s database is made first, otherwise the sample database is loaded.</span>
 
 <span class="sd">	Returns:</span>
-<span class="sd">		An error message and None, or None and the loaded rooms database.</span>
+<span class="sd">		An error message or None, the rooms database or None, and the schema version.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">errorMessages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">MAP_FILE_PATH</span><span class="p">,</span> <span class="n">SAMPLE_MAP_FILE_PATH</span><span class="p">):</span>
-		<span class="n">errors</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">MAP_SCHEMA_FILE_PATH</span><span class="p">)</span>
+		<span class="n">errors</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">schemaVersion</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">dataType</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;user&quot;</span>
 			<span class="n">errorMessages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;While loading </span><span class="si">{</span><span class="n">dataType</span><span class="si">}</span><span class="s2"> map: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">result</span>
-	<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errorMessages</span><span class="p">),</span> <span class="kc">None</span>
+			<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">schemaVersion</span>
+	<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errorMessages</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span>
 </code></pre></div>
         </details>
     </div>

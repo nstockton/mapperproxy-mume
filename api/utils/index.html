@@ -563,6 +563,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mapper.utils.getXMLAttributes" class="md-nav__link">
+    getXMLAttributes()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.humanSort" class="md-nav__link">
     humanSort()
   </a>
@@ -752,6 +759,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mapper.utils.getXMLAttributes" class="md-nav__link">
+    getXMLAttributes()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.humanSort" class="md-nav__link">
     humanSort()
   </a>
@@ -874,6 +888,9 @@
 
 
 
+
+
+
   <div class="doc doc-object doc-function">
 
 
@@ -931,7 +948,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">camelCase</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	converts text to camel case.</span>
 
 <span class="sd">	Args:</span>
@@ -963,7 +980,8 @@
 
     <div class="doc doc-contents ">
 
-      <p>Decodes UTF-8 or Latin-1 bytes into a string.</p>
+      <p>Decodes bytes into a string.</p>
+<p>If data contains Latin-1 characters, they will be replaced with ASCII equivalents.</p>
 
 <p><strong>Parameters:</strong></p>
 <table role="grid" class="data">
@@ -1002,8 +1020,10 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Decodes UTF-8 or Latin-1 bytes into a string.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Decodes bytes into a string.</span>
+
+<span class="sd">	If data contains Latin-1 characters, they will be replaced with ASCII equivalents.</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		data: The data to be decoded.</span>
@@ -1013,10 +1033,14 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ByteString</span><span class="p">):</span>
 		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Data must be a bytes-like object.&quot;</span><span class="p">)</span>
+	<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;us-ascii&quot;</span><span class="p">)</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+		<span class="c1"># If UTF-8, re-encode the data before decoding because of multi-byte code points.</span>
+		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;us-ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;latin2ascii&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;us-ascii&quot;</span><span class="p">)</span>
 	<span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;latin-1&quot;</span><span class="p">)</span>
+		<span class="c1"># Assume data is Latin-1.</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;us-ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;latin2ascii&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -1090,7 +1114,7 @@
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">formatDocString</span><span class="p">(</span>
 	<span class="n">functionOrString</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">79</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Formats a docstring for displaying.</span>
 
 <span class="sd">	Args:</span>
@@ -1199,7 +1223,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getDataPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieves the path of the data directory.</span>
 
 <span class="sd">	Args:</span>
@@ -1268,7 +1292,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getDirectoryPath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieves the path of the directory where the program is located.</span>
 
 <span class="sd">	Args:</span>
@@ -1326,7 +1350,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getFreezer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determines the name of the library used to freeze the code.</span>
 
 <span class="sd">	Note:</span>
@@ -1351,6 +1375,91 @@
 	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frozen</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;unknown </span><span class="si">{</span><span class="n">frozen</span><span class="si">}</span><span class="s2">&quot;</span>
 	<span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.getXMLAttributes" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">getXMLAttributes</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.getXMLAttributes" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Extracts XML attributes from a tag.</p>
+<p>The supplied string must only contain attributes, not the tag name.</p>
+<div class="codehilite"><pre><span></span><code>    !!! note
+            Adapted from the html.parser module of the Python standard library.
+</code></pre></div>
+
+<p><strong>Parameters:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>text</code></td>
+        <td><code>str</code></td>
+        <td><p>The text to be parsed.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>dict[str, Union[str, None]]</code></td>
+      <td><p>The extracted attributes.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getXMLAttributes</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Extracts XML attributes from a tag.</span>
+
+<span class="sd">	The supplied string must only contain attributes, not the tag name.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			Adapted from the html.parser module of the Python standard library.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		text: The text to be parsed.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The extracted attributes.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">attributes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">XML_ATTRIBUTE_REGEX</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">rest</span><span class="p">:</span>
+			<span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">elif</span> <span class="n">value</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&#39;&quot;</span> <span class="o">==</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">or</span> <span class="n">value</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">==</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]:</span>
+			<span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span>
+	<span class="k">return</span> <span class="n">attributes</span>
 </code></pre></div>
         </details>
     </div>
@@ -1410,7 +1519,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">humanSort</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Sorts a list of strings, with numbers sorted according to their numeric value.</span>
 
 <span class="sd">	Args:</span>
@@ -1465,7 +1574,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isFrozen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determines whether the program is running from a frozen copy or from source.</span>
 
 <span class="sd">	Returns:</span>
@@ -1477,6 +1586,7 @@
     </div>
 
   </div>
+
 
 
 
@@ -1549,7 +1659,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">lpadList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Pad the left side of a list.</span>
 
 <span class="sd">	Args:</span>
@@ -1624,7 +1734,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">minIndent</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieves the indention characters from the line with the least indention.</span>
 
 <span class="sd">	Args:</span>
@@ -1717,7 +1827,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">padList</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">padding</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fixed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Pad the right side of a list.</span>
 
 <span class="sd">	Args:</span>
@@ -1777,7 +1887,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">page</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Displays lines using the pager if necessary.</span>
 
 <span class="sd">	Args:</span>
@@ -1849,7 +1959,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">regexFuzzy</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Creates a regular expression matching all or part of a string or sequence.</span>
 
 <span class="sd">	Args:</span>
@@ -1935,7 +2045,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">decimals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Rounds a float away from 0 if the fractional is 5 or more.</span>
 
 <span class="sd">	Note:</span>
@@ -2009,7 +2119,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Replaces one or more consecutive white space characters with a single space.</span>
 
 <span class="sd">	Args:</span>
@@ -2078,7 +2188,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Strips ANSI escape sequences from text.</span>
 
 <span class="sd">	Args:</span>
@@ -2133,7 +2243,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\utils.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">touch</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Touches a file.</span>
 
 <span class="sd">	I.E. creates the file if it doesn&#39;t exist, or updates the modified time of the file if it does.</span>

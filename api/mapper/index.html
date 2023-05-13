@@ -1180,7 +1180,6 @@
 
 
 
-
   <div class="doc doc-object doc-class">
 
 
@@ -1266,6 +1265,8 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">xmlRoomAttributes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">timeEvent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">timeEventOffset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parsedHour</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1331,43 +1332,57 @@
 				<span class="k">return</span> <span class="n">handler</span>
 		<span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s2">&quot;MPI Handler not found&quot;</span><span class="p">)</span>
 
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">playerTelnetHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Player</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">_handlers</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">Player</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">handler</span>
+		<span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s2">&quot;Player Telnet Handler not found&quot;</span><span class="p">)</span>
+
 	<span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="c1"># Override World.output.</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">showPrompt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputFormat</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">showPrompt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span>
-				<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">escapeXMLString</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&lt;prompt&gt;</span><span class="si">{</span><span class="n">escapeXMLString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/prompt&gt;&quot;</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ConnectionError</span><span class="p">):</span>
+			<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">LookupError</span><span class="p">):</span>
+				<span class="n">gmcpMessageOutput</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">playerTelnetHandler</span><span class="o">.</span><span class="n">mpmMessageSend</span><span class="p">({</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">})</span>
+				<span class="k">if</span> <span class="n">gmcpMessageOutput</span><span class="p">:</span>
+					<span class="c1"># Player is receiving messages through GMCP.</span>
+					<span class="k">return</span> <span class="kc">None</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputFormat</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">showPrompt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span>
+					<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">escapeXMLString</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&lt;prompt&gt;</span><span class="si">{</span><span class="n">escapeXMLString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/prompt&gt;&quot;</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">escapeXMLString</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputFormat</span> <span class="o">==</span> <span class="s2">&quot;tintin&quot;</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">showPrompt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span>
+					<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">PROMPT:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="si">}</span><span class="s2">:PROMPT&quot;</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 			<span class="k">else</span><span class="p">:</span>
-				<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">escapeXMLString</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputFormat</span> <span class="o">==</span> <span class="s2">&quot;tintin&quot;</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">showPrompt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span>
-				<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">PROMPT:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="si">}</span><span class="s2">:PROMPT&quot;</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">showPrompt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span>
-				<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">showPrompt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span>
+					<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">sendGame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ConnectionError</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;Exits the program.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Exits the program.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;quit&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)&quot;&quot;&quot;</span>
 		<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 		<span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
@@ -1387,30 +1402,30 @@
 		<span class="k">return</span> <span class="p">()</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_brief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;toggles brief mode.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;toggles brief mode.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Brief mode </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Brief mode </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;toggles automatic speaking of dynamic descs.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;toggles automatic speaking of dynamic descs.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dynamic descs </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dynamic descs </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_examine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;shows the room&#39;s description.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;shows the room&#39;s description.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;shows the exits in the room.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;shows the exits in the room.&quot;&quot;&quot;</span>
 		<span class="n">exits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exits: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exits</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">isJump</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)&quot;&quot;&quot;</span>
 		<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 		<span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 		<span class="n">room</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Room</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
@@ -1425,7 +1440,7 @@
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;Shows documentation for mapper&#39;s emulation commands.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Shows documentation for mapper&#39;s emulation commands.&quot;&quot;&quot;</span>
 		<span class="n">helpTexts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 			<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;emulation_command_&quot;</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 			<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationCommands</span>
@@ -1457,7 +1472,7 @@
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;looks at the room.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;looks at the room.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
@@ -1468,7 +1483,7 @@
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;returns to the last room jumped to with the go command.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;returns to the last room jumped to with the go command.&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
@@ -1476,7 +1491,7 @@
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;changes the room name. (useful for exploring places with many similar names)&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;changes the room name. (useful for exploring places with many similar names)&quot;&quot;&quot;</span>
 		<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 		<span class="k">if</span> <span class="n">name</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -1486,7 +1501,7 @@
 		<span class="k">return</span> <span class="p">()</span>
 
 	<span class="k">def</span> <span class="nf">emulation_command_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		When emulating while connected to the mud, syncs the emulated location with the in-game location.</span>
 <span class="sd">		When running in offline mode, is equivalent to the return command.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -1497,7 +1512,7 @@
 		<span class="k">return</span> <span class="n">args</span>
 
 	<span class="k">def</span> <span class="nf">emulate_leave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-		<span class="sd">&quot;&quot;&quot;emulates leaving the room into a neighbouring room&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;emulates leaving the room into a neighbouring room&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="n">direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">&quot;Alas, you cannot go that way...&quot;</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">args</span>
@@ -1543,10 +1558,10 @@
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="n">userCommand</span><span class="p">,</span> <span class="o">*</span><span class="n">userArgs</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_gettimer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TIMER:</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">default_timer</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">initTimer</span><span class="p">)</span><span class="si">}</span><span class="s2">:TIMER&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TIMER:</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">default_timer</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">initTimer</span><span class="p">)</span><span class="si">}</span><span class="s2">:TIMER&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_gettimerms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TIMERMS:</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">default_timer</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">initTimer</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2">:TIMERMS&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TIMERMS:</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">default_timer</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">initTimer</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2">:TIMERMS&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
@@ -1578,28 +1593,28 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;on&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto Mapping </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto Mapping </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_autoupdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoUpdateRooms</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoUpdateRooms</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoUpdateRooms</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;on&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto update rooms </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoUpdateRooms</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto update rooms </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">autoUpdateRooms</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_automerge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoMerging</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMerging</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoMerging</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;on&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto Merging </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMerging</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto Merging </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">autoMerging</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_autolink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoLinking</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoLinking</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">autoLinking</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;on&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto Linking </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoLinking</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto Linking </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">autoLinking</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_rdelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rdelete</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
@@ -1619,6 +1634,12 @@
 	<span class="k">def</span> <span class="nf">user_command_fnote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fnote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">findFormat</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
+	<span class="k">def</span> <span class="nf">user_command_farea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">farea</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">findFormat</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="nf">user_command_fsid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fsid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">findFormat</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+
 	<span class="k">def</span> <span class="nf">user_command_rnote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rnote</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
@@ -1633,6 +1654,9 @@
 
 	<span class="k">def</span> <span class="nf">user_command_rridable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="nf">user_command_rsundeath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rsundeath</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
 	<span class="k">def</span> <span class="nf">user_command_ravoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ravoid</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
@@ -1669,7 +1693,7 @@
 			<span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;wordwrap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 			<span class="n">cfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 			<span class="k">del</span> <span class="n">cfg</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Word Wrap </span><span class="si">{</span><span class="s1">&#39;enabled&#39;</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="s1">&#39;disabled&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Word Wrap </span><span class="si">{</span><span class="s1">&#39;enabled&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;disabled&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 		<span class="k">except</span> <span class="ne">LookupError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to toggle word wrapping: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
@@ -1683,11 +1707,11 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rinfo</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
 	<span class="k">def</span> <span class="nf">user_command_vnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;states the vnum of the current room&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;states the vnum of the current room&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vnum: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">user_command_tvnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;tells a given char the vnum of your room&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;tells a given char the vnum of your room&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Tell VNum to who?&quot;</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
@@ -1785,7 +1809,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span><span class="n">vnum</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
 	<span class="k">def</span> <span class="nf">user_command_maphelp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Shows documentation for mapper commands&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Shows documentation for mapper commands&quot;&quot;&quot;</span>
 		<span class="n">helpTexts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 			<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_command_&quot;</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 			<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userCommands</span>
@@ -1900,24 +1924,16 @@
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">note</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">note</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">showPrompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">updateRoomFlags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">match</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">PROMPT_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">return</span> <span class="kc">None</span>
-		<span class="n">promptDict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+	<span class="k">def</span> <span class="nf">updateRoomFlags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="n">output</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
-			<span class="n">light</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LIGHT_SYMBOLS</span><span class="p">[</span><span class="n">promptDict</span><span class="p">[</span><span class="s2">&quot;light&quot;</span><span class="p">]]</span>
+		<span class="n">lightSymbol</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;light&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">lightSymbol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">lightSymbol</span> <span class="ow">in</span> <span class="n">LIGHT_SYMBOLS</span><span class="p">:</span>
+			<span class="n">light</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LIGHT_SYMBOLS</span><span class="p">[</span><span class="n">lightSymbol</span><span class="p">]</span>
 			<span class="k">if</span> <span class="n">light</span> <span class="o">==</span> <span class="s2">&quot;lit&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">light</span> <span class="o">!=</span> <span class="n">light</span><span class="p">:</span>
 				<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rlight</span><span class="p">(</span><span class="s2">&quot;lit&quot;</span><span class="p">))</span>
-		<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
-			<span class="n">terrain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TERRAIN_SYMBOLS</span><span class="p">[</span><span class="n">promptDict</span><span class="p">[</span><span class="s2">&quot;terrain&quot;</span><span class="p">]]</span>
-			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">terrain</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">terrain</span><span class="p">,</span> <span class="s2">&quot;deathtrap&quot;</span><span class="p">):</span>
-				<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rterrain</span><span class="p">(</span><span class="n">terrain</span><span class="p">))</span>
-		<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
-			<span class="n">ridable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span> <span class="ow">in</span> <span class="n">promptDict</span><span class="p">[</span><span class="s2">&quot;movementFlags&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-			<span class="k">if</span> <span class="n">ridable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">!=</span> <span class="s2">&quot;ridable&quot;</span><span class="p">:</span>
-				<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;ridable&quot;</span><span class="p">))</span>
+		<span class="n">ridable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ride&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ridden&quot;</span><span class="p">))</span>
+		<span class="k">if</span> <span class="n">ridable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">!=</span> <span class="s2">&quot;ridable&quot;</span><span class="p">:</span>
+			<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;ridable&quot;</span><span class="p">))</span>
 		<span class="k">if</span> <span class="n">output</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
 
@@ -1995,11 +2011,17 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">movement</span><span class="p">]</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">vnum</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding room &#39;</span><span class="si">{</span><span class="n">newRoom</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; with vnum &#39;</span><span class="si">{</span><span class="n">vnum</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
+	<span class="k">def</span> <span class="nf">mud_event_gmcp_char_vitals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">newValues</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newValues</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">updateRoomFlags</span><span class="p">()</span>
+
 	<span class="k">def</span> <span class="nf">mud_event_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">text</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSynced</span><span class="p">:</span>
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">moved</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">updateRoomFlags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">updateRoomFlags</span><span class="p">()</span>
 		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roomName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSynced</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2040,8 +2062,8 @@
 		<span class="k">if</span> <span class="n">MOVEMENT_FORCED_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="ow">or</span> <span class="n">MOVEMENT_PREVENTED_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stopRun</span><span class="p">()</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSynced</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;It&#39;s too difficult to ride here.&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">!=</span> <span class="s2">&quot;notridable&quot;</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;notridable&quot;</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;It&#39;s too difficult to ride here.&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">!=</span> <span class="s2">&quot;not_ridable&quot;</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;not_ridable&quot;</span><span class="p">))</span>
 			<span class="k">elif</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;You are already riding.&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">!=</span> <span class="s2">&quot;ridable&quot;</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;ridable&quot;</span><span class="p">))</span>
 
@@ -2094,6 +2116,10 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">timeSynchronized</span> <span class="o">=</span> <span class="kc">True</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synchronized with epoch </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">epoch</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">showPrompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
+	<span class="k">def</span> <span class="nf">mud_event_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">xmlRoomAttributes</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">xmlRoomAttributes</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">getXMLAttributes</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+
 	<span class="k">def</span> <span class="nf">mud_event_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="n">text</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;You just see a dense fog around you...&quot;</span><span class="p">,</span> <span class="s2">&quot;It is pitch black...&quot;</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">roomName</span> <span class="o">=</span> <span class="n">simplified</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -2120,6 +2146,28 @@
 			<span class="k">return</span> <span class="kc">True</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">isSynced</span> <span class="o">=</span> <span class="kc">False</span>
 		<span class="k">return</span> <span class="kc">False</span>
+
+	<span class="k">def</span> <span class="nf">updateRooms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Updating room name.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">desc</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Updating room description.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">dynamicDesc</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">dynamicDesc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Updating room dynamic description.&quot;</span><span class="p">)</span>
+		<span class="n">terrain</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmlRoomAttributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">terrain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">terrain</span> <span class="o">!=</span> <span class="n">terrain</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rterrain</span><span class="p">(</span><span class="n">terrain</span><span class="p">))</span>
+		<span class="n">area</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmlRoomAttributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;area&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">area</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">area</span> <span class="o">!=</span> <span class="n">area</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">area</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting room area to &#39;</span><span class="si">{</span><span class="n">area</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+		<span class="n">serverID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmlRoomAttributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">serverID</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">serverID</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">serverID</span> <span class="o">!=</span> <span class="n">serverID</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">serverID</span> <span class="o">=</span> <span class="n">serverID</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting room server ID to &#39;</span><span class="si">{</span><span class="n">serverID</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">mud_event_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span> <span class="o">=</span> <span class="n">text</span>
@@ -2153,15 +2201,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">moved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movement</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">movement</span> <span class="o">=</span> <span class="kc">None</span>
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoUpdateRooms</span><span class="p">:</span>
-				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span><span class="p">:</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roomName</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Updating room name.&quot;</span><span class="p">)</span>
-				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">desc</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Updating room description.&quot;</span><span class="p">)</span>
-				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">dynamicDesc</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span><span class="p">:</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">dynamicDesc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Updating room dynamic description.&quot;</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">updateRooms</span><span class="p">()</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSynced</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">moved</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">addedNewRoomFrom</span> <span class="ow">and</span> <span class="n">REVERSE_DIRECTIONS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">moved</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">[</span><span class="n">REVERSE_DIRECTIONS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">moved</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNewExit</span><span class="p">(</span>
@@ -2195,7 +2235,7 @@
 			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;received data with an unknown event type of </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Registers a method to handle mud events of a given type.</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Registers a method to handle mud events of a given type.</span>
 <span class="sd">		Params: event, handler</span>
 <span class="sd">		where event is the name of the event type, typically corresponding to the XML tag of the incoming data,</span>
 <span class="sd">		and handler is a method that takes a single argument, text, which is the text received from the mud.</span>
@@ -2207,7 +2247,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Deregisters mud event handlers.</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Deregisters mud event handlers.</span>
 <span class="sd">		params: same as registerMudEventHandler.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span> <span class="ow">and</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
@@ -2356,6 +2396,7 @@ This represents the Thread ID as reported by the kernel.</p>
 
 
 
+
   <div class="doc doc-object doc-method">
 
 
@@ -2376,7 +2417,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">GUIRefresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Trigger the clearing and redrawing of rooms by the GUI&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Trigger the clearing and redrawing of rooms by the GUI&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="o">!=</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_gui_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;on_gui_refresh&quot;</span><span class="p">,))</span>
 </code></pre></div>
@@ -2413,7 +2454,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">createSpeedWalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directionsList</span><span class="p">:</span> <span class="n">MutableSequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Given a list of directions, return a string of the directions in standard speed walk format&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Given a list of directions, return a string of the directions in standard speed walk format&quot;&quot;&quot;</span>
 
 	<span class="k">def</span> <span class="nf">compressDirections</span><span class="p">(</span><span class="n">directionsBuffer</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 		<span class="n">speedWalkDirs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2468,7 +2509,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Deregisters mud event handlers.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Deregisters mud event handlers.</span>
 <span class="sd">	params: same as registerMudEventHandler.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span> <span class="ow">and</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
@@ -2502,7 +2543,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulate_leave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;emulates leaving the room into a neighbouring room&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;emulates leaving the room into a neighbouring room&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">&quot;Alas, you cannot go that way...&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">args</span>
@@ -2539,7 +2580,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)&quot;&quot;&quot;</span>
 	<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
@@ -2582,9 +2623,9 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_brief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;toggles brief mode.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;toggles brief mode.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Brief mode </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Brief mode </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">args</span>
 </code></pre></div>
         </details>
@@ -2611,9 +2652,9 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;toggles automatic speaking of dynamic descs.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;toggles automatic speaking of dynamic descs.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dynamic descs </span><span class="si">{</span><span class="s1">&#39;on&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span> <span class="k">else</span> <span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dynamic descs </span><span class="si">{</span><span class="s1">&#39;on&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingDynamicDescs</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;off&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">args</span>
 </code></pre></div>
         </details>
@@ -2640,7 +2681,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_examine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;shows the room&#39;s description.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;shows the room&#39;s description.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">args</span>
 </code></pre></div>
@@ -2668,7 +2709,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;shows the exits in the room.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;shows the exits in the room.&quot;&quot;&quot;</span>
 	<span class="n">exits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exits: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exits</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">args</span>
@@ -2697,7 +2738,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">isJump</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)&quot;&quot;&quot;</span>
 	<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 	<span class="n">room</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Room</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRoomFromLabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
@@ -2735,7 +2776,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;Shows documentation for mapper&#39;s emulation commands.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Shows documentation for mapper&#39;s emulation commands.&quot;&quot;&quot;</span>
 	<span class="n">helpTexts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;emulation_command_&quot;</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulationCommands</span>
@@ -2790,7 +2831,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;looks at the room.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;looks at the room.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingBriefMode</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span>
@@ -2824,7 +2865,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;Exits the program.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Exits the program.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;quit&quot;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">args</span>
 </code></pre></div>
@@ -2852,7 +2893,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;changes the room name. (useful for exploring places with many similar names)&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;changes the room name. (useful for exploring places with many similar names)&quot;&quot;&quot;</span>
 	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 	<span class="k">if</span> <span class="n">name</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -2885,7 +2926,7 @@ params: same as registerMudEventHandler.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;returns to the last room jumped to with the go command.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;returns to the last room jumped to with the go command.&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">emulation_command_go</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lastEmulatedJump</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
@@ -2917,7 +2958,7 @@ When running in offline mode, is equivalent to the return command.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">emulation_command_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	When emulating while connected to the mud, syncs the emulated location with the in-game location.</span>
 <span class="sd">	When running in offline mode, is equivalent to the return command.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -2931,6 +2972,8 @@ When running in offline mode, is equivalent to the return command.</p>
     </div>
 
   </div>
+
+
 
 
 
@@ -2961,7 +3004,7 @@ When running in offline mode, is equivalent to the return command.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3001,7 +3044,7 @@ Each yielded result contains the vnum, room object reference, and difference in 
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromCoordinates</span><span class="p">(</span>
 	<span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">radius</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Room</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.</span>
 <span class="sd">	Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates.&quot;&quot;&quot;</span>
 	<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span>
 	<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
@@ -3042,7 +3085,7 @@ Each yielded result contains the vnum, room object reference, and difference in 
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getNeighborsFromRoom</span><span class="p">(</span>
 	<span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">Room</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Room</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;A generator which yields all rooms in the vicinity of a room object.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;A generator which yields all rooms in the vicinity of a room object.</span>
 <span class="sd">	Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates.&quot;&quot;&quot;</span>
 	<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">z</span>
 	<span class="n">radiusX</span><span class="p">,</span> <span class="n">radiusY</span><span class="p">,</span> <span class="n">radiusZ</span> <span class="o">=</span> <span class="n">radius</span>
@@ -3129,7 +3172,7 @@ Each yielded result contains the vnum, room object reference, and difference in 
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getNewExit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span> <span class="n">vnum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Exit</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Creates a new exit object for a given direction.</span>
 
 <span class="sd">	Args:</span>
@@ -3181,7 +3224,7 @@ you just came from would put you back where you started, False otherwise.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isBidirectional</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitObj</span><span class="p">:</span> <span class="n">Exit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns True if an exit is bidirectional, False if unidirectional.</span>
 <span class="sd">	I.E. True if moving in a given direction then moving back in the direction</span>
 <span class="sd">	you just came from would put you back where you started, False otherwise.</span>
@@ -3224,7 +3267,7 @@ you just came from would put you back where you started, False otherwise.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -3264,7 +3307,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -3319,7 +3362,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -3374,6 +3417,10 @@ exception.</p>
 
 
 
+
+
+
+
   <div class="doc doc-object doc-method">
 
 
@@ -3399,7 +3446,7 @@ exception.</p>
 	<span class="n">destination</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 	<span class="n">flags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-	<span class="sd">&quot;&quot;&quot;Find the path&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Find the path&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">&quot;Error! The mapper has no location. Please use the sync command then try again.&quot;</span><span class="p">)</span>
@@ -3459,7 +3506,7 @@ and handler is a method that takes a single argument, text, which is the text re
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Registers a method to handle mud events of a given type.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Registers a method to handle mud events of a given type.</span>
 <span class="sd">	Params: event, handler</span>
 <span class="sd">	where event is the name of the event type, typically corresponding to the XML tag of the incoming data,</span>
 <span class="sd">	and handler is a method that takes a single argument, text, which is the text received from the mud.</span>
@@ -3474,6 +3521,7 @@ and handler is a method that takes a single argument, text, which is the text re
     </div>
 
   </div>
+
 
 
 
@@ -3560,7 +3608,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -3598,7 +3646,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3639,7 +3687,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
@@ -3692,6 +3740,9 @@ same thread object.</p>
 
 
 
+
+
+
   <div class="doc doc-object doc-method">
 
 
@@ -3709,7 +3760,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">user_command_maphelp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Shows documentation for mapper commands&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Shows documentation for mapper commands&quot;&quot;&quot;</span>
 	<span class="n">helpTexts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="p">(</span><span class="n">funcName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_command_&quot;</span> <span class="o">+</span> <span class="n">funcName</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userCommands</span>
@@ -3771,6 +3822,7 @@ same thread object.</p>
 
 
 
+
   <div class="doc doc-object doc-method">
 
 
@@ -3788,7 +3840,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">user_command_tvnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;tells a given char the vnum of your room&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;tells a given char the vnum of your room&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Tell VNum to who?&quot;</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
@@ -3818,7 +3870,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">user_command_vnum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;states the vnum of the current room&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;states the vnum of the current room&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vnum: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">vnum</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>

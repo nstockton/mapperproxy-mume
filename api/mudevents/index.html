@@ -703,7 +703,7 @@
           <summary>Source code in <code>mapper\mudevents.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Handler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Initialises a mud event handler in the given mapper instance.</span>
 
 <span class="sd">		Args:</span>
@@ -721,13 +721,13 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Deregisters the event handler after the object is deleted and garbage collected.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Deregisters the event handler after the object is deleted and garbage collected.&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span>
 
 	<span class="nd">@abstractmethod</span>
 	<span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Called when the event is dispatched.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Called when the event is dispatched.&quot;&quot;&quot;</span>
 </code></pre></div>
         </details>
 
@@ -788,7 +788,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\mudevents.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Initialises a mud event handler in the given mapper instance.</span>
 
 <span class="sd">	Args:</span>
@@ -830,7 +830,7 @@
           <summary>Source code in <code>mapper\mudevents.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@abstractmethod</span>
 <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Called when the event is dispatched.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Called when the event is dispatched.&quot;&quot;&quot;</span>
 </code></pre></div>
         </details>
     </div>

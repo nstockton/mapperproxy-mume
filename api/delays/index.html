@@ -1523,11 +1523,9 @@
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">BaseDelay</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Implements the base delay class.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-
-	<span class="n">_delays</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
 		<span class="bp">self</span><span class="p">,</span>
@@ -1537,7 +1535,7 @@
 		<span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 		<span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 	<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Defines the constructor for the object.</span>
 
 <span class="sd">		Args:</span>
@@ -1559,12 +1557,11 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
 
 	<span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
 	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">try</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 			<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duration</span><span class="p">)</span>
 				<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -1573,7 +1570,6 @@
 					<span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">-=</span> <span class="mi">1</span>
 		<span class="k">finally</span><span class="p">:</span>
 			<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre></div>
@@ -1769,7 +1765,7 @@ This represents the Thread ID as reported by the kernel.</p>
 	<span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 	<span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -1818,7 +1814,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -1856,7 +1852,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -1896,7 +1892,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -1951,7 +1947,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -2017,7 +2013,6 @@ from the args and kwargs arguments, respectively.</p>
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duration</span><span class="p">)</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -2026,7 +2021,6 @@ from the args and kwargs arguments, respectively.</p>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">-=</span> <span class="mi">1</span>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre></div>
@@ -2058,7 +2052,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -2096,7 +2090,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -2137,7 +2131,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
@@ -2186,7 +2180,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </code></pre></div>
         </details>
@@ -2224,7 +2218,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Delay</span><span class="p">(</span><span class="n">BaseDelay</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Implements a delay which automatically starts upon creation.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
@@ -2376,7 +2370,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -2414,7 +2408,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -2454,7 +2448,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -2509,7 +2503,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -2578,7 +2572,6 @@ from the args and kwargs arguments, respectively.</p>
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duration</span><span class="p">)</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -2587,7 +2580,6 @@ from the args and kwargs arguments, respectively.</p>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">-=</span> <span class="mi">1</span>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre></div>
@@ -2619,7 +2611,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -2657,7 +2649,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -2698,7 +2690,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
@@ -2750,7 +2742,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </code></pre></div>
         </details>
@@ -2788,12 +2780,12 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">OneShot</span><span class="p">(</span><span class="n">Delay</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Implements a delay which is run only once.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Defines the constructor for the object.</span>
 
 <span class="sd">		Args:</span>
@@ -2983,7 +2975,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -3022,7 +3014,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3060,7 +3052,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -3100,7 +3092,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -3155,7 +3147,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -3224,7 +3216,6 @@ from the args and kwargs arguments, respectively.</p>
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duration</span><span class="p">)</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -3233,7 +3224,6 @@ from the args and kwargs arguments, respectively.</p>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">-=</span> <span class="mi">1</span>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre></div>
@@ -3265,7 +3255,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -3303,7 +3293,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3344,7 +3334,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
@@ -3396,7 +3386,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </code></pre></div>
         </details>
@@ -3434,12 +3424,12 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Repeating</span><span class="p">(</span><span class="n">Delay</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Implements a delay which runs indefinitely.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Defines the constructor for the object.</span>
 
 <span class="sd">		Args:</span>
@@ -3629,7 +3619,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -3668,7 +3658,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3706,7 +3696,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -3746,7 +3736,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -3801,7 +3791,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -3870,7 +3860,6 @@ from the args and kwargs arguments, respectively.</p>
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="k">try</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duration</span><span class="p">)</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -3879,7 +3868,6 @@ from the args and kwargs arguments, respectively.</p>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">-=</span> <span class="mi">1</span>
 	<span class="k">finally</span><span class="p">:</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_delays</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre></div>
@@ -3911,7 +3899,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -3949,7 +3937,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3990,7 +3978,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
@@ -4042,7 +4030,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\delays.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Stops an active delay.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </code></pre></div>
         </details>

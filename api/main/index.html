@@ -1388,27 +1388,27 @@
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">Tap</span><span class="p">):</span>
 	<span class="n">emulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-	<span class="sd">&quot;&quot;&quot;Start in emulation mode.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Start in emulation mode.&quot;&quot;&quot;</span>
 	<span class="n">interface</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">INTERFACES</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-	<span class="sd">&quot;&quot;&quot;Select a user interface.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Select a user interface.&quot;&quot;&quot;</span>
 	<span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">OUTPUT_FORMATS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-	<span class="sd">&quot;&quot;&quot;Select how data from the server is transformed before  being sent to the client.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Select how data from the server is transformed before  being sent to the client.&quot;&quot;&quot;</span>
 	<span class="n">local_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
-	<span class="sd">&quot;&quot;&quot;The local host address to bind to.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;The local host address to bind to.&quot;&quot;&quot;</span>
 	<span class="n">local_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4000</span>
-	<span class="sd">&quot;&quot;&quot;The local port to bind to.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;The local port to bind to.&quot;&quot;&quot;</span>
 	<span class="n">remote_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mume.org&quot;</span>
-	<span class="sd">&quot;&quot;&quot;The remote host address to connect to.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;The remote host address to connect to.&quot;&quot;&quot;</span>
 	<span class="n">remote_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4242</span>
-	<span class="sd">&quot;&quot;&quot;The remote port to connect to.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;The remote port to connect to.&quot;&quot;&quot;</span>
 	<span class="n">no_ssl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-	<span class="sd">&quot;&quot;&quot;Disable encrypted communication between the local and remote hosts.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Disable encrypted communication between the local and remote hosts.&quot;&quot;&quot;</span>
 	<span class="n">prompt_terminator_lf</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-	<span class="sd">&quot;&quot;&quot;Terminate game prompts with return-linefeed characters (IAC + GA is default).&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Terminate game prompts with return-linefeed characters (IAC + GA is default).&quot;&quot;&quot;</span>
 	<span class="n">gag_prompts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-	<span class="sd">&quot;&quot;&quot;Gag emulated prompts.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Gag emulated prompts.&quot;&quot;&quot;</span>
 	<span class="n">find_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{vnum}</span><span class="s2">, </span><span class="si">{name}</span><span class="s2">, </span><span class="si">{attribute}</span><span class="s2">&quot;</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	The format string for controlling output of the find commands.</span>
 <span class="sd">	Accepts the following placeholders in braces:</span>
 <span class="sd">	{attribute}, {direction}, {clockPosition}, {distance}, {name}, {vnum}.</span>
@@ -1418,7 +1418,7 @@
 	<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
 			<span class="sa">f</span><span class="s2">&quot;%(prog)s v</span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> &quot;</span>
-			<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;(Python </span><span class="si">{</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">releaselevel</span><span class="si">}</span><span class="s2">)&quot;</span>
+			<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;(Python </span><span class="si">{</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">releaselevel</span><span class="si">}</span><span class="s2">)&quot;</span>
 		<span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
 			<span class="s2">&quot;-v&quot;</span><span class="p">,</span>
@@ -1686,7 +1686,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">name_or_flags</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Adds an argument to the argument buffer, which will later be passed to _add_argument.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds an argument to the argument buffer, which will later be passed to _add_argument.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;add_argument cannot be called after initialization. &#39;</span>
                          <span class="s1">&#39;Arguments must be added either as class variables or by overriding &#39;</span>
@@ -1724,7 +1724,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated and will be removed by January 1st, 2021.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated and will be removed by January 1st, 2021.</span>
 
 <span class="sd">    Explicitly add arguments to the argument buffer if not using default settings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1758,7 +1758,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">add_subparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subparser_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Add a subparser to the collection of subparsers&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a subparser to the collection of subparsers&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_subparser_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">flag</span><span class="p">,</span> <span class="n">subparser_type</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
 </code></pre></div>
         </details>
@@ -1792,7 +1792,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Returns the member variables corresponding to the parsed arguments.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the member variables corresponding to the parsed arguments.</span>
 
 <span class="sd">    Note: This does not include attributes set directly on an instance</span>
 <span class="sd">    (e.g. arg is not included in MyTap().arg = &quot;hi&quot;)</span>
@@ -1856,7 +1856,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 	<span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
 		<span class="sa">f</span><span class="s2">&quot;%(prog)s v</span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> &quot;</span>
-		<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;(Python </span><span class="si">{</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">releaselevel</span><span class="si">}</span><span class="s2">)&quot;</span>
+		<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;(Python </span><span class="si">{</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">releaselevel</span><span class="si">}</span><span class="s2">)&quot;</span>
 	<span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
 		<span class="s2">&quot;-v&quot;</span><span class="p">,</span>
@@ -1909,7 +1909,7 @@ should either exit or raise an exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;error(message: string)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;error(message: string)</span>
 
 <span class="sd">    Prints a usage message incorporating the message to stderr and</span>
 <span class="sd">    exits.</span>
@@ -1955,7 +1955,7 @@ should either exit or raise an exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">skip_unsettable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Loads arguments from a dictionary, ensuring all required arguments are set.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads arguments from a dictionary, ensuring all required arguments are set.</span>
 
 <span class="sd">    :param args_dict: A dictionary from argument names to the values of the arguments.</span>
 <span class="sd">    :param skip_unsettable: When True, skips attributes that cannot be set in the Tap object,</span>
@@ -2025,7 +2025,7 @@ should either exit or raise an exception.</p>
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">get_reproducibility_info</span><span class="p">(</span><span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Gets a dictionary of reproducibility information.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets a dictionary of reproducibility information.</span>
 
 <span class="sd">    Reproducibility information always includes:</span>
 <span class="sd">    - command_line: The command line command used to execute the code.</span>
@@ -2046,7 +2046,7 @@ should either exit or raise an exception.</p>
         <span class="n">repo_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
     <span class="n">reproducibility</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;command_line&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;python </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;command_line&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;python </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
         <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%c</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="p">}</span>
 
@@ -2098,7 +2098,7 @@ should either exit or raise an exception.</p>
          <span class="n">check_reproducibility</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
          <span class="n">skip_unsettable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
          <span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Loads the arguments in JSON format. Note: Due to JSON, tuples are loaded as lists.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the arguments in JSON format. Note: Due to JSON, tuples are loaded as lists.</span>
 
 <span class="sd">    :param path: Path to the JSON file where the arguments will be loaded from.</span>
 <span class="sd">    :param check_reproducibility: When True, raises an error if the loaded reproducibility</span>
@@ -2157,7 +2157,7 @@ Unparsed arguments are saved to self.extra_args.
                <span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="n">known_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                <span class="n">legacy_config_parsing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Parses arguments, sets attributes of self equal to the parsed arguments, and processes arguments.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses arguments, sets attributes of self equal to the parsed arguments, and processes arguments.</span>
 
 <span class="sd">    :param args: List of strings to parse. The default is taken from `sys.argv`.</span>
 <span class="sd">    :param known_only: If true, ignores extra arguments and only parses known arguments.</span>
@@ -2251,7 +2251,7 @@ Unparsed arguments are saved to self.extra_args.
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">process_args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Perform additional argument processing and/or validation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform additional argument processing and/or validation.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div>
         </details>
@@ -2291,7 +2291,7 @@ Unparsed arguments are saved to self.extra_args.
          <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">with_reproducibility</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
          <span class="n">skip_unpicklable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
          <span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Saves the arguments and reproducibility information in JSON format, pickling what can&#39;t be encoded.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the arguments and reproducibility information in JSON format, pickling what can&#39;t be encoded.</span>
 
 <span class="sd">    :param path: Path to the JSON file where the arguments will be saved.</span>
 <span class="sd">    :param with_reproducibility: If True, adds a &quot;reproducibility&quot; field with information (e.g. git hash)</span>
@@ -2512,7 +2512,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -2550,7 +2550,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -2590,7 +2590,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -2645,7 +2645,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -2755,7 +2755,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -2793,7 +2793,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -2834,7 +2834,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>
@@ -3065,7 +3065,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a string used for identification purposes only.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3103,7 +3103,7 @@ This represents the Thread ID as reported by the kernel.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the daemon attribute instead.</span>
 
@@ -3143,7 +3143,7 @@ enumerate().</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the thread is alive.</span>
 
 <span class="sd">    This method returns True just before the run() method starts until just</span>
 <span class="sd">    after the run() method terminates. See also the module function</span>
@@ -3198,7 +3198,7 @@ exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait until the thread terminates.</span>
 
 <span class="sd">    This blocks the calling thread until the thread whose join() method is</span>
 <span class="sd">    called terminates -- either normally or through an unhandled exception</span>
@@ -3307,7 +3307,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setDaemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether this thread is a daemon.</span>
 
 <span class="sd">    This method is deprecated, use the .daemon property instead.</span>
 
@@ -3345,7 +3345,7 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the name string for this thread.</span>
 
 <span class="sd">    This method is deprecated, use the name attribute instead.</span>
 
@@ -3386,7 +3386,7 @@ same thread object.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start the thread&#39;s activity.</span>
 
 <span class="sd">    It must be called at most once per thread object. It arranges for the</span>
 <span class="sd">    object&#39;s run() method to be invoked in a separate thread of control.</span>

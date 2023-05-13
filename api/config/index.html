@@ -872,14 +872,14 @@
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Implements loading and saving of program configuration.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="n">_configLock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Defines the constructor for the object.</span>
 
 <span class="sd">		Args:</span>
@@ -892,7 +892,7 @@
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;The name of the configuration.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;The name of the configuration.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
 	<span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -911,13 +911,13 @@
 				<span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corrupted json file: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">reload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Reloads the configuration from disc.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Reloads the configuration from disc.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json.sample&quot;</span><span class="p">))</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">))</span>
 
 	<span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="sd">&quot;&quot;&quot;Saves the configuration to disc.&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Saves the configuration to disc.&quot;&quot;&quot;</span>
 		<span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIRECTORY</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
 		<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configLock</span><span class="p">:</span>
 			<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fileObj</span><span class="p">:</span>
@@ -1016,7 +1016,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Defines the constructor for the object.</span>
 
 <span class="sd">	Args:</span>
@@ -1166,7 +1166,7 @@
 
 
 <h3 id="mapper.config.Config.pop" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Method</span> <span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x0000023FEE874180</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000001B578578190</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1182,7 +1182,7 @@ If key is not found, d is returned if given, otherwise KeyError is raised.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">__marker</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
 <span class="sd">      If key is not found, d is returned if given, otherwise KeyError is raised.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1223,7 +1223,7 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;D.popitem() -&gt; (k, v), remove and return some (key, value) pair</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;D.popitem() -&gt; (k, v), remove and return some (key, value) pair</span>
 <span class="sd">       as a 2-tuple; but raise KeyError if D is empty.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1258,7 +1258,7 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">reload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Reloads the configuration from disc.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Reloads the configuration from disc.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json.sample&quot;</span><span class="p">))</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">))</span>
@@ -1287,7 +1287,7 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="sd">&quot;&quot;&quot;Saves the configuration to disc.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Saves the configuration to disc.&quot;&quot;&quot;</span>
 	<span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIRECTORY</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
 	<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configLock</span><span class="p">:</span>
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fileObj</span><span class="p">:</span>
@@ -1359,7 +1359,7 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="p">(),</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; D.update([E, ]**F) -&gt; None.  Update D from mapping/iterable E and F.</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; D.update([E, ]**F) -&gt; None.  Update D from mapping/iterable E and F.</span>
 <span class="sd">        If E present and has a .keys() method, does:     for k in E: D[k] = E[k]</span>
 <span class="sd">        If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v</span>
 <span class="sd">        In either case, this is followed by: for k, v in F.items(): D[k] = v</span>
@@ -1441,7 +1441,7 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
         <details class="quote">
           <summary>Source code in <code>mapper\config.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ConfigError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;Implements the base class for Config exceptions.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Implements the base class for Config exceptions.&quot;&quot;&quot;</span>
 </code></pre></div>
         </details>
 

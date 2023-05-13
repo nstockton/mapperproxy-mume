@@ -854,7 +854,7 @@
 <h1 id="mapper-proxy">Mapper Proxy<a class="headerlink" href="#mapper-proxy" title="Permanent link">&para;</a></h1>
 <p>A mapper proxy for playing <a href="https://mume.org" title="MUME Official Site">MUME,</a> targeted towards the needs of blind players. It is entirely controlled by plain text commands, and offers some facilities such as pathfinding and room finding. It also comes with a high contrast GUI for visually impaired players, and a tiled one for sighted players.</p>
 <hr />
-<p><img alt="screenshot of the sighted GUI" src="https://github.com/nstockton/mapperproxy-mume/raw/master/tiles/screenshot-multi.png?raw=true" title="screenshot of the sighted GUI" /></p>
+<p><img alt="screenshot of the sighted GUI" src="https://github.com/nstockton/mapperproxy-mume/raw/master/src/mapper_data/tiles/screenshot-multi.png?raw=true" title="screenshot of the sighted GUI" /></p>
 <hr />
 <h2 id="license-and-credits">License And Credits<a class="headerlink" href="#license-and-credits" title="Permanent link">&para;</a></h2>
 <p>Mapper Proxy is licensed under the terms of the <a href="https://nstockton.github.io/mapperproxy-mume/license" title="License Page">Mozilla Public License, version 2.0.</a></p>
@@ -874,8 +874,8 @@ Sighted GUI and various additions contributed by Lindisse.</p>
 <p>After Python is installed, execute the following commands from the top level directory of this repository to install the module dependencies.
 <div class="highlight"><pre><span></span><code>python -m venv .venv
 source .venv/bin/activate
-pip install poetry
-poetry install
+pip install --upgrade --require-hashes --requirement requirements-poetry.txt
+poetry install --no-ansi
 </code></pre></div></p>
 <p>If you wish to contribute to this project, install the development dependencies with the following commands.
 <div class="highlight"><pre><span></span><code>source .venv/bin/activate
@@ -929,11 +929,12 @@ from mapper.main import main
 <li><code>rlight [lit|dark|undefined]</code>  --  Modify the light flag of the current room.</li>
 <li><code>rlink [add|remove] [oneway] [vnum] [north|east|south|west|up|down]</code>  --  Manually manage links from the current room to room with vnum. If oneway is given, treat the link as unidirectional.</li>
 <li><code>rloadflags [add|remove] [treasure|armour|weapon|water|food|herb|key|mule|horse|pack_horse|trained_horse|rohirrim|warg|boat|attention|tower|clock|mail|stable|white_word|dark_word|equipment|coach]</code>  --  Modify the load flags of the current room.</li>
-<li><code>rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob]</code>  --  Modify the mob flags of the current room.</li>
+<li><code>rmobflags [add|remove] [rent|shop|weapon_shop|armour_shop|food_shop|pet_shop|guild|scout_guild|mage_guild|cleric_guild|warrior_guild|ranger_guild|aggressive_mob|quest_mob|passive_mob|elite_mob|super_mob|milkable]</code>  --  Modify the mob flags of the current room.</li>
 <li><code>rnote [-a|-r] [text]</code>  --  Modify the note for the current room. If '-a' is given, append text to the current note. If '-r' is given, remove the note.</li>
-<li><code>rportable [portable|notportable|undefined]</code>  --  Modify the portable flag of the current room.</li>
-<li><code>rridable [ridable|notridable|undefined]</code>  --  Modify the ridable flag of the current room.</li>
-<li><code>rterrain [death|city|shallowwater|forest|hills|road|cavern|field|water|underwater|rapids|indoors|brush|tunnel|mountains|random|undefined]</code>  --  Modify the terrain of the current room.</li>
+<li><code>rportable [portable|not_portable|undefined]</code>  --  Modify the portable flag of the current room.</li>
+<li><code>rridable [ridable|not_ridable|undefined]</code>  --  Modify the ridable flag of the current room.</li>
+<li><code>rsundeath [sundeath|no_sundeath|undefined]</code>  --  Modify the sundeath flag of the current room.</li>
+<li><code>rterrain [brush|building|cavern|city|field|forest|hills|mountains|rapids|road|shallows|tunnel|undefined|underwater|water]</code>  --  Modify the terrain of the current room.</li>
 <li><code>rx [number]</code>  --  Modify the X coordinate of the current room.</li>
 <li><code>ry [number]</code>  --  Modify the Y coordinate of the current room.</li>
 <li><code>rz [number]</code>  --  Modify the Z coordinate of the current room.</li>
@@ -944,6 +945,7 @@ from mapper.main import main
 <ul>
 <li><code>fdoor [text]</code>  --  Search the map for rooms with doors matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry" title="Wikipedia Page On Taxicab Geometry">Manhattan Distance.</a></li>
 <li><code>fdynamic [text]</code>  --  Search the map for rooms with dynamic descriptions matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry" title="Wikipedia Page On Taxicab Geometry">Manhattan Distance.</a></li>
+<li><code>fsid [number]</code>  --  Search the map for rooms with server IDs matching number (0 for undefined IDs). Returns the nearest 20 rooms to you (furthest to closest) based on the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry" title="Wikipedia Page On Taxicab Geometry">Manhattan Distance.</a></li>
 <li><code>flabel [text]</code>  --  Search the map for rooms with labels matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry" title="Wikipedia Page On Taxicab Geometry">Manhattan Distance.</a> If no text is given, will show the 20 closest labeled rooms.</li>
 <li><code>fname [text]</code>  --  Search the map for rooms with names matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry" title="Wikipedia Page On Taxicab Geometry">Manhattan Distance.</a></li>
 <li><code>fnote [text]</code>  --  Search the map for rooms with notes matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry" title="Wikipedia Page On Taxicab Geometry">Manhattan Distance.</a></li>
