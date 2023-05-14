@@ -950,6 +950,7 @@ class Mapper(threading.Thread, World):
 			self.updateRoomFlags()
 
 	def mud_event_prompt(self, text: str) -> None:
+		self.playerTelnetHandler.mpmEventSend({"prompt": text})
 		self.prompt = text
 		if self.isSynced:
 			if self.autoMapping and self.moved:
