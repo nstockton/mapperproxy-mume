@@ -110,6 +110,8 @@ class Player(GMCPMixIn, Telnet):
 						self._mpmGMCP = True
 						self.mpmEventSend({"gmcp_enabled": True})
 						continue
+				elif lowered.startswith("mmapper"):
+					continue
 				addedPackages.append(item)
 			value = bytes(
 				json.dumps(addedPackages, ensure_ascii=False, indent=None, separators=(", ", ": ")), "utf-8"
