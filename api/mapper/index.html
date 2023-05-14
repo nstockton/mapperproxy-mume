@@ -2018,6 +2018,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">updateRoomFlags</span><span class="p">()</span>
 
 	<span class="k">def</span> <span class="nf">mud_event_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">playerTelnetHandler</span><span class="o">.</span><span class="n">mpmEventSend</span><span class="p">({</span><span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">})</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">text</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSynced</span><span class="p">:</span>
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">moved</span><span class="p">:</span>
