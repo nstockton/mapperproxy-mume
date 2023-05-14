@@ -102,12 +102,15 @@ class Player(GMCPMixIn, Telnet):
 			# Change this in future to allow player's client to only remove packages it previously added.
 			return None
 		if package == "core.supports.add":
-			addedPackages = json.loads(value)
-			for item in list(addedPackages):
-				p = item.split(None, 1)[0].lower()
-				if p == "mpm":
-					self._mpmGMCP = True
-					addedPackages.remove(item)
+			addedPackages: list[str] = []
+			for item in json.loads(value):
+				lowered: str = item.strip().lower()
+				if lowered.startswith("mpm"):
+					if not self._mpmGMCP:
+						self._mpmGMCP = True
+						self.mpmEventSend({"gmcp_enabled": True})
+						continue
+				addedPackages.append(item)
 			value = bytes(
 				json.dumps(addedPackages, ensure_ascii=False, indent=None, separators=(", ", ": ")), "utf-8"
 			)
@@ -160,7 +163,7 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 			self.gmcpSetPackages(supportedPackages)
 			while self._gmcpBuffer:
 				package, value, isSerialized = self._gmcpBuffer.pop(0)
-				super().gmcpSend(package, value, isSerialized=isSerialized)
+				self.gmcpSend(package, value, isSerialized=isSerialized)
 
 
 class ProxyHandler(object):
