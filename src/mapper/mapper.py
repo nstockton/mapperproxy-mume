@@ -862,7 +862,9 @@ class Mapper(threading.Thread, World):
 		if lightSymbol is not None and lightSymbol in LIGHT_SYMBOLS:
 			light: str = LIGHT_SYMBOLS[lightSymbol]
 			if light == "lit" and self.currentRoom.light != light:
-				output.append(self.rlight("lit"))
+				# Todo: Orc can define sundeath, troll can define no_sundeath and lit/dark.
+				# output.append(self.rlight("lit"))
+				pass
 		ridable: bool = bool(self.gmcpCharVitals.get("ride") or self.gmcpCharVitals.get("ridden"))
 		if ridable and self.currentRoom.ridable != "ridable":
 			output.append(self.rridable("ridable"))
