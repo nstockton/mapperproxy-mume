@@ -175,23 +175,18 @@ class TestDatabase(TestCase):
 	@patch("mapper.roomdata.database._load")
 	def testLoadLabels(self, mockLoad: Mock) -> None:
 		database: dict[str, str] = {"label1": "1", "label2": "2"}
-		expectedErrors: str = "While loading sample labels: some_error\nWhile loading user labels: some_error"
+		expectedErrors: str = "While loading sample labels: some_error"
 		mockLoad.return_value = ("some_error", None, 0)
 		errors, labels, schemaVersion = loadLabels()
 		self.assertEqual(errors, expectedErrors)
 		self.assertIsNone(labels)
 		self.assertEqual(schemaVersion, 0)
 		loadCalls: _CallList = mockLoad.mock_calls
-		self.assertEqual(len(loadCalls), 2)
+		self.assertEqual(len(loadCalls), 1)
 		self.assertEqual(
 			loadCalls[0],
 			call(SAMPLE_LABELS_FILE_PATH),
 			"First call to _load was not as expected.",
-		)
-		self.assertEqual(
-			loadCalls[1],
-			call(LABELS_FILE_PATH),
-			"Second call to _load was not as expected.",
 		)
 		mockLoad.return_value = (None, database, 0)
 		errors, labels, schemaVersion = loadLabels()
@@ -203,8 +198,10 @@ class TestDatabase(TestCase):
 	def testDumpLabels(self, mockDump: Mock) -> None:
 		database: dict[str, str] = {"label1": "1", "label2": "2"}
 		dumpLabels(database)
-		output: dict[str, Any] = dict(database)  # Shallow copy.
-		output["schema_version"] = LABELS_SCHEMA_VERSION
+		output: dict[str, Any] = {
+			"schema_version": LABELS_SCHEMA_VERSION,
+			"labels": dict(database),  # Shallow copy.
+		}
 		mockDump.assert_called_once_with(
 			output, LABELS_FILE_PATH, getSchemaPath(LABELS_FILE_PATH, LABELS_SCHEMA_VERSION)
 		)

@@ -309,6 +309,7 @@ class World(object):
 	def loadLabels(self) -> None:
 		errors: Union[str, None]
 		labels: Union[dict[str, str], None]
+		schemaVersion: int
 		errors, labels, schemaVersion = loadLabels()
 		if labels is None:
 			if errors is not None:

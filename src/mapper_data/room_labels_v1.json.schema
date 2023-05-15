@@ -1,0 +1,25 @@
+{
+  "id": "mapper_data/room_labels_v1.json.schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Labels V1",
+  "description": "Labels database, version 1.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "enum": [1]
+    },
+    "labels": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["schema_version", "labels"],
+  "additionalProperties": false
+}

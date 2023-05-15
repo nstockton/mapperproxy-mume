@@ -6,7 +6,8 @@
   "type": "object",
   "patternProperties": {
     "^schema_version$": {
-      "type": "integer"
+      "type": "integer",
+      "enum": [0]
     },
     "^[0-9]+$": {
       "type": "object",

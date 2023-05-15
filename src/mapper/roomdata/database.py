@@ -21,7 +21,7 @@ import rapidjson
 from ..utils import getDataPath
 
 
-LABELS_SCHEMA_VERSION: int = 0  # Increment this when the labels schema changes.
+LABELS_SCHEMA_VERSION: int = 1  # Increment this when the labels schema changes.
 MAP_SCHEMA_VERSION: int = 2  # Increment this when the map schema changes.
 DATA_DIRECTORY: str = getDataPath()
 LABELS_FILE: str = "room_labels.json"
@@ -106,9 +106,10 @@ def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[st
 	try:
 		with open(databasePath, "r", encoding="utf-8") as fileObj:
 			database: dict[str, Any] = json.load(fileObj)
-		schemaVersion: int = database.pop("schema_version", 0)
+		schemaVersion: int = database.get("schema_version", 0)
 		schemaPath = getSchemaPath(databasePath, schemaVersion)
 		_validate(database, schemaPath)
+		database.pop("schema_version", None)
 		return None, database, schemaVersion
 	except IOError as e:
 		return f"{e.strerror}: '{e.filename}'", None, 0
@@ -142,12 +143,14 @@ def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int
 	errorMessages: list[str] = []
 	labels: dict[str, str] = {}
 	for path in (SAMPLE_LABELS_FILE_PATH, LABELS_FILE_PATH):
+		if not os.path.exists(path) or os.path.isdir(path):
+			continue
 		errors, result, schemaVersion = _load(path)
 		if result is None:
 			dataType: str = "sample" if path.endswith("sample") else "user"
 			errorMessages.append(f"While loading {dataType} labels: {errors}")
 		else:
-			labels.update(result)
+			labels.update(result if schemaVersion < 1 else result["labels"])
 	if labels:
 		return None, labels, schemaVersion
 	else:
@@ -161,8 +164,10 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 	Args:
 		labels: The labels database to be saved.
 	"""
-	output: dict[str, Any] = dict(labels)  # Shallow copy.
-	output["schema_version"] = LABELS_SCHEMA_VERSION
+	output: dict[str, Any] = {
+		"schema_version": LABELS_SCHEMA_VERSION,
+		"labels": dict(labels),  # Shallow copy.
+	}
 	_dump(output, LABELS_FILE_PATH, getSchemaPath(LABELS_FILE_PATH, LABELS_SCHEMA_VERSION))
 
 

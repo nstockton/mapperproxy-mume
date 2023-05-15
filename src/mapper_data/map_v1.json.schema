@@ -1,12 +1,13 @@
 {
-  "id": "mapper_data/map_v0.json.schema",
+  "id": "mapper_data/map_v1.json.schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Map V1",
   "description": "Map database, version 1.",
   "type": "object",
   "patternProperties": {
     "^schema_version$": {
-      "type": "integer"
+      "type": "integer",
+      "enum": [1]
     },
     "^[0-9]+$": {
       "type": "object",
@@ -208,5 +209,6 @@
       "additionalProperties": false
     }
   },
+  "required": ["schema_version"],
   "additionalProperties": false
 }
