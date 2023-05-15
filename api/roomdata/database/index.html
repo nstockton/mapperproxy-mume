@@ -801,8 +801,10 @@
 <span class="sd">	Args:</span>
 <span class="sd">		labels: The labels database to be saved.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>  <span class="c1"># Shallow copy.</span>
-	<span class="n">output</span><span class="p">[</span><span class="s2">&quot;schema_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LABELS_SCHEMA_VERSION</span>
+	<span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s2">&quot;schema_version&quot;</span><span class="p">:</span> <span class="n">LABELS_SCHEMA_VERSION</span><span class="p">,</span>
+		<span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span>  <span class="c1"># Shallow copy.</span>
+	<span class="p">}</span>
 	<span class="n">_dump</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">getSchemaPath</span><span class="p">(</span><span class="n">LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">LABELS_SCHEMA_VERSION</span><span class="p">))</span>
 </code></pre></div>
         </details>
@@ -987,12 +989,14 @@
 	<span class="n">errorMessages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">labels</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 	<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">SAMPLE_LABELS_FILE_PATH</span><span class="p">,</span> <span class="n">LABELS_FILE_PATH</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+			<span class="k">continue</span>
 		<span class="n">errors</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">schemaVersion</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">dataType</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;user&quot;</span>
 			<span class="n">errorMessages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;While loading </span><span class="si">{</span><span class="n">dataType</span><span class="si">}</span><span class="s2"> labels: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+			<span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">result</span> <span class="k">if</span> <span class="n">schemaVersion</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">])</span>
 	<span class="k">if</span> <span class="n">labels</span><span class="p">:</span>
 		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">schemaVersion</span>
 	<span class="k">else</span><span class="p">:</span>
