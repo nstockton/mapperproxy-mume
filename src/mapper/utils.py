@@ -15,7 +15,7 @@ import re
 import shutil
 import sys
 import textwrap
-from collections.abc import ByteString, Callable, Sequence
+from collections.abc import ByteString, Callable, Container, Sequence
 from contextlib import suppress
 from pydoc import pager
 from typing import Any, Optional, Union
@@ -496,3 +496,33 @@ def page(lines: Sequence[str]) -> None:
 	# occasional blank lines in the terminal output.
 	text = "\n".join(textwrap.fill(line.strip(), width - 1) for line in lines)
 	pager(text)
+
+
+class ContainerEmptyMixin:
+	"""
+	A mixin class to be used in unit tests.
+	"""
+
+	assertIsInstance: Callable[..., Any]
+	assertTrue: Callable[..., Any]
+	assertFalse: Callable[..., Any]
+
+	def assertContainerEmpty(self, obj: Container[Any]) -> None:
+		"""
+		Asserts whether the given object is an empty container.
+
+		Args:
+			obj: The object to test.
+		"""
+		self.assertIsInstance(obj, Container)
+		self.assertFalse(obj)
+
+	def assertContainerNotEmpty(self, obj: Container[Any]) -> None:
+		"""
+		Asserts whether the given object is a non-empty container.
+
+		Args:
+			obj: The object to test.
+		"""
+		self.assertIsInstance(obj, Container)
+		self.assertTrue(obj)

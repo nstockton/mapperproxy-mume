@@ -11,11 +11,28 @@ import os
 import sys
 import textwrap
 from collections.abc import Callable
+from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, mock_open, patch
 
 # Mapper Modules:
 from mapper import utils
+
+
+class MockTestCase(Mock):
+	"""
+	A mocked version of TestCase.
+	"""
+
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
+		kwargs["spec_set"] = TestCase
+		super().__init__(*args, **kwargs)
+
+
+class ContainerEmpty(utils.ContainerEmptyMixin, MockTestCase):
+	"""
+	ContainerEmptyMixin with mocked TestCase.
+	"""
 
 
 class TestUtils(TestCase):
@@ -209,3 +226,13 @@ class TestUtils(TestCase):
 		utils.page(lines)
 		text: str = "\n".join(textwrap.fill(line.strip(), cols - 1) for line in lines)
 		mockPager.assert_called_once_with(text)
+
+	def test_ContainerEmptyMixin(self) -> None:
+		test = ContainerEmpty()
+		test.assertContainerEmpty([])
+		test.assertIsInstance.assert_called_once()
+		test.assertFalse.assert_called_once()
+		test.reset_mock()
+		test.assertContainerNotEmpty([])
+		test.assertIsInstance.assert_called_once()
+		test.assertTrue.assert_called_once()
