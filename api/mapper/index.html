@@ -1930,7 +1930,9 @@
 		<span class="k">if</span> <span class="n">lightSymbol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">lightSymbol</span> <span class="ow">in</span> <span class="n">LIGHT_SYMBOLS</span><span class="p">:</span>
 			<span class="n">light</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LIGHT_SYMBOLS</span><span class="p">[</span><span class="n">lightSymbol</span><span class="p">]</span>
 			<span class="k">if</span> <span class="n">light</span> <span class="o">==</span> <span class="s2">&quot;lit&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">light</span> <span class="o">!=</span> <span class="n">light</span><span class="p">:</span>
-				<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rlight</span><span class="p">(</span><span class="s2">&quot;lit&quot;</span><span class="p">))</span>
+				<span class="c1"># Todo: Orc can define sundeath, troll can define no_sundeath and lit/dark.</span>
+				<span class="c1"># output.append(self.rlight(&quot;lit&quot;))</span>
+				<span class="k">pass</span>
 		<span class="n">ridable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ride&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ridden&quot;</span><span class="p">))</span>
 		<span class="k">if</span> <span class="n">ridable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">!=</span> <span class="s2">&quot;ridable&quot;</span><span class="p">:</span>
 			<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;ridable&quot;</span><span class="p">))</span>
@@ -2426,6 +2428,7 @@ This represents the Thread ID as reported by the kernel.</p>
     </div>
 
   </div>
+
 
 
 
@@ -3404,6 +3407,7 @@ exception.</p>
     </div>
 
   </div>
+
 
 
 

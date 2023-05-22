@@ -371,6 +371,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#mapper.roomdata.objects.Room.coordinates" class="md-nav__link">
+    coordinates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.roomdata.objects.Room.info" class="md-nav__link">
     info
   </a>
@@ -401,6 +408,20 @@
           <li class="md-nav__item">
   <a href="#mapper.roomdata.objects.Room.directionTo" class="md-nav__link">
     directionTo()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.roomdata.objects.Room.hasUndefinedExits" class="md-nav__link">
+    hasUndefinedExits()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.roomdata.objects.Room.isOrphan" class="md-nav__link">
+    isOrphan()
   </a>
   
 </li>
@@ -696,6 +717,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#mapper.roomdata.objects.Room.coordinates" class="md-nav__link">
+    coordinates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mapper.roomdata.objects.Room.info" class="md-nav__link">
     info
   </a>
@@ -726,6 +754,20 @@
           <li class="md-nav__item">
   <a href="#mapper.roomdata.objects.Room.directionTo" class="md-nav__link">
     directionTo()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.roomdata.objects.Room.hasUndefinedExits" class="md-nav__link">
+    hasUndefinedExits()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapper.roomdata.objects.Room.isOrphan" class="md-nav__link">
+    isOrphan()
   </a>
   
 </li>
@@ -776,6 +818,7 @@
 
 
   <div class="doc doc-children">
+
 
 
 
@@ -941,6 +984,17 @@
 		<span class="k">return</span> <span class="kc">False</span>
 
 	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">COORDINATES_TYPE</span><span class="p">:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;The room coordinates.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+	<span class="nd">@coordinates</span><span class="o">.</span><span class="n">setter</span>
+	<span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected sequence of length 3.&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">value</span>
+
+	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">sortedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Exit</span><span class="p">]]:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The room exits, sorted by direction.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
@@ -1050,6 +1104,24 @@
 			<span class="k">return</span> <span class="s2">&quot;same X-Y&quot;</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">return</span> <span class="n">COMPASS_DIRECTIONS</span><span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">45</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Determines if room is an orphan, based on the existence of undefined exits.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			True if room contains no exits or only undefined exits, False otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+	<span class="k">def</span> <span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Determines if room contains one or more undefined exits.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			True if room contains at least one undefined exit, False otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 </code></pre></div>
         </details>
 
@@ -1059,6 +1131,29 @@
 
 
 
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="mapper.roomdata.objects.Room.coordinates" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">COORDINATES_TYPE</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-writable"><code>writable</code></small>
+  </span>
+
+<a href="#mapper.roomdata.objects.Room.coordinates" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>The room coordinates.</p>
+    </div>
+
+  </div>
 
 
 
@@ -1300,6 +1395,100 @@
 		<span class="k">return</span> <span class="s2">&quot;same X-Y&quot;</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="k">return</span> <span class="n">COMPASS_DIRECTIONS</span><span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">45</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.roomdata.objects.Room.hasUndefinedExits" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#mapper.roomdata.objects.Room.hasUndefinedExits" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Determines if room contains one or more undefined exits.</p>
+
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if room contains at least one undefined exit, False otherwise.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Determines if room contains one or more undefined exits.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		True if room contains at least one undefined exit, False otherwise.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="mapper.roomdata.objects.Room.isOrphan" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#mapper.roomdata.objects.Room.isOrphan" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Determines if room is an orphan, based on the existence of undefined exits.</p>
+
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if room contains no exits or only undefined exits, False otherwise.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Determines if room is an orphan, based on the existence of undefined exits.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		True if room contains no exits or only undefined exits, False otherwise.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 </code></pre></div>
         </details>
     </div>

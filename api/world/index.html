@@ -892,8 +892,9 @@
 				<span class="n">newRoom</span><span class="o">.</span><span class="n">sundeath</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;sundeath&quot;</span><span class="p">]</span>
 			<span class="n">terrain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;terrain&quot;</span><span class="p">]</span>
 			<span class="n">newRoom</span><span class="o">.</span><span class="n">terrain</span> <span class="o">=</span> <span class="n">terrainReplacements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">terrain</span><span class="p">,</span> <span class="n">terrain</span><span class="p">)</span>
-			<span class="n">coordinates</span> <span class="o">=</span> <span class="p">(</span><span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">])</span>
-			<span class="n">newRoom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">newRoom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">newRoom</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">coordinates</span>
+			<span class="n">newRoom</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+			<span class="n">newRoom</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+			<span class="n">newRoom</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
 			<span class="n">newRoom</span><span class="o">.</span><span class="n">calculateCost</span><span class="p">()</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">vnum</span><span class="p">]</span> <span class="o">=</span> <span class="n">newRoom</span>
 			<span class="n">roomDict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -922,7 +923,7 @@
 			<span class="n">newRoom</span><span class="o">.</span><span class="n">ridable</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;ridable&quot;</span><span class="p">]</span>
 			<span class="n">newRoom</span><span class="o">.</span><span class="n">sundeath</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;sundeath&quot;</span><span class="p">]</span>
 			<span class="n">newRoom</span><span class="o">.</span><span class="n">terrain</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;terrain&quot;</span><span class="p">]</span>
-			<span class="n">newRoom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">newRoom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">newRoom</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">]</span>
+			<span class="n">newRoom</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">]</span>
 			<span class="k">if</span> <span class="n">schemaVersion</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
 				<span class="n">newRoom</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;area&quot;</span><span class="p">]</span>
 				<span class="n">newRoom</span><span class="o">.</span><span class="n">serverID</span> <span class="o">=</span> <span class="n">roomDict</span><span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
@@ -967,7 +968,7 @@
 			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">area</span>
 			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;avoid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">avoid</span>
 			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">dynamicDesc</span>
-			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">roomObj</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">coordinates</span>
 			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">desc</span>
 			<span class="n">newRoom</span><span class="p">[</span><span class="s2">&quot;exits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 			<span class="k">for</span> <span class="n">direction</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="n">roomObj</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1998,6 +1999,24 @@
 			<span class="n">similarLabels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">text</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown label. Did you mean </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">similarLabels</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span><span class="si">}</span><span class="s2">?&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="kc">None</span>
+
+	<span class="k">def</span> <span class="nf">crawl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">borders</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+		<span class="n">explored</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+		<span class="n">unexplored</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+		<span class="n">unexplored</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+		<span class="k">while</span> <span class="n">unexplored</span><span class="p">:</span>
+			<span class="n">vnum</span> <span class="o">=</span> <span class="n">unexplored</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+			<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="p">[</span><span class="n">vnum</span><span class="p">]</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+				<span class="k">if</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">explored</span> <span class="ow">and</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">borders</span> <span class="ow">and</span> <span class="n">exitObj</span><span class="o">.</span><span class="n">to</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+					<span class="n">unexplored</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span><span class="p">)</span>
+			<span class="n">explored</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vnum</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">explored</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">overlapping</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">COORDINATES_TYPE</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="o">...</span><span class="p">]:</span>
+		<span class="n">results</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">COORDINATES_TYPE</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">vnum</span><span class="p">,</span> <span class="n">room</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="n">results</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">coordinates</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vnum</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">coordinates</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vnums</span><span class="p">))</span> <span class="k">for</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">vnums</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vnums</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -2039,6 +2058,7 @@
     </div>
 
   </div>
+
 
 
 
@@ -2317,6 +2337,7 @@ you just came from would put you back where you started, False otherwise.</p>
     </div>
 
   </div>
+
 
 
 
