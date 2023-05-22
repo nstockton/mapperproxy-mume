@@ -11,6 +11,7 @@ from unittest import TestCase
 
 # Mapper Modules:
 from mapper.roomdata.objects import DIRECTIONS, Exit, Room
+from mapper.utils import ContainerEmptyMixin
 
 
 class TestExit(TestCase):
@@ -29,7 +30,7 @@ class TestExit(TestCase):
 		self.assertEqual(self.exit.direction, "north")
 
 
-class TestRoom(TestCase):
+class TestRoom(ContainerEmptyMixin, TestCase):
 	def setUp(self) -> None:
 		self.room: Room = Room()
 
@@ -39,6 +40,16 @@ class TestRoom(TestCase):
 	def testRoomCompare(self) -> None:
 		tempRoom: Room = Room()
 		self.assertFalse(self.room < tempRoom)
+
+	def testCoordinates(self) -> None:
+		self.room.x = 1
+		self.room.y = 2
+		self.room.z = 3
+		self.assertEqual(self.room.coordinates, (1, 2, 3))
+		self.room.coordinates = (4, 5, 6)
+		self.assertEqual((self.room.x, self.room.y, self.room.z), self.room.coordinates)
+		with self.assertRaises(ValueError):
+			self.room.coordinates = (1, 2)  # type: ignore[assignment]
 
 	def testRoomSortedExits(self) -> None:
 		exits: list[tuple[str, Exit]] = [(direction, Exit()) for direction in DIRECTIONS]
@@ -197,3 +208,24 @@ class TestRoom(TestCase):
 		self.assertEqual(self.room.directionTo(tempRoom), "southwest")
 		tempRoom.y = 100
 		self.assertEqual(self.room.directionTo(tempRoom), "south")
+
+	def testIsOrphan(self) -> None:
+		self.assertContainerEmpty(self.room.exits)
+		self.assertTrue(self.room.isOrphan())
+		self.room.exits["north"] = Exit()
+		self.room.exits["north"].to = "undefined"
+		self.room.exits["south"] = Exit()
+		self.room.exits["south"].to = "undefined"
+		self.assertTrue(self.room.isOrphan())
+		self.room.exits["east"] = Exit()
+		self.room.exits["east"].to = "0"
+		self.assertFalse(self.room.isOrphan())
+
+	def testHasUndefinedExits(self) -> None:
+		self.assertContainerEmpty(self.room.exits)
+		self.assertFalse(self.room.hasUndefinedExits())
+		self.room.exits["north"] = Exit()
+		self.room.exits["north"].to = "undefined"
+		self.room.exits["east"] = Exit()
+		self.room.exits["east"].to = "0"
+		self.assertTrue(self.room.hasUndefinedExits())

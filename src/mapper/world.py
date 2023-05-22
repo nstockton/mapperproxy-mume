@@ -13,7 +13,7 @@ import itertools
 import operator
 import re
 import warnings
-from collections.abc import Callable, Generator, MutableSequence, Sequence
+from collections.abc import Callable, Generator, Iterable, MutableSequence, Sequence
 from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer as defaultTimer
@@ -33,6 +33,7 @@ from .roomdata.database import (
 	loadRooms,
 )
 from .roomdata.objects import (
+	COORDINATES_TYPE,
 	DIRECTION_COORDINATES,
 	DIRECTIONS,
 	REVERSE_DIRECTIONS,
@@ -203,8 +204,9 @@ class World(object):
 				newRoom.sundeath = roomDict["sundeath"]
 			terrain: str = roomDict["terrain"]
 			newRoom.terrain = terrainReplacements.get(terrain, terrain)
-			coordinates = (roomDict["x"], roomDict["y"], roomDict["z"])
-			newRoom.x, newRoom.y, newRoom.z = coordinates
+			newRoom.x = roomDict["x"]
+			newRoom.y = roomDict["y"]
+			newRoom.z = roomDict["z"]
 			newRoom.calculateCost()
 			self.rooms[vnum] = newRoom
 			roomDict.clear()
@@ -233,7 +235,7 @@ class World(object):
 			newRoom.ridable = roomDict["ridable"]
 			newRoom.sundeath = roomDict["sundeath"]
 			newRoom.terrain = roomDict["terrain"]
-			newRoom.x, newRoom.y, newRoom.z = roomDict["coordinates"]
+			newRoom.coordinates = roomDict["coordinates"]
 			if schemaVersion >= 2:
 				newRoom.area = roomDict["area"]
 				newRoom.serverID = roomDict["server_id"]
@@ -278,7 +280,7 @@ class World(object):
 			newRoom["area"] = roomObj.area
 			newRoom["avoid"] = roomObj.avoid
 			newRoom["contents"] = roomObj.dynamicDesc
-			newRoom["coordinates"] = (roomObj.x, roomObj.y, roomObj.z)
+			newRoom["coordinates"] = roomObj.coordinates
 			newRoom["description"] = roomObj.desc
 			newRoom["exits"] = {}
 			for direction, exitObj in roomObj.exits.items():
@@ -1309,3 +1311,21 @@ class World(object):
 			similarLabels: list[str] = sorted(self.labels, key=lambda l: fuzz.ratio(l, text), reverse=True)
 			self.output(f"Unknown label. Did you mean {', '.join(similarLabels[0:4])}?")
 		return None
+
+	def crawl(self, start: str, borders: Iterable[str]) -> tuple[str, ...]:
+		explored: set[str] = set()
+		unexplored: set[str] = set()
+		unexplored.add(start)
+		while unexplored:
+			vnum = unexplored.pop()
+			for _, exitObj in self.rooms[vnum].exits.items():
+				if exitObj.to not in explored and exitObj.to not in borders and exitObj.to.isdigit():
+					unexplored.add(exitObj.to)
+			explored.add(vnum)
+		return tuple(explored)
+
+	def overlapping(self) -> tuple[tuple[COORDINATES_TYPE, tuple[str, ...]], ...]:
+		results: dict[COORDINATES_TYPE, list[str]] = {}
+		for vnum, room in self.rooms.items():
+			results.setdefault(room.coordinates, []).append(vnum)
+		return tuple((coordinates, tuple(vnums)) for coordinates, vnums in results.items() if len(vnums) > 1)

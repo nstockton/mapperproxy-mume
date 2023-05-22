@@ -8,12 +8,14 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
-from typing import Union
+from collections.abc import Sequence
+from typing import Tuple, Union
 
 # Local Modules:
 from ..gui.vec2d import Vec2d
 
 
+COORDINATES_TYPE = Tuple[int, int, int]
 DIRECTIONS: tuple[str, ...] = (
 	"north",
 	"east",
@@ -30,7 +32,7 @@ REVERSE_DIRECTIONS: dict[str, str] = {
 	"up": "down",
 	"down": "up",
 }
-DIRECTION_COORDINATES: dict[str, tuple[int, int, int]] = {
+DIRECTION_COORDINATES: dict[str, COORDINATES_TYPE] = {
 	"north": (0, 1, 0),
 	"south": (0, -1, 0),
 	"west": (-1, 0, 0),
@@ -220,6 +222,17 @@ class Room(object):
 		return False
 
 	@property
+	def coordinates(self) -> COORDINATES_TYPE:
+		"""The room coordinates."""
+		return (self.x, self.y, self.z)
+
+	@coordinates.setter
+	def coordinates(self, value: Sequence[int]) -> None:
+		if len(value) != 3:
+			raise ValueError("Expected sequence of length 3.")
+		self.x, self.y, self.z = value
+
+	@property
 	def sortedExits(self) -> list[tuple[str, Exit]]:
 		"""The room exits, sorted by direction."""
 		return sorted(
@@ -329,3 +342,21 @@ class Room(object):
 			return "same X-Y"
 		else:
 			return COMPASS_DIRECTIONS[round((90 - delta.angle_degrees + 360) % 360 / 45) % 8]
+
+	def isOrphan(self) -> bool:
+		"""
+		Determines if room is an orphan, based on the existence of undefined exits.
+
+		Returns:
+			True if room contains no exits or only undefined exits, False otherwise.
+		"""
+		return all(exitObj.to == "undefined" for _, exitObj in self.exits.items())
+
+	def hasUndefinedExits(self) -> bool:
+		"""
+		Determines if room contains one or more undefined exits.
+
+		Returns:
+			True if room contains at least one undefined exit, False otherwise.
+		"""
+		return any(exitObj.to == "undefined" for _, exitObj in self.exits.items())
