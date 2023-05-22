@@ -26,6 +26,7 @@ class MockTestCase(Mock):
 
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		kwargs["spec_set"] = TestCase
+		kwargs["unsafe"] = True
 		super().__init__(*args, **kwargs)
 
 
