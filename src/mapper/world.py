@@ -554,7 +554,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(results[:20])
 		)
@@ -573,7 +573,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(results[:20])
 		)
@@ -596,7 +596,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(sorted(results, key=lambda r: r.manhattanDistance(currentRoom))[:20])
 		)
@@ -615,7 +615,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(results[:20])
 		)
@@ -634,7 +634,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(results[:20])
 		)
@@ -653,7 +653,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(results[:20])
 		)
@@ -672,7 +672,7 @@ class World(object):
 				direction=currentRoom.directionTo(roomObj),
 				clockPosition=currentRoom.clockPositionTo(roomObj),
 				distance=currentRoom.manhattanDistance(roomObj),
-				**vars(roomObj),
+				**{i: getattr(roomObj, i) for i in dir(roomObj)},
 			)
 			for roomObj in reversed(results[:20])
 		)
