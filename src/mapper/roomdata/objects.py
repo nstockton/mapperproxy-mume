@@ -8,7 +8,9 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
+import sys
 from collections.abc import Sequence
+from dataclasses import dataclass, field
 from typing import Tuple, Union
 
 # Local Modules:
@@ -153,20 +155,33 @@ VALID_DOOR_FLAGS: tuple[str, ...] = (
 	"action",  # Action controlled
 	"no_bash",
 )
+DATACLASS_KWARGS: dict[str, bool] = {"eq": False}  # Use the default __hash__ method for speed.
 
 
+if sys.version_info >= (3, 10):  # pragma: no cover
+	# Python 3.10 and up adds a "slots" argument to automatically generate a __slots__ attribute.
+	DATACLASS_KWARGS["slots"] = True
+
+
+@dataclass(**DATACLASS_KWARGS)
 class Exit(object):
 	"""
 	An exit.
 	"""
 
-	def __init__(self) -> None:
-		self._direction: str = ""
-		self.vnum: Union[str, None] = None
-		self.to: str = "undefined"
-		self.exitFlags: set[str] = set(["exit"])
-		self.door: str = ""
-		self.doorFlags: set[str] = set()
+	_direction: str = ""
+	vnum: Union[str, None] = None
+	to: str = "undefined"
+	exitFlags: set[str] = field(default_factory=set)
+	door: str = ""
+	doorFlags: set[str] = field(default_factory=set)
+
+	def __post_init__(self) -> None:
+		"""Called after __init__."""
+		self.exitFlags.add("exit")
+
+	def __str__(self) -> str:
+		return self._direction
 
 	@property
 	def direction(self) -> str:
@@ -182,33 +197,37 @@ class Exit(object):
 		self._direction = value
 
 
+@dataclass(**DATACLASS_KWARGS)
 class Room(object):
 	"""
 	A room.
 	"""
 
-	def __init__(self) -> None:
-		self.vnum: str = "-1"
-		self.serverID: str = "0"  # Server room IDs are in range 1-0x7fffffff.
-		self.area: str = ""
-		self.name: str = ""
-		self.desc: str = ""
-		self.dynamicDesc: str = ""
-		self.note: str = ""
-		self.terrain: str = "undefined"
-		self.cost: float = TERRAIN_COSTS["undefined"]
-		self.light: str = "undefined"
-		self.align: str = "undefined"
-		self.portable: str = "undefined"
-		self.ridable: str = "undefined"
-		self.sundeath: str = "undefined"
-		self.avoid: bool = False
-		self.mobFlags: set[str] = set()
-		self.loadFlags: set[str] = set()
-		self.x: int = 0
-		self.y: int = 0
-		self.z: int = 0
-		self.exits: dict[str, Exit] = {}
+	# Cost needs to be defined first for correct sorting.
+	cost: float = field(init=False, repr=False, default=TERRAIN_COSTS["undefined"])
+	vnum: str = "-1"
+	serverID: str = "0"  # Server room IDs are in range 1-0x7fffffff.
+	area: str = ""
+	name: str = ""
+	desc: str = ""
+	dynamicDesc: str = ""
+	note: str = ""
+	terrain: str = "undefined"
+	light: str = "undefined"
+	align: str = "undefined"
+	portable: str = "undefined"
+	ridable: str = "undefined"
+	sundeath: str = "undefined"
+	avoid: bool = False
+	mobFlags: set[str] = field(default_factory=set)
+	loadFlags: set[str] = field(default_factory=set)
+	x: int = 0
+	y: int = 0
+	z: int = 0
+	exits: dict[str, Exit] = field(default_factory=dict)
+
+	def __str__(self) -> str:
+		return self.vnum
 
 	def __lt__(self, other: Room) -> bool:
 		# Unlike in Python 2 where most objects are sortable by default, our
@@ -219,6 +238,7 @@ class Room(object):
 		# We'll return False because we want heapq.heappush to sort the tuples
 		# of movement cost and room object by the first item in the tuple (room cost),
 		# and the order of rooms with the same movement cost is irrelevant.
+		# Note that this is much faster than passing the 'order' keyword to the dataclass decorator.
 		return False
 
 	@property
@@ -266,7 +286,7 @@ class Room(object):
 		output.append(f"Sundeath: '{self.sundeath}'")
 		output.append(f"Mob Flags: '{', '.join(self.mobFlags)}'")
 		output.append(f"Load Flags: '{', '.join(self.loadFlags)}'")
-		output.append(f"Coordinates (X, Y, Z): '{self.x}', '{self.y}', '{self.z}'")
+		output.append(f"Coordinates (X, Y, Z): '{self.coordinates}'")
 		output.append("Exits:")
 		for direction, exitObj in self.sortedExits:
 			output.append("-" * 5)
@@ -350,7 +370,7 @@ class Room(object):
 		Returns:
 			True if room contains no exits or only undefined exits, False otherwise.
 		"""
-		return all(exitObj.to == "undefined" for _, exitObj in self.exits.items())
+		return all(exitObj.to == "undefined" for exitObj in self.exits.values())
 
 	def hasUndefinedExits(self) -> bool:
 		"""
@@ -359,4 +379,4 @@ class Room(object):
 		Returns:
 			True if room contains at least one undefined exit, False otherwise.
 		"""
-		return any(exitObj.to == "undefined" for _, exitObj in self.exits.items())
+		return any(exitObj.to == "undefined" for exitObj in self.exits.values())

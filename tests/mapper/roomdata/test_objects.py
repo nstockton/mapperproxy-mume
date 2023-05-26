@@ -107,7 +107,7 @@ class TestRoom(ContainerEmptyMixin, TestCase):
 			+ f"Sundeath: '{self.room.sundeath}'\n"
 			+ f"Mob Flags: '{', '.join(self.room.mobFlags)}'\n"
 			+ f"Load Flags: '{', '.join(self.room.loadFlags)}'\n"
-			+ f"Coordinates (X, Y, Z): '{self.room.x}', '{self.room.y}', '{self.room.z}'\n"
+			+ f"Coordinates (X, Y, Z): '{self.room.coordinates}'\n"
 			+ "Exits:\n"
 			+ "-----\n"
 			+ "Direction: 'east'\n"
