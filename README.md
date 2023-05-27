@@ -17,8 +17,8 @@ They are a modified version of [fantasy-tileset.png](https://opengameart.org/con
 
 This project created and maintained by [Nick Stockton.](https://github.com/nstockton)
 Numerous features and bug fixes contributed by [Ted Cooke.](https://github.com/BeastlyTheos)
+Sighted GUI and various additions contributed by [Pierre-Jean Fichet.](https://github.com/pjfichet)
 High contrast GUI contributed by Katalina Durden.
-Sighted GUI and various additions contributed by Lindisse.
 
 ## Documentation
 
@@ -119,6 +119,7 @@ Auto mapping mode must be on for these commands to have any effect.
 
 ### Searching Commands
 
+* `farea [text]`  --  Search the map for rooms with areas matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
 * `fdoor [text]`  --  Search the map for rooms with doors matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
 * `fdynamic [text]`  --  Search the map for rooms with dynamic descriptions matching text. Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
 * `fsid [number]`  --  Search the map for rooms with server IDs matching number (0 for undefined IDs). Returns the nearest 20 rooms to you (furthest to closest) based on the [Manhattan Distance.](https://en.wikipedia.org/wiki/Taxicab_geometry "Wikipedia Page On Taxicab Geometry")
