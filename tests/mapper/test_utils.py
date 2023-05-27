@@ -228,6 +228,10 @@ class TestUtils(TestCase):
 		text: str = "\n".join(textwrap.fill(line.strip(), cols - 1) for line in lines)
 		mockPager.assert_called_once_with(text)
 
+	def test_average(self) -> None:
+		self.assertEqual(utils.average(range(7)), 3)
+		self.assertEqual(utils.average([]), 0)
+
 	def test_ContainerEmptyMixin(self) -> None:
 		test = ContainerEmpty()
 		test.assertContainerEmpty([])

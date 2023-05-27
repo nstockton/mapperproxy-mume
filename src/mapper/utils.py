@@ -13,9 +13,10 @@ import math
 import os
 import re
 import shutil
+import statistics
 import sys
 import textwrap
-from collections.abc import ByteString, Callable, Container, Sequence
+from collections.abc import ByteString, Callable, Container, Iterable, Sequence
 from contextlib import suppress
 from pydoc import pager
 from typing import Any, Optional, Union
@@ -496,6 +497,23 @@ def page(lines: Sequence[str]) -> None:
 	# occasional blank lines in the terminal output.
 	text = "\n".join(textwrap.fill(line.strip(), width - 1) for line in lines)
 	pager(text)
+
+
+def average(items: Iterable[float]) -> float:
+	"""
+	Calculates the average item length of an iterable.
+
+	Args:
+		items: The iterable of items.
+
+	Returns:
+		The average item length.
+	"""
+	try:
+		return statistics.mean(items)
+	except statistics.StatisticsError:
+		# No items.
+		return 0
 
 
 class ContainerEmptyMixin:
