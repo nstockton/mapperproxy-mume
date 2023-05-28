@@ -21,7 +21,7 @@ from timeit import default_timer as defaultTimer
 from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
 
 # Third-party Modules:
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 
 # Local Modules:
 from .roomdata.database import (
