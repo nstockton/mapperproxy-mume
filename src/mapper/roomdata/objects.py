@@ -17,7 +17,13 @@ from typing import Tuple, Union
 from ..gui.vec2d import Vec2d
 
 
-COORDINATES_TYPE = Tuple[int, int, int]
+if sys.version_info < (3, 10):  # pragma: no cover
+	from typing_extensions import TypeAlias
+else:  # pragma: no cover
+	from typing import TypeAlias
+
+
+COORDINATES_TYPE: TypeAlias = Tuple[int, int, int]
 DIRECTIONS: tuple[str, ...] = (
 	"north",
 	"east",

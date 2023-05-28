@@ -11,6 +11,7 @@ import json
 import logging
 import re
 import socket
+import sys
 import textwrap
 import threading
 import traceback
@@ -24,7 +25,6 @@ from typing import Any, Optional, Union
 from mudproto.mpi import MPIProtocol
 from mudproto.utils import escapeXMLString
 from mudproto.xml import EVENT_CALLER_TYPE
-from typing_extensions import TypeAlias
 
 # Local Modules:
 from . import INTERFACES, OUTPUT_FORMATS
@@ -36,6 +36,12 @@ from .proxy import Player, ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
 from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
+
+
+if sys.version_info < (3, 10):  # pragma: no cover
+	from typing_extensions import TypeAlias
+else:  # pragma: no cover
+	from typing import TypeAlias
 
 
 MAPPER_QUEUE_TYPE: TypeAlias = Union[EVENT_CALLER_TYPE, None]

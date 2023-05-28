@@ -12,6 +12,7 @@ import heapq
 import itertools
 import operator
 import re
+import sys
 import warnings
 from collections.abc import Callable, Generator, Iterable, MutableSequence, Sequence
 from contextlib import suppress
@@ -21,7 +22,6 @@ from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
 
 # Third-party Modules:
 from fuzzywuzzy import fuzz
-from typing_extensions import TypeAlias
 
 # Local Modules:
 from .roomdata.database import (
@@ -48,16 +48,22 @@ from .roomdata.objects import (
 from .utils import regexFuzzy
 
 
-# Ignore warning from Pyglet's Windows Imaging Component module.
-warnings.filterwarnings(
-	"ignore",
-	message=r"\[WinError -2147417850\] Cannot change thread mode after it is set",
-)
+if sys.version_info < (3, 10):  # pragma: no cover
+	from typing_extensions import TypeAlias
+else:  # pragma: no cover
+	from typing import TypeAlias
 
 
 if TYPE_CHECKING:  # pragma: no cover
 	# Only import pyglet.window if type checking. Prevents slowdown during tests.
 	import pyglet.window
+
+
+# Ignore warning from Pyglet's Windows Imaging Component module.
+warnings.filterwarnings(
+	"ignore",
+	message=r"\[WinError -2147417850\] Cannot change thread mode after it is set",
+)
 
 
 GUI_QUEUE_TYPE: TypeAlias = Union[Tuple[str], Tuple[str, Room], None]
