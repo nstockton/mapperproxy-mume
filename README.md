@@ -40,11 +40,6 @@ python -m venv .venv
 source .venv/bin/activate
 pip install --upgrade --require-hashes --requirement requirements-poetry.txt
 poetry install --no-ansi
-```
-
-If you wish to contribute to this project, install the development dependencies with the following commands.
-```
-source .venv/bin/activate
 pre-commit install -t pre-commit
 pre-commit install -t pre-push
 ```
