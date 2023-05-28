@@ -2,7 +2,7 @@
 # python -B -m pre_commit run --all-files
 # Update this file:
 # python -B -m pre_commit autoupdate
-exclude: '^$'
+exclude: '^requirements-poetry\.txt$'
 fail_fast: false
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -20,7 +20,7 @@ repos:
         args: ["--django"]
         stages: [commit]
       - id: requirements-txt-fixer
-        args: ["requirements-poetry.txt"]
+        #args: ["requirements.txt"]
         stages: [commit]
       - id: trailing-whitespace
         stages: [commit]
