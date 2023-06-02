@@ -108,7 +108,7 @@
 	use-tabs = true
 	safe = true
 	line-length = 110
-	target-version = ["py37", "py38", "py39", "py310"]
+	target-version = ["py38", "py39", "py310"]
 	exclude = '(/(\.eggs|\.git|\.mypy_cache|\.tox|\.venv|build|dist)|__pycache__)'
 	include = '/((src/mapper|tests).*\.py[isw]?|pyinstaller_windows\.spec)$'
 
