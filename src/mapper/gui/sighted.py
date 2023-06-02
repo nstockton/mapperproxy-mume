@@ -195,9 +195,10 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		x: int
 		y: int
 		z: int
-		for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=centerRoom, radius=self.radius):
-			if z == 0:
-				self.draw_room(self.mcol + x, self.mrow + y, room)
+		with self.world.roomsLock:
+			for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=centerRoom, radius=self.radius):
+				if z == 0:
+					self.draw_room(self.mcol + x, self.mrow + y, room)
 		self.draw_player()
 
 	def draw_room(self, x: int, y: int, room: Room) -> None:

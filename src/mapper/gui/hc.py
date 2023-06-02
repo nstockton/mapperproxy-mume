@@ -627,12 +627,15 @@ class Window(pyglet.window.Window):
 		logger.debug(f"Drawing rooms near {currentRoom}")
 		self.draw_room(currentRoom, self.cp, group=self.groups[1])
 		newrooms = {currentRoom.vnum}
-		neighbors = self.world.getNeighborsFromRoom(start=currentRoom, radius=self.room_draw_radius)
-		for vnum, room, x, y, z in neighbors:
-			if z == 0:
-				newrooms.add(vnum)
-				delta = Vec2d(x, y) * (self.size * (1 if self.continuous_view else self.gap_as_float + 1.0))
-				self.draw_room(room, self.cp + delta)
+		with self.world.roomsLock:
+			neighbors = self.world.getNeighborsFromRoom(start=currentRoom, radius=self.room_draw_radius)
+			for vnum, room, x, y, z in neighbors:
+				if z == 0:
+					newrooms.add(vnum)
+					delta = Vec2d(x, y) * (
+						self.size * (1 if self.continuous_view else self.gap_as_float + 1.0)
+					)
+					self.draw_room(room, self.cp + delta)
 		if self.visible_rooms:
 			for vnum in set(self.visible_rooms) - newrooms:
 				self.visible_rooms[vnum][0].delete()

@@ -13,6 +13,7 @@ import itertools
 import operator
 import re
 import sys
+import threading
 import warnings
 from collections.abc import Callable, Generator, Iterable, MutableSequence, Sequence
 from contextlib import suppress
@@ -96,6 +97,7 @@ TERRAIN_SYMBOLS: dict[str, str] = {
 
 class World(object):
 	def __init__(self, interface: str = "text") -> None:
+		self.roomsLock = threading.Lock()
 		self.isSynced: bool = False
 		self.rooms: dict[str, Room] = {}
 		self.labels: dict[str, str] = {}
@@ -263,10 +265,11 @@ class World(object):
 			return None
 		schemaVersionOutput: str = "latest" if schemaVersion == MAP_SCHEMA_VERSION else f"V{schemaVersion}"
 		self.output(f"Creating room objects with {schemaVersionOutput} schema.")
-		if schemaVersion < 1:
-			self.loadRoomsV0(db)
-		else:
-			self.loadRoomsV1Through2(db, schemaVersion)
+		with self.roomsLock:
+			if schemaVersion < 1:
+				self.loadRoomsV0(db)
+			else:
+				self.loadRoomsV1Through2(db, schemaVersion)
 		db.clear()
 		self.currentRoom = self.rooms["0"]
 		if not gc.isenabled():
@@ -280,33 +283,34 @@ class World(object):
 			gc.disable()
 		self.output("Creating dict from room objects.")
 		db: dict[str, dict[str, Any]] = {}
-		for vnum, roomObj in self.rooms.items():
-			newRoom: dict[str, Any] = {}
-			newRoom["alignment"] = roomObj.align
-			newRoom["area"] = roomObj.area
-			newRoom["avoid"] = roomObj.avoid
-			newRoom["contents"] = roomObj.dynamicDesc
-			newRoom["coordinates"] = roomObj.coordinates
-			newRoom["description"] = roomObj.desc
-			newRoom["exits"] = {}
-			for direction, exitObj in roomObj.exits.items():
-				newExit: dict[str, Any] = {}
-				newExit["door"] = exitObj.door
-				newExit["door_flags"] = sorted(exitObj.doorFlags)
-				newExit["exit_flags"] = sorted(exitObj.exitFlags)
-				newExit["to"] = exitObj.to
-				newRoom["exits"][direction] = newExit
-			newRoom["light"] = roomObj.light
-			newRoom["load_flags"] = sorted(roomObj.loadFlags)
-			newRoom["mob_flags"] = sorted(roomObj.mobFlags)
-			newRoom["name"] = roomObj.name
-			newRoom["note"] = roomObj.note
-			newRoom["portable"] = roomObj.portable
-			newRoom["ridable"] = roomObj.ridable
-			newRoom["server_id"] = roomObj.serverID
-			newRoom["sundeath"] = roomObj.sundeath
-			newRoom["terrain"] = roomObj.terrain
-			db[vnum] = newRoom
+		with self.roomsLock:
+			for vnum, roomObj in self.rooms.items():
+				newRoom: dict[str, Any] = {}
+				newRoom["alignment"] = roomObj.align
+				newRoom["area"] = roomObj.area
+				newRoom["avoid"] = roomObj.avoid
+				newRoom["contents"] = roomObj.dynamicDesc
+				newRoom["coordinates"] = roomObj.coordinates
+				newRoom["description"] = roomObj.desc
+				newRoom["exits"] = {}
+				for direction, exitObj in roomObj.exits.items():
+					newExit: dict[str, Any] = {}
+					newExit["door"] = exitObj.door
+					newExit["door_flags"] = sorted(exitObj.doorFlags)
+					newExit["exit_flags"] = sorted(exitObj.exitFlags)
+					newExit["to"] = exitObj.to
+					newRoom["exits"][direction] = newExit
+				newRoom["light"] = roomObj.light
+				newRoom["load_flags"] = sorted(roomObj.loadFlags)
+				newRoom["mob_flags"] = sorted(roomObj.mobFlags)
+				newRoom["name"] = roomObj.name
+				newRoom["note"] = roomObj.note
+				newRoom["portable"] = roomObj.portable
+				newRoom["ridable"] = roomObj.ridable
+				newRoom["server_id"] = roomObj.serverID
+				newRoom["sundeath"] = roomObj.sundeath
+				newRoom["terrain"] = roomObj.terrain
+				db[vnum] = newRoom
 		self.output("Saving the database.")
 		dumpRooms(db)
 		if not gc.isenabled():
@@ -457,20 +461,24 @@ class World(object):
 		vnum: str
 		if text.isdigit():
 			vnum = text
-			if vnum not in self.rooms:
+			if self.currentRoom.vnum == vnum:
+				self.isSynced = False
+				self.currentRoom = self.rooms.get("0", Room())
+			elif vnum not in self.rooms:
 				return f"Error: the vnum '{vnum}' does not exist."
 		elif self.isSynced:
 			vnum = self.currentRoom.vnum
 			self.isSynced = False
-			self.currentRoom = self.rooms["0"]
+			self.currentRoom = self.rooms.get("0", Room())
 		else:
 			return "Syntax: rdelete [vnum]"
 		output = f"Deleting room '{vnum}' with name '{self.rooms[vnum].name}'."
-		for roomVnum, roomObj in self.rooms.items():
-			for direction, exitObj in roomObj.exits.items():
-				if exitObj.to == vnum:
-					self.rooms[roomVnum].exits[direction].to = "undefined"
-		del self.rooms[vnum]
+		with self.roomsLock:
+			for roomVnum, roomObj in self.rooms.items():
+				for direction, exitObj in roomObj.exits.items():
+					if exitObj.to == vnum:
+						self.rooms[roomVnum].exits[direction].to = "undefined"
+			del self.rooms[vnum]
 		self.GUIRefresh()
 		return output
 
