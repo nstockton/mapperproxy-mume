@@ -10,7 +10,6 @@ from __future__ import annotations
 import gc
 import heapq
 import itertools
-import operator
 import re
 import sys
 import threading
@@ -414,10 +413,10 @@ class World(object):
 		return result
 
 	def coordinatesSubtract(self, first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
-		return tuple(map(operator.sub, first, second))
+		return tuple(a - b for a, b in zip(first, second))
 
 	def coordinatesAdd(self, first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
-		return tuple(map(operator.add, first, second))
+		return tuple(a + b for a, b in zip(first, second))
 
 	def coordinatesAddDirection(self, coordinates: Sequence[int], direction: str) -> tuple[int, ...]:
 		if direction not in DIRECTIONS:

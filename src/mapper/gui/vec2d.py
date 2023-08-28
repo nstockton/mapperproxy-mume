@@ -27,7 +27,6 @@ from __future__ import annotations
 
 # Built-in Modules:
 import math
-import operator
 from typing import NamedTuple
 
 
@@ -163,7 +162,7 @@ class Vec2d(NamedTuple):
 		>>> -Vec2d(1,-2)
 		Vec2d(-1, 2)
 		"""
-		return Vec2d(operator.neg(self.x), operator.neg(self.y))
+		return Vec2d(-self.x, -self.y)
 
 	def __pos__(self) -> "Vec2d":
 		"""Return the unary pos of the Vec2d.
@@ -171,7 +170,7 @@ class Vec2d(NamedTuple):
 		>>> +Vec2d(1,-2)
 		Vec2d(1, -2)
 		"""
-		return Vec2d(operator.pos(self.x), operator.pos(self.y))
+		return Vec2d(+self.x, +self.y)
 
 	def __abs__(self) -> float:
 		"""Return the length of the Vec2d
