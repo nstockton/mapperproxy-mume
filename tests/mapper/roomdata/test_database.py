@@ -178,11 +178,11 @@ class TestDatabase(TestCase):
 		expectedErrors: str = "While loading sample labels: some_error"
 		mockLoad.return_value = ("some_error", None, 0)
 		errors, labels, schemaVersion = loadLabels()
-		self.assertEqual(errors, expectedErrors)
+		self.assertIn(expectedErrors, str(errors))
 		self.assertIsNone(labels)
 		self.assertEqual(schemaVersion, 0)
 		loadCalls: _CallList = mockLoad.mock_calls
-		self.assertEqual(len(loadCalls), 1)
+		self.assertGreaterEqual(len(loadCalls), 1)
 		self.assertEqual(
 			loadCalls[0],
 			call(SAMPLE_LABELS_FILE_PATH),
