@@ -16,7 +16,7 @@ import shutil
 import statistics
 import sys
 import textwrap
-from collections.abc import ByteString, Callable, Container, Iterable, Sequence
+from collections.abc import Callable, Container, Iterable, Sequence
 from contextlib import suppress
 from pydoc import pager
 from typing import Any, Optional, Union
@@ -349,7 +349,7 @@ def roundHalfAwayFromZero(number: float, decimals: int = 0) -> float:
 	Returns:
 		The number after rounding.
 	"""
-	multiplier = 10 ** decimals
+	multiplier = 10**decimals
 	return math.copysign(math.floor(abs(number) * multiplier + 0.5) / multiplier, number)
 
 
@@ -471,7 +471,7 @@ def decodeBytes(data: bytes) -> str:
 	Returns:
 		The decoded string.
 	"""
-	if not isinstance(data, ByteString):
+	if not isinstance(data, (bytes, bytearray)):
 		raise TypeError("Data must be a bytes-like object.")
 	with suppress(UnicodeDecodeError):
 		return str(data, "us-ascii")

@@ -128,7 +128,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 	"""
 	with open(databasePath, "w", encoding="utf-8") as fileObj:
 		_validate(database, schemaPath)
-		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2 ** 16)
+		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2**16)
 
 
 def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int]]:

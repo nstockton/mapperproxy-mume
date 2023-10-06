@@ -1,7 +1,7 @@
 [build-system]
 	requires = [
 		"poetry-core>=1.0.0",
-		"poetry-dynamic-versioning==0.20.0",
+		"poetry-dynamic-versioning==1.1.0",
 	]
 	build-backend = "poetry.core.masonry.api"
 
@@ -51,22 +51,22 @@
 
 [tool.poetry.dependencies]
 	python = "^3.8"
-	boltons = "^21.0"
+	boltons = "^23.0"
 	certifi = "^2023.5"
-	jsonschema = "^4.4"
+	jsonschema = "^4.19"
 	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.5.0/mud_protocols-0.5.0-py3-none-any.whl"}
 	pyglet = "1.5.26"
-	python-rapidjson = "^1.5"
+	python-rapidjson = "^1.11"
 	rapidfuzz = "^2.15"
 	speechlight = "^1.7"
-	typed-argument-parser = "^1.7"
+	typed-argument-parser = "^1.8"
 	typing-extensions = {version = "^4.1", python = "< 3.10"}
 
 [tool.poetry.dev-dependencies]
-	poetry-dynamic-versioning = "0.20.0"
-	pre-commit = "^2.17"
+	poetry-dynamic-versioning = "1.1.0"
+	pre-commit = "^3.4"
 	PyInstaller = {version = "4.10", python = "< 3.11", platform = "win32"}
-	types-jsonschema = "^4.4"
+	types-jsonschema = "^4.19"
 
 [tool.poetry.group.docs.dependencies]
 	mkdocs = "1.2.3"
@@ -79,14 +79,14 @@
 [tool.poetry.group.lint.dependencies]
 	click = "8.0.4"  # Required by Tan.
 	flake8 = "5.0.4"
-	isort = "^5.10.1"
+	isort = "^5.12.0"
 	jinja2 = "3.0.3"  # Required by Tan.
-	mypy = ">=0.950,<1.0"
+	mypy = "^1.5"
 	pyproject-flake8 = "5.0.4"
-	tan = "^21.14"
+	tan = "^23.7"
 
 [tool.poetry.group.test.dependencies]
-	coverage = {version = "^6.5", extras = ["toml"]}
+	coverage = {version = "^7.3", extras = ["toml"]}
 
 [tool.poetry.scripts]
 	mapper = "mapper.main:run"
@@ -108,7 +108,7 @@
 	use-tabs = true
 	safe = true
 	line-length = 110
-	target-version = ["py38", "py39", "py310"]
+	target-version = ["py38", "py39", "py310", "py311", "py312"]
 	exclude = '(/(\.eggs|\.git|\.mypy_cache|\.tox|\.venv|build|dist)|__pycache__)'
 	include = '/((src/mapper|tests).*\.py[isw]?|pyinstaller_windows\.spec)$'
 

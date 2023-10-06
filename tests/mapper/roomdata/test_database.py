@@ -169,7 +169,7 @@ class TestDatabase(TestCase):
 		_dump(self.rooms, "__junk__.json", MAP_SCHEMA_FILE_PATH)
 		mockValidate.assert_called_once_with(self.rooms, MAP_SCHEMA_FILE_PATH)
 		mockJsonDump.assert_called_once_with(
-			self.rooms, mockFileObj, sort_keys=True, indent=2, chunk_size=2 ** 16
+			self.rooms, mockFileObj, sort_keys=True, indent=2, chunk_size=2**16
 		)
 
 	@patch("mapper.roomdata.database._load")

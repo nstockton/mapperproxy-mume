@@ -329,7 +329,7 @@ print("Generating checksums.")
 hashes: dict[str, HASH] = {  # type: ignore[no-any-unimported]
 	"sha256": hashlib.sha256(),
 }
-block_size: int = 2 ** 16
+block_size: int = 2**16
 with open(ZIP_FILE, "rb") as zf:
 	for block in iter(lambda: zf.read(block_size), b""):
 		for _, hash in hashes.items():

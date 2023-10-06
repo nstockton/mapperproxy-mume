@@ -193,7 +193,7 @@ class Vec2d(NamedTuple):
 
 		:return: The squared length
 		"""
-		return self.x ** 2 + self.y ** 2
+		return self.x**2 + self.y**2
 
 	@property
 	def length(self) -> float:
@@ -206,7 +206,7 @@ class Vec2d(NamedTuple):
 
 		:return: The length
 		"""
-		return math.sqrt(self.x ** 2 + self.y ** 2)
+		return math.sqrt(self.x**2 + self.y**2)
 
 	def scale_to_length(self, length: float) -> "Vec2d":
 		"""Return a copy of this vector scaled to the given length.
