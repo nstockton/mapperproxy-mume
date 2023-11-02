@@ -47,6 +47,11 @@ class TestUtils(TestCase):
 		self.assertEqual(utils.camelCase("", "_"), "")
 		self.assertEqual(utils.camelCase("this_is_a_test", "_"), "thisIsATest")
 
+	def test_clamp(self) -> None:
+		self.assertEqual(utils.clamp(10, 5, 20), 10)
+		self.assertEqual(utils.clamp(4, 5, 20), 5)
+		self.assertEqual(utils.clamp(50, 5, 20), 20)
+
 	def test_minIndent(self) -> None:
 		self.assertEqual(utils.minIndent("hello\nworld"), "")
 		self.assertEqual(utils.minIndent("\thello\n\t\tworld"), "\t")

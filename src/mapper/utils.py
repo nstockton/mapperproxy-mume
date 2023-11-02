@@ -184,6 +184,21 @@ def camelCase(text: str, delimiter: str) -> str:
 	return "".join((*map(str.lower, words[:1]), *map(str.title, words[1:])))
 
 
+def clamp(value: float, minimum: float, maximum: float) -> float:
+	"""
+	Clamps the given value between the given minimum and maximum values.
+
+	Args:
+		value: The value to restrict inside the range defined by minimum and maximum.
+		minimum: The minimum value to compare against.
+		maximum: The maximum value to compare against.
+
+	Returns:
+		The result between minimum and maximum.
+	"""
+	return minimum if value < minimum else maximum if value > maximum else value
+
+
 def minIndent(text: str) -> str:
 	"""
 	Retrieves the indention characters from the line with the least indention.
