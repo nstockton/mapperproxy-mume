@@ -50,7 +50,7 @@ repos:
         name: Flake8
         stages: [commit]
         language: system
-        entry: "python -B -m pflake8"
+        entry: "python -B -m flake8"
         types_or: [python, spec]
       - id: mypy
         name: MyPy

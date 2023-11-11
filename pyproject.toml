@@ -81,10 +81,10 @@
 [tool.poetry.group.lint.dependencies]
 	click = "8.0.4"  # Required by Tan.
 	flake8 = "5.0.4"
+	flake8-pyproject = "1.2.3"
 	isort = "^5.12.0"
 	jinja2 = "3.0.3"  # Required by Tan.
 	mypy = "^1.5"
-	pyproject-flake8 = "5.0.4"
 	tan = "^23.7"
 
 [tool.poetry.group.test.dependencies]
@@ -164,7 +164,11 @@
 	ignore = [
 		"E101",  # indentation contains mixed spaces and tabs (remove when using flake8-tabs again).
 		"E117",  # over-indented (remove when using flake8-tabs again).
+		"E201",  # whitespace after '['. Seems to trigger even in string.
+		"E202",  # whitespace before ')'. Seems to trigger even in string.
 		"E203",  # whitespace before ':'. Caused by Black.
+		"E231",  # missing whitespace after ':'. Seems to trigger even in string.
+		"E241",  # multiple spaces after ','. Seems to trigger even in string.
 		"W191",  # indentation contains tabs
 		"W503",  # line break before binary operator. We want W504(line break after binary operator)
 		"ET113",  # (flake8-tabs) use of alignment as indentation, but option continuation-style=hanging does not permit this.
@@ -180,7 +184,8 @@
 		"env.bak",
 		"venv.bak",
 		"ENV",
-		"maps",
+		"src/mapper_data",
+		"*.ignore",
 	]
 	filename = [
 		"*.py",

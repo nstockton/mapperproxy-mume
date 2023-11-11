@@ -238,6 +238,23 @@ pycodestyle = ">=2.9.0,<2.10.0"
 pyflakes = ">=2.5.0,<2.6.0"
 
 [[package]]
+name = "flake8-pyproject"
+version = "1.2.3"
+description = "Flake8 plug-in loading the configuration from pyproject.toml"
+optional = false
+python-versions = ">= 3.6"
+files = [
+    {file = "flake8_pyproject-1.2.3-py3-none-any.whl", hash = "sha256:6249fe53545205af5e76837644dc80b4c10037e73a0e5db87ff562d75fb5bd4a"},
+]
+
+[package.dependencies]
+Flake8 = ">=5"
+TOMLi = {version = "*", markers = "python_version < \"3.11\""}
+
+[package.extras]
+dev = ["pyTest", "pyTest-cov"]
+
+[[package]]
 name = "ghp-import"
 version = "2.1.0"
 description = "Copy your docs directly to the gh-pages branch."
@@ -3355,21 +3372,6 @@ pyobjc-core = ">=8.5.1"
 pyobjc-framework-Cocoa = ">=8.5.1"
 
 [[package]]
-name = "pyproject-flake8"
-version = "5.0.4"
-description = "pyproject-flake8 (`pflake8`), a monkey patching wrapper to connect flake8 with pyproject.toml configuration"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pyproject-flake8-5.0.4.tar.gz", hash = "sha256:cb69b064b39bb588b5c45a7b16c158f013dddb2ce41cf1896f4b8bc7839bd2ce"},
-    {file = "pyproject_flake8-5.0.4-py2.py3-none-any.whl", hash = "sha256:b41bf2a8f8590220ae067ba4f1c4ab43b4efc65bb76fac18aa982dadea223c08"},
-]
-
-[package.dependencies]
-flake8 = "5.0.4"
-tomli = {version = "*", markers = "python_version < \"3.11\""}
-
-[[package]]
 name = "pyrsistent"
 version = "0.19.3"
 description = "Persistent/Functional/Immutable data structures"
@@ -3964,4 +3966,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "9d4b5d18c10fef79288181a913ffa6fee91fdabec4fe3b243fdca403ecac84c1"
+content-hash = "b7d95d793c8d27222c12e8a5e51222ec969edcf0bf96a16426ffb372bb6c31a7"
