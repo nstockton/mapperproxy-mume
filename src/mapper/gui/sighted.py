@@ -12,7 +12,7 @@ import os.path
 import re
 from queue import Empty as QueueEmpty
 from queue import SimpleQueue
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Optional, Protocol, Union
 
 # Third-party Modules:
 import pyglet
@@ -30,7 +30,7 @@ if TYPE_CHECKING:  # pragma: no cover
 FPS: int = 40
 TILESDIR: str = getDataPath("tiles")
 
-TILES: dict[str, pyglet.image.ImageData] = {  # type: ignore[no-any-unimported]
+TILES: dict[str, Any] = {
 	# terrain
 	"field": pyglet.image.load(os.path.join(TILESDIR, "field.png")),
 	"brush": pyglet.image.load(os.path.join(TILESDIR, "brush.png")),
@@ -97,6 +97,34 @@ logger: logging.Logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 
+class GroupType(Protocol):
+	def __init__(self, order: int = 0, parent: Optional[GroupType] = None) -> None:
+		...
+
+
+class BatchType(Protocol):
+	def draw(self) -> None:
+		...
+
+
+class SpriteType(Protocol):
+	@property
+	def x(self) -> int:
+		...
+
+	@x.setter
+	def x(self, value: int) -> None:
+		...
+
+	@property
+	def y(self) -> int:
+		...
+
+	@y.setter
+	def y(self, value: int) -> None:
+		...
+
+
 class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 	def __init__(self, world: World) -> None:
 		# Mapperproxy world
@@ -125,12 +153,12 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = world._gui_queue
 		# Sprites
 		# The list of sprites
-		self.sprites: list[pyglet.sprite.Sprite] = []  # type: ignore[no-any-unimported]
+		self.sprites: list[SpriteType] = []
 		# Pyglet batch of sprites
-		self.batch: pyglet.graphics.Batch = pyglet.graphics.Batch()  # type: ignore[no-any-unimported]
+		self.batch: BatchType = pyglet.graphics.Batch()
 		# The list of visible layers (level 0 is covered by level 1)
-		self.layer: list[pyglet.graphics.OrderedGroup]  # type: ignore[no-any-unimported]
-		self.layer = [pyglet.graphics.OrderedGroup(i) for i in range(4)]
+		self.layer: list[GroupType]
+		self.layer = [pyglet.graphics.Group(order=i) for i in range(4)]
 		# Define FPS
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
 
@@ -252,7 +280,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 	def draw_tile(self, x: int, y: int, z: int, tile: str) -> None:
 		logger.debug(f"Drawing tile: {x} {y} {tile}")
 		# pyglet stuff to add a sprite to the batch
-		sprite: pyglet.sprite.Sprite  # type: ignore[no-any-unimported]
+		sprite: SpriteType
 		sprite = pyglet.sprite.Sprite(TILES[tile], batch=self.batch, group=self.layer[z])
 		# adapt sprite coordinates
 		sprite.x = x * self.square
