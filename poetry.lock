@@ -785,13 +785,13 @@ files = [
 
 [[package]]
 name = "pyglet"
-version = "2.0.9"
+version = "2.0.10"
 description = "Cross-platform windowing and multimedia library"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyglet-2.0.9-py3-none-any.whl", hash = "sha256:8520b22dde75f47167e1fedeed58ac0bb0c890c0dca17d8528427d6b318cd9cc"},
-    {file = "pyglet-2.0.9.zip", hash = "sha256:a0922e42f2d258505678e2f4a355c5476c1a6352c3f3a37754042ddb7e7cf72f"},
+    {file = "pyglet-2.0.10-py3-none-any.whl", hash = "sha256:e10a1f1a6a2dcfbf23155913746ff6fbf8ea18c5ee813b6d0e79d273bb2b3c18"},
+    {file = "pyglet-2.0.10.zip", hash = "sha256:242beb1b3bd67c5bebdfe5ba11ec56b696ad86b50c6e7f2a317f8d783256b9c9"},
 ]
 
 [[package]]

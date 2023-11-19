@@ -1,11 +1,6 @@
-# type: ignore
-
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-
-# Some code borrowed from pymunk's debug drawing functions.
 
 
 # Future Modules:
@@ -14,128 +9,143 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import math
-from collections import namedtuple
-from itertools import chain
-from queue import Empty as QueueEmpty
+import queue
+from collections.abc import Iterable, Sequence
+from contextlib import suppress
+from enum import Enum, auto
+from typing import TYPE_CHECKING, Any, NamedTuple, Optional, Protocol, Union
 
 # Third-party Modules:
 import pyglet
+from pyglet import shapes
 from pyglet.window import key
+from speechlight import Speech
 
 # Local Modules:
 from .vec2d import Vec2d
 from ..config import Config
-from ..roomdata.objects import DIRECTIONS
+from ..roomdata.objects import DIRECTION_COORDINATES, DIRECTIONS, Exit, Room
+from ..utils import clamp
 
 
-try:
-	from speechlight import Speech
-except ImportError:
-	Speech = None
+if TYPE_CHECKING:
+	# Prevent cyclic import.
+	from ..world import GUI_QUEUE_TYPE, World
 
 
-FPS = 30
-DIRECTIONS_2D = set(DIRECTIONS[:-2])
-DIRECTIONS_VEC2D = {"north": Vec2d(0, 1), "east": Vec2d(1, 0), "south": Vec2d(0, -1), "west": Vec2d(-1, 0)}
-
-KEYS = {
-	(key.ESCAPE, 0): "reset_zoom",
-	(key.LEFT, 0): "adjust_size",
-	(key.RIGHT, 0): "adjust_size",
-	(key.UP, 0): "adjust_gap",
-	(key.DOWN, 0): "adjust_gap",
-	(key.F11, 0): "toggle_fullscreen",
-	(key.F12, 0): "toggle_blink",
-	(key.SPACE, 0): "toggle_continuous_view",
+FPS: int = 30
+DEFAULT_ROOM_SIZE: int = 100  # Pixels.
+DEFAULT_WALL_PERCENTAGE: int = 8  # Percentage of room size that will be used for a wall.
+AGGRESSIVE_MOB_FLAGS: set[str] = {"aggressive_mob", "elite_mob", "super_mob"}
+DIRECTIONS_2D: set[str] = set(DIRECTIONS[:-2])
+DIRECTIONS_UD: set[str] = set(DIRECTIONS[-2:])
+DIRECTION_COORDINATES_2D: dict[str, Vec2d] = {d: Vec2d(*DIRECTION_COORDINATES[d][:2]) for d in DIRECTIONS_2D}
+KEYS: dict[tuple[int, int], str] = {
+	(key.ESCAPE, 0): "resetZoom",
+	(key.LEFT, 0): "adjustSize",
+	(key.RIGHT, 0): "adjustSize",
+	(key.F11, 0): "toggleExpandWindow",
+	(key.F12, 0): "toggleAlwaysOnTop",
+	(key.ENTER, key.MOD_ALT): "toggleFullscreen",
+}
+DEFAULT_TERRAIN_COLORS: dict[str, tuple[int, ...]] = {
+	"brush": (127, 255, 0),
+	"building": (186, 85, 211),
+	"cavern": (153, 50, 204),
+	"city": (190, 190, 190),
+	"deathtrap": (255, 128, 0),
+	"field": (124, 252, 0),
+	"forest": (8, 128, 0),
+	"hills": (139, 69, 19),
+	"mountains": (165, 42, 42),
+	"rapids": (32, 64, 192),
+	"road": (255, 255, 255),
+	"shallows": (218, 120, 245),
+	"tunnel": (153, 50, 204),
+	"undefined": (24, 16, 32),
+	"underwater": (48, 8, 120),
+	"water": (32, 64, 192),
+}
+DEFAULT_MISC_COLORS: dict[str, tuple[int, ...]] = {
+	"highlight": (0, 0, 255),
+	"mob_flags": (255, 234, 0),
+	"mob_flags_border": (32, 64, 128),
+	"up_down_bidirectional": (255, 228, 225),
+	"up_down_bidirectional_border": (0, 0, 0),
+	"up_down_death_border": (0, 0, 0),
+	"up_down_undefined": (0, 0, 0),
+	"up_down_undefined_border": (255, 255, 255),
 }
 
-TERRAIN_COLORS = {
-	"brush": (127, 255, 0, 255),
-	"building": (186, 85, 211, 255),
-	"cavern": (153, 50, 204, 255),
-	"city": (190, 190, 190, 255),
-	"field": (124, 252, 0, 255),
-	"deathtrap": (255, 128, 0, 255),
-	"forest": (8, 128, 0, 255),
-	"highlight": (0, 0, 255, 255),
-	"hills": (139, 69, 19, 255),
-	"mountains": (165, 42, 42, 255),
-	"rapids": (32, 64, 192, 255),
-	"road": (255, 255, 255, 255),
-	"shallows": (218, 120, 245, 255),
-	"tunnel": (153, 50, 204, 255),
-	"underwater": (48, 8, 120, 255),
-	"undefined": (24, 16, 32, 255),
-	"water": (32, 64, 192, 255),
-}
 
 pyglet.options["debug_gl"] = False
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
-class Color(namedtuple("Color", ["r", "g", "b", "a"])):
-	"""Color tuple used by the debug drawing API."""
-
-	__slots__ = ()
-
-	def as_int(self):
-		return tuple(int(i) for i in self)
-
-	def as_float(self):
-		return tuple(i / 255.0 for i in self)
+class BatchType(Protocol):
+	def draw(self) -> None:
+		...
 
 
-class Blinker(object):
-	def __init__(self, blink_rate, draw_func, args_func):
-		logger.debug(
-			f"Creating blinker with blink rate {blink_rate}, "
-			+ f"calling function {draw_func}, "
-			+ f"with {args_func} for arguments."
-		)
-		self.blink_rate = blink_rate
-		self.draw_func = draw_func
-		self.args_func = args_func
-		self.since = 0
-		self.vl = None
+class ShapeType(Protocol):
+	@property
+	def position(self) -> tuple[float, float]:
+		...
 
-	def blink(self, dt):
-		self.since += dt
-		if self.since >= 1.0 / self.blink_rate:
-			if self.vl is None:
-				logger.debug(f"{self} blink on. Drawing.")
-				args, kwargs = self.args_func()
-				self.vl = self.draw_func(*args, **kwargs)
-			else:
-				logger.debug(f"{self} blink off. Cleaning upp")
-				self.vl.delete()
-				self.vl = None
-			self.since = 0
+	@position.setter
+	def position(self, values: Sequence[float]) -> None:
+		...
 
-	def delete(self):
-		if self.vl is not None:
-			self.vl.delete()
-			self.vl = None
-
-	def __del__(self):
-		self.delete()
+	def delete(self) -> None:
+		...
 
 
-class Window(pyglet.window.Window):
-	def __init__(self, world):
+class GroupType(Protocol):
+	def __init__(self, order: int = 0, parent: Optional[GroupType] = None) -> None:
+		...
+
+
+class Groups(Enum):
+	"""
+	The various group/layer levels.
+
+	Values are ordered from lowest to highest priority, with higher priority displayed on top of lower.
+	"""
+
+	@staticmethod
+	def _generate_next_value_(
+		name: str, start: Union[int, None], count: int, last_values: list[GroupType]
+	) -> GroupType:
+		# Overriding this method so that auto() will return a Group instance.
+		group: GroupType = pyglet.graphics.Group(order=count)
+		return group
+
+	DEFAULT = auto()
+	PRIORITY_ROOM = auto()
+	ROOM_FLAGS = auto()
+	UP_DOWN = auto()
+	CENTER_MARK = auto()
+
+
+class Color(NamedTuple):
+	"""The color of a shape."""
+
+	r: int
+	g: int
+	b: int
+	a: int = 255
+
+
+class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
+	width: int
+	height: int
+
+	def __init__(self, world: World) -> None:
 		self.world = world
-		self._gui_queue = world._gui_queue
-		if Speech is not None:
-			self._speech = Speech()
-			self.say = self._speech.say
-		else:
-			self.say = lambda *args, **kwargs: None
-			msg = (
-				"Speech disabled. Unable to import speechlight. Please download from:\n"
-				"https://github.com/nstockton/speechlight"
-			)
-			self.message(msg)
-			logger.warning(msg)
-		self._cfg = {}
+		self._gui_queue: queue.SimpleQueue[GUI_QUEUE_TYPE] = world._gui_queue
+		self._speech = Speech()
+		self.say = self._speech.say
+		self._cfg: dict[str, Any] = {}
 		cfg = Config()
 		if "gui" in cfg:
 			self._cfg.update(cfg["gui"])
@@ -143,284 +153,795 @@ class Window(pyglet.window.Window):
 			cfg["gui"] = {}
 			cfg.save()
 		del cfg
-		if "fullscreen" not in self._cfg:
-			self._cfg["fullscreen"] = False
-		terrain_colors = {}
-		terrain_colors.update(TERRAIN_COLORS)
-		if "terrain_colors" in self._cfg:
-			terrain_colors.update(self._cfg["terrain_colors"])
-		self._cfg["terrain_colors"] = terrain_colors
-		self.continuous_view = True
-		self.batch = pyglet.graphics.Batch()
-		self.groups = tuple(pyglet.graphics.OrderedGroup(i) for i in range(6))
-		self.visible_rooms = {}
-		self.visible_exits = {}
-		self.blinkers = {}
-		self.center_mark = []
-		self.highlight = None
-		self.current_room = None
-		super(Window, self).__init__(
-			caption="MPM",
-			resizable=True,
-			style=pyglet.window.Window.WINDOW_STYLE_DEFAULT,
-			fullscreen=self._cfg["fullscreen"],
-			vsync=False,
-		)
+		terrainColors: dict[str, tuple[int, ...]] = {}
+		terrainColors.update(DEFAULT_TERRAIN_COLORS)
+		terrainColors.update(self._cfg.get("terrain_colors", {}))
+		self.terrainColors: dict[str, Color] = {k: Color(*v) for k, v in terrainColors.items()}
+		miscColors: dict[str, tuple[int, ...]] = {}
+		miscColors.update(DEFAULT_MISC_COLORS)
+		miscColors.update(self._cfg.get("misc_colors", {}))
+		self.miscColors: dict[str, Color] = {k: Color(*v) for k, v in miscColors.items()}
+		self.batch: BatchType = pyglet.graphics.Batch()
+		self.visibleRooms: dict[str, tuple[ShapeType, Room, Vec2d]] = {}
+		self.visibleRoomFlags: dict[str, tuple[ShapeType, ...]] = {}
+		self.visibleExits: dict[str, tuple[ShapeType, ...]] = {}
+		self.centerMark: list[ShapeType] = []
+		self.highlight: Union[str, None] = None
+		self.currentRoom: Union[Room, None] = None
+		fullscreen: bool = self._cfg.get("fullscreen", False)
+		super().__init__(caption="MPM", resizable=True, fullscreen=fullscreen, vsync=False)
+		self._originalSize: tuple[int, int] = self.get_size()
+		self._originalLocation: tuple[int, int] = self.get_location()
+		if self._cfg.get("expand_window", False):
+			self.set_location(0, 0)
+			self.set_size(self.screen.width, self.screen.height)
+		# Set style manually after the window is created.
+		# Prevents lag if expand window and always on top are both enabled.
+		if self._cfg.get("always_on_top", False):
+			self._style = pyglet.window.Window.WINDOW_STYLE_OVERLAY
+		else:
+			self._style = pyglet.window.Window.WINDOW_STYLE_DEFAULT
+		self._recreate(["style"])
 		logger.info(f"Created window {self}")
-		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
-		if self.blink:
-			# If blinking was enabled in the cconfig file, resetting self.blink
-			# to True will trigger the initial scheduling of the blinker in the clock.
-			self.blink = True
+		pyglet.clock.schedule_interval_soft(self.guiQueueDispatcher, 1.0 / FPS)  # Called once every frame.
 
 	@property
-	def size(self):
+	def roomSize(self) -> int:
 		"""The size of a drawn room in pixels."""
 		try:
-			if not 20 <= int(self._cfg["room_size"]) <= 300:
-				raise ValueError
+			roomSize = self._cfg["room_size"]
+			if not 20 <= roomSize <= 300:
+				clampedSize: int = int(clamp(roomSize, 20, 300))
+				logger.warn(
+					"Invalid value for room_size in config.json: "
+					+ f"{roomSize} not in range 20-300. Clamping to {clampedSize}."
+				)
+				self._cfg["room_size"] = roomSize = clampedSize
 		except KeyError:
-			self._cfg["room_size"] = 100
-		except ValueError:
-			logger.warn(f"Invalid value for room_size in config.json: {self._cfg['room_size']}")
-			self._cfg["room_size"] = 100
-		return int(self._cfg["room_size"])
-
-	@size.setter
-	def size(self, value):
-		value = int(value)
-		if value < 20:
-			value = 20
-		elif value > 300:
-			value = 300
-		self._cfg["room_size"] = value
-
-	@property
-	def size_as_float(self):
-		"""The scale of a drawn room."""
-		return self.size / 100.0
-
-	@property
-	def gap(self):
-		try:
-			if not 10 <= self._cfg["gap"] <= 100:
-				raise ValueError
-		except KeyError:
-			self._cfg["gap"] = 100
-		except ValueError:
-			logger.warning(f"Invalid value for gap in config.json: {self._cfg['gap']}")
-			self._cfg["gap"] = 100
-		return int(self._cfg["gap"])
-
-	@gap.setter
-	def gap(self, value):
-		value = int(value)
-		if value < 10:
-			value = 10
-		elif value > 100:
-			value = 100
-		self._cfg["gap"] = value
-
-	@property
-	def gap_as_float(self):
-		return self.gap / 100.0
-
-	@property
-	def blink(self):
-		return bool(self._cfg.get("blink", True))
-
-	@blink.setter
-	def blink(self, value):
-		value = bool(value)
-		self._cfg["blink"] = value
-		if value:
-			pyglet.clock.schedule_interval_soft(self.blinker, 1.0 / 20)
-			self.enable_current_room_markers()
-		else:
-			pyglet.clock.unschedule(self.blinker)
-			for marker in self.blinkers["current_room_markers"]:
-				marker.delete()
-			del self.blinkers["current_room_markers"]
-
-	@property
-	def blink_rate(self):
-		try:
-			if not 0 <= int(self._cfg["blink_rate"]) <= 15:
-				raise ValueError
-		except KeyError:
-			self._cfg["blink_rate"] = 2
-		except ValueError:
-			logger.warning(f"Invalid value for blink_rate in config.json: {self._cfg['blink_rate']}")
-			self._cfg["blink_rate"] = 2
-		return int(self._cfg["blink_rate"])
-
-	@blink_rate.setter
-	def blink_rate(self, value):
-		value = int(value)
-		if value < 0:
-			value = 0
-		elif value > 15:
-			value = 15
-		self._cfg["blink_rate"] = value
-
-	@property
-	def current_room_mark_radius(self):
-		try:
-			if not 1 <= int(self._cfg["current_room_mark_radius"]) <= 100:
-				raise ValueError
-		except KeyError:
-			self._cfg["current_room_mark_radius"] = 10
-		except ValueError:
-			logger.warning(
-				f"Invalid value for current_room_mark_radius: {self._cfg['current_room_mark_radius']}"
+			logger.debug(
+				f"Undefined value for room_size in config.json: using default value {DEFAULT_ROOM_SIZE}."
 			)
-			self._cfg["current_room_mark_radius"] = 10
-		return int(self._cfg["current_room_mark_radius"])
+			self._cfg["room_size"] = roomSize = DEFAULT_ROOM_SIZE
+		return int(roomSize)
+
+	@roomSize.setter
+	def roomSize(self, value: int) -> None:
+		self._cfg["room_size"] = int(clamp(value, 20, 300))
 
 	@property
-	def current_room_mark_color(self):
-		try:
-			return Color(*self._cfg["current_room_mark_color"])
-		except KeyError:
-			self._cfg["current_room_mark_color"] = (255, 255, 255, 255)
-			return Color(*self._cfg["current_room_mark_color"])
+	def roomScale(self) -> float:
+		"""The scale of a drawn room."""
+		return self.roomSize / 100.0
 
 	@property
-	def terrain_colors(self):
-		try:
-			return self._cfg["terrain_colors"]
-		except KeyError:
-			self._cfg["terrain_colors"] = TERRAIN_COLORS
-			return self._cfg["terrain_colors"]
+	def wallSize(self) -> int:
+		"""The size of a wall in pixels."""
+		return int(self.roomSize * DEFAULT_WALL_PERCENTAGE / 100)
 
 	@property
-	def cx(self):
-		return self.width / 2.0
+	def walledRoomSize(self) -> int:
+		"""The size of a room in pixels, after subtracting the size of a wall from both sides."""
+		roomSize: int = self.roomSize
+		wallSize: int = int(roomSize * DEFAULT_WALL_PERCENTAGE / 100)
+		return roomSize - wallSize * 2
 
 	@property
-	def cy(self):
-		return self.height / 2.0
+	def cp(self) -> Vec2d:
+		"""A vector of the center point in pixels."""
+		return Vec2d(self.width / 2.0, self.height / 2.0)
 
 	@property
-	def cp(self):
-		return Vec2d(self.cx, self.cy)
-
-	@property
-	def room_draw_radius(self):
-		space = 1 if self.continuous_view else self.gap_as_float + 1.0
+	def roomDrawRadius(self) -> tuple[int, int, int]:
+		"""The radius in room coordinates, used when searching for neighboring rooms."""
+		roomSize: int = self.roomSize
 		return (
-			int(math.ceil(self.width / self.size / space / 2)),
-			int(math.ceil(self.height / self.size / space / 2)),
+			int(math.ceil(self.width / roomSize / 2)),
+			int(math.ceil(self.height / roomSize / 2)),
 			1,
 		)
 
-	def room_offset_from_pixels(self, x, y, z=None):
+	def roomBottomLeft(self, cp: Vec2d) -> Vec2d:
 		"""
-		Given a pair of X-Y coordinates in pixels, return the
-		offset in room coordinates from the center room.
+		Retrieves the bottom left coordinates from a room's center point.
+
+		Args:
+			cp: The center point vector.
+
+		Returns:
+			A vector containing the bottom left coordinates.
 		"""
+		width = height = self.roomSize
+		return cp - (width / 2.0, height / 2.0)
+
+	def roomTopLeft(self, cp: Vec2d) -> Vec2d:
+		"""
+		Retrieves the top left coordinates from a room's center point.
+
+		Args:
+			cp: The center point vector.
+
+		Returns:
+			A vector containing the top left coordinates.
+		"""
+		width = height = self.roomSize
+		return cp - (width / 2.0, -height / 2.0)
+
+	def roomTopRight(self, cp: Vec2d) -> Vec2d:
+		"""
+		Retrieves the top right coordinates from a room's center point.
+
+		Args:
+			cp: The center point vector.
+
+		Returns:
+			A vector containing the top right coordinates.
+		"""
+		width = height = self.roomSize
+		return cp + (width / 2.0, height / 2.0)
+
+	def roomBottomRight(self, cp: Vec2d) -> Vec2d:
+		"""
+		Retrieves the bottom right coordinates from a room's center point.
+
+		Args:
+			cp: The center point vector.
+
+		Returns:
+			A vector containing the bottom right coordinates.
+		"""
+		width = height = self.roomSize
+		return cp + (width / 2.0, -height / 2.0)
+
+	def roomOffsetFromPixels(self, x: float, y: float, z: Optional[float] = None) -> tuple[int, int]:
+		"""
+		Given coordinates in pixels, return the offset in room coordinates from the center room.
+
+		Args:
+			x: The X coordinate in pixels.
+			y: The Y coordinate in pixels.
+			z: The Z coordinate in pixels (unused).
+
+		Returns:
+			The 2-dimensional offset.
+		"""
+		roomSize: int = self.roomSize
+		cp: Vec2d = self.cp
 		return (
-			int((x - self.cx + self.size / 2) // self.size),
-			int((y - self.cy + self.size / 2) // self.size),
+			int((x - cp.x + roomSize / 2) // roomSize),
+			int((y - cp.y + roomSize / 2) // roomSize),
 		)
 
-	def message(self, text):
+	def equilateralTriangle(self, cp: Vec2d, radius: float, angle: float) -> tuple[Vec2d, Vec2d, Vec2d]:
+		"""
+		Calculates the coordinates for the corners of an equilateral triangle.
+
+		Args:
+			cp: The center point of the triangle.
+			radius: The radius of the triangle.
+			angle: The angle of the triangle.
+
+		Returns:
+			The 3 corners of an equilateral triangle.
+		"""
+		vec = Vec2d(radius, 0)
+		point1 = vec.rotated_degrees(angle)
+		point2 = point1.rotated_degrees(120)
+		point3 = point2.rotated_degrees(120)
+		return point1 + cp, point2 + cp, point3 + cp
+
+	def drawBorderedTriangle(
+		self,
+		cp: Vec2d,
+		radius: float,
+		innerRadiusRatio: float,
+		angle: float,
+		*,
+		color: Optional[Color] = None,
+		borderColor: Optional[Color] = None,
+		batch: Optional[BatchType] = None,
+		group: Optional[GroupType] = None,
+	) -> tuple[ShapeType, ShapeType]:
+		"""
+		Draws a triangle with a border around it.
+
+		This is accomplished by drawing an inner triangle within a larger border triangle.
+
+		Args:
+			cp: The center point of both triangles.
+			radius: The radius of the inner triangle.
+			innerRadiusRatio:
+				The ratio of the inner triangle radius, compared to the border triangle radius.
+			angle: The angle of both triangles.
+			color:
+				The color of the inner triangle.
+				If not provided, white will be used.
+			borderColor:
+				The color of the border triangle.
+				If not provided, black will be used.
+			batch:
+				The batch to add the shapes to.
+				If not provided, self.batch will be used.
+			group:
+				The group (I.E. layer) where the shapes will appear.
+				If not provided, the bottom-most group will be used.
+
+		Returns:
+			A tuple containing the border triangle and inner triangle.
+		"""
+		if color is None:
+			color = Color(255, 255, 255)  # White.
+		if borderColor is None:
+			borderColor = Color(0, 0, 0)  # Black.
+		if batch is None:
+			batch = self.batch
+		if group is None:
+			group = Groups.DEFAULT.value
+		border1, border2, border3 = self.equilateralTriangle(cp, radius, angle)
+		inner1, inner2, inner3 = self.equilateralTriangle(cp, radius * innerRadiusRatio, angle)
+		borderTriangle = shapes.Triangle(
+			*border1, *border2, *border3, color=borderColor, batch=batch, group=group
+		)
+		innerTriangle = shapes.Triangle(*inner1, *inner2, *inner3, color=color, batch=batch, group=group)
+		return borderTriangle, innerTriangle
+
+	def drawBorderedStar(
+		self,
+		cp: Vec2d,
+		radius: float,
+		innerRadiusRatio: float,
+		*,
+		numSpikes: Optional[float] = None,
+		rotation: Optional[float] = None,
+		color: Optional[Color] = None,
+		borderColor: Optional[Color] = None,
+		batch: Optional[BatchType] = None,
+		group: Optional[GroupType] = None,
+	) -> tuple[ShapeType, ShapeType]:
+		"""
+		Draws a star with a border around it.
+
+		This is accomplished by drawing an inner star within a larger border star.
+
+		Args:
+			cp: The center point of both stars.
+			radius: The radius of the inner star.
+			innerRadiusRatio:
+				The ratio of the inner star radius, compared to the border star radius.
+			numSpikes: The number of spikes the star should have.
+			rotation: A number in degrees that the stars should be rotated.
+			color:
+				The color of the inner star.
+				If not provided, white will be used.
+			borderColor:
+				The color of the border star.
+				If not provided, black will be used.
+			batch:
+				The batch to add the shapes to.
+				If not provided, self.batch will be used.
+			group:
+				The group (I.E. layer) where the shapes will appear.
+				If not provided, the bottom-most group will be used.
+
+		Returns:
+			A tuple containing the border star and inner star.
+		"""
+		if numSpikes is None:
+			numSpikes = 5
+		if rotation is None:
+			rotation = 0
+		if color is None:
+			color = Color(255, 255, 255)  # White.
+		if borderColor is None:
+			borderColor = Color(0, 0, 0)  # Black.
+		if batch is None:
+			batch = self.batch
+		if group is None:
+			group = Groups.DEFAULT.value
+		borderStar = shapes.Star(
+			*cp,
+			outer_radius=radius,
+			inner_radius=radius * innerRadiusRatio,
+			num_spikes=numSpikes,
+			rotation=rotation,
+			color=borderColor,
+			batch=batch,
+			group=group,
+		)
+		innerStar = shapes.Star(
+			*cp,
+			outer_radius=radius / 2,
+			inner_radius=radius / 2 * innerRadiusRatio,
+			num_spikes=numSpikes,
+			rotation=rotation,
+			color=color,
+			batch=batch,
+			group=group,
+		)
+		return borderStar, innerStar
+
+	def drawBorderedCircle(
+		self,
+		cp: Vec2d,
+		radius: float,
+		innerRadiusRatio: float,
+		*,
+		color: Optional[Color] = None,
+		borderColor: Optional[Color] = None,
+		batch: Optional[BatchType] = None,
+		group: Optional[GroupType] = None,
+	) -> tuple[ShapeType, ShapeType]:
+		"""
+		Draws a circle with a border around it.
+
+		This is accomplished by drawing an inner circle within a larger border circle.
+
+		Args:
+			cp: The center point of both circles.
+			radius: The radius of the inner circle.
+			innerRadiusRatio:
+				The ratio of the inner circle radius, compared to the border circle radius.
+			color:
+				The color of the inner circle.
+				If not provided, white will be used.
+			borderColor:
+				The color of the border circle.
+				If not provided, black will be used.
+			batch:
+				The batch to add the shapes to.
+				If not provided, self.batch will be used.
+			group:
+				The group (I.E. layer) where the shapes will appear.
+				If not provided, the bottom-most group will be used.
+
+		Returns:
+			A tuple containing the border circle and inner circle.
+		"""
+		if color is None:
+			color = Color(255, 255, 255)  # White.
+		if borderColor is None:
+			borderColor = Color(0, 0, 0)  # Black.
+		if batch is None:
+			batch = self.batch
+		if group is None:
+			group = Groups.DEFAULT.value
+		borderCircle = shapes.Circle(*cp, radius, color=borderColor, batch=batch, group=group)
+		innerCircle = shapes.Circle(*cp, radius * innerRadiusRatio, color=color, batch=batch, group=group)
+		return borderCircle, innerCircle
+
+	def message(self, text: str) -> None:
+		"""
+		Outputs a message to Speech Light and the world.
+
+		Args:
+			text: The text to output.
+		"""
 		self.say(text)
 		self.world.output(text)
 
-	def queue_observer(self, dt):
-		while not self._gui_queue.empty():
-			try:
-				event = self._gui_queue.get_nowait()
-				if event is None:
-					event = ("on_close",)
-				self.dispatch_event(event[0], *event[1:])
-			except QueueEmpty:
-				continue
+	def keyboard_toggleExpandWindow(self, symbol: int, modifiers: int) -> None:
+		"""
+		Toggles expanding the window to screen size.
 
-	def blinker(self, dt):
-		for _, marker in self.blinkers.items():
-			try:
-				marker.blink(dt)
-			except AttributeError:
-				for submarker in marker:
-					submarker.blink(dt)
+		Args:
+			symbol: The key symbol pressed.
+			modifiers: Bitwise combination of the key modifiers active.
+		"""
+		expanded = not self._cfg.get("expand_window", False)
+		if expanded:
+			self._originalSize = self.get_size()
+			self._originalLocation = self.get_location()
+			self.set_location(0, 0)
+			self.set_size(self.screen.width, self.screen.height)
+		else:
+			self.set_size(*self._originalSize)
+			self.set_location(*self._originalLocation)
+		self._cfg["expand_window"] = expanded
+		self.say(f"Window {'expanded' if expanded else 'restored'}.", True)
 
-	def on_close(self):
+	def keyboard_toggleAlwaysOnTop(self, symbol: int, modifiers: int) -> None:
+		"""
+		Toggles window always being on top of other windows.
+
+		Args:
+			symbol: The key symbol pressed.
+			modifiers: Bitwise combination of the key modifiers active.
+		"""
+		alwaysOnTop = not self._cfg.get("always_on_top", False)
+		if alwaysOnTop:
+			self._style = pyglet.window.Window.WINDOW_STYLE_OVERLAY
+		else:
+			self._style = pyglet.window.Window.WINDOW_STYLE_DEFAULT
+		self._recreate(["style"])
+		self._cfg["always_on_top"] = alwaysOnTop
+		self.say(f"Always on top {'enabled' if alwaysOnTop else 'disabled'}.", True)
+
+	def keyboard_toggleFullscreen(self, symbol: int, modifiers: int) -> None:
+		"""
+		Toggles full screen mode.
+
+		Args:
+			symbol: The key symbol pressed.
+			modifiers: Bitwise combination of the key modifiers active.
+		"""
+		fs = not self.fullscreen
+		self.set_fullscreen(fs)
+		self._cfg["fullscreen"] = fs
+		self.say(f"fullscreen {'enabled' if fs else 'disabled'}.", True)
+
+	def keyboard_adjustSize(self, symbol: int, modifiers: int) -> None:
+		"""
+		Adjusts the size of visible shapes, effectively zooming the view in or out.
+
+		Args:
+			symbol: The key symbol pressed.
+			modifiers: Bitwise combination of the key modifiers active.
+		"""
+		if symbol == key.LEFT:
+			self.roomSize -= 10
+		elif symbol == key.RIGHT:
+			self.roomSize += 10
+		self.say(f"{self.roomSize}%", True)
+		self.on_guiRefresh()
+
+	def keyboard_resetZoom(self, symbol: int, modifiers: int) -> None:
+		"""
+		Sets the room size back to its default value, effectively resetting the zoom.
+
+		Args:
+			symbol: The key symbol pressed.
+			modifiers: Bitwise combination of the key modifiers active.
+		"""
+		self.roomSize = DEFAULT_ROOM_SIZE
+		self.on_guiRefresh()
+		self.say("Reset zoom", True)
+
+	def deleteStaleRooms(self, excludes: Optional[Iterable[str]] = None) -> None:
+		"""
+		Deletes stale room shapes which are no longer visible.
+
+		Args:
+			excludes: Room vnums to exclude from deletion.
+		"""
+		stale: set[str]
+		if excludes is None:
+			stale = set(self.visibleRooms)
+		else:
+			stale = set(self.visibleRooms).difference(excludes)
+		with suppress(AssertionError):
+			for vnum in stale:
+				self.visibleRooms[vnum][0].delete()
+				del self.visibleRooms[vnum]
+
+	def deleteStaleRoomFlags(self, excludes: Optional[Iterable[str]] = None) -> None:
+		"""
+		Deletes stale room flag shapes which are no longer visible.
+
+		Args:
+			excludes: Room flag vnums to exclude from deletion.
+		"""
+		stale: set[str]
+		if excludes is None:
+			stale = set(self.visibleRoomFlags)
+		else:
+			stale = set(self.visibleRoomFlags).difference(excludes)
+		with suppress(AssertionError):
+			for vnum in stale:
+				for shape in self.visibleRoomFlags[vnum]:
+					shape.delete()
+				del self.visibleRoomFlags[vnum]
+
+	def deleteStaleExits(self, excludes: Optional[Iterable[str]] = None) -> None:
+		"""
+		Deletes stale exit shapes which are no longer visible.
+
+		Args:
+			excludes: Exit names to exclude from deletion.
+		"""
+		stale: set[str]
+		if excludes is None:
+			stale = set(self.visibleExits)
+		else:
+			stale = set(self.visibleExits).difference(excludes)
+		with suppress(AssertionError):
+			for name in stale:
+				for shape in self.visibleExits[name]:
+					shape.delete()
+				del self.visibleExits[name]
+
+	def deleteCenterMark(self) -> None:
+		"""Deletes the center mark."""
+		with suppress(AssertionError):
+			for shape in self.centerMark:
+				shape.delete()
+		self.centerMark.clear()
+
+	def drawCenterMark(self) -> None:
+		"""Marks the center of the screen with a white circle within a black border."""
+		self.centerMark.extend(
+			self.drawBorderedCircle(
+				self.cp, self.walledRoomSize * 0.25, 1 / 3, group=Groups.CENTER_MARK.value
+			)
+		)
+
+	def drawUpDownExit(self, direction: str, exitObj: Exit, name: str, cp: Vec2d) -> None:
+		"""
+		Draws an up or down exit.
+
+		Args:
+			direction: The direction of the exit.
+			exitObj: The exit object.
+			name: A unique name for referencing the associated shapes.
+			cp: The center point of the room containing the exit.
+		"""
+		triangleSize = self.walledRoomSize / 3
+		if direction == "up":
+			# Triangle pointing up on top half of room square.
+			triangleCP = cp + (0, triangleSize)
+			angle = 90
+		else:
+			# Triangle pointing down on bottom half of room square.
+			triangleCP = cp - (0, triangleSize)
+			angle = -90
+		radius = triangleSize / 2
+		innerRadiusRatio = 1 / 3 * 2  # 2 thirds.
+		if name not in self.visibleExits:
+			if exitObj.to == "undefined":
+				color = self.miscColors["up_down_undefined"]
+				borderColor = self.miscColors["up_down_undefined_border"]
+			elif exitObj.to == "death":
+				color = self.terrainColors["deathtrap"]
+				borderColor = self.miscColors["up_down_death_border"]
+			else:
+				color = self.miscColors["up_down_bidirectional"]
+				borderColor = self.miscColors["up_down_bidirectional_border"]
+			borderTriangle, innerTriangle = self.drawBorderedTriangle(
+				triangleCP,
+				radius,
+				innerRadiusRatio,
+				angle,
+				color=color,
+				borderColor=borderColor,
+				group=Groups.UP_DOWN.value,
+			)
+			self.visibleExits[name] = (borderTriangle, innerTriangle)
+		else:
+			borderTriangle, innerTriangle = self.visibleExits[name]
+			border1, border2, border3 = self.equilateralTriangle(triangleCP, radius, angle)
+			inner1, inner2, inner3 = self.equilateralTriangle(triangleCP, radius * innerRadiusRatio, angle)
+			borderTriangle.position = border1
+			innerTriangle.position = inner1
+
+	def drawDeathExit2d(self, direction: str, name: str, cp: Vec2d) -> None:
+		"""
+		Draws a deathtrap for a 2D exit.
+
+		Args:
+			direction: The direction of the deathtrap exit.
+			name: A unique name for referencing the associated shape.
+			cp: The center point of the room containing the exit.
+		"""
+		width = height = roomSize = self.roomSize
+		bottomLeft = cp - (width / 2, height / 2)
+		bottomLeft += DIRECTION_COORDINATES_2D[direction] * roomSize
+		if name not in self.visibleExits:
+			square = shapes.Rectangle(
+				*bottomLeft,
+				width,
+				height,
+				color=self.terrainColors["deathtrap"],
+				batch=self.batch,
+				group=Groups.PRIORITY_ROOM.value,
+			)
+			self.visibleExits[name] = (square,)
+		else:
+			square = self.visibleExits[name][0]
+			square.position = bottomLeft
+
+	def drawSpecialExits(self) -> None:
+		"""
+		Draws special exits.
+
+		A special exit is one which requires new shapes be created to represent the exit in the map view.
+		2D bidirectional exits are seamless and do not require any extra work.
+		2D walls and 2D undefined/one-way exits are represented by trimming the dimensions of the room.
+		"""
+		logger.debug("Drawing special exits")
+		visibleExits = set()
+		for vnum, item in self.visibleRooms.items():
+			square, room, cp = item
+			for direction, exitObj in room.exits.items():
+				name = vnum + direction
+				if direction in DIRECTIONS_UD:
+					self.drawUpDownExit(direction, exitObj, name, cp)
+					visibleExits.add(name)
+				elif exitObj.to == "death":
+					self.drawDeathExit2d(direction, name, cp)
+					visibleExits.add(name)
+		self.deleteStaleExits(visibleExits)
+
+	def drawRoomFlags(self, room: Room, cp: Vec2d) -> None:
+		"""
+		Draws shapes representing notable room flags.
+
+		Args:
+			room: A Room object.
+			cp: The center point of the room.
+		"""
+		if room.vnum not in self.visibleRoomFlags:
+			if AGGRESSIVE_MOB_FLAGS.intersection(room.mobFlags):
+				borderStar, innerStar = self.drawBorderedStar(
+					cp,
+					self.walledRoomSize * 1 / 3 * 2,
+					1 / 3,
+					rotation=-90,  # A spike should be pointing up.
+					color=self.miscColors["mob_flags"],
+					borderColor=self.miscColors["mob_flags_border"],
+					group=Groups.ROOM_FLAGS.value,
+				)
+				self.visibleRoomFlags[room.vnum] = (borderStar, innerStar)
+		else:
+			for shape in self.visibleRoomFlags[room.vnum]:
+				shape.position = cp
+
+	def drawRoom(self, room: Room, cp: Vec2d, group: Optional[GroupType] = None) -> None:
+		"""
+		Draws a room.
+
+		Args:
+			room: A Room object.
+			cp: The center point of the room.
+			group:
+				The group (I.E. layer) where the square will appear.
+				If not provided, the bottom-most group will be used.
+		"""
+		if group is None:
+			group = Groups.DEFAULT.value
+		if self.highlight is not None and self.highlight == room.vnum:
+			color = self.miscColors["highlight"]
+		elif room.avoid:
+			color = self.terrainColors["deathtrap"]
+		elif room.terrain not in self.terrainColors:
+			color = self.terrainColors["undefined"]
+		else:
+			color = self.terrainColors[room.terrain]
+		walls2d = DIRECTIONS_2D.difference(room.exits)
+		for direction, exitObj in room.exits.items():
+			if direction in DIRECTIONS_2D:
+				if exitObj.to == "undefined" or not self.world.isBidirectional(exitObj):
+					# Treat these as walls for the moment.
+					walls2d.add(direction)
+		width = height = self.roomSize
+		wallSize = self.wallSize
+		bottomLeft = cp - (width / 2, height / 2)
+		if "north" in walls2d:
+			height -= wallSize  # Trim size from top.
+		if "east" in walls2d:
+			width -= wallSize  # Trim size from right.
+		if "south" in walls2d:
+			bottomLeft += (0, wallSize)  # Trim size from bottom.
+		if "west" in walls2d:
+			bottomLeft += (wallSize, 0)  # Trim size from left.
+		if room.vnum not in self.visibleRooms:
+			square = shapes.Rectangle(*bottomLeft, width, height, color=color, batch=self.batch, group=group)
+			self.visibleRooms[room.vnum] = (square, room, cp)
+		else:
+			square = self.visibleRooms[room.vnum][0]
+			square.position = bottomLeft
+			square.group = group
+			self.visibleRooms[room.vnum] = (square, room, cp)
+
+	def drawRooms(self) -> None:
+		"""Draws all the visible rooms."""
+		currentRoom = self.currentRoom
+		if currentRoom is None:
+			logger.error("Unable to draw rooms: Current room undefined.")
+			return None
+		logger.debug(f"Drawing rooms near {currentRoom}")
+		roomSize = self.roomSize
+		visibleRooms = {currentRoom.vnum}
+		self.drawRoom(currentRoom, self.cp, group=Groups.PRIORITY_ROOM.value)
+		self.drawRoomFlags(currentRoom, self.cp)
+		neighbors = self.world.getNeighborsFromRoom(start=currentRoom, radius=self.roomDrawRadius)
+		for vnum, room, x, y, z in neighbors:
+			if z == 0:
+				visibleRooms.add(vnum)
+				cp = self.cp + Vec2d(x * roomSize, y * roomSize)  # In pixels.
+				self.drawRoom(room, cp)
+				self.drawRoomFlags(room, cp)
+		self.deleteStaleRooms(visibleRooms)
+		self.deleteStaleRoomFlags(visibleRooms)
+		self.drawSpecialExits()
+
+	def on_close(self) -> None:
+		"""
+		Triggers when the user attempted to close the window.
+
+		This event can be triggered by clicking on the "X" control box in
+		the window title bar, or by some other platform-dependent manner.
+
+		The default handler sets `has_exit` to ``True``.  In pyglet 1.1, if
+		`pyglet.app.event_loop` is being used, `close` is also called,
+		closing the window immediately.
+		"""
 		logger.debug(f"Closing window {self}")
 		cfg = Config()
 		cfg["gui"].update(self._cfg)
 		cfg.save()
 		del cfg
-		super(Window, self).on_close()
+		super().on_close()
 
-	def on_draw(self):
-		pyglet.gl.glClearColor(0, 0, 0, 0)
+	def on_draw(self) -> None:
+		"""
+		Triggers when the window contents should be redrawn.
+
+		The `EventLoop` will dispatch this event when the `draw`
+		method has been called. The window will already have the
+		GL context, so there is no need to call `switch_to`. The window's
+		`flip` method will be called immediately after this event,
+		so your event handler should not.
+
+		You should make no assumptions about the window contents when
+		this event is triggered; a resize or expose event may have
+		invalidated the framebuffer since the last time it was drawn.
+		"""
+		pyglet.gl.glClearColor(0, 0, 0, 1)  # Values in range 0.0-1.0.
 		self.clear()
 		self.batch.draw()
 
-	def on_map_sync(self, currentRoom):
-		logger.debug(f"Map synced to {currentRoom}")
-		self.current_room = currentRoom
-		self.redraw()
-
-	def on_gui_refresh(self):
+	def on_key_press(self, symbol: int, modifiers: int) -> None:
 		"""
-		This event is fired when the mapper needs to signal the GUI to clear the
-		visible rooms cache and redraw the map view.
+		Triggers when a key on the keyboard was pressed (and held down).
+
+		Since pyglet 1.1 the default handler dispatches the `pyglet.window.Window.on_close`
+		event if the ``ESC`` key is pressed.
+
+		Args:
+			symbol: The key symbol pressed.
+			modifiers: Bitwise combination of the key modifiers active.
 		"""
-		logger.debug("Clearing visible exits.")
-		for dead in self.visible_exits:
-			try:
-				try:
-					for d in self.visible_exits[dead]:
-						d.delete()
-				except TypeError:
-					self.visible_exits[dead].delete()
-			except AssertionError:
-				pass
-		self.visible_exits.clear()
-		logger.debug("Clearing visible rooms.")
-		for dead in self.visible_rooms:
-			self.visible_rooms[dead][0].delete()
-		self.visible_rooms.clear()
-		if self.center_mark:
-			for i in self.center_mark:
-				i.delete()
-			del self.center_mark[:]
-		self.redraw()
-		self.center_mark.append(
-			self.draw_circle(self.cp, self.size / 2.0 / 8 * 3, Color(0, 0, 0, 255), self.groups[4])
-		)
-		self.center_mark.append(
-			self.draw_circle(self.cp, self.size / 2.0 / 8, Color(255, 255, 255, 255), self.groups[5])
-		)
-		logger.debug("GUI refreshed.")
-
-	def on_resize(self, width, height):
-		super(Window, self).on_resize(width, height)
-		logger.debug(f"resizing window to ({width}, {height})")
-		if self.current_room is not None:
-			self.on_gui_refresh()
-
-	def on_key_press(self, sym, mod):
-		logger.debug(f"Key press: sym: {sym}, mod: {mod}")
-		key = (sym, mod)
+		logger.debug(f"Key press: symbol: {symbol}, modifiers: {modifiers}")
+		key = (symbol, modifiers)
 		if key in KEYS:
-			funcName = "do_" + KEYS[key]
-			try:
-				func = getattr(self, funcName)
-				try:
-					func(sym, mod)
-				except Exception as e:
-					logger.exception(e.message)
-			except AttributeError:
+			funcName = "keyboard_" + KEYS[key]
+			func = getattr(self, funcName, None)
+			if func is None:
 				logger.error(f"Invalid key assignment for key {key}. No such function {funcName}.")
+			else:
+				try:
+					func(symbol, modifiers)
+				except Exception:
+					logger.exception(
+						f"Error while executing function {funcName}: called from key press {key}."
+					)
 
-	def on_mouse_motion(self, x, y, dx, dy):
-		for vnum, item in self.visible_rooms.items():
-			vl, room, cp = item
-			if self.room_offset_from_pixels(*cp) == self.room_offset_from_pixels(x, y):
+	def on_mouse_leave(self, x: int, y: int) -> None:
+		"""
+		Triggers when the mouse was moved outside the window.
+
+		This event will not be triggered if the mouse is currently being
+		dragged.  Note that the coordinates of the mouse pointer will be
+		outside the window rectangle.
+
+		Args:
+			x: Distance in pixels from the left edge of the window.
+			y: Distance in pixels from the bottom edge of the window.
+		"""
+		self.highlight = None
+		self.on_guiRefresh()
+
+	def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
+		"""
+		Triggers when the mouse was moved with no buttons held down.
+
+		Args:
+			x: Distance in pixels from the left edge of the window.
+			y: Distance in pixels from the bottom edge of the window.
+			dx: Relative X position from the previous mouse position.
+			dy: Relative Y position from the previous mouse position.
+		"""
+		for vnum, item in self.visibleRooms.items():
+			square, room, cp = item
+			if self.roomOffsetFromPixels(*cp) == self.roomOffsetFromPixels(x, y):
 				if vnum is None or vnum not in self.world.rooms:
 					return None
 				elif self.highlight == vnum:
@@ -431,17 +952,26 @@ class Window(pyglet.window.Window):
 				break
 		else:
 			self.highlight = None
-		self.on_gui_refresh()
+		self.on_guiRefresh()
 
-	def on_mouse_press(self, x, y, buttons, modifiers):
+	def on_mouse_press(self, x: int, y: int, buttons: int, modifiers: int) -> None:
+		"""
+		Triggers when a mouse button was pressed (and held down).
+
+		Args:
+			x: Distance in pixels from the left edge of the window.
+			y: Distance in pixels from the bottom edge of the window.
+			button: The mouse button that was pressed.
+			modifiers: Bitwise combination of any keyboard modifiers currently active.
+		"""
 		logger.debug(f"Mouse press on {x} {y}, buttons: {buttons}, modifiers: {modifiers}")
 		if buttons == pyglet.window.mouse.MIDDLE:
-			self.do_reset_zoom(key.ESCAPE, 0)
+			self.keyboard_resetZoom(key.ESCAPE, 0)
 			return None
 		# check if the player clicked on a room
-		for vnum, item in self.visible_rooms.items():
-			vl, room, cp = item
-			if self.room_offset_from_pixels(*cp) == self.room_offset_from_pixels(x, y):
+		for vnum, item in self.visibleRooms.items():
+			square, room, cp = item
+			if self.roomOffsetFromPixels(*cp) == self.roomOffsetFromPixels(x, y):
 				# Action depends on which button the player clicked
 				if vnum is None or vnum not in self.world.rooms:
 					return None
@@ -456,472 +986,91 @@ class Window(pyglet.window.Window):
 					self.world.output(f"Current room now set to '{room.name}' with vnum {vnum}")
 				break
 
-	def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
+	def on_mouse_scroll(self, x: int, y: int, scroll_x: float, scroll_y: float) -> None:
+		"""
+		Triggers when the mouse wheel was scrolled.
+
+		Note that most mice have only a vertical scroll wheel, so
+		`scroll_x` is usually 0.  An exception to this is the Apple Mighty
+		Mouse, which has a mouse ball in place of the wheel which allows
+		both `scroll_x` and `scroll_y` movement.
+
+		Args:
+			x: Distance in pixels from the left edge of the window.
+			y: Distance in pixels from the bottom edge of the window.
+			scroll_x: Amount of movement on the horizontal axis.
+			scroll_y: Amount of movement on the vertical axis.
+		"""
 		if scroll_y > 0:
-			self.do_adjust_size(key.RIGHT, 0)
+			self.keyboard_adjustSize(key.RIGHT, 0)
 		elif scroll_y < 0:
-			self.do_adjust_size(key.LEFT, 0)
+			self.keyboard_adjustSize(key.LEFT, 0)
 
-	def on_mouse_leave(self, x, y):
-		self.highlight = None
-		self.on_gui_refresh()
+	def on_resize(self, width: int, height: int) -> None:
+		"""
+		Triggers when the window was resized.
 
-	def do_toggle_blink(self, sym, mod):
-		self.blink = not self.blink
-		self.say(f"Blinking {'enabled' if self.blink else 'disabled'}", True)
+		The window will have the GL context when this event is dispatched;
+		there is no need to call `switch_to` in this handler.
 
-	def do_toggle_continuous_view(self, sym, mod):
-		self.continuous_view = not self.continuous_view
-		self.say(f"{'continuous' if self.continuous_view else 'tiled'} view", True)
-		self.on_gui_refresh()
+		Args:
+			width: The new width of the window, in pixels.
+			height: The new height of the window, in pixels.
+		"""
+		logger.debug(f"resizing window to ({width}, {height})")
+		super().on_resize(width, height)
+		if self.currentRoom is not None:
+			self.on_guiRefresh()
 
-	def do_toggle_fullscreen(self, sym, mod):
-		fs = not self.fullscreen
-		self.set_fullscreen(fs)
-		self._cfg["fullscreen"] = fs
-		self.say(f"fullscreen {'enabled' if fs else 'disabled'}.", True)
-
-	def do_adjust_gap(self, sym, mod):
-		self.continuous_view = False
-		if sym == key.DOWN:
-			self.gap -= 10
-		elif sym == key.UP:
-			self.gap += 10
-		self.say(f"{self.gap_as_float} Gap.", True)
-		self.on_gui_refresh()
-
-	def do_adjust_size(self, sym, mod):
-		if sym == key.LEFT:
-			self.size -= 10
-		elif sym == key.RIGHT:
-			self.size += 10
-		self.say(f"{self.size}%", True)
-		self.on_gui_refresh()
-
-	def do_reset_zoom(self, sym, mod):
-		self.size = 100
-		self.on_gui_refresh()
-		self.say("Reset zoom", True)
-
-	def circle_vertices(self, cp, radius):
-		cp = Vec2d(*cp)
-		# http://slabode.exofire.net/circle_draw.shtml
-		numSegments = int(4 * math.sqrt(radius))
-		theta = float(2 * math.pi / numSegments)
-		radialFactor = math.cos(theta)
-		sine = math.sin(theta)
-		x = radius  # We start at angle 0.
-		y = 0
-		points = []
-		for _ in range(numSegments):
-			points.append(cp + (x, y))
-			tangent = x
-			x = x * radialFactor - y * sine
-			y = y * radialFactor + tangent * sine
-		vertices = points[0:1] * 2  # The first point, twice.
-		vertices.extend(
-			chain.from_iterable((points[i], points[-i]) for i in range(1, (len(points) + 1) // 2))
-		)
-		vertices.append(vertices[-1])
-		return list(chain.from_iterable(vertices))
-
-	def draw_circle(self, cp, radius, color, group=None):
-		vertices = self.circle_vertices(cp, radius)
-		count = len(vertices) // 2
-		return self.batch.add(
-			count, pyglet.gl.GL_TRIANGLE_STRIP, group, ("v2f", vertices), ("c4B", color.as_int() * count)
-		)
-
-	def draw_segment(self, a, b, color, group=None):
-		vecA = Vec2d(*a)
-		vecB = Vec2d(*b)
-		vertices = (int(vecA.x), int(vecA.y), int(vecB.x), int(vecB.y))
-		count = len(vertices) // 2
-		return self.batch.add(
-			count, pyglet.gl.GL_LINES, group, ("v2i", vertices), ("c4B", color.as_int() * count)
-		)
-
-	def fat_segment_vertices(self, a, b, radius):
-		vecA = Vec2d(*a)
-		vecB = Vec2d(*b)
-		radius = max(radius, 1)
-		tangent = -math.atan2(*(vecB - vecA))
-		delta = (math.cos(tangent) * radius, math.sin(tangent) * radius)
-		points = [vecA + delta, vecA - delta, vecB + delta, vecB - delta]
-		return list(chain.from_iterable([*points[:3], *points[1:]]))
-
-	def draw_fat_segment(self, a, b, radius, color, group=None):
-		vertices = self.fat_segment_vertices(a, b, radius)
-		count = len(vertices) // 2
-		return self.batch.add(
-			count, pyglet.gl.GL_TRIANGLES, group, ("v2f", vertices), ("c4B", color.as_int() * count)
-		)
-
-	def corners_2_vertices(self, points):
-		points.insert(2, points.pop(0))  # Move item 0 to index 2.
-		return list(chain.from_iterable([points[0], *points, points[-1]]))
-
-	def draw_polygon(self, points, color, group=None):
-		mode = pyglet.gl.GL_TRIANGLE_STRIP
-		vertices = self.corners_2_vertices(points)
-		count = len(vertices) // 2
-		return self.batch.add(count, mode, group, ("v2f", vertices), ("c4B", color.as_int() * count))
-
-	def square_vertices(self, cp, radius):
-		return [
-			cp - (radius, radius),  # Bottom left.
-			cp - (radius, -radius),  # Top left.
-			cp + (radius, radius),  # Top right.
-			cp + (radius, -radius),  # Bottom right.
-		]
-
-	def equilateral_triangle(self, cp, radius, angleDegrees):
-		vec = Vec2d(radius, 0)
-		vecA = vec.rotated_degrees(angleDegrees)
-		vecB = vecA.rotated_degrees(120)
-		vecC = vecB.rotated_degrees(120)
-		return [vecA + cp, vecB + cp, vecC + cp]
-
-	def arrow_points(self, a, d, radius):
-		vec = d - a
-		h = math.sqrt(3) * radius * 1.5
-		vec = vec.scale_to_length(vec.length - h)
-		b = a + vec
-		vec = vec.scale_to_length(vec.length + h / 3.0)
-		c = a + vec
-		return (b, c, vec.angle_degrees)
-
-	def arrow_vertices(self, a, d, radius):
-		b, c, angle = self.arrow_points(a, d, radius)
-		return (
-			self.fat_segment_vertices(a, b, radius),
-			self.corners_2_vertices(self.equilateral_triangle(c, radius * 3, angle)),
-		)
-
-	def draw_arrow(self, a, d, radius, color, group=None):
-		b, c, angle = self.arrow_points(a, d, radius)
-		return (
-			self.draw_fat_segment(a, b, radius, color, group=group),
-			self.draw_polygon(self.equilateral_triangle(c, radius * 3, angle), color, group=group),
-		)
-
-	def draw_room(self, room, cp, group=None):
-		if self.highlight is not None and self.highlight == room.vnum:
-			color = Color(*self.terrain_colors.get("highlight", "undefined"))
-		else:
-			color = Color(*self.terrain_colors.get("deathtrap" if room.avoid else room.terrain, "undefined"))
-		vertices = self.square_vertices(cp, self.size / 2.0)
-		if group is None:
-			group = self.groups[0]
-		if room.vnum not in self.visible_rooms:
-			self.visible_rooms[room.vnum] = [self.draw_polygon(vertices, color, group=group), room, cp]
-		else:
-			roomShape = self.visible_rooms[room.vnum][0]
-			roomShape.vertices = self.corners_2_vertices(vertices)
-			self.batch.migrate(roomShape, pyglet.gl.GL_TRIANGLE_STRIP, group, self.batch)
-			self.visible_rooms[room.vnum][2] = cp
-
-	def draw_rooms(self, currentRoom=None):
-		if currentRoom is None:
-			currentRoom = self.current_room
-		logger.debug(f"Drawing rooms near {currentRoom}")
-		self.draw_room(currentRoom, self.cp, group=self.groups[1])
-		newrooms = {currentRoom.vnum}
+	def redraw(self) -> None:
+		"""Redraws the map view."""
+		logger.debug("Redrawing map view.")
+		if not self.centerMark:
+			self.drawCenterMark()
 		with self.world.roomsLock:
-			neighbors = self.world.getNeighborsFromRoom(start=currentRoom, radius=self.room_draw_radius)
-			for vnum, room, x, y, z in neighbors:
-				if z == 0:
-					newrooms.add(vnum)
-					delta = Vec2d(x, y) * (
-						self.size * (1 if self.continuous_view else self.gap_as_float + 1.0)
-					)
-					self.draw_room(room, self.cp + delta)
-		if self.visible_rooms:
-			for vnum in set(self.visible_rooms) - newrooms:
-				self.visible_rooms[vnum][0].delete()
-				del self.visible_rooms[vnum]
+			self.drawRooms()
 
-	def exitsUpDown(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
-		if direction == "up":
-			newCP = cp + (0, self.size / 4.0)
-			angle = 90
-		elif direction == "down":
-			newCP = cp - (0, self.size / 4.0)
-			angle = -90
-		if self.world.isBidirectional(exit):
-			vs1 = self.equilateral_triangle(newCP, (self.size / 4.0) + 14, angle)
-			vs2 = self.equilateral_triangle(newCP, self.size / 4.0, angle)
-			if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
-				vl1, vl2 = self.visible_exits[name]
-				vl1.vertices = self.corners_2_vertices(vs1)
-				vl2.vertices = self.corners_2_vertices(vs2)
-			else:
-				if name in self.visible_exits:
-					self.visible_exits[name].delete()
-				vl1 = self.draw_polygon(vs1, exitColor2, group=self.groups[2])
-				vl2 = self.draw_polygon(vs2, exitColor1, group=self.groups[2])
-				self.visible_exits[name] = (vl1, vl2)
-		elif exit.to in ("undefined", "death"):
-			if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
-				vl = self.visible_exits[name]
-				vl.x, vl.y = newCP
-			elif exit.to == "undefined":
-				self.visible_exits[name] = pyglet.text.Label(
-					"?",
-					font_name="Times New Roman",
-					font_size=(self.size / 100.0) * 72,
-					x=newCP.x,
-					y=newCP.y,
-					anchor_x="center",
-					anchor_y="center",
-					color=exitColor2,
-					batch=self.batch,
-					group=self.groups[2],
-				)
-			else:  # Death
-				self.visible_exits[name] = pyglet.text.Label(
-					"X",
-					font_name="Times New Roman",
-					font_size=(self.size / 100.0) * 72,
-					x=newCP.x,
-					y=newCP.y,
-					anchor_x="center",
-					anchor_y="center",
-					color=Color(255, 0, 0, 255),
-					batch=self.batch,
-					group=self.groups[2],
-				)
-		else:  # one-way, random, etc
-			vec = newCP - cp
-			vec = vec.scale_to_length(vec.length / 2)
-			a = newCP - vec
-			d = newCP + vec
-			r = (self.size / radius) / 2.0
-			if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
-				vl1, vl2 = self.visible_exits[name]
-				vs1, vs2 = self.arrow_vertices(a, d, r)
-				vl1.vertices = vs1
-				vl2.vertices = vs2
-			else:
-				if name in self.visible_exits:
-					self.visible_exits[name].delete()
-				vl1, vl2 = self.draw_arrow(a, d, r, exitColor2, group=self.groups[2])
-				self.visible_exits[name] = (vl1, vl2)
+	def on_guiRefresh(self) -> None:
+		"""Fires when it is necessary to clear the visible rooms cache and redraw the map view."""
+		logger.debug("Clearing visible exits.")
+		self.deleteStaleExits()
+		logger.debug("Clearing visible room flags.")
+		self.deleteStaleRoomFlags()
+		logger.debug("Clearing visible rooms.")
+		self.deleteStaleRooms()
+		logger.debug("Clearing center mark.")
+		self.deleteCenterMark()
+		self.redraw()
+		logger.debug("GUI refreshed.")
 
-	def exits2d_continuous(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
-		if exit is None:
-			color = exitColor2
-		elif exit.to == "undefined":
-			color = Color(0, 0, 255, 255)
-		elif exit.to == "death":
-			color = Color(255, 0, 0, 255)
-		else:
-			color = Color(0, 255, 0, 255)
-		square = self.square_vertices(cp, self.size / 2.0)
-		a = square[(DIRECTIONS.index(direction) + 1) % 4]
-		b = square[(DIRECTIONS.index(direction) + 2) % 4]
-		if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
-			vl = self.visible_exits[name]
-			vl.vertices = self.fat_segment_vertices(a, b, self.size / radius / 2.0)
-			vl.colors = color * (len(vl.colors) // 4)
-		else:
-			self.visible_exits[name] = self.draw_fat_segment(
-				a, b, self.size / radius, color, group=self.groups[2]
-			)
+	def on_mapSync(self, currentRoom: Room) -> None:
+		"""
+		Fires when `world.currentRoom` changes value.
 
-	def exits2d_tiled(self, direction, exit, name, cp, exitColor1, exitColor2, radius):
-		directionVector = DIRECTIONS_VEC2D.get(direction, None)
-		if self.world.isBidirectional(exit):
-			a = cp + (directionVector * (self.size / 2.0))
-			b = a + (directionVector * ((self.size * self.gap_as_float) / 2))
-			if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
-				vl = self.visible_exits[name]
-				vs = self.fat_segment_vertices(a, b, self.size / radius)
-				vl.vertices = vs
-			else:
-				self.visible_exits[name] = self.draw_fat_segment(
-					a, b, self.size / radius, exitColor1, group=self.groups[2]
-				)
-		elif exit.to in ("undefined", "death"):
-			newCP = cp + directionVector * (self.size * 0.75)
-			if name in self.visible_exits and not isinstance(self.visible_exits[name], tuple):
-				vl = self.visible_exits[name]
-				vl.x, vl.y = newCP
-			elif exit.to == "undefined":
-				self.visible_exits[name] = pyglet.text.Label(
-					"?",
-					font_name="Times New Roman",
-					font_size=(self.size / 100.0) * 72,
-					x=newCP.x,
-					y=newCP.y,
-					anchor_x="center",
-					anchor_y="center",
-					color=exitColor1,
-					batch=self.batch,
-					group=self.groups[2],
-				)
-			else:  # Death
-				self.visible_exits[name] = pyglet.text.Label(
-					"X",
-					font_name="Times New Roman",
-					font_size=(self.size / 100.0) * 72,
-					x=newCP.x,
-					y=newCP.y,
-					anchor_x="center",
-					anchor_y="center",
-					color=Color(255, 0, 0, 255),
-					batch=self.batch,
-					group=self.groups[2],
-				)
-		else:  # One-way, random, etc.
-			color = exitColor1
-			a = cp + (directionVector * (self.size / 2.0))
-			d = a + (directionVector * ((self.size * self.gap_as_float) / 2))
-			r = ((self.size / radius) / 2.0) * self.gap_as_float
-			if name in self.visible_exits and isinstance(self.visible_exits[name], tuple):
-				vl1, vl2 = self.visible_exits[name]
-				vs1, vs2 = self.arrow_vertices(a, d, r)
-				vl1.vertices = vs1
-				vl1.colors = color * (len(vl1.colors) // 4)
-				vl2.vertices = vs2
-				vl2.colors = color * (len(vl2.colors) // 4)
-			else:
-				if name in self.visible_exits:
-					self.visible_exits[name].delete()
-				self.visible_exits[name] = self.draw_arrow(a, d, r, color, group=self.groups[2])
+		This typically happens if player's location was
+		automatically synced, or set manually with the 'sync' command.
 
-	def getExits(self, room):
-		if not self.continuous_view:
-			return set(room.exits)  # Normal exits list
-		# Swap NESW exits with directions you can't go. Leave up/down in place if present.
-		exits = DIRECTIONS_2D.symmetric_difference(room.exits)
-		for direction in room.exits:
-			if not self.world.isBidirectional(room.exits[direction]):
-				# Add any existing NESW exits that are unidirectional back
-				# to the exits set for processing later.
-				exits.add(direction)
-		return exits
+		Args:
+			currentRoom: The updated value of `world.currentRoom`.
+		"""
+		self.currentRoom = currentRoom
+		logger.debug(f"Map synced to {currentRoom}")
+		self.redraw()
 
-	def clearOldVisibleExits(self, newExits):
-		for name in set(self.visible_exits) - newExits:
-			try:
-				try:
-					for dead in self.visible_exits[name]:
-						dead.delete()
-				except TypeError:
-					self.visible_exits[name].delete()
-			except AssertionError:
-				pass
-			del self.visible_exits[name]
+	def guiQueueDispatcher(self, dt: float) -> None:
+		"""
+		Dispatches events from the GUI queue on every new frame.
 
-	def draw_exits(self):
-		logger.debug("Drawing exits")
-		try:
-			exitColor1 = self._cfg["exitColor1"]
-		except KeyError:
-			exitColor1 = (255, 228, 225, 255)
-			self._cfg["exitColor1"] = exitColor1
-		try:
-			exitColor2 = self._cfg["exitColor2"]
-		except KeyError:
-			exitColor2 = (0, 0, 0, 255)
-			self._cfg["exitColor2"] = exitColor2
-		exitColor1 = Color(*exitColor1)
-		exitColor2 = Color(*exitColor2)
-		try:
-			radius = int(self._cfg["exit_radius"])
-		except (KeyError, ValueError) as error:
-			if isinstance(error, ValueError):
-				logger.warning(f"Invalid value for exit_radius in config.json: {radius}")
-			radius = 10
-			self._cfg["exit_radius"] = radius
-		newExits = set()
-		for vnum, item in self.visible_rooms.items():
-			vl, room, cp = item
-			for direction in self.getExits(room):
-				name = vnum + direction
-				exit = room.exits.get(direction, None)
-				if direction in ("up", "down"):
-					self.exitsUpDown(direction, exit, name, cp, exitColor1, exitColor2, radius)
-				elif self.continuous_view:
-					name += "-"
-					self.exits2d_continuous(direction, exit, name, cp, exitColor1, exitColor2, radius)
-				else:
-					self.exits2d_tiled(direction, exit, name, cp, exitColor1, exitColor2, radius)
-				newExits.add(name)
-		self.clearOldVisibleExits(newExits)
-
-	def enable_current_room_markers(self):
-		if "current_room_markers" in self.blinkers:
-			return None
-		bottom_left = self.cp - (self.size / 2.0, self.size / 2.0)
-		top_left = self.cp - (self.size / 2.0, -self.size / 2.0)
-		top_right = self.cp + (self.size / 2.0, self.size / 2.0)
-		bottom_right = self.cp + (self.size / 2.0, -self.size / 2.0)
-		current_room_markers = []
-		current_room_markers.append(
-			Blinker(
-				self.blink_rate,
-				self.draw_circle,
-				lambda: (
-					(
-						bottom_left,
-						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color,
-					),
-					{"group": self.groups[5]},
-				),
-			)
-		)
-		current_room_markers.append(
-			Blinker(
-				self.blink_rate,
-				self.draw_circle,
-				lambda: (
-					(
-						top_left,
-						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color,
-					),
-					{"group": self.groups[5]},
-				),
-			)
-		)
-		current_room_markers.append(
-			Blinker(
-				self.blink_rate,
-				self.draw_circle,
-				lambda: (
-					(
-						top_right,
-						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color,
-					),
-					{"group": self.groups[5]},
-				),
-			)
-		)
-		current_room_markers.append(
-			Blinker(
-				self.blink_rate,
-				self.draw_circle,
-				lambda: (
-					(
-						bottom_right,
-						(self.size / 100.0) * self.current_room_mark_radius,
-						self.current_room_mark_color,
-					),
-					{"group": self.groups[5]},
-				),
-			)
-		)
-		self.blinkers["current_room_markers"] = tuple(current_room_markers)
-
-	def redraw(self):
-		logger.debug("Redrawing...")
-		self.draw_rooms()
-		self.draw_exits()
+		Args:
+			dt: The Time delta in seconds since the last clock tick.
+		"""
+		while not self._gui_queue.empty():
+			with suppress(queue.Empty):
+				event = self._gui_queue.get_nowait()
+				if event is None:
+					event = ("on_close",)
+				self.dispatch_event(event[0], *event[1:])
 
 
-Window.register_event_type("on_map_sync")
-Window.register_event_type("on_gui_refresh")
+Window.register_event_type("on_mapSync")
+Window.register_event_type("on_guiRefresh")

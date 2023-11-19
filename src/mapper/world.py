@@ -66,6 +66,14 @@ warnings.filterwarnings(
 )
 
 
+# Ignore warnings from Pyglet Windows OpenGL context functions due to unescaped path separators in strings.
+warnings.filterwarnings(
+	"ignore",
+	category=SyntaxWarning,
+	module=r".*?pyglet.gl.wgl",
+)
+
+
 GUI_QUEUE_TYPE: TypeAlias = Union[Tuple[str], Tuple[str, Room], None]
 LEAD_BEFORE_ENTERING_VNUMS: list[str] = ["196", "3473", "3474", "12138", "12637"]
 LIGHT_SYMBOLS: dict[str, str] = {
@@ -107,7 +115,7 @@ class World(object):
 			if interface == "hc":
 				from .gui import hc
 
-				self.window = hc.Window(self)  # type: ignore[attr-defined]
+				self.window = hc.Window(self)
 			elif interface == "sighted":
 				from .gui import sighted
 
@@ -124,7 +132,7 @@ class World(object):
 	def currentRoom(self, value: Room) -> None:
 		self._currentRoom = value
 		if self._interface != "text":
-			self._gui_queue.put(("on_map_sync", value))
+			self._gui_queue.put(("on_mapSync", value))
 
 	@currentRoom.deleter
 	def currentRoom(self) -> None:
@@ -133,7 +141,7 @@ class World(object):
 	def GUIRefresh(self) -> None:
 		"""Trigger the clearing and redrawing of rooms by the GUI"""
 		if self._interface != "text":
-			self._gui_queue.put(("on_gui_refresh",))
+			self._gui_queue.put(("on_guiRefresh",))
 
 	def output(self, text: str) -> None:
 		print(text)

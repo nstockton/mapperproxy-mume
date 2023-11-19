@@ -195,13 +195,13 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		if self.centerRoom is not None:
 			self.draw_map(self.centerRoom)
 
-	def on_map_sync(self, currentRoom: Room) -> None:
+	def on_mapSync(self, currentRoom: Room) -> None:
 		logger.debug(f"Map synced to {currentRoom}, vnum {currentRoom.vnum}")
 		# reset player position, center the map around
 		self.playerRoom = currentRoom
 		self.draw_map(currentRoom)
 
-	def on_gui_refresh(self) -> None:
+	def on_guiRefresh(self) -> None:
 		"""This event is fired when the mapper needs to signal the GUI to clear
 		the visible rooms cache and redraw the map view."""
 		if self.centerRoom is not None:
@@ -313,5 +313,5 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			self.world.output(f"Click on room {room.vnum}.")
 
 
-Window.register_event_type("on_map_sync")
-Window.register_event_type("on_gui_refresh")
+Window.register_event_type("on_mapSync")
+Window.register_event_type("on_guiRefresh")
