@@ -4,8 +4,9 @@
 *.html text eol=crlf
 *.in text eol=crlf
 *.jpg -text
+*.json text eol=lf
 *.json.sample text eol=lf
-*.json.schema text eol=crlf
+*.json.schema text eol=lf
 *.md text eol=crlf
 *.png -text
 *.py text eol=crlf
@@ -19,5 +20,3 @@
 *.yml text eol=crlf
 .gitattributes text eol=crlf
 .gitignore text eol=crlf
-data/config.json.sample text eol=crlf
-Pipfile text eol=crlf

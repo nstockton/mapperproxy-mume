@@ -126,7 +126,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		databasePath: The location where the database should be saved.
 		schemaPath: The location of the schema.
 	"""
-	with open(databasePath, "w", encoding="utf-8") as fileObj:
+	with open(databasePath, "w", encoding="utf-8", newline="\n") as fileObj:
 		_validate(database, schemaPath)
 		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2**16)
 

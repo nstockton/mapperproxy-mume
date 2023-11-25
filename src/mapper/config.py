@@ -73,9 +73,7 @@ class Config(MutableMapping[str, Any]):
 		"""Saves the configuration to disc."""
 		filename: str = os.path.join(DATA_DIRECTORY, f"{self.name}.json")
 		with self._configLock:
-			with open(filename, "w", encoding="utf-8", newline="\r\n") as fileObj:
-				# Configuration should be stored using Windows style line endings (\r\n)
-				# so the file can be viewed in Notepad.
+			with open(filename, "w", encoding="utf-8", newline="\n") as fileObj:
 				json.dump(self._config, fileObj, sort_keys=True, indent=2)
 
 	def __getitem__(self, key: str) -> Any:

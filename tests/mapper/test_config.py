@@ -47,5 +47,5 @@ class TestConfig(TestCase):
 		with patch("mapper.config.open", mockOpen):
 			cfg.save()
 		fileName: str = os.path.join(DATA_DIRECTORY, f"{cfg.name}.json")
-		mockOpen.assert_called_once_with(fileName, "w", encoding="utf-8", newline="\r\n")
+		mockOpen.assert_called_once_with(fileName, "w", encoding="utf-8", newline="\n")
 		self.assertEqual("".join(lines), '{\n  "test": "somevalue"\n}')
