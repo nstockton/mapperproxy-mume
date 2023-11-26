@@ -168,22 +168,61 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		self.centerMark: list[ShapeType] = []
 		self.highlight: Union[str, None] = None
 		self.currentRoom: Union[Room, None] = None
-		fullscreen: bool = self._cfg.get("fullscreen", False)
-		super().__init__(caption="MPM", resizable=True, fullscreen=fullscreen, vsync=False)
-		self._originalSize: tuple[int, int] = self.get_size()
+		super().__init__(caption="MPM", resizable=True, vsync=False)
 		self._originalLocation: tuple[int, int] = self.get_location()
-		if self._cfg.get("expand_window", False):
-			self.set_location(0, 0)
-			self.set_size(self.screen.width, self.screen.height)
+		self._originalSize: tuple[int, int] = self.get_size()
+		if self.expandWindow:
+			self.expandWindow = self.expandWindow  # Triggers resize.
 		# Set style manually after the window is created.
 		# Prevents lag if expand window and always on top are both enabled.
-		if self._cfg.get("always_on_top", False):
+		if self.alwaysOnTop:
+			self.alwaysOnTop = self.alwaysOnTop  # Apply the setting.
+		# Only set full screen after the call to the parent constructor above.
+		# This is done so we have a chance to store the original screen location and
+		# size, as full screen mode would otherwise change the values.
+		fullscreen: bool = self._cfg.get("fullscreen", False)
+		if fullscreen:
+			self.set_fullscreen(fullscreen)
+		logger.info(f"Created window {self}")
+		pyglet.clock.schedule_interval_soft(self.guiQueueDispatcher, 1.0 / FPS)  # Called once every frame.
+
+	@property
+	def alwaysOnTop(self) -> bool:
+		"""Specify if window should be on top of other windows."""
+		return self._cfg.get("always_on_top", False)
+
+	@alwaysOnTop.setter
+	def alwaysOnTop(self, value: bool) -> None:
+		if value:
 			self._style = pyglet.window.Window.WINDOW_STYLE_OVERLAY
 		else:
 			self._style = pyglet.window.Window.WINDOW_STYLE_DEFAULT
+		self._cfg["always_on_top"] = value
 		self._recreate(["style"])
-		logger.info(f"Created window {self}")
-		pyglet.clock.schedule_interval_soft(self.guiQueueDispatcher, 1.0 / FPS)  # Called once every frame.
+
+	@property
+	def expandWindow(self) -> bool:
+		"""Specify if window size should be expanded to fit the screen."""
+		return self._cfg.get("expand_window", False)
+
+	@expandWindow.setter
+	def expandWindow(self, value: bool) -> None:
+		if self.fullscreen:
+			return None
+		alwaysOnTop = self.alwaysOnTop
+		if alwaysOnTop:
+			# Temporarily switch to default window style to prevent full screen bug.
+			self.alwaysOnTop = False
+		if value:
+			self.set_location(0, 0)
+			self.set_size(self.screen.width, self.screen.height)
+		else:
+			self.set_location(*self._originalLocation)
+			self.set_size(*self._originalSize)
+		if alwaysOnTop:
+			# Undo Temporary change.
+			self.alwaysOnTop = True
+		self._cfg["expand_window"] = value
 
 	@property
 	def roomSize(self) -> int:
@@ -526,17 +565,12 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			symbol: The key symbol pressed.
 			modifiers: Bitwise combination of the key modifiers active.
 		"""
-		expanded = not self._cfg.get("expand_window", False)
-		if expanded:
-			self._originalSize = self.get_size()
-			self._originalLocation = self.get_location()
-			self.set_location(0, 0)
-			self.set_size(self.screen.width, self.screen.height)
-		else:
-			self.set_size(*self._originalSize)
-			self.set_location(*self._originalLocation)
-		self._cfg["expand_window"] = expanded
-		self.say(f"Window {'expanded' if expanded else 'restored'}.", True)
+		if self.fullscreen:
+			self.say("Can't change window size while in full screen.", True)
+			return None
+		value = not self.expandWindow
+		self.expandWindow = value
+		self.say(f"Window {'expanded' if value else 'restored'}.", True)
 
 	def keyboard_toggleAlwaysOnTop(self, symbol: int, modifiers: int) -> None:
 		"""
@@ -546,14 +580,9 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			symbol: The key symbol pressed.
 			modifiers: Bitwise combination of the key modifiers active.
 		"""
-		alwaysOnTop = not self._cfg.get("always_on_top", False)
-		if alwaysOnTop:
-			self._style = pyglet.window.Window.WINDOW_STYLE_OVERLAY
-		else:
-			self._style = pyglet.window.Window.WINDOW_STYLE_DEFAULT
-		self._recreate(["style"])
-		self._cfg["always_on_top"] = alwaysOnTop
-		self.say(f"Always on top {'enabled' if alwaysOnTop else 'disabled'}.", True)
+		value = not self.alwaysOnTop
+		self.alwaysOnTop = value
+		self.say(f"Always on top {'enabled' if value else 'disabled'}.", True)
 
 	def keyboard_toggleFullscreen(self, symbol: int, modifiers: int) -> None:
 		"""
@@ -563,10 +592,10 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			symbol: The key symbol pressed.
 			modifiers: Bitwise combination of the key modifiers active.
 		"""
-		fs = not self.fullscreen
-		self.set_fullscreen(fs)
-		self._cfg["fullscreen"] = fs
-		self.say(f"fullscreen {'enabled' if fs else 'disabled'}.", True)
+		value = not self.fullscreen
+		self.set_fullscreen(value)
+		self._cfg["fullscreen"] = value
+		self.say(f"fullscreen {'enabled' if value else 'disabled'}.", True)
 
 	def keyboard_adjustSize(self, symbol: int, modifiers: int) -> None:
 		"""
