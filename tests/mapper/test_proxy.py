@@ -174,14 +174,15 @@ class TestProxyHandler(TestCase):
 	def testProxyHandlerOn_playerReceived(self) -> None:
 		data: bytes = b"Hello world!"
 		self.proxy.isEmulatingOffline = False
-		self.assertEqual(self.parse("player", data), (b"", data))
+		self.assertEqual(self.parse("player", data), (b"", b""))
+		self.assertEqual(self.parse("player", LF), (b"", data + CR_LF))
 		self.assertFalse(self.mapperEvents)
-		self.assertEqual(self.parse("player", b"testCommand " + data), (b"", b""))
-		self.assertEqual(self.mapperEvents, [("userInput", b"testCommand " + data)])
+		self.assertEqual(self.parse("player", b"testCommand " + data + LF), (b"", b""))
+		self.assertEqual(self.mapperEvents, [("userInput", b"testCommand " + data + LF)])
 		self.mapperEvents.clear()
 		self.proxy.isEmulatingOffline = True
-		self.assertEqual(self.parse("player", data), (b"", b""))
-		self.assertEqual(self.mapperEvents, [("userInput", data)])
+		self.assertEqual(self.parse("player", data + LF), (b"", b""))
+		self.assertEqual(self.mapperEvents, [("userInput", data + LF)])
 
 	def testProxyHandlerOn_gameReceived(self) -> None:
 		data: bytes = b"Hello world!"

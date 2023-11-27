@@ -20,7 +20,7 @@ from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.naws import NAWSMixIn
 from mudproto.telnet import TelnetProtocol
-from mudproto.telnet_constants import GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
+from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
 from mudproto.utils import escapeIAC
 from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
 
@@ -183,6 +183,7 @@ class ProxyHandler(object):
 		self.outputFormat: str = outputFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
 		self.mapperCommands: list[bytes] = mapperCommands
+		self.playerInputBuffer: bytearray = bytearray()
 		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
 		self.player: Manager = Manager(
 			playerWriter, self.on_playerReceived, isClient=False, promptTerminator=promptTerminator
@@ -211,10 +212,18 @@ class ProxyHandler(object):
 		self.player.disconnect()
 
 	def on_playerReceived(self, data: bytes) -> None:
-		if self.isEmulatingOffline or b"".join(data.strip().split()[:1]) in self.mapperCommands:
-			self.eventCaller(("userInput", data))
-		else:
-			self.game.write(data, escape=True)
+		if self.playerInputBuffer:
+			data = bytes(self.playerInputBuffer + data)
+			self.playerInputBuffer.clear()
+		for line in data.splitlines(True):
+			if line[-1] not in CR_LF:
+				# Final line was incomplete.
+				self.playerInputBuffer.extend(line)
+				break
+			elif self.isEmulatingOffline or b"".join(line.strip().split()[:1]) in self.mapperCommands:
+				self.eventCaller(("userInput", line))
+			else:
+				self.game.write(line, escape=True)
 
 	def on_gameReceived(self, data: bytes) -> None:
 		self.player.write(data, escape=True)
