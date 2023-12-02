@@ -21,12 +21,15 @@ from contextlib import suppress
 from pydoc import pager
 from typing import Any, Optional, Union
 
+# Local Modules:
+from .typedef import REGEX_PATTERN
+
 
 DATA_DIRECTORY: str = "mapper_data"
-ANSI_COLOR_REGEX: re.Pattern[str] = re.compile(r"\x1b\[[\d;]+m")
-WHITE_SPACE_REGEX: re.Pattern[str] = re.compile(r"\s+", flags=re.UNICODE)
-INDENT_REGEX: re.Pattern[str] = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
-XML_ATTRIBUTE_REGEX: re.Pattern[str] = re.compile(r"([\w-]+)(\s*=+\s*('[^']*'|\"[^\"]*\"|(?!['\"])[^\s]*))?")
+ANSI_COLOR_REGEX: REGEX_PATTERN = re.compile(r"\x1b\[[\d;]+m")
+WHITE_SPACE_REGEX: REGEX_PATTERN = re.compile(r"\s+", flags=re.UNICODE)
+INDENT_REGEX: REGEX_PATTERN = re.compile(r"^(?P<indent>\s*)(?P<text>.*)", flags=re.UNICODE)
+XML_ATTRIBUTE_REGEX: REGEX_PATTERN = re.compile(r"([\w-]+)(\s*=+\s*('[^']*'|\"[^\"]*\"|(?!['\"])[^\s]*))?")
 # Latin-1 replacement values taken from the MUME help page.
 # https://mume.org/help/latin1
 LATIN_ENCODING_REPLACEMENTS: dict[str, bytes] = {

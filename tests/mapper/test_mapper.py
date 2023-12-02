@@ -15,7 +15,8 @@ from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
 # Mapper Modules:
-from mapper.mapper import MAPPER_QUEUE_TYPE, Mapper
+from mapper.mapper import Mapper
+from mapper.typedef import MAPPER_QUEUE_EVENT_TYPE
 
 
 class TestMapper(TestCase):
@@ -41,10 +42,10 @@ class TestMapper(TestCase):
 		cm: ExitStack
 		with ExitStack() as cm:
 			mockHandleMudEvent: Mock = cm.enter_context(patch.object(self.mapper, "handleMudEvent"))
-			mockHandleUserData: Mock = cm.enter_context(patch.object(self.mapper, "handleUserData"))
+			mockHandleUserInput: Mock = cm.enter_context(patch.object(self.mapper, "handleUserInput"))
 			self.mapper.start()
 			# feed data into the mapper queue
-			testMapperInput: tuple[MAPPER_QUEUE_TYPE, ...] = (
+			testMapperInput: tuple[MAPPER_QUEUE_EVENT_TYPE, ...] = (
 				("line", b"Welcome to mume"),
 				("prompt", b"hp:hurt mana:burning>"),
 				("userInput", b"rinfo"),
@@ -61,56 +62,50 @@ class TestMapper(TestCase):
 			self.mapper.join(1)
 			self.assertFalse(self.mapper.is_alive(), "mapper thread took longer than a second to quit")
 			self.assertTrue(self.mapper.queue.empty(), "mapper queue is not empty after thread termination")
-			# validate calls to handleUserData
-			userCalls: _CallList = mockHandleUserData.mock_calls
+			# validate calls to handleUserInput
+			userCalls: _CallList = mockHandleUserInput.mock_calls
 			self.assertEqual(len(userCalls), 4)
 			self.assertEqual(
-				userCalls[0], call(b"rinfo"), "First call to handleUserData was not as expected."
+				userCalls[0], call("rinfo"), "First call to handleUserInput was not as expected."
 			)
 			self.assertEqual(
-				userCalls[1], call(b"emu go lorien"), "Second call to handleUserData was not as expected."
+				userCalls[1], call("emu go lorien"), "Second call to handleUserInput was not as expected."
 			)
 			self.assertEqual(
-				userCalls[2], call(b"not_a_user_command"), "Third handleUserData was not as expected."
+				userCalls[2], call("not_a_user_command"), "Third handleUserInput was not as expected."
 			)
 			self.assertEqual(
-				userCalls[3], call(b"run ingrove"), "Fourth call to handleUserData was not as expected."
+				userCalls[3], call("run ingrove"), "Fourth call to handleUserInput was not as expected."
 			)
 			# validate calls to handleMudEvent
 			serverCalls: _CallList = mockHandleMudEvent.mock_calls
 			self.assertEqual(len(serverCalls), 4)
 			self.assertEqual(
-				serverCalls[0], call("line", b"Welcome to mume"), "handleMudEvent #0 not expected."
+				serverCalls[0], call("line", "Welcome to mume"), "handleMudEvent #0 not expected."
 			)
-			self.assertEqual(
-				serverCalls[1], call("prompt", b"hp:hurt mana:burning>"), "Second handleMudEvent"
-			)
-			self.assertEqual(
-				serverCalls[2], call("movement", b"east"), "Third handleMudEvent not as expected"
-			)
-			self.assertEqual(
-				serverCalls[3], call("not_an_event", b"good bype world"), "Fourth handleMudEvent"
-			)
+			self.assertEqual(serverCalls[1], call("prompt", "hp:hurt mana:burning>"), "Second handleMudEvent")
+			self.assertEqual(serverCalls[2], call("movement", "east"), "Third handleMudEvent not as expected")
+			self.assertEqual(serverCalls[3], call("not_an_event", "good bype world"), "Fourth handleMudEvent")
 
-	def testMapper_handleUserData(self) -> None:
-		validUserInput: tuple[tuple[bytes, str, str], ...] = (
-			(b"rinfo", "user_command_rinfo", ""),
-			(b"rlabel add here", "user_command_rlabel", "add here"),
-			(b"emu go emoria", "user_command_emu", "go emoria"),
+	def testMapper_handleUserInput(self) -> None:
+		validUserInput: tuple[tuple[str, str, str], ...] = (
+			("rinfo", "user_command_rinfo", ""),
+			("rlabel add here", "user_command_rlabel", "add here"),
+			("emu go emoria", "user_command_emu", "go emoria"),
 		)
 		for command, handlerName, args in validUserInput:
 			handler: Mock
 			with patch.object(self.mapper, handlerName) as handler:
-				self.mapper.handleUserData(command)
+				self.mapper.handleUserInput(command)
 				handler.assert_called_with(args)
-		junkUserInput: tuple[bytes, ...] = (
-			b"not_a_command",
-			b"test failure",
-			b"rinf",
+		junkUserInput: tuple[str, ...] = (
+			"not_a_command",
+			"test failure",
+			"rinf",
 		)
 		for command in junkUserInput:
 			with self.assertRaises(AttributeError):
-				self.mapper.handleUserData(command)
+				self.mapper.handleUserInput(command)
 
 
 class TestMapper_handleMudEvent(TestCase):
@@ -147,15 +142,15 @@ class TestMapper_handleMudEvent(TestCase):
 			getattr(self.mapper, handlerName) for handlerName in self.legacyHandlerNames
 		)
 		for event, handler in zip(events, handlers):
-			sampleInput1: bytes = b"Helol oje"
-			sampleInput2: bytes = b"no sir, away. a papaya war is on"
-			sampleInput3: bytes = b"delting no sir, away. a papaya war is on"
+			sampleInput1: str = "Helol oje"
+			sampleInput2: str = "no sir, away. a papaya war is on"
+			sampleInput3: str = "delting no sir, away. a papaya war is on"
 			self.mapper.registerMudEventHandler(event, handler)
 			self.mapper.handleMudEvent(event, sampleInput1)
-			handler.assert_called_once_with(sampleInput1.decode("us-ascii"))
+			handler.assert_called_once_with(sampleInput1)
 			handler.reset_mock()
 			self.mapper.handleMudEvent(event, sampleInput2)
-			handler.assert_called_once_with(sampleInput2.decode("us-ascii"))
+			handler.assert_called_once_with(sampleInput2)
 			handler.reset_mock()
 			self.mapper.deregisterMudEventHandler(event, handler)
 			self.mapper.handleMudEvent(event, sampleInput3)
@@ -169,15 +164,15 @@ class TestMapper_handleMudEvent(TestCase):
 		)
 		for event in events:
 			handler: Mock = Mock()
-			sampleInput1: bytes = b"Helol oje"
-			sampleInput2: bytes = b"no sir, away. a papaya war is on"
-			sampleInput3: bytes = b"delting no sir, away. a papaya war is on"
+			sampleInput1: str = "Helol oje"
+			sampleInput2: str = "no sir, away. a papaya war is on"
+			sampleInput3: str = "delting no sir, away. a papaya war is on"
 			self.mapper.registerMudEventHandler(event, handler)
 			self.mapper.handleMudEvent(event, sampleInput1)
-			handler.assert_called_once_with(sampleInput1.decode("us-ascii"))
+			handler.assert_called_once_with(sampleInput1)
 			handler.reset_mock()
 			self.mapper.handleMudEvent(event, sampleInput2)
-			handler.assert_called_once_with(sampleInput2.decode("us-ascii"))
+			handler.assert_called_once_with(sampleInput2)
 			handler.reset_mock()
 			self.mapper.deregisterMudEventHandler(event, handler)
 			self.mapper.handleMudEvent(event, sampleInput3)
@@ -192,4 +187,4 @@ class TestMapper_handleMudEvent(TestCase):
 		)
 		for unknownEvent in unknownEvents:
 			# simply require this to execute without raising an exception
-			self.mapper.handleMudEvent(unknownEvent, b"meaningless input")
+			self.mapper.handleMudEvent(unknownEvent, "meaningless input")

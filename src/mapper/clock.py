@@ -13,23 +13,24 @@ from typing import Optional, Union
 
 # Local Modules:
 from .config import Config
+from .typedef import REGEX_PATTERN
 
 
-CLOCK_REGEX: re.Pattern[str] = re.compile(
+CLOCK_REGEX: REGEX_PATTERN = re.compile(
 	r"^The current time is (?P<hour>[1-9]|1[0-2])\:(?P<minutes>[0-5]\d) (?P<am_pm>[ap]m)\.$"
 )
-TIME_REGEX: re.Pattern[str] = re.compile(
+TIME_REGEX: REGEX_PATTERN = re.compile(
 	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2]) (?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
 	+ r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
 )
-DAWN_REGEX: re.Pattern[str] = re.compile(
+DAWN_REGEX: REGEX_PATTERN = re.compile(
 	r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$"
 )
-DAY_REGEX: re.Pattern[str] = re.compile(
+DAY_REGEX: REGEX_PATTERN = re.compile(
 	r"^(?:It seems as if )?[Tt]he day has begun\.(?: You feel so weak under the cruel light\!)?$"
 )
-DUSK_REGEX: re.Pattern[str] = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
-NIGHT_REGEX: re.Pattern[str] = re.compile(
+DUSK_REGEX: REGEX_PATTERN = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
+NIGHT_REGEX: REGEX_PATTERN = re.compile(
 	r"^The last ray of light fades\, and all is swallowed up in darkness\.$|"
 	+ r"^(?:It seems as if )?[Tt]he night has begun\.(?: You feel stronger in the dark\!)?$"
 )

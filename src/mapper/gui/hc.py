@@ -9,10 +9,10 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import math
-import queue
 from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from enum import Enum, auto
+from queue import Empty as QueueEmpty
 from typing import TYPE_CHECKING, Any, NamedTuple, Optional, Protocol, Union
 
 # Third-party Modules:
@@ -25,12 +25,13 @@ from speechlight import Speech
 from .vec2d import Vec2d
 from ..config import Config
 from ..roomdata.objects import DIRECTION_COORDINATES, DIRECTIONS, Exit, Room
+from ..typedef import GUI_QUEUE_TYPE
 from ..utils import clamp
 
 
 if TYPE_CHECKING:
 	# Prevent cyclic import.
-	from ..world import GUI_QUEUE_TYPE, World
+	from ..world import World
 
 
 FPS: int = 30
@@ -142,7 +143,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 
 	def __init__(self, world: World) -> None:
 		self.world = world
-		self._gui_queue: queue.SimpleQueue[GUI_QUEUE_TYPE] = world._gui_queue
+		self._gui_queue: GUI_QUEUE_TYPE = world._gui_queue
 		self._speech = Speech()
 		self.say = self._speech.say
 		self._cfg: dict[str, Any] = {}
@@ -1094,7 +1095,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			dt: The Time delta in seconds since the last clock tick.
 		"""
 		while not self._gui_queue.empty():
-			with suppress(queue.Empty):
+			with suppress(QueueEmpty):
 				event = self._gui_queue.get_nowait()
 				if event is None:
 					event = ("on_close",)

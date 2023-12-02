@@ -10,8 +10,8 @@ from __future__ import annotations
 import logging
 import os.path
 import re
+from contextlib import suppress
 from queue import Empty as QueueEmpty
-from queue import SimpleQueue
 from typing import TYPE_CHECKING, Any, Optional, Protocol, Union
 
 # Third-party Modules:
@@ -19,12 +19,13 @@ import pyglet
 
 # Local Modules:
 from ..roomdata.objects import Room
+from ..typedef import GUI_QUEUE_TYPE
 from ..utils import getDataPath
 
 
 if TYPE_CHECKING:  # pragma: no cover
 	# Prevent cyclic import.
-	from ..world import GUI_QUEUE_TYPE, World
+	from ..world import World
 
 
 FPS: int = 40
@@ -150,7 +151,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		# Pyglet window
 		super().__init__(self.col * self.square, self.row * self.square, caption="MPM", resizable=True)
 		logger.info(f"Creating window {self}")
-		self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = world._gui_queue
+		self._gui_queue: GUI_QUEUE_TYPE = world._gui_queue
 		# Sprites
 		# The list of sprites
 		self.sprites: list[SpriteType] = []
@@ -164,13 +165,11 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 
 	def queue_observer(self, dt: float) -> None:
 		while not self._gui_queue.empty():
-			try:
-				event: GUI_QUEUE_TYPE = self._gui_queue.get_nowait()
+			with suppress(QueueEmpty):
+				event = self._gui_queue.get_nowait()
 				if event is None:
 					event = ("on_close",)
 				self.dispatch_event(event[0], *event[1:])
-			except QueueEmpty:
-				continue
 
 	def on_close(self) -> None:
 		logger.debug(f"Closing window {self}")

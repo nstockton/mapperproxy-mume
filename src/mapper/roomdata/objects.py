@@ -11,19 +11,17 @@ import re
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Union
 
 # Local Modules:
 from ..gui.vec2d import Vec2d
 
 
-if sys.version_info < (3, 10):  # pragma: no cover
-	from typing_extensions import TypeAlias
-else:  # pragma: no cover
-	from typing import TypeAlias
+if TYPE_CHECKING:
+	# Prevent cyclic import.
+	from ..typedef import COORDINATES_TYPE, REGEX_PATTERN
 
 
-COORDINATES_TYPE: TypeAlias = Tuple[int, int, int]
 DIRECTIONS: tuple[str, ...] = (
 	"north",
 	"east",
@@ -58,7 +56,7 @@ COMPASS_DIRECTIONS: tuple[str, ...] = (
 	"west",
 	"northwest",
 )
-AVOID_DYNAMIC_DESC_REGEX: re.Pattern[str] = re.compile(
+AVOID_DYNAMIC_DESC_REGEX: REGEX_PATTERN = re.compile(
 	r"Some roots lie here waiting to ensnare weary travellers\.|"
 	r"The remains of a clump of roots lie here in a heap of rotting compost\.|"
 	r"A clump of roots is here, fighting|"

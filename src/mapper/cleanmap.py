@@ -8,15 +8,15 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
-from typing import Union
 
 # Local Modules:
 from .mudevents import Handler
 from .roomdata.objects import DIRECTIONS, Room
+from .typedef import REGEX_MATCH, REGEX_PATTERN
 
 
 DIRECTION_TITLES: str = "|".join(d.title() for d in DIRECTIONS)
-EXIT_REGEX: re.Pattern[str] = re.compile(rf".*?(?<![#(])(?P<dir>{DIRECTION_TITLES})(?![#)]).*?[ ]+[-] .+")
+EXIT_REGEX: REGEX_PATTERN = re.compile(rf".*?(?<![#(])(?P<dir>{DIRECTION_TITLES})(?![#)]).*?[ ]+[-] .+")
 
 
 class ExitsCleaner(Handler):
@@ -40,7 +40,7 @@ class ExitsCleaner(Handler):
 		if not self.mapper.autoUpdateRooms or text.startswith("Exits:"):
 			return None
 		for line in text.splitlines():
-			match: Union[re.Match[str], None] = EXIT_REGEX.match(line)
+			match: REGEX_MATCH = EXIT_REGEX.match(line)
 			if match is not None:
 				room: Room = self.mapper.currentRoom
 				direction: str = match.group("dir").lower()

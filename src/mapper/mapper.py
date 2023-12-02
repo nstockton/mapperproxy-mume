@@ -11,11 +11,9 @@ import json
 import logging
 import re
 import socket
-import sys
 import textwrap
 import threading
 import traceback
-from collections.abc import Callable
 from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer
@@ -24,7 +22,6 @@ from typing import Any, Optional, Union
 # Third-party Modules:
 from mudproto.mpi import MPIProtocol
 from mudproto.utils import escapeXMLString
-from mudproto.xml import EVENT_CALLER_TYPE
 
 # Local Modules:
 from . import INTERFACES, OUTPUT_FORMATS
@@ -34,22 +31,16 @@ from .config import Config
 from .delays import OneShot
 from .proxy import Player, ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
+from .typedef import MAPPER_QUEUE_TYPE, MUD_EVENT_HANDLER_TYPE, REGEX_MATCH, REGEX_PATTERN, XML_EVENT_TYPE
 from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 
-if sys.version_info < (3, 10):  # pragma: no cover
-	from typing_extensions import TypeAlias
-else:  # pragma: no cover
-	from typing import TypeAlias
-
-
-MAPPER_QUEUE_TYPE: TypeAlias = Union[EVENT_CALLER_TYPE, None]
-EXIT_TAGS_REGEX: re.Pattern[str] = re.compile(
+EXIT_TAGS_REGEX: REGEX_PATTERN = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ rf"(?P<direction>{'|'.join(DIRECTIONS)})"
 )
-MOVEMENT_FORCED_REGEX: re.Pattern[str] = re.compile(
+MOVEMENT_FORCED_REGEX: REGEX_PATTERN = re.compile(
 	"|".join(
 		[
 			r"You feel confused and move along randomly\.\.\.",
@@ -83,7 +74,7 @@ MOVEMENT_FORCED_REGEX: re.Pattern[str] = re.compile(
 		]
 	)
 )
-MOVEMENT_PREVENTED_REGEX: re.Pattern[str] = re.compile(
+MOVEMENT_PREVENTED_REGEX: REGEX_PATTERN = re.compile(
 	"^(?:{lines})$".format(
 		lines="|".join(
 			[
@@ -155,7 +146,7 @@ class Mapper(threading.Thread, World):
 		self.gagPrompts: bool = gagPrompts
 		self.findFormat: str = findFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
-		self.queue: SimpleQueue[MAPPER_QUEUE_TYPE] = SimpleQueue()
+		self.queue: MAPPER_QUEUE_TYPE = SimpleQueue()
 		self.autoMapping: bool = False
 		self.autoMerging: bool = True
 		self.autoLinking: bool = True
@@ -166,7 +157,7 @@ class Mapper(threading.Thread, World):
 			for func in dir(self)
 			if func.startswith("user_command_") and callable(getattr(self, func))
 		]
-		self.mudEventHandlers: dict[str, set[Callable[[str], None]]] = {}
+		self.mudEventHandlers: dict[str, set[MUD_EVENT_HANDLER_TYPE]] = {}
 		self.unknownMudEvents: list[str] = []
 		for legacyHandler in [
 			func[len("mud_event_") :]
@@ -509,7 +500,7 @@ class Mapper(threading.Thread, World):
 
 	def user_command_secretaction(self, *args: str) -> None:
 		matchPattern: str = rf"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$"
-		match: Union[re.Match[str], None] = re.match(matchPattern, args[0].strip().lower())
+		match: REGEX_MATCH = re.match(matchPattern, args[0].strip().lower())
 		if match is None:
 			self.sendPlayer(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")
 			return None
@@ -669,7 +660,7 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer("Usage: run [label|vnum]")
 			return None
 		self.stopRun()
-		match: Union[re.Match[str], None]
+		match: REGEX_MATCH
 		destination: str
 		argString: str = args[0].strip()
 		if argString.lower() == "t" or argString.lower().startswith("t "):
@@ -718,7 +709,7 @@ class Mapper(threading.Thread, World):
 			return None
 		self.autoWalkDirections.clear()
 		argString: str = args[0].strip()
-		match: Union[re.Match[str], None] = RUN_DESTINATION_REGEX.match(argString)
+		match: REGEX_MATCH = RUN_DESTINATION_REGEX.match(argString)
 		if match is not None:
 			destination: str = match.group("destination")
 			flags: str = match.group("flags")
@@ -1009,8 +1000,8 @@ class Mapper(threading.Thread, World):
 				self.sendPlayer(self.rridable("ridable"))
 
 	def syncTime(self, text: str) -> None:
-		clockMatch: Union[re.Match[str], None] = CLOCK_REGEX.match(text)
-		timeMatch: Union[re.Match[str], None] = TIME_REGEX.match(text)
+		clockMatch: REGEX_MATCH = CLOCK_REGEX.match(text)
+		timeMatch: REGEX_MATCH = TIME_REGEX.match(text)
 		if self.timeEvent is None:
 			if clockMatch is not None:
 				hour: int = int(clockMatch.group("hour"))
@@ -1154,19 +1145,19 @@ class Mapper(threading.Thread, World):
 	def mud_event_exits(self, text: str) -> None:
 		self.exits = text
 
-	def handleUserData(self, data: bytes) -> None:
-		data = data.strip()
-		if not data:
+	def handleUserInput(self, text: str) -> None:
+		text = text.strip()
+		if not text:
 			return None
 		elif self.isEmulatingOffline:
-			self.user_command_emu(decodeBytes(data))
+			self.user_command_emu(text)
 		else:
-			userCommand: bytes = data.split()[0]
-			args: bytes = data[len(userCommand) :].strip()
-			getattr(self, f"user_command_{decodeBytes(userCommand)}")(decodeBytes(args))
+			userCommand: str = text.split()[0]
+			args: str = text[len(userCommand) :].strip()
+			getattr(self, f"user_command_{userCommand}")(args)
 
-	def handleMudEvent(self, event: str, data: bytes) -> None:
-		text: str = stripAnsi(decodeBytes(data))
+	def handleMudEvent(self, event: str, text: str) -> None:
+		text = stripAnsi(text)
 		if event in self.mudEventHandlers:
 			if not self.scouting or event in ("prompt", "movement"):
 				for handler in self.mudEventHandlers[event]:
@@ -1175,7 +1166,7 @@ class Mapper(threading.Thread, World):
 			self.unknownMudEvents.append(event)
 			logger.debug(f"received data with an unknown event type of {event}")
 
-	def registerMudEventHandler(self, event: str, handler: Callable[[str], None]) -> None:
+	def registerMudEventHandler(self, event: str, handler: MUD_EVENT_HANDLER_TYPE) -> None:
 		"""Registers a method to handle mud events of a given type.
 		Params: event, handler
 		where event is the name of the event type, typically corresponding to the XML tag of the incoming data,
@@ -1187,7 +1178,7 @@ class Mapper(threading.Thread, World):
 			self.unknownMudEvents.remove(event)
 		self.mudEventHandlers[event].add(handler)
 
-	def deregisterMudEventHandler(self, event: str, handler: Callable[[str], None]) -> None:
+	def deregisterMudEventHandler(self, event: str, handler: MUD_EVENT_HANDLER_TYPE) -> None:
 		"""Deregisters mud event handlers.
 		params: same as registerMudEventHandler.
 		"""
@@ -1197,14 +1188,15 @@ class Mapper(threading.Thread, World):
 				del self.mudEventHandlers[event]
 
 	def run(self) -> None:
-		item: EVENT_CALLER_TYPE
+		item: XML_EVENT_TYPE
 		for item in iter(self.queue.get, None):
 			try:
 				event, data = item
+				text = decodeBytes(data)
 				if event == "userInput":
-					self.handleUserData(data)
+					self.handleUserInput(text)
 				else:
-					self.handleMudEvent(*item)
+					self.handleMudEvent(event, text)
 			except Exception:
 				self.output(f"Error in mapper thread:\n{traceback.format_exc().strip()}")
 				logger.exception("Error in mapper thread")

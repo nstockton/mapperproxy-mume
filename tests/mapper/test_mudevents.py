@@ -51,14 +51,14 @@ class TestHandler(TestCase):
 
 	def testMapper_handle(self) -> None:
 		dummy: DummyHandler = DummyHandler(self.mapper)
-		self.mapper.handleMudEvent(dummy.event, b"Hello world")
+		self.mapper.handleMudEvent(dummy.event, "Hello world")
 		dummy.handleText.assert_called_once_with("I received Hello world")
 		dummy.handleText.reset_mock()
-		self.mapper.handleMudEvent(dummy.event, b"I am here.")
+		self.mapper.handleMudEvent(dummy.event, "I am here.")
 		dummy.handleText.assert_called_once_with("I received I am here.")
 		dummy.handleText.reset_mock()
 		dummy.__del__()
-		self.mapper.handleMudEvent(dummy.event, b"Goodbye world")
+		self.mapper.handleMudEvent(dummy.event, "Goodbye world")
 		dummy.handleText.assert_not_called()
 
 	def test_init_raisesValueErrorWhenNoEventTypeIsProvided(self) -> None:

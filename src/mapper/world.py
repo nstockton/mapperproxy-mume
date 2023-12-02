@@ -11,14 +11,13 @@ import gc
 import heapq
 import itertools
 import re
-import sys
 import threading
 import warnings
 from collections.abc import Callable, Generator, Iterable, MutableSequence, Sequence
 from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer as defaultTimer
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 # Third-party Modules:
 from rapidfuzz import fuzz
@@ -33,7 +32,6 @@ from .roomdata.database import (
 	loadRooms,
 )
 from .roomdata.objects import (
-	COORDINATES_TYPE,
 	DIRECTION_COORDINATES,
 	DIRECTIONS,
 	REVERSE_DIRECTIONS,
@@ -45,13 +43,8 @@ from .roomdata.objects import (
 	Exit,
 	Room,
 )
+from .typedef import COORDINATES_TYPE, GUI_QUEUE_TYPE, REGEX_MATCH, REGEX_PATTERN
 from .utils import regexFuzzy
-
-
-if sys.version_info < (3, 10):  # pragma: no cover
-	from typing_extensions import TypeAlias
-else:  # pragma: no cover
-	from typing import TypeAlias
 
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -74,7 +67,6 @@ warnings.filterwarnings(
 )
 
 
-GUI_QUEUE_TYPE: TypeAlias = Union[Tuple[str], Tuple[str, Room], None]
 LEAD_BEFORE_ENTERING_VNUMS: list[str] = ["196", "3473", "3474", "12138", "12637"]
 LIGHT_SYMBOLS: dict[str, str] = {
 	"*": "lit",  # Sunlight, either direct or indirect.
@@ -82,7 +74,7 @@ LIGHT_SYMBOLS: dict[str, str] = {
 	")": "lit",  # Moonlight, either direct or indirect.
 	"o": "dark",  # Darkness.
 }
-RUN_DESTINATION_REGEX: re.Pattern[str] = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
+RUN_DESTINATION_REGEX: REGEX_PATTERN = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 TERRAIN_SYMBOLS: dict[str, str] = {
 	":": "brush",
 	"[": "building",
@@ -110,7 +102,7 @@ class World(object):
 		self.labels: dict[str, str] = {}
 		self._interface: str = interface
 		if interface != "text":
-			self._gui_queue: SimpleQueue[GUI_QUEUE_TYPE] = SimpleQueue()
+			self._gui_queue: GUI_QUEUE_TYPE = SimpleQueue()
 			self.window: pyglet.window.Window  # type: ignore[no-any-unimported]
 			if interface == "hc":
 				from .gui import hc
@@ -436,9 +428,7 @@ class World(object):
 
 	def revnum(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: Union[re.Match[str], None] = re.match(
-			r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text
-		)
+		match: REGEX_MATCH = re.match(r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text)
 		if match is None:
 			self.output("Syntax: 'revnum [Origin VNum] [Destination VNum]'.")
 			return None
@@ -856,7 +846,7 @@ class World(object):
 			rf"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
 			+ rf"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
 		)
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
@@ -882,7 +872,7 @@ class World(object):
 			rf"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
 			+ rf"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
 		)
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
@@ -908,7 +898,7 @@ class World(object):
 			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ rf"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -941,7 +931,7 @@ class World(object):
 			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ rf"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -974,7 +964,7 @@ class World(object):
 			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
 			+ rf"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -1010,7 +1000,7 @@ class World(object):
 			+ r"((?P<vnum>\d+|undefined)\s+)?"
 			+ rf"(?P<direction>{regexFuzzy(DIRECTIONS)})"
 		)
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
@@ -1081,7 +1071,7 @@ class World(object):
 	def rlabel(self, text: str = "") -> None:
 		text = text.strip().lower()
 		matchPattern: str = r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$"
-		match: Union[re.Match[str], None] = re.match(matchPattern, text)
+		match: REGEX_MATCH = re.match(matchPattern, text)
 		if match is None:
 			self.output(
 				"Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. "
@@ -1179,7 +1169,7 @@ class World(object):
 
 	def path(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: Union[re.Match[str], None] = RUN_DESTINATION_REGEX.match(text)
+		match: REGEX_MATCH = RUN_DESTINATION_REGEX.match(text)
 		if match is None:
 			self.output("Usage: path [label|vnum]")
 			return None

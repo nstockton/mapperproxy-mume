@@ -22,10 +22,11 @@ from mudproto.naws import NAWSMixIn
 from mudproto.telnet import TelnetProtocol
 from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
 from mudproto.utils import escapeIAC
-from mudproto.xml import EVENT_CALLER_TYPE, XMLProtocol
+from mudproto.xml import XMLProtocol
 
 # Local Modules:
 from . import __version__
+from .typedef import XML_EVENT_CALLER_TYPE
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -178,13 +179,13 @@ class ProxyHandler(object):
 		promptTerminator: Union[bytes, None],
 		isEmulatingOffline: bool,
 		mapperCommands: list[bytes],
-		eventCaller: Callable[[EVENT_CALLER_TYPE], None],
+		eventCaller: XML_EVENT_CALLER_TYPE,
 	) -> None:
 		self.outputFormat: str = outputFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
 		self.mapperCommands: list[bytes] = mapperCommands
 		self.playerInputBuffer: bytearray = bytearray()
-		self.eventCaller: Callable[[EVENT_CALLER_TYPE], None] = eventCaller
+		self.eventCaller: XML_EVENT_CALLER_TYPE = eventCaller
 		self.player: Manager = Manager(
 			playerWriter, self.on_playerReceived, isClient=False, promptTerminator=promptTerminator
 		)
