@@ -11,15 +11,11 @@ import re
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
 # Local Modules:
 from ..gui.vec2d import Vec2d
-
-
-if TYPE_CHECKING:
-	# Prevent cyclic import.
-	from ..typedef import COORDINATES_TYPE, REGEX_PATTERN
+from ..typedef import COORDINATES_TYPE, REGEX_PATTERN
 
 
 DIRECTIONS: tuple[str, ...] = (
