@@ -190,7 +190,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 	@property
 	def alwaysOnTop(self) -> bool:
 		"""Specify if window should be on top of other windows."""
-		return self._cfg.get("always_on_top", False)
+		return bool(self._cfg.get("always_on_top", False))
 
 	@alwaysOnTop.setter
 	def alwaysOnTop(self, value: bool) -> None:
@@ -204,7 +204,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 	@property
 	def expandWindow(self) -> bool:
 		"""Specify if window size should be expanded to fit the screen."""
-		return self._cfg.get("expand_window", False)
+		return bool(self._cfg.get("expand_window", False))
 
 	@expandWindow.setter
 	def expandWindow(self, value: bool) -> None:

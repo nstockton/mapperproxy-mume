@@ -1,9 +1,9 @@
 [build-system]
 	requires = [
 		"poetry-core>=1.0.0",
-		"poetry-dynamic-versioning==1.1.0",
+		"poetry-dynamic-versioning==1.2.0",
 	]
-	build-backend = "poetry.core.masonry.api"
+	build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.poetry]
 	name = "mapperproxy"
@@ -54,21 +54,21 @@
 [tool.poetry.dependencies]
 	python = "^3.8"
 	boltons = "^23.0"
-	certifi = "^2023.5"
-	jsonschema = "^4.17"
+	certifi = "2023.7.22"
+	jsonschema = "^4.2"
 	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.5.0/mud_protocols-0.5.0-py3-none-any.whl"}
 	pyglet = "^2.0"
-	python-rapidjson = "^1.11"
-	rapidfuzz = "^2.15"
+	python-rapidjson = "^1.13"
+	rapidfuzz = "3.5.2"
 	speechlight = "^1.7"
 	typed-argument-parser = "^1.8"
 	typing-extensions = {version = "^4.1", python = "< 3.10"}
 
 [tool.poetry.dev-dependencies]
-	poetry-dynamic-versioning = "1.1.0"
-	pre-commit = "^3.4"
+	poetry-dynamic-versioning = {version = "1.2.0", extras = ["plugin"]}
+	pre-commit = "^3.5"
 	PyInstaller = {version = "4.10", python = "< 3.11", platform = "win32"}
-	types-jsonschema = "^4.17"
+	types-jsonschema = "^4.2"
 
 [tool.poetry.group.docs.dependencies]
 	mkdocs = "1.2.3"
@@ -84,7 +84,7 @@
 	flake8-pyproject = "1.2.3"
 	isort = "^5.12.0"
 	jinja2 = "3.0.3"  # Required by Tan.
-	mypy = "^1.5"
+	mypy = "^1.7"
 	tan = "^23.7"
 
 [tool.poetry.group.test.dependencies]
