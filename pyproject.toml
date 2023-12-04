@@ -60,7 +60,7 @@
 	pyglet = "^2.0"
 	python-rapidjson = "^1.13"
 	rapidfuzz = "3.5.2"
-	speechlight = "^1.7"
+	speechlight = "^1.8"
 	typed-argument-parser = "^1.8"
 	typing-extensions = {version = "^4.1", python = "< 3.10"}
 
