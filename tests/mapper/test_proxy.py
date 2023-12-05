@@ -18,7 +18,7 @@ from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, IAC_IAC, LF
 
 # Mapper Modules:
 from mapper.proxy import Game, Player, ProxyHandler, Telnet
-from mapper.typedef import XML_EVENT_TYPE
+from mapper.typedef import MUD_EVENT_TYPE
 
 
 class TestTelnet(TestCase):
@@ -132,7 +132,7 @@ class TestProxyHandler(TestCase):
 		logging.disable(logging.CRITICAL)
 		self.gameReceives: bytearray = bytearray()
 		self.playerReceives: bytearray = bytearray()
-		self.mapperEvents: list[XML_EVENT_TYPE] = []
+		self.mapperEvents: list[MUD_EVENT_TYPE] = []
 		playerSocket: Mock = Mock(spec=socket.socket)
 		playerSocket.sendall.side_effect = lambda data: self.playerReceives.extend(data)
 		gameSocket: Mock = Mock(spec=socket.socket)

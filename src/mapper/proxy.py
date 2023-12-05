@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import json
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from typing import Any, Union, cast
 
 # Third-party Modules:
@@ -18,15 +18,15 @@ from mudproto.gmcp import GMCPMixIn
 from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
-from mudproto.naws import NAWSMixIn
+from mudproto.naws import UINT16_MAX, Dimensions, NAWSMixIn
 from mudproto.telnet import TelnetProtocol
 from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
 from mudproto.utils import escapeIAC
-from mudproto.xml import XMLProtocol
+from mudproto.xml import XMLProtocol as _XMLProtocol
 
 # Local Modules:
 from . import __version__
-from .typedef import XML_EVENT_CALLER_TYPE
+from .typedef import MUD_EVENT_CALLER_TYPE
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -156,7 +156,7 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 		super().on_optionEnabled(option)  # pragma: no cover
 		if option == NAWS:
 			# NAWS was enabled.
-			self.nawsDimensions = (80, 0xFFFF)  # 80 character width, max line hight.
+			self.nawsDimensions = Dimensions(80, UINT16_MAX)  # 80 character width, max line hight.
 		if option == GMCP:
 			# We just sent GMCP Hello to the game.
 			supportedPackages: dict[str, int] = {
@@ -169,6 +169,15 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 				self.gmcpSend(package, value, isSerialized=isSerialized)
 
 
+class XMLProtocol(_XMLProtocol):
+	def __init__(self, *args: Any, eventCaller: MUD_EVENT_CALLER_TYPE, **kwargs: Any) -> None:
+		self.eventCaller: MUD_EVENT_CALLER_TYPE = eventCaller
+		super().__init__(*args, **kwargs)
+
+	def on_xmlEvent(self, name: str, data: bytes) -> None:
+		self.eventCaller((name, data))
+
+
 class ProxyHandler(object):
 	def __init__(
 		self,
@@ -178,14 +187,14 @@ class ProxyHandler(object):
 		outputFormat: str,
 		promptTerminator: Union[bytes, None],
 		isEmulatingOffline: bool,
-		mapperCommands: list[bytes],
-		eventCaller: XML_EVENT_CALLER_TYPE,
+		mapperCommands: Iterable[bytes],
+		eventCaller: MUD_EVENT_CALLER_TYPE,
 	) -> None:
 		self.outputFormat: str = outputFormat
 		self.isEmulatingOffline: bool = isEmulatingOffline
-		self.mapperCommands: list[bytes] = mapperCommands
+		self.mapperCommands: Iterable[bytes] = mapperCommands
 		self.playerInputBuffer: bytearray = bytearray()
-		self.eventCaller: XML_EVENT_CALLER_TYPE = eventCaller
+		self.eventCaller: MUD_EVENT_CALLER_TYPE = eventCaller
 		self.player: Manager = Manager(
 			playerWriter, self.on_playerReceived, isClient=False, promptTerminator=promptTerminator
 		)

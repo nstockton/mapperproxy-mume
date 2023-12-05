@@ -31,7 +31,7 @@ from .config import Config
 from .delays import OneShot
 from .proxy import Player, ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
-from .typedef import MAPPER_QUEUE_TYPE, MUD_EVENT_HANDLER_TYPE, REGEX_MATCH, REGEX_PATTERN, XML_EVENT_TYPE
+from .typedef import MAPPER_QUEUE_TYPE, MUD_EVENT_HANDLER_TYPE, REGEX_MATCH, REGEX_PATTERN
 from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
@@ -1188,7 +1188,6 @@ class Mapper(threading.Thread, World):
 				del self.mudEventHandlers[event]
 
 	def run(self) -> None:
-		item: XML_EVENT_TYPE
 		for item in iter(self.queue.get, None):
 			try:
 				event, data = item
