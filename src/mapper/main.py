@@ -20,7 +20,7 @@ from typing import Union
 from tap import Tap
 
 # Local Modules:
-from . import INTERFACES, OUTPUT_FORMATS, __version__
+from . import INTERFACES, LITERAL_INTERFACES, LITERAL_OUTPUT_FORMATS, OUTPUT_FORMATS, __version__
 from .mapper import Mapper
 from .sockets.bufferedsocket import BufferedSocket
 from .sockets.fakesocket import FakeSocket, FakeSocketEmpty
@@ -102,9 +102,9 @@ class Game(threading.Thread):
 class ArgumentParser(Tap):
 	emulation: bool = False
 	"""Start in emulation mode."""
-	interface: str = INTERFACES[0]
+	interface: LITERAL_INTERFACES = INTERFACES[0]
 	"""Select a user interface."""
-	format: str = OUTPUT_FORMATS[0]
+	format: LITERAL_OUTPUT_FORMATS = OUTPUT_FORMATS[0]
 	"""Select how data from the server is transformed before  being sent to the client."""
 	local_host: str = "127.0.0.1"
 	"""The local host address to bind to."""
@@ -141,8 +141,8 @@ class ArgumentParser(Tap):
 			version=version,
 		)
 		self.add_argument("-e", "--emulation")
-		self.add_argument("-i", "--interface", choices=INTERFACES)
-		self.add_argument("-f", "--format", choices=OUTPUT_FORMATS)
+		self.add_argument("-i", "--interface")
+		self.add_argument("-f", "--format")
 		self.add_argument("-lh", "--local_host", metavar="address")
 		self.add_argument("-lp", "--local_port", metavar="port")
 		self.add_argument("-rh", "--remote_host", metavar="address")
@@ -241,7 +241,9 @@ def main(
 
 
 def run() -> None:
-	parser: ArgumentParser = ArgumentParser(description="The accessible Mume mapper.")
+	parser: ArgumentParser = ArgumentParser(
+		underscores_to_dashes=True, description="The accessible Mume mapper."
+	)
 	args: ArgumentParser = parser.parse_args()
 	try:
 		logging.info("Initializing")

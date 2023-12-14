@@ -8,7 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Union
+from typing import Literal, Union, get_args
 
 # Local Modules:
 from .config import Config
@@ -17,8 +17,10 @@ from .config import Config
 __version__: str = "0.0.0"
 
 
-INTERFACES: tuple[str, str, str] = ("text", "hc", "sighted")
-OUTPUT_FORMATS: tuple[str, str, str] = ("normal", "raw", "tintin")
+LITERAL_INTERFACES = Literal["text", "hc", "sighted"]
+INTERFACES: tuple[LITERAL_INTERFACES, ...] = get_args(LITERAL_INTERFACES)
+LITERAL_OUTPUT_FORMATS = Literal["normal", "raw", "tintin"]
+OUTPUT_FORMATS: tuple[LITERAL_OUTPUT_FORMATS, ...] = get_args(LITERAL_OUTPUT_FORMATS)
 
 
 def levelName(level: Union[str, int, None]) -> str:
