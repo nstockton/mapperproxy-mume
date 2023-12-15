@@ -15,14 +15,12 @@ import os
 import pathlib
 import shutil
 import tempfile
-from _hashlib import HASH
 from datetime import datetime
-from typing import Union
+from typing import Any, Union
 
 # Third-party Modules:
 import PyInstaller.config
 import speechlight
-from PyInstaller.archive.pyz_crypto import PyiBlockCipher
 from PyInstaller.building.api import COLLECT, EXE, PYZ
 from PyInstaller.building.build_main import Analysis
 from PyInstaller.building.datastruct import TOC
@@ -97,7 +95,7 @@ excludes: list[str] = [
 	"xml",
 ]
 
-dll_excludes: TOC = TOC(  # type: ignore[no-any-unimported]
+dll_excludes: TOC = TOC(
 	[
 		("api-ms-win-core-console-l1-1-0.dll", None, None),
 		("api-ms-win-core-datetime-l1-1-0.dll", None, None),
@@ -145,7 +143,7 @@ dll_excludes: TOC = TOC(  # type: ignore[no-any-unimported]
 	]
 )
 
-block_cipher: Union[PyiBlockCipher, None] = None  # type: ignore[no-any-unimported]
+block_cipher: Union[Any, None] = None
 
 version_data: str = f"""
 # UTF-8
@@ -215,7 +213,7 @@ if __name__ == "__main__":
 with open(RUN_FILE, "w", encoding="utf-8") as f:
 	f.write(run_data)
 
-a: Analysis = Analysis(  # type: ignore[no-any-unimported]
+a: Analysis = Analysis(
 	[RUN_FILE],
 	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
 	binaries=[],
@@ -230,9 +228,9 @@ a: Analysis = Analysis(  # type: ignore[no-any-unimported]
 	noarchive=False,
 )
 
-pyz: PYZ = PYZ(a.pure, a.zipped_data, cipher=block_cipher)  # type: ignore[no-any-unimported]
+pyz: PYZ = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
-exe: EXE = EXE(  # type: ignore[no-any-unimported]
+exe: EXE = EXE(
 	pyz,
 	a.scripts,
 	[],
@@ -247,7 +245,7 @@ exe: EXE = EXE(  # type: ignore[no-any-unimported]
 	version=VERSION_FILE,
 )
 
-coll: COLLECT = COLLECT(  # type: ignore[no-any-unimported]
+coll: COLLECT = COLLECT(
 	exe,
 	a.binaries - dll_excludes,
 	a.zipfiles,
@@ -326,7 +324,7 @@ if os.path.exists(RUN_FILE) and not os.path.isdir(RUN_FILE):
 shutil.rmtree(APP_DEST, ignore_errors=True)
 
 print("Generating checksums.")
-hashes: dict[str, HASH] = {  # type: ignore[no-any-unimported]
+hashes: dict[str, hashlib._Hash] = {
 	"sha256": hashlib.sha256(),
 }
 block_size: int = 2**16
