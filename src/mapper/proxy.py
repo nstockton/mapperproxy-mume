@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import json
 import logging
-from collections.abc import Callable, Iterable
+from collections.abc import Iterable
 from typing import Any, Union, cast
 
 # Third-party Modules:
@@ -26,7 +26,7 @@ from mudproto.xml import XMLProtocol as _XMLProtocol
 
 # Local Modules:
 from . import __version__
-from .typedef import MUD_EVENT_CALLER_TYPE
+from .typedef import GAME_WRITER_TYPE, MUD_EVENT_CALLER_TYPE, PLAYER_WRITER_TYPE
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -181,8 +181,8 @@ class XMLProtocol(_XMLProtocol):
 class ProxyHandler(object):
 	def __init__(
 		self,
-		playerWriter: Callable[[bytes], None],
-		gameWriter: Callable[[bytes], None],
+		playerWriter: PLAYER_WRITER_TYPE,
+		gameWriter: GAME_WRITER_TYPE,
 		*,
 		outputFormat: str,
 		promptTerminator: Union[bytes, None],

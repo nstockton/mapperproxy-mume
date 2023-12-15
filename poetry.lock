@@ -4875,6 +4875,17 @@ docstring-parser = ">=0.15"
 typing-inspect = ">=0.7.1"
 
 [[package]]
+name = "types-boltons"
+version = "23.1.0.0"
+description = "Typing stubs for boltons"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "types-boltons-23.1.0.0.tar.gz", hash = "sha256:ec237e877076ce6c3a8a4766333df8bae0300d5fc0fd3afd1dbb7c790e913a55"},
+    {file = "types_boltons-23.1.0.0-py3-none-any.whl", hash = "sha256:46a8734e88096b61d70b4b5e3d0c9d383e5a2039ca48918e1c5e496022cbfe54"},
+]
+
+[[package]]
 name = "types-jsonschema"
 version = "4.20.0.0"
 description = "Typing stubs for jsonschema"
@@ -5106,4 +5117,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "d7850fe93df4e198a235586f6b8990f04e512f44e6308e4fa57f5858114ce88d"
+content-hash = "52f9fc4b17066517ff319c739e652ba3fb5e268b74d15a5b070f6fa897a1186a"

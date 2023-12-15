@@ -53,7 +53,7 @@
 
 [tool.poetry.dependencies]
 	python = "^3.8"
-	boltons = "^23.0"
+	boltons = "^23.1"
 	certifi = "2023.7.22"
 	jsonschema = "^4.2"
 	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.6.1/mud_protocols-0.6.1-py3-none-any.whl"}
@@ -68,6 +68,7 @@
 	poetry-dynamic-versioning = {version = "1.2.0", extras = ["plugin"]}
 	pre-commit = "^3.5"
 	PyInstaller = {version = "6.3.0", python = ">= 3.8, <3.13", platform = "win32"}
+	types-boltons = "^23.1"
 	types-jsonschema = "^4.2"
 
 [tool.poetry.group.docs.dependencies]
@@ -261,7 +262,6 @@
 [[tool.mypy.overrides]]
 	module = [
 		"_hashlib.*",
-		"boltons.*",
 		"pyglet.*",
 		"PyInstaller.*",
 		"rapidjson.*",

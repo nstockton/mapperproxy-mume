@@ -12,7 +12,7 @@ from queue import SimpleQueue
 from typing import TYPE_CHECKING, Union
 
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
 	# Prevent cyclic import.
 	from .roomdata.objects import Room
 
@@ -31,6 +31,8 @@ else:  # pragma: no cover
 REGEX_MATCH: TypeAlias = Union[Match[str], None]
 REGEX_PATTERN: TypeAlias = Pattern[str]
 COORDINATES_TYPE: TypeAlias = "tuple[int, int, int]"  # Remove quotes after dropping Py38.
+GAME_WRITER_TYPE: TypeAlias = Callable[[bytes], None]
+PLAYER_WRITER_TYPE: TypeAlias = Callable[[bytes], None]
 MUD_EVENT_HANDLER_TYPE: TypeAlias = Callable[[str], None]
 MUD_EVENT_TYPE: TypeAlias = "tuple[str, bytes]"  # Remove quotes after dropping Py38.
 MUD_EVENT_CALLER_TYPE: TypeAlias = Callable[[MUD_EVENT_TYPE], None]

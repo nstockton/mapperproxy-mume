@@ -10,14 +10,13 @@ from __future__ import annotations
 import json
 import logging
 import re
-import socket
 import textwrap
 import threading
 import traceback
 from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, cast
 
 # Third-party Modules:
 from mudproto.mpi import MPIProtocol
@@ -31,7 +30,15 @@ from .config import Config
 from .delays import OneShot
 from .proxy import Player, ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
-from .typedef import MAPPER_QUEUE_TYPE, MUD_EVENT_HANDLER_TYPE, REGEX_MATCH, REGEX_PATTERN
+from .sockets.bufferedsocket import BufferedSocket
+from .typedef import (
+	GAME_WRITER_TYPE,
+	MAPPER_QUEUE_TYPE,
+	MUD_EVENT_HANDLER_TYPE,
+	PLAYER_WRITER_TYPE,
+	REGEX_MATCH,
+	REGEX_PATTERN,
+)
 from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
@@ -128,8 +135,8 @@ logger: logging.Logger = logging.getLogger(__name__)
 class Mapper(threading.Thread, World):
 	def __init__(
 		self,
-		playerSocket: socket.socket,
-		gameSocket: socket.socket,
+		playerSocket: BufferedSocket,
+		gameSocket: BufferedSocket,
 		outputFormat: str,
 		interface: str,
 		promptTerminator: Union[bytes, None],
@@ -202,8 +209,8 @@ class Mapper(threading.Thread, World):
 		self.parsedMinutes: int = 0
 		self.timeSynchronized: bool = False
 		self.proxy: ProxyHandler = ProxyHandler(
-			playerSocket.sendall,
-			gameSocket.sendall,
+			cast(PLAYER_WRITER_TYPE, playerSocket.send),  # todo: Fix this later.
+			cast(GAME_WRITER_TYPE, gameSocket.send),  # todo: Fix this later.
 			outputFormat=outputFormat,
 			promptTerminator=promptTerminator,
 			isEmulatingOffline=isEmulatingOffline,

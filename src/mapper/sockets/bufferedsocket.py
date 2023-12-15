@@ -11,7 +11,8 @@ import logging
 import select
 import socket
 import ssl
-from typing import Any, Union
+from contextlib import AbstractContextManager
+from typing import Any, Union, cast
 
 # Third-party Modules:
 import certifi
@@ -27,13 +28,14 @@ CERT_LOCATION: str = certifi.where()
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-unimported]
-	def __init__(  # type: ignore[no-any-unimported]
+class BufferedSocket(socketutils.BufferedSocket):
+	_recv_lock: AbstractContextManager[None]
+	_send_lock: AbstractContextManager[None]
+
+	def __init__(
 		self,
 		sock: Union[socket.socket, FakeSocket],
-		timeout: Union[socketutils._UNSET, float, None] = socketutils._UNSET,
-		maxsize: int = socketutils.DEFAULT_MAXSIZE,
-		recvsize: Union[socketutils._UNSET, int] = socketutils._UNSET,
+		*args: Any,
 		encrypt: bool = False,
 		**kwargs: Any,
 	) -> None:
@@ -42,20 +44,18 @@ class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-u
 
 		Args:
 			sock: The connected socket to be wrapped.
-			timeout: The default timeout for [send][1] and [recv][2], in seconds.
-				Set to `None` for no timeout, `0` for nonblocking.
-				[1]: <https://docs.python.org/library/socket.html#socket.socket.send>
-				[2]: <https://docs.python.org/library/socket.html#socket.socket.recv>
-			maxsize: The maximum number of bytes to be received into the buffer before it raises an exception.
-			recvsize: The number of bytes to receive for every lower-level [`socket.recv`][1] call.
-				[1]: <https://docs.python.org/library/socket.html#socket.socket.recv>
-			encrypt: True if the socket should be wrapped in an [SSL context][1], False otherwise.
+			*args: Positional arguments to be passed to the parent constructor.
+			encrypt:
+				True if the socket should be wrapped in an [SSL context][1], False otherwise.
 				[1]: <https://docs.python.org/library/ssl.html#ssl.SSLContext>
-			**kwargs: Key-word only arguments to be passed to the
+			**kwargs:
+				Key-word only arguments to be passed to the parent constructor.
+				Additional key-word only arguments will be passed to the
 				[wrapSSL][mapper.sockets.bufferedsocket.BufferedSocket.wrapSSL] method.
 		"""
-		self.sock: Union[socket.socket, FakeSocket, ssl.SSLSocket]
-		super().__init__(sock, timeout, maxsize, recvsize)
+		parentExtraArgs: tuple[str, ...] = ("timeout", "maxsize", "recvsize")
+		parentKWArgs: dict[str, Any] = {arg: kwargs.pop(arg) for arg in parentExtraArgs if arg in kwargs}
+		super().__init__(cast(socket.socket, sock), *args, **parentKWArgs)
 		if encrypt and isinstance(self.sock, socket.socket):
 			self.sock = self.wrapSSL(self.sock, **kwargs)
 
@@ -65,12 +65,13 @@ class BufferedSocket(socketutils.BufferedSocket):  # type: ignore[misc, no-any-u
 
 		Args:
 			sock: The unencrypted socket.
-			**kwargs: Key-word only arguments to be passed to the [`SSLContext.wrap_socket`][1] method.
+			**kwargs:
+				Key-word only arguments to be passed to the [`SSLContext.wrap_socket`][1] method.
 				[1]: <https://docs.python.org/library/ssl.html#ssl.SSLContext.wrap_socket>
 
 		Returns:
-			The socket wrapped in an
-			[SSL context.](https://docs.python.org/library/ssl.html#ssl.SSLContext)
+			The socket wrapped in an [SSL context.][1]
+			[1]: <https://docs.python.org/library/ssl.html#ssl.SSLContext>
 		"""
 		kwargs["do_handshake_on_connect"] = False  # Avoid race condition.
 		with self._recv_lock, self._send_lock:
