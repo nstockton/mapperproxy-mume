@@ -67,9 +67,9 @@
 [tool.poetry.dev-dependencies]
 	poetry-dynamic-versioning = {version = "1.2.0", extras = ["plugin"]}
 	pre-commit = "^3.5"
-	PyInstaller = {version = "6.2.0", python = ">= 3.8, <3.13", platform = "win32"}
+	PyInstaller = {version = "6.2.0", python = ">=3.8, <3.13", platform = "win32"}
 	types-boltons = "^23.1"
-	types-pyinstaller = {version = "6.2.0.1", python = ">= 3.8, <3.13", platform = "win32"}
+	types-pyinstaller = "6.2.0.1"
 
 [tool.poetry.group.docs.dependencies]
 	mkdocs = "1.2.3"
