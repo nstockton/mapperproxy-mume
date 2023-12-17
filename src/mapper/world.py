@@ -278,6 +278,7 @@ class World(object):
 		self.output(f"Map database loaded in {elapsedTime:.1f} seconds.")
 
 	def saveRooms(self) -> None:
+		startTime: float = defaultTimer()
 		if gc.isenabled():
 			gc.disable()
 		self.output("Creating dict from room objects.")
@@ -315,7 +316,8 @@ class World(object):
 		if not gc.isenabled():
 			gc.enable()
 			gc.collect()
-		self.output("Map Database saved.")
+		elapsedTime: float = defaultTimer() - startTime
+		self.output(f"Map Database saved in {elapsedTime:.1f} seconds.")
 
 	def loadLabels(self) -> None:
 		errors: Union[str, None]
