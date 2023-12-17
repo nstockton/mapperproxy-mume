@@ -7,15 +7,15 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import json
 import logging
 import os.path
 from collections.abc import Callable, Mapping
+from functools import lru_cache
 from typing import Any, Union
 
 # Third-party Modules:
-import jsonschema
-import rapidjson
+import fastjsonschema
+import orjson
 
 # Local Modules:
 from ..utils import getDataPath
@@ -37,10 +37,6 @@ SAMPLE_MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_MAP_FILE)
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class SchemaValidationError(ValueError):
-	"""Raised if there was an error validating an object's schema."""
-
-
 def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
 	"""
 	Determines the schema file path from a schema version.
@@ -57,36 +53,26 @@ def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
 	return "{}_v{ver}{}.schema".format(*os.path.splitext(databasePath), ver=schemaVersion)
 
 
+@lru_cache(maxsize=None)
+def getValidator(schemaPath: str) -> Callable[..., None]:  # type: ignore[misc]
+	with open(schemaPath, "rb") as fileObj:
+		validator: Callable[..., None] = fastjsonschema.compile(orjson.loads(fileObj.read()))
+	return validator
+
+
 def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 	"""
 	Validates a database against a schema.
-
-	Note:
-		The `jsonschema` library validates python data structures directly and
-		produces nice error messages, but validation is slow.
-		The `rapidjson` library validates much faster, however it produces poor error messages.
-		For this reason rapidjson is used for the initial
-		validation, and jsonschema is used if there is a failure.
 
 	Args:
 		database: The database to be validated.
 		schemaPath: The location of the schema.
 	"""
-	with open(schemaPath, "r", encoding="utf-8") as fileObj:
-		schema: dict[str, Any] = json.load(fileObj)
-	validate: Callable[[str], None] = rapidjson.Validator(rapidjson.dumps(schema))
+	validator = getValidator(schemaPath)
 	try:
-		validate(rapidjson.dumps(database))
-	except rapidjson.ValidationError as rapidjsonExc:
-		try:
-			jsonschema.validate(database, schema)
-		except jsonschema.ValidationError as jsonschemaExc:
-			raise SchemaValidationError(str(jsonschemaExc)) from jsonschemaExc
-		else:
-			logger.warning(
-				f"Error: jsonschema did not raise an exception, whereas rapidjson raised {rapidjsonExc}."
-			)
-			raise SchemaValidationError(str(rapidjsonExc)) from rapidjsonExc
+		validator(database)
+	except fastjsonschema.JsonSchemaException as e:
+		logger.exception(f"Data failed validation: {e}")
 
 
 def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[str, Any], int]]:
@@ -104,17 +90,17 @@ def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[st
 	elif os.path.isdir(databasePath):
 		return f"Error: '{databasePath}' is a directory, not a file.", None, 0
 	try:
-		with open(databasePath, "r", encoding="utf-8") as fileObj:
-			database: dict[str, Any] = json.load(fileObj)
+		with open(databasePath, "rb") as fileObj:
+			database: dict[str, Any] = orjson.loads(fileObj.read())
 		schemaVersion: int = database.get("schema_version", 0)
 		schemaPath = getSchemaPath(databasePath, schemaVersion)
 		_validate(database, schemaPath)
 		database.pop("schema_version", None)
 		return None, database, schemaVersion
 	except IOError as e:
-		return f"{e.strerror}: '{e.filename}'", None, 0
-	except ValueError:
-		return f"Corrupted database file: {databasePath}", None, 0
+		return f"IOError: {e}", None, 0
+	except orjson.JSONDecodeError as e:
+		return f"Error: '{databasePath}' is corrupted. {e}", None, 0
 
 
 def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> None:
@@ -126,9 +112,20 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		databasePath: The location where the database should be saved.
 		schemaPath: The location of the schema.
 	"""
-	with open(databasePath, "w", encoding="utf-8", newline="\n") as fileObj:
-		_validate(database, schemaPath)
-		rapidjson.dump(database, fileObj, sort_keys=True, indent=2, chunk_size=2**16)
+	_validate(database, schemaPath)
+	options: int = (
+		orjson.OPT_APPEND_NEWLINE | orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS | orjson.OPT_STRICT_INTEGER
+	)
+	try:
+		data: bytes = orjson.dumps(database, option=options)
+	except orjson.JSONEncodeError as e:
+		logger.exception(f"Error: Cannot encode to '{databasePath}'. {e}")
+		return None
+	try:
+		with open(databasePath, "wb") as fileObj:
+			fileObj.write(data)
+	except IOError as e:
+		logger.exception(f"IOError: {e}")
 
 
 def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int]]:

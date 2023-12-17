@@ -7,13 +7,12 @@
 from __future__ import annotations
 
 # Built-in Modules:
-from contextlib import ExitStack
 from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
 # Third-party Modules:
-import rapidjson
+import orjson
 
 # Mapper Modules:
 from mapper.roomdata.database import (
@@ -23,7 +22,6 @@ from mapper.roomdata.database import (
 	MAP_SCHEMA_VERSION,
 	SAMPLE_LABELS_FILE_PATH,
 	SAMPLE_MAP_FILE_PATH,
-	SchemaValidationError,
 	_dump,
 	_load,
 	_validate,
@@ -101,19 +99,15 @@ class TestDatabase(TestCase):
 	def testValidate(self) -> None:
 		schemaPath: str = MAP_SCHEMA_FILE_PATH
 		_validate(self.rooms, schemaPath)
-		cm: ExitStack
-		with ExitStack() as cm:
-			cm.enter_context(patch("mapper.roomdata.database.jsonschema.validate"))
-			mockLogger: Any = cm.enter_context(self.assertLogs("mapper.roomdata.database", level="WARNING"))
-			cm.enter_context(
-				self.assertRaises(SchemaValidationError, msg="rapidjson fails validation, jsonschema passes")
-			)
+		loggerOutput: str
+		with self.assertLogs("mapper.roomdata.database", level="ERROR") as mockLogger:
 			_validate({"invalid": "invalid"}, schemaPath)
-			self.assertIn(
-				"Error: jsonschema did not raise an exception, whereas rapidjson raised", mockLogger.output
-			)
-		with self.assertRaises(SchemaValidationError, msg="rapidjson and jsonschema fail validation"):
-			_validate({"invalid": "invalid"}, schemaPath)
+			loggerOutput = "".join(mockLogger.output)
+		self.assertIn(
+			"Data failed validation: data must not contain {'invalid'} properties",
+			loggerOutput,
+			msg="Expected message not found in logger output.",
+		)
 
 	@patch("mapper.roomdata.database._validate")
 	@patch("mapper.roomdata.database.open")
@@ -124,34 +118,34 @@ class TestDatabase(TestCase):
 		mockFileObj: Mock = Mock()
 		mockOpen.return_value.__enter__.return_value = mockFileObj
 		mockOSPath.isdir.return_value = False
-		# Check path does not exist.
+		# Test path does not exist:
 		mockOSPath.exists.return_value = False
 		errors, database, schemaVersion = _load(fileName)
-		self.assertIsNotNone(errors)
+		self.assertEqual(f"Error: '{fileName}' doesn't exist.", errors)
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
 		mockOSPath.exists.return_value = True
-		# Check path is directory.
+		# Test path is directory:
 		mockOSPath.isdir.return_value = True
 		errors, database, schemaVersion = _load(fileName)
-		self.assertIsNotNone(errors)
+		self.assertEqual(f"Error: '{fileName}' is a directory, not a file.", errors)
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
 		mockOSPath.isdir.return_value = False
-		# Check IOError.
+		# Test IOError:
 		mockFileObj.read.side_effect = lambda *args: (_ for _ in ()).throw(IOError("some error"))
 		errors, database, schemaVersion = _load(fileName)
-		self.assertIsNotNone(errors)
+		self.assertEqual("IOError: some error", errors)
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
-		# Check corrupted data.
+		# Test corrupted data:
 		mockFileObj.read.side_effect = lambda *args: "corrupted data"
 		errors, database, schemaVersion = _load(fileName)
-		self.assertIsNotNone(errors)
+		self.assertTrue(str(errors).startswith(f"Error: '{fileName}' is corrupted."))
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
-		# Check valid data.
-		mockFileObj.read.side_effect = lambda *args: rapidjson.dumps(self.rooms)
+		# Test valid data:
+		mockFileObj.read.side_effect = lambda *args: orjson.dumps(self.rooms)
 		with patch("mapper.roomdata.database.getSchemaPath", return_value=schemaPath):
 			errors, database, schemaVersion = _load(fileName)
 		self.assertIsNone(errors)
@@ -160,17 +154,44 @@ class TestDatabase(TestCase):
 		mockValidate.assert_called_once_with(database, schemaPath)
 		self.assertEqual(database, self.rooms)
 
-	@patch("mapper.roomdata.database.rapidjson.dump")
 	@patch("mapper.roomdata.database._validate")
 	@patch("mapper.roomdata.database.open")
-	def testDump(self, mockOpen: Mock, mockValidate: Mock, mockJsonDump: Mock) -> None:
+	def testDump(self, mockOpen: Mock, mockValidate: Mock) -> None:
 		mockFileObj = Mock()
 		mockOpen.return_value.__enter__.return_value = mockFileObj
-		_dump(self.rooms, "__junk__.json", MAP_SCHEMA_FILE_PATH)
-		mockValidate.assert_called_once_with(self.rooms, MAP_SCHEMA_FILE_PATH)
-		mockJsonDump.assert_called_once_with(
-			self.rooms, mockFileObj, sort_keys=True, indent=2, chunk_size=2**16
+		fileName: str = "__junk__.json"
+		loggerOutput: str
+		# Test invalid database:
+		invalidDatabase = {"**integer larger than 53-bit**": 2**53}
+		with self.assertLogs("mapper.roomdata.database", level="ERROR") as mockLogger:
+			_dump(invalidDatabase, fileName, MAP_SCHEMA_FILE_PATH)
+			loggerOutput = "".join(mockLogger.output)
+		mockValidate.assert_called_once_with(invalidDatabase, MAP_SCHEMA_FILE_PATH)
+		self.assertIn(
+			f"Error: Cannot encode to '{fileName}'.",
+			loggerOutput,
+			msg="Expected message not found in logger output.",
 		)
+		mockFileObj.write.assert_not_called()
+		mockValidate.reset_mock()
+		# Test valid database:
+		_dump(self.rooms, fileName, MAP_SCHEMA_FILE_PATH)
+		mockValidate.assert_called_once_with(self.rooms, MAP_SCHEMA_FILE_PATH)
+		mockFileObj.write.assert_called_once()
+		mockValidate.reset_mock()
+		mockFileObj.reset_mock()
+		# Test IOError:
+		mockOpen.side_effect = IOError("some error")
+		with self.assertLogs("mapper.roomdata.database", level="ERROR") as mockLogger:
+			_dump(self.rooms, fileName, MAP_SCHEMA_FILE_PATH)
+			loggerOutput = "".join(mockLogger.output)
+		mockValidate.assert_called_once_with(self.rooms, MAP_SCHEMA_FILE_PATH)
+		self.assertIn(
+			"IOError: some error",
+			loggerOutput,
+			msg="Expected message not found in logger output.",
+		)
+		mockFileObj.write.assert_not_called()
 
 	@patch("mapper.roomdata.database._load")
 	def testLoadLabels(self, mockLoad: Mock) -> None:
@@ -186,7 +207,7 @@ class TestDatabase(TestCase):
 		self.assertEqual(
 			loadCalls[0],
 			call(SAMPLE_LABELS_FILE_PATH),
-			"First call to _load was not as expected.",
+			msg="First call to _load was not as expected.",
 		)
 		mockLoad.return_value = (None, database, 0)
 		errors, labels, schemaVersion = loadLabels()
@@ -219,12 +240,12 @@ class TestDatabase(TestCase):
 		self.assertEqual(
 			loadCalls[0],
 			call(MAP_FILE_PATH),
-			"First call to _load was not as expected.",
+			msg="First call to _load was not as expected.",
 		)
 		self.assertEqual(
 			loadCalls[1],
 			call(SAMPLE_MAP_FILE_PATH),
-			"Second call to _load was not as expected.",
+			msg="Second call to _load was not as expected.",
 		)
 		mockLoad.return_value = ("some_error", self.rooms, 0)
 		errors, rooms, schemaVersion = loadRooms()

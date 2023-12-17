@@ -55,10 +55,10 @@
 	python = "^3.8"
 	boltons = "^23.1"
 	certifi = "2023.7.22"
-	jsonschema = "^4.2"
+	fastjsonschema = "2.19.0"
 	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.6.1/mud_protocols-0.6.1-py3-none-any.whl"}
+	orjson = "^3.9"
 	pyglet = "^2.0"
-	python-rapidjson = "^1.13"
 	rapidfuzz = "3.5.2"
 	speechlight = "^1.8"
 	typed-argument-parser = "^1.8"
@@ -69,7 +69,6 @@
 	pre-commit = "^3.5"
 	PyInstaller = {version = "6.2.0", python = ">= 3.8, <3.13", platform = "win32"}
 	types-boltons = "^23.1"
-	types-jsonschema = "^4.2"
 	types-pyinstaller = {version = "6.2.0.1", python = ">= 3.8, <3.13", platform = "win32"}
 
 [tool.poetry.group.docs.dependencies]
@@ -228,12 +227,12 @@
 	known_third_party = [
 		"boltons",
 		"certifi",
-		"jsonschema",
+		"fastjsonschema",
 		"mudproto",
+		"orjson",
 		"pyglet",
 		"PyInstaller",
 		"rapidfuzz",
-		"rapidjson",
 		"speechlight",
 		"tap",
 		"typing_extensions",
@@ -262,8 +261,8 @@
 
 [[tool.mypy.overrides]]
 	module = [
+		"fastjsonschema.*",
 		"pyglet.*",
 		"PyInstaller.config",
-		"rapidjson.*",
 	]
 	ignore_missing_imports = true
