@@ -21,5 +21,3 @@ The colored version uses the [DB32+Zs8](https://opengameart.org/content/lots-of-
 You can use [gimp](http://gimp.org) to edit the file tiles.xcf and adapt the tiles to your wishes.
 
 The makefile will help you build the tileset. For that purpose, you will need xcf2png, from [xcftools](http://henning.makholm.net/software), and convert, from [imagemagick](http://www.imagemagick.org/). If you are using the 32 color tileset, just use `make`. Edit the makefile if you want to use the monochromatic color tileset.
-
-

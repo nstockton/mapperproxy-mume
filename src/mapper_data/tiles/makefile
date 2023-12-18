@@ -48,4 +48,3 @@ clean:
 	@rm -f player.png
 
 .PHONY: $(TILES) $(TERRAIN)
-

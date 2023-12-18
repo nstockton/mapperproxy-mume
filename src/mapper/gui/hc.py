@@ -232,7 +232,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			roomSize = self._cfg["room_size"]
 			if not 20 <= roomSize <= 300:
 				clampedSize: int = int(clamp(roomSize, 20, 300))
-				logger.warn(
+				logger.warning(
 					"Invalid value for room_size in config.json: "
 					+ f"{roomSize} not in range 20-300. Clamping to {clampedSize}."
 				)

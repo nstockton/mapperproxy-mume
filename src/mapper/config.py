@@ -40,7 +40,7 @@ class Config(MutableMapping[str, Any]):
 		"""
 		super().__init__()
 		self._name: str = name
-		self._config: dict[str, Any] = dict()
+		self._config: dict[str, Any] = {}
 		self.reload()
 
 	@property
