@@ -202,6 +202,8 @@
 	supported_extensions = ["py", "pyi", "pys", "pyw", "spec"]
 	extend_skip = []  # List of files to skip.
 	indent = "tab"  # String to place for indents.
+	atomic = true  # Ensures the output doesn't save if the resulting file contains syntax errors.
+	dedup_headings = true  # Only show an identical custom import heading comment once.
 	multi_line_output = 3  # Vertical hanging indent for long sections of multiple imports.
 	include_trailing_comma = true  # Include a trailing comma on multi line imports that include parentheses.
 	force_grid_wrap = 0  # Only consider line length when forcing lines to be grid wrapped.
