@@ -48,4 +48,4 @@ class TestConfig(TestCase):
 			cfg.save()
 		fileName: str = os.path.join(DATA_DIRECTORY, f"{cfg.name}.json")
 		mockOpen.assert_called_once_with(fileName, "w", encoding="utf-8", newline="\n")
-		self.assertEqual("".join(lines), '{\n  "test": "somevalue"\n}')
+		self.assertEqual("".join(lines), '{\n  "test": "somevalue"\n}\n')
