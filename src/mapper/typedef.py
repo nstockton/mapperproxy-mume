@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import sys
 from queue import SimpleQueue
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, TypeVar, Union
 
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -28,6 +28,7 @@ else:  # pragma: no cover
 	from re import Match, Pattern
 
 
+BytesOrStr = TypeVar("BytesOrStr", bytes, str)
 REGEX_MATCH: TypeAlias = Union[Match[str], None]
 REGEX_PATTERN: TypeAlias = Pattern[str]
 COORDINATES_TYPE: TypeAlias = "tuple[int, int, int]"  # Remove quotes after dropping Py38.

@@ -39,7 +39,15 @@ from .typedef import (
 	REGEX_MATCH,
 	REGEX_PATTERN,
 )
-from .utils import decodeBytes, formatDocString, getXMLAttributes, regexFuzzy, simplified, stripAnsi
+from .utils import (
+	decodeBytes,
+	formatDocString,
+	getXMLAttributes,
+	regexFuzzy,
+	removePrefix,
+	simplified,
+	stripAnsi,
+)
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 
@@ -159,24 +167,28 @@ class Mapper(threading.Thread, World):
 		self.autoLinking: bool = True
 		self.autoWalk: bool = False
 		self.autoWalkDirections: list[str] = []
+		userCommandPrefix: str = "user_command_"
 		self.userCommands: list[str] = [
-			func[len("user_command_") :]
+			removePrefix(func, userCommandPrefix)
 			for func in dir(self)
-			if func.startswith("user_command_") and callable(getattr(self, func))
+			if func.startswith(userCommandPrefix) and callable(getattr(self, func))
 		]
 		self.mudEventHandlers: dict[str, set[MUD_EVENT_HANDLER_TYPE]] = {}
 		self.unknownMudEvents: list[str] = []
-		for legacyHandler in [
-			func[len("mud_event_") :]
+		mudEventPrefix: str = "mud_event_"
+		legacyHandlers: list[str] = [
+			removePrefix(func, mudEventPrefix)
 			for func in dir(self)
-			if func.startswith("mud_event_") and callable(getattr(self, func))
-		]:
-			self.registerMudEventHandler(legacyHandler, getattr(self, f"mud_event_{legacyHandler}"))
+			if func.startswith(mudEventPrefix) and callable(getattr(self, func))
+		]
+		for legacyHandler in legacyHandlers:
+			self.registerMudEventHandler(legacyHandler, getattr(self, mudEventPrefix + legacyHandler))
 		ExitsCleaner(self, "exits")
+		emulationCommandPrefix: str = "emulation_command_"
 		self.emulationCommands: list[str] = [
-			func[len("emulation_command_") :]
+			removePrefix(func, emulationCommandPrefix)
 			for func in dir(self)
-			if func.startswith("emulation_command_") and callable(getattr(self, func))
+			if func.startswith(emulationCommandPrefix) and callable(getattr(self, func))
 		]
 		# Commands that should have priority when matching user input to an emulation command.
 		priorityCommands: list[str] = [
@@ -1160,7 +1172,7 @@ class Mapper(threading.Thread, World):
 			self.user_command_emu(text)
 		else:
 			userCommand: str = text.split()[0]
-			args: str = text[len(userCommand) :].strip()
+			args: str = removePrefix(text, userCommand).strip()
 			getattr(self, f"user_command_{userCommand}")(args)
 
 	def handleMudEvent(self, event: str, text: str) -> None:

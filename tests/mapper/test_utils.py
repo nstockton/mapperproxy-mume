@@ -237,6 +237,14 @@ class TestUtils(TestCase):
 		self.assertEqual(utils.average(range(7)), 3)
 		self.assertEqual(utils.average([]), 0)
 
+	def test_removePrefix(self) -> None:
+		self.assertEqual(utils.removePrefix("hello", "he"), "llo")
+		self.assertEqual(utils.removePrefix("hello", "xx"), "hello")
+
+	def test_removeSuffix(self) -> None:
+		self.assertEqual(utils.removeSuffix("hello", "lo"), "hel")
+		self.assertEqual(utils.removeSuffix("hello", "xx"), "hello")
+
 	def test_ContainerEmptyMixin(self) -> None:
 		test = ContainerEmpty()
 		test.assertContainerEmpty([])

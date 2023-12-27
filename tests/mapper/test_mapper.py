@@ -17,6 +17,7 @@ from unittest.mock import Mock, _CallList, call, patch
 # Mapper Modules:
 from mapper.mapper import Mapper
 from mapper.typedef import MAPPER_QUEUE_EVENT_TYPE
+from mapper.utils import removePrefix
 
 
 class TestMapper(TestCase):
@@ -136,7 +137,7 @@ class TestMapper_handleMudEvent(TestCase):
 
 	def test_legacyMudEventHandlers(self) -> None:
 		events: Generator[str, None, None] = (
-			handlerName[len("mud_event_") :] for handlerName in self.legacyHandlerNames
+			removePrefix(handlerName, "mud_event_") for handlerName in self.legacyHandlerNames
 		)
 		handlers: Generator[Mock, None, None] = (
 			getattr(self.mapper, handlerName) for handlerName in self.legacyHandlerNames

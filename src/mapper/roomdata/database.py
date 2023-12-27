@@ -18,7 +18,7 @@ import fastjsonschema
 import orjson
 
 # Local Modules:
-from ..utils import getDataPath
+from ..utils import getDataPath, removeSuffix
 
 
 LABELS_SCHEMA_VERSION: int = 1  # Increment this when the labels schema changes.
@@ -48,8 +48,7 @@ def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
 	Returns:
 		The schema file path.
 	"""
-	if databasePath.endswith(".sample"):
-		databasePath = databasePath[: -len(".sample")]
+	databasePath = removeSuffix(databasePath, ".sample")
 	return "{}_v{ver}{}.schema".format(*os.path.splitext(databasePath), ver=schemaVersion)
 
 

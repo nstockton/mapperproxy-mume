@@ -22,7 +22,7 @@ from pydoc import pager
 from typing import Any, Optional, Union
 
 # Local Modules:
-from .typedef import REGEX_PATTERN
+from .typedef import REGEX_PATTERN, BytesOrStr
 
 
 DATA_DIRECTORY: str = "mapper_data"
@@ -532,6 +532,22 @@ def average(items: Iterable[float]) -> float:
 	except statistics.StatisticsError:
 		# No items.
 		return 0
+
+
+def removePrefix(text: BytesOrStr, prefix: BytesOrStr) -> BytesOrStr:
+	"""Backport of `removeprefix` from PEP-616 (Python 3.9+)"""
+	if text.startswith(prefix):
+		return text[len(prefix) :]
+	else:
+		return text
+
+
+def removeSuffix(text: BytesOrStr, suffix: BytesOrStr) -> BytesOrStr:
+	"""Backport of `removesuffix` from PEP-616 (Python 3.9+)"""
+	if text.endswith(suffix):
+		return text[: -len(suffix)]
+	else:
+		return text
 
 
 class ContainerEmptyMixin:
