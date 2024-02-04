@@ -548,8 +548,22 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mapper.utils.average" class="md-nav__link">
+    average()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.camelCase" class="md-nav__link">
     camelCase()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils.clamp" class="md-nav__link">
+    clamp()
   </a>
   
 </li>
@@ -641,6 +655,20 @@
         <li class="md-nav__item">
   <a href="#mapper.utils.regexFuzzy" class="md-nav__link">
     regexFuzzy()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils.removePrefix" class="md-nav__link">
+    removePrefix()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils.removeSuffix" class="md-nav__link">
+    removeSuffix()
   </a>
   
 </li>
@@ -771,8 +799,22 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mapper.utils.average" class="md-nav__link">
+    average()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mapper.utils.camelCase" class="md-nav__link">
     camelCase()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils.clamp" class="md-nav__link">
+    clamp()
   </a>
   
 </li>
@@ -864,6 +906,20 @@
         <li class="md-nav__item">
   <a href="#mapper.utils.regexFuzzy" class="md-nav__link">
     regexFuzzy()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils.removePrefix" class="md-nav__link">
+    removePrefix()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapper.utils.removeSuffix" class="md-nav__link">
+    removeSuffix()
   </a>
   
 </li>
@@ -1123,6 +1179,79 @@
 
 
 
+<h2 id="mapper.utils.average" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">average</span><span class="p">(</span><span class="n">items</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.average" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the average item length of an iterable.</p>
+
+<p><strong>Parameters:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>items</code></td>
+        <td><code>Iterable[float]</code></td>
+        <td><p>The iterable of items.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>float</code></td>
+      <td><p>The average item length.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">average</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Calculates the average item length of an iterable.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		items: The iterable of items.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The average item length.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+	<span class="k">except</span> <span class="n">statistics</span><span class="o">.</span><span class="n">StatisticsError</span><span class="p">:</span>
+		<span class="c1"># No items.</span>
+		<span class="k">return</span> <span class="mi">0</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
 <h2 id="mapper.utils.camelCase" class="doc doc-heading">
 <code class="codehilite language-python"><span class="n">Function</span> <span class="n">camelCase</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span></code>
 
@@ -1200,6 +1329,89 @@
 
 
 
+<h2 id="mapper.utils.clamp" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">clamp</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">maximum</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.clamp" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Clamps the given value between the given minimum and maximum values.</p>
+
+<p><strong>Parameters:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>value</code></td>
+        <td><code>float</code></td>
+        <td><p>The value to restrict inside the range defined by minimum and maximum.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>minimum</code></td>
+        <td><code>float</code></td>
+        <td><p>The minimum value to compare against.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>maximum</code></td>
+        <td><code>float</code></td>
+        <td><p>The maximum value to compare against.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table role="grid" class="data">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>float</code></td>
+      <td><p>The result between minimum and maximum.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">clamp</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">minimum</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">maximum</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Clamps the given value between the given minimum and maximum values.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		value: The value to restrict inside the range defined by minimum and maximum.</span>
+<span class="sd">		minimum: The minimum value to compare against.</span>
+<span class="sd">		maximum: The maximum value to compare against.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		The result between minimum and maximum.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">minimum</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">minimum</span> <span class="k">else</span> <span class="n">maximum</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">maximum</span> <span class="k">else</span> <span class="n">value</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
 <h2 id="mapper.utils.decodeBytes" class="doc doc-heading">
 <code class="codehilite language-python"><span class="n">Function</span> <span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
 
@@ -1259,7 +1471,7 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		The decoded string.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ByteString</span><span class="p">):</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
 		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Data must be a bytes-like object.&quot;</span><span class="p">)</span>
 	<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">):</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;us-ascii&quot;</span><span class="p">)</span>
@@ -1353,7 +1565,7 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		The formatted docstring.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">):</span>  <span class="c1"># It&#39;s a function.</span>
+	<span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">):</span>  <span class="c1"># It&#39;s a function.</span>
 		<span class="n">docString</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">functionOrString</span><span class="p">,</span> <span class="s2">&quot;__doc__&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
 	<span class="k">else</span><span class="p">:</span>  <span class="c1"># It&#39;s a string.</span>
 		<span class="n">docString</span> <span class="o">=</span> <span class="n">functionOrString</span>
@@ -1556,8 +1768,10 @@
 
       <p>Determines the name of the library used to freeze the code.</p>
 <div class="admonition note">
-<p class="admonition-title">Note<p>https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py</p>
-</p>
+<p class="admonition-title">Note</p>
+<div class="codehilite"><pre><span></span><code>https://github.com/blackmagicgirl/ktools/blob/master/ktools/utils.py
+</code></pre></div>
+
 </div>
 
 <p><strong>Returns:</strong></p>
@@ -2216,6 +2430,66 @@
 
 
 
+<h2 id="mapper.utils.removePrefix" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">removePrefix</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.removePrefix" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Backport of <code>removeprefix</code> from PEP-616 (Python 3.9+)</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">removePrefix</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">BytesOrStr</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">BytesOrStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BytesOrStr</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Backport of `removeprefix` from PEP-616 (Python 3.9+)&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">text</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="p">:]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">text</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="mapper.utils.removeSuffix" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">Function</span> <span class="n">removeSuffix</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span></code>
+
+
+<a href="#mapper.utils.removeSuffix" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Backport of <code>removesuffix</code> from PEP-616 (Python 3.9+)</p>
+
+        <details class="quote">
+          <summary>Source code in <code>mapper\utils.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">removeSuffix</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n">BytesOrStr</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="n">BytesOrStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BytesOrStr</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Backport of `removesuffix` from PEP-616 (Python 3.9+)&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">suffix</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">text</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">suffix</span><span class="p">)]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">text</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
 <h2 id="mapper.utils.roundHalfAwayFromZero" class="doc doc-heading">
 <code class="codehilite language-python"><span class="n">Function</span> <span class="n">roundHalfAwayFromZero</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
 
@@ -2226,8 +2500,10 @@
 
       <p>Rounds a float away from 0 if the fractional is 5 or more.</p>
 <div class="admonition note">
-<p class="admonition-title">Note<p>https://realpython.com/python-rounding</p>
-</p>
+<p class="admonition-title">Note</p>
+<div class="codehilite"><pre><span></span><code>https://realpython.com/python-rounding
+</code></pre></div>
+
 </div>
 
 <p><strong>Parameters:</strong></p>
@@ -2286,7 +2562,7 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		The number after rounding.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">multiplier</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">decimals</span>
+	<span class="n">multiplier</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">decimals</span>
 	<span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="o">*</span> <span class="n">multiplier</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
 </code></pre></div>
         </details>

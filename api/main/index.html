@@ -571,13 +571,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.ArgumentParser.add_arguments" class="md-nav__link">
-    add_arguments()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mapper.main.ArgumentParser.add_subparser" class="md-nav__link">
     add_subparser()
   </a>
@@ -1051,13 +1044,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mapper.main.ArgumentParser.add_arguments" class="md-nav__link">
-    add_arguments()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mapper.main.ArgumentParser.add_subparser" class="md-nav__link">
     add_subparser()
   </a>
@@ -1389,9 +1375,9 @@
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">Tap</span><span class="p">):</span>
 	<span class="n">emulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Start in emulation mode.&quot;&quot;&quot;</span>
-	<span class="n">interface</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">INTERFACES</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">interface</span><span class="p">:</span> <span class="n">LITERAL_INTERFACES</span> <span class="o">=</span> <span class="n">INTERFACES</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Select a user interface.&quot;&quot;&quot;</span>
-	<span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">OUTPUT_FORMATS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="nb">format</span><span class="p">:</span> <span class="n">LITERAL_OUTPUT_FORMATS</span> <span class="o">=</span> <span class="n">OUTPUT_FORMATS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Select how data from the server is transformed before  being sent to the client.&quot;&quot;&quot;</span>
 	<span class="n">local_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;The local host address to bind to.&quot;&quot;&quot;</span>
@@ -1428,8 +1414,8 @@
 			<span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
 		<span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--emulation&quot;</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--interface&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">INTERFACES</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">OUTPUT_FORMATS</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--interface&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-lh&quot;</span><span class="p">,</span> <span class="s2">&quot;--local_host&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-lp&quot;</span><span class="p">,</span> <span class="s2">&quot;--local_port&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;port&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-rh&quot;</span><span class="p">,</span> <span class="s2">&quot;--remote_host&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
@@ -1496,7 +1482,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
 
 
 <h3 id="mapper.main.ArgumentParser.format" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Attribute</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span></code>
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="nb">format</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;tintin&#39;</span><span class="p">]</span></code>
 
 
 <a href="#mapper.main.ArgumentParser.format" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -1534,7 +1520,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
 
 
 <h3 id="mapper.main.ArgumentParser.interface" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">interface</span><span class="p">:</span> <span class="nb">str</span></code>
+<code class="codehilite language-python"><span class="n">Attribute</span> <span class="n">interface</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="s1">&#39;sighted&#39;</span><span class="p">]</span></code>
 
 
 <a href="#mapper.main.ArgumentParser.interface" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -1688,11 +1674,13 @@ Where {attribute} represents the attribute on which the search is performed.</p>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">name_or_flags</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds an argument to the argument buffer, which will later be passed to _add_argument.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;add_argument cannot be called after initialization. &#39;</span>
-                         <span class="s1">&#39;Arguments must be added either as class variables or by overriding &#39;</span>
-                         <span class="s1">&#39;configure and including a self.add_argument call there.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;add_argument cannot be called after initialization. &quot;</span>
+            <span class="s2">&quot;Arguments must be added either as class variables or by overriding &quot;</span>
+            <span class="s2">&quot;configure and including a self.add_argument call there.&quot;</span>
+        <span class="p">)</span>
 
-    <span class="n">variable</span> <span class="o">=</span> <span class="n">get_argument_name</span><span class="p">(</span><span class="o">*</span><span class="n">name_or_flags</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">variable</span> <span class="o">=</span> <span class="n">get_argument_name</span><span class="p">(</span><span class="o">*</span><span class="n">name_or_flags</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">argument_buffer</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name_or_flags</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
         </details>
@@ -1700,40 +1688,6 @@ Where {attribute} represents the attribute on which the search is performed.</p>
 
   </div>
 
-
-
-
-  <div class="doc doc-object doc-method">
-
-
-
-<h3 id="mapper.main.ArgumentParser.add_arguments" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Method</span> <span class="n">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
-
-  <span class="doc doc-properties">
-      <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
-  </span>
-
-<a href="#mapper.main.ArgumentParser.add_arguments" class="headerlink" title="Permanent link">&para;</a></h3>
-
-    <div class="doc doc-contents ">
-
-      <p>Deprecated and will be removed by January 1st, 2021.</p>
-<p>Explicitly add arguments to the argument buffer if not using default settings.</p>
-
-        <details class="quote">
-          <summary>Source code in <code>mapper\main.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated and will be removed by January 1st, 2021.</span>
-
-<span class="sd">    Explicitly add arguments to the argument buffer if not using default settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
 
 
 
@@ -1759,6 +1713,9 @@ Where {attribute} represents the attribute on which the search is performed.</p>
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">add_subparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subparser_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a subparser to the collection of subparsers&quot;&quot;&quot;</span>
+    <span class="n">help_desc</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">,</span> <span class="n">subparser_type</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;help&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">help_desc</span>
+
     <span class="bp">self</span><span class="o">.</span><span class="n">_subparser_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">flag</span><span class="p">,</span> <span class="n">subparser_type</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
 </code></pre></div>
         </details>
@@ -1800,11 +1757,11 @@ Where {attribute} represents the attribute on which the search is performed.</p>
 <span class="sd">    :return: A dictionary mapping each argument&#39;s name to its value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parsed</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You should call `parse_args` before retrieving arguments.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You should call `parse_args` before retrieving arguments.&quot;</span><span class="p">)</span>
 
     <span class="n">self_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
     <span class="n">class_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_from_self_and_super</span><span class="p">(</span>
-        <span class="n">extract_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">super_class</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">super_class</span><span class="p">,</span> <span class="s1">&#39;__dict__&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()))</span>
+        <span class="n">extract_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">super_class</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">super_class</span><span class="p">,</span> <span class="s2">&quot;__dict__&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()))</span>
     <span class="p">)</span>
     <span class="n">class_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self_dict</span><span class="p">}</span>
     <span class="n">stored_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">self_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">class_dict</span><span class="p">}</span>
@@ -1812,9 +1769,7 @@ Where {attribute} represents the attribute on which the search is performed.</p>
     <span class="n">stored_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">var</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">stored_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
-                <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">)</span>
-                <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="p">))</span>
     <span class="p">}</span>
 
     <span class="n">tap_class_dict_keys</span> <span class="o">=</span> <span class="n">Tap</span><span class="p">()</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">|</span> <span class="n">Tap</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -1866,8 +1821,8 @@ Where {attribute} represents the attribute on which the search is performed.</p>
 		<span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
 	<span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--emulation&quot;</span><span class="p">)</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--interface&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">INTERFACES</span><span class="p">)</span>
-	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">OUTPUT_FORMATS</span><span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--interface&quot;</span><span class="p">)</span>
+	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-lh&quot;</span><span class="p">,</span> <span class="s2">&quot;--local_host&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-lp&quot;</span><span class="p">,</span> <span class="s2">&quot;--local_port&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;port&quot;</span><span class="p">)</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-rh&quot;</span><span class="p">,</span> <span class="s2">&quot;--remote_host&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
@@ -1968,8 +1923,10 @@ should either exit or raise an exception.</p>
     <span class="n">missing_required_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">unprovided_required_args</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">)]</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_required_args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input dictionary &quot;</span><span class="si">{</span><span class="n">args_dict</span><span class="si">}</span><span class="s1">&quot; does not include &#39;</span>
-                         <span class="sa">f</span><span class="s1">&#39;all unset required arguments: &quot;</span><span class="si">{</span><span class="n">missing_required_args</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Input dictionary &quot;</span><span class="si">{</span><span class="n">args_dict</span><span class="si">}</span><span class="s1">&quot; does not include &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;all unset required arguments: &quot;</span><span class="si">{</span><span class="n">missing_required_args</span><span class="si">}</span><span class="s1">&quot;.&#39;</span>
+        <span class="p">)</span>
 
     <span class="c1"># Load all arguments</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1977,9 +1934,11 @@ should either exit or raise an exception.</p>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_unsettable</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot set attribute &quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot; to &quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;. &#39;</span>
-                                     <span class="sa">f</span><span class="s1">&#39;To skip arguments that cannot be set </span><span class="se">\n</span><span class="s1">&#39;</span>
-                                     <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&quot;skip_unsettable = True&quot;&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Cannot set attribute &quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot; to &quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;. &#39;</span>
+                    <span class="sa">f</span><span class="s2">&quot;To skip arguments that cannot be set </span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&quot;skip_unsettable = True&quot;&#39;</span>
+                <span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_parsed</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -2024,7 +1983,7 @@ should either exit or raise an exception.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">get_reproducibility_info</span><span class="p">(</span><span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">get_reproducibility_info</span><span class="p">(</span><span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PathLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets a dictionary of reproducibility information.</span>
 
 <span class="sd">    Reproducibility information always includes:</span>
@@ -2046,16 +2005,16 @@ should either exit or raise an exception.</p>
         <span class="n">repo_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
     <span class="n">reproducibility</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;command_line&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;python </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%c</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="s2">&quot;command_line&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;python </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span><span class="p">),</span>
     <span class="p">}</span>
 
     <span class="n">git_info</span> <span class="o">=</span> <span class="n">GitInfo</span><span class="p">(</span><span class="n">repo_path</span><span class="o">=</span><span class="n">repo_path</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">git_info</span><span class="o">.</span><span class="n">has_git</span><span class="p">():</span>
-        <span class="n">reproducibility</span><span class="p">[</span><span class="s1">&#39;git_root&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">git_info</span><span class="o">.</span><span class="n">get_git_root</span><span class="p">()</span>
-        <span class="n">reproducibility</span><span class="p">[</span><span class="s1">&#39;git_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">git_info</span><span class="o">.</span><span class="n">get_git_url</span><span class="p">(</span><span class="n">commit_hash</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">reproducibility</span><span class="p">[</span><span class="s1">&#39;git_has_uncommitted_changes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">git_info</span><span class="o">.</span><span class="n">has_uncommitted_changes</span><span class="p">()</span>
+        <span class="n">reproducibility</span><span class="p">[</span><span class="s2">&quot;git_root&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">git_info</span><span class="o">.</span><span class="n">get_git_root</span><span class="p">()</span>
+        <span class="n">reproducibility</span><span class="p">[</span><span class="s2">&quot;git_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">git_info</span><span class="o">.</span><span class="n">get_git_url</span><span class="p">(</span><span class="n">commit_hash</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">reproducibility</span><span class="p">[</span><span class="s2">&quot;git_has_uncommitted_changes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">git_info</span><span class="o">.</span><span class="n">has_uncommitted_changes</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">reproducibility</span>
 </code></pre></div>
@@ -2093,11 +2052,13 @@ should either exit or raise an exception.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-         <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-         <span class="n">check_reproducibility</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-         <span class="n">skip_unsettable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-         <span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
+    <span class="n">check_reproducibility</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_unsettable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PathLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the arguments in JSON format. Note: Due to JSON, tuples are loaded as lists.</span>
 
 <span class="sd">    :param path: Path to the JSON file where the arguments will be loaded from.</span>
@@ -2113,7 +2074,7 @@ should either exit or raise an exception.</p>
         <span class="n">args_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">as_python_object</span><span class="p">)</span>
 
     <span class="c1"># Remove loaded reproducibility information since it is no longer valid</span>
-    <span class="n">saved_reproducibility_data</span> <span class="o">=</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;reproducibility&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">saved_reproducibility_data</span> <span class="o">=</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;reproducibility&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">check_reproducibility</span><span class="p">:</span>
         <span class="n">current_reproducibility_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reproducibility_info</span><span class="p">(</span><span class="n">repo_path</span><span class="o">=</span><span class="n">repo_path</span><span class="p">)</span>
         <span class="n">enforce_reproducibility</span><span class="p">(</span><span class="n">saved_reproducibility_data</span><span class="p">,</span> <span class="n">current_reproducibility_data</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
@@ -2147,27 +2108,26 @@ should either exit or raise an exception.</p>
       <p>Parses arguments, sets attributes of self equal to the parsed arguments, and processes arguments.</p>
 <p>:param args: List of strings to parse. The default is taken from <code>sys.argv</code>.
 :param known_only: If true, ignores extra arguments and only parses known arguments.
-Unparsed arguments are saved to self.extra_args.
-:legacy_config_parsing: If true, config files are parsed using <code>str.split</code> instead of <code>shlex.split</code>.
+                   Unparsed arguments are saved to self.extra_args.
+:param legacy_config_parsing: If true, config files are parsed using <code>str.split</code> instead of <code>shlex.split</code>.
 :return: self, which is a Tap instance containing all of the parsed args.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">TapType</span><span class="p">,</span>
-               <span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-               <span class="n">known_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-               <span class="n">legacy_config_parsing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">:</span> <span class="n">TapType</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">known_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">legacy_config_parsing</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapType</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses arguments, sets attributes of self equal to the parsed arguments, and processes arguments.</span>
 
 <span class="sd">    :param args: List of strings to parse. The default is taken from `sys.argv`.</span>
 <span class="sd">    :param known_only: If true, ignores extra arguments and only parses known arguments.</span>
-<span class="sd">    Unparsed arguments are saved to self.extra_args.</span>
-<span class="sd">    :legacy_config_parsing: If true, config files are parsed using `str.split` instead of `shlex.split`.</span>
+<span class="sd">                       Unparsed arguments are saved to self.extra_args.</span>
+<span class="sd">    :param legacy_config_parsing: If true, config files are parsed using `str.split` instead of `shlex.split`.</span>
 <span class="sd">    :return: self, which is a Tap instance containing all of the parsed args.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Prevent double parsing</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parsed</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;parse_args can only be called once.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;parse_args can only be called once.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Collect arguments from all of the configs</span>
 
@@ -2208,8 +2168,8 @@ Unparsed arguments are saved to self.extra_args.
                 <span class="k">elif</span> <span class="n">var_type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Tuple</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-        <span class="c1"># Set variable in self (and deepcopy)</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="c1"># Set variable in self</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="c1"># Process args</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">process_args</span><span class="p">()</span>
@@ -2287,10 +2247,13 @@ Unparsed arguments are saved to self.extra_args.
 
         <details class="quote">
           <summary>Source code in <code>mapper\main.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-         <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">with_reproducibility</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-         <span class="n">skip_unpicklable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-         <span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
+    <span class="n">with_reproducibility</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">skip_unpicklable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PathLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the arguments and reproducibility information in JSON format, pickling what can&#39;t be encoded.</span>
 
 <span class="sd">    :param path: Path to the JSON file where the arguments will be saved.</span>
@@ -2300,8 +2263,8 @@ Unparsed arguments are saved to self.extra_args.
 <span class="sd">                      If None, uses the git repo of the Python file that is run.</span>
 <span class="sd">    :param skip_unpicklable: If True, does not save attributes whose values cannot be pickled.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_all</span><span class="p">()</span> <span class="k">if</span> <span class="n">with_reproducibility</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_all</span><span class="p">(</span><span class="n">repo_path</span><span class="o">=</span><span class="n">repo_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">with_reproducibility</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">define_python_object_encoder</span><span class="p">(</span><span class="n">skip_unpicklable</span><span class="p">))</span>
 </code></pre></div>
         </details>

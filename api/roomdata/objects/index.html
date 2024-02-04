@@ -844,6 +844,9 @@
         <code>Class Exit</code>
 
 
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-dataclass"><code>dataclass</code></small>
+  </span>
 
 <a href="#mapper.roomdata.objects.Exit" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -853,18 +856,25 @@
 
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Exit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="o">**</span><span class="n">DATACLASS_KWARGS</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Exit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	An exit.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">exitFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;exit&quot;</span><span class="p">])</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">door</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">doorFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+	<span class="n">_direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">vnum</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">exitFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+	<span class="n">door</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">doorFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Called after __init__.&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">exitFlags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;exit&quot;</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -919,6 +929,11 @@
 
 
 
+
+
+
+
+
   </div>
 
     </div>
@@ -935,6 +950,9 @@
         <code>Class Room</code>
 
 
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-dataclass"><code>dataclass</code></small>
+  </span>
 
 <a href="#mapper.roomdata.objects.Room" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -944,33 +962,37 @@
 
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Room</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="o">**</span><span class="n">DATACLASS_KWARGS</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Room</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A room.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-1&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">serverID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>  <span class="c1"># Server room IDs are in range 1-0x7fffffff.</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">desc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">dynamicDesc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">note</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">TERRAIN_COSTS</span><span class="p">[</span><span class="s2">&quot;undefined&quot;</span><span class="p">]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">light</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">align</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">portable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ridable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">sundeath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">avoid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">mobFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">loadFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Exit</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="c1"># Cost needs to be defined first for correct sorting.</span>
+	<span class="n">cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">TERRAIN_COSTS</span><span class="p">[</span><span class="s2">&quot;undefined&quot;</span><span class="p">])</span>
+	<span class="n">vnum</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-1&quot;</span>
+	<span class="n">serverID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>  <span class="c1"># Server room IDs are in range 1-0x7fffffff.</span>
+	<span class="n">area</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">desc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">dynamicDesc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">note</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">terrain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">light</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">align</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">portable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">ridable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">sundeath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
+	<span class="n">avoid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+	<span class="n">mobFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+	<span class="n">loadFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+	<span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">z</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">exits</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Exit</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnum</span>
 
 	<span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 		<span class="c1"># Unlike in Python 2 where most objects are sortable by default, our</span>
@@ -981,6 +1003,7 @@
 		<span class="c1"># We&#39;ll return False because we want heapq.heappush to sort the tuples</span>
 		<span class="c1"># of movement cost and room object by the first item in the tuple (room cost),</span>
 		<span class="c1"># and the order of rooms with the same movement cost is irrelevant.</span>
+		<span class="c1"># Note that this is much faster than passing the &#39;order&#39; keyword to the dataclass decorator.</span>
 		<span class="k">return</span> <span class="kc">False</span>
 
 	<span class="nd">@property</span>
@@ -1028,7 +1051,7 @@
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sundeath: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sundeath</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mob Flags: &#39;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mobFlags</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Load Flags: &#39;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loadFlags</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coordinates (X, Y, Z): &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coordinates (X, Y, Z): &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Exits:&quot;</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">direction</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sortedExits</span><span class="p">:</span>
 			<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
@@ -1112,7 +1135,7 @@
 <span class="sd">		Returns:</span>
 <span class="sd">			True if room contains no exits or only undefined exits, False otherwise.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+		<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 	<span class="k">def</span> <span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1121,13 +1144,16 @@
 <span class="sd">		Returns:</span>
 <span class="sd">			True if room contains at least one undefined exit, False otherwise.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+		<span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </code></pre></div>
         </details>
 
 
 
   <div class="doc doc-children">
+
+
+
 
 
 
@@ -1157,6 +1183,10 @@
 
 
 
+
+
+
+
   <div class="doc doc-object doc-attribute">
 
 
@@ -1180,6 +1210,14 @@
 
 
 
+
+
+
+
+
+
+
+
   <div class="doc doc-object doc-attribute">
 
 
@@ -1200,6 +1238,12 @@
     </div>
 
   </div>
+
+
+
+
+
+
 
 
 
@@ -1252,8 +1296,10 @@
 
       <p>Returns the clock position of another room from this one.</p>
 <div class="admonition note">
-<p class="admonition-title">Note<p>https://en.wikipedia.org/wiki/Clock_position</p>
-</p>
+<p class="admonition-title">Note</p>
+<div class="codehilite"><pre><span></span><code>https://en.wikipedia.org/wiki/Clock_position
+</code></pre></div>
+
 </div>
 
 <p><strong>Parameters:</strong></p>
@@ -1335,8 +1381,10 @@
 
       <p>Returns the compass direction of another room from this one.</p>
 <div class="admonition note">
-<p class="admonition-title">Note<p>https://en.wikipedia.org/wiki/Points_of_the_compass</p>
-</p>
+<p class="admonition-title">Note</p>
+<div class="codehilite"><pre><span></span><code>https://en.wikipedia.org/wiki/Points_of_the_compass
+</code></pre></div>
+
 </div>
 
 <p><strong>Parameters:</strong></p>
@@ -1441,7 +1489,7 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		True if room contains at least one undefined exit, False otherwise.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+	<span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </code></pre></div>
         </details>
     </div>
@@ -1488,7 +1536,7 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		True if room contains no exits or only undefined exits, False otherwise.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+	<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </code></pre></div>
         </details>
     </div>
@@ -1511,8 +1559,10 @@
 
       <p>Returns the Manhattan distance between this room and another.</p>
 <div class="admonition note">
-<p class="admonition-title">Note<p>https://en.wikipedia.org/wiki/Taxicab_geometry</p>
-</p>
+<p class="admonition-title">Note</p>
+<div class="codehilite"><pre><span></span><code>https://en.wikipedia.org/wiki/Taxicab_geometry
+</code></pre></div>
+
 </div>
 
 <p><strong>Parameters:</strong></p>

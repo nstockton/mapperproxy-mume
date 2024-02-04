@@ -1179,7 +1179,6 @@
 
 
 
-
   <div class="doc doc-object doc-class">
 
 
@@ -1199,8 +1198,8 @@
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Mapper</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">,</span> <span class="n">World</span><span class="p">):</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
 		<span class="bp">self</span><span class="p">,</span>
-		<span class="n">playerSocket</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
-		<span class="n">gameSocket</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
+		<span class="n">playerSocket</span><span class="p">:</span> <span class="n">BufferedSocket</span><span class="p">,</span>
+		<span class="n">gameSocket</span><span class="p">:</span> <span class="n">BufferedSocket</span><span class="p">,</span>
 		<span class="n">outputFormat</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 		<span class="n">interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 		<span class="n">promptTerminator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
@@ -1217,30 +1216,34 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">gagPrompts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">gagPrompts</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">findFormat</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">findFormat</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingOffline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">isEmulatingOffline</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">:</span> <span class="n">SimpleQueue</span><span class="p">[</span><span class="n">MAPPER_QUEUE_TYPE</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleQueue</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">:</span> <span class="n">MAPPER_QUEUE_TYPE</span> <span class="o">=</span> <span class="n">SimpleQueue</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">autoMerging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">autoLinking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">autoWalk</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">autoWalkDirections</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">userCommandPrefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;user_command_&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">userCommands</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="n">func</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;user_command_&quot;</span><span class="p">)</span> <span class="p">:]</span>
+			<span class="n">removePrefix</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">userCommandPrefix</span><span class="p">)</span>
 			<span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;user_command_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">userCommandPrefix</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
 		<span class="p">]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="n">MUD_EVENT_HANDLER_TYPE</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">unknownMudEvents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">legacyHandler</span> <span class="ow">in</span> <span class="p">[</span>
-			<span class="n">func</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;mud_event_&quot;</span><span class="p">)</span> <span class="p">:]</span>
+		<span class="n">mudEventPrefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mud_event_&quot;</span>
+		<span class="n">legacyHandlers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+			<span class="n">removePrefix</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">mudEventPrefix</span><span class="p">)</span>
 			<span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;mud_event_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
-		<span class="p">]:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">registerMudEventHandler</span><span class="p">(</span><span class="n">legacyHandler</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;mud_event_</span><span class="si">{</span><span class="n">legacyHandler</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">mudEventPrefix</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
+		<span class="p">]</span>
+		<span class="k">for</span> <span class="n">legacyHandler</span> <span class="ow">in</span> <span class="n">legacyHandlers</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">registerMudEventHandler</span><span class="p">(</span><span class="n">legacyHandler</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mudEventPrefix</span> <span class="o">+</span> <span class="n">legacyHandler</span><span class="p">))</span>
 		<span class="n">ExitsCleaner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;exits&quot;</span><span class="p">)</span>
+		<span class="n">emulationCommandPrefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;emulation_command_&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">emulationCommands</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="n">func</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;emulation_command_&quot;</span><span class="p">)</span> <span class="p">:]</span>
+			<span class="n">removePrefix</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">emulationCommandPrefix</span><span class="p">)</span>
 			<span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;emulation_command_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">emulationCommandPrefix</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
 		<span class="p">]</span>
 		<span class="c1"># Commands that should have priority when matching user input to an emulation command.</span>
 		<span class="n">priorityCommands</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -1273,8 +1276,8 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">parsedMinutes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">timeSynchronized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="p">:</span> <span class="n">ProxyHandler</span> <span class="o">=</span> <span class="n">ProxyHandler</span><span class="p">(</span>
-			<span class="n">playerSocket</span><span class="o">.</span><span class="n">sendall</span><span class="p">,</span>
-			<span class="n">gameSocket</span><span class="o">.</span><span class="n">sendall</span><span class="p">,</span>
+			<span class="n">cast</span><span class="p">(</span><span class="n">PLAYER_WRITER_TYPE</span><span class="p">,</span> <span class="n">playerSocket</span><span class="o">.</span><span class="n">send</span><span class="p">),</span>  <span class="c1"># todo: Fix this later.</span>
+			<span class="n">cast</span><span class="p">(</span><span class="n">GAME_WRITER_TYPE</span><span class="p">,</span> <span class="n">gameSocket</span><span class="o">.</span><span class="n">send</span><span class="p">),</span>  <span class="c1"># todo: Fix this later.</span>
 			<span class="n">outputFormat</span><span class="o">=</span><span class="n">outputFormat</span><span class="p">,</span>
 			<span class="n">promptTerminator</span><span class="o">=</span><span class="n">promptTerminator</span><span class="p">,</span>
 			<span class="n">isEmulatingOffline</span><span class="o">=</span><span class="n">isEmulatingOffline</span><span class="p">,</span>
@@ -1571,7 +1574,7 @@
 
 	<span class="k">def</span> <span class="nf">user_command_secretaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="n">matchPattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;^\s*(?P&lt;action&gt;.+?)(?:\s+(?P&lt;direction&gt;</span><span class="si">{</span><span class="n">regexFuzzy</span><span class="p">(</span><span class="n">DIRECTIONS</span><span class="p">)</span><span class="si">}</span><span class="s2">))?$&quot;</span>
-		<span class="n">match</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">matchPattern</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+		<span class="n">match</span><span class="p">:</span> <span class="n">REGEX_MATCH</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">matchPattern</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 		<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Syntax: &#39;secretaction [action] [</span><span class="si">{</span><span class="s1">&#39; | &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRECTIONS</span><span class="p">)</span><span class="si">}</span><span class="s2">]&#39;.&quot;</span><span class="p">)</span>
 			<span class="k">return</span> <span class="kc">None</span>
@@ -1731,7 +1734,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="s2">&quot;Usage: run [label|vnum]&quot;</span><span class="p">)</span>
 			<span class="k">return</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">stopRun</span><span class="p">()</span>
-		<span class="n">match</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
+		<span class="n">match</span><span class="p">:</span> <span class="n">REGEX_MATCH</span>
 		<span class="n">destination</span><span class="p">:</span> <span class="nb">str</span>
 		<span class="n">argString</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 		<span class="k">if</span> <span class="n">argString</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;t&quot;</span> <span class="ow">or</span> <span class="n">argString</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;t &quot;</span><span class="p">):</span>
@@ -1780,7 +1783,7 @@
 			<span class="k">return</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">autoWalkDirections</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 		<span class="n">argString</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-		<span class="n">match</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">RUN_DESTINATION_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">argString</span><span class="p">)</span>
+		<span class="n">match</span><span class="p">:</span> <span class="n">REGEX_MATCH</span> <span class="o">=</span> <span class="n">RUN_DESTINATION_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">argString</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;destination&quot;</span><span class="p">)</span>
 			<span class="n">flags</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;flags&quot;</span><span class="p">)</span>
@@ -2071,8 +2074,8 @@
 				<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rridable</span><span class="p">(</span><span class="s2">&quot;ridable&quot;</span><span class="p">))</span>
 
 	<span class="k">def</span> <span class="nf">syncTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">clockMatch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">CLOCK_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-		<span class="n">timeMatch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">TIME_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="n">clockMatch</span><span class="p">:</span> <span class="n">REGEX_MATCH</span> <span class="o">=</span> <span class="n">CLOCK_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="n">timeMatch</span><span class="p">:</span> <span class="n">REGEX_MATCH</span> <span class="o">=</span> <span class="n">TIME_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeEvent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">clockMatch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 				<span class="n">hour</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">clockMatch</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">))</span>
@@ -2216,19 +2219,19 @@
 	<span class="k">def</span> <span class="nf">mud_event_exits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">exits</span> <span class="o">=</span> <span class="n">text</span>
 
-	<span class="k">def</span> <span class="nf">handleUserData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">handleUserInput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
 			<span class="k">return</span> <span class="kc">None</span>
 		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEmulatingOffline</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">user_command_emu</span><span class="p">(</span><span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">user_command_emu</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">userCommand</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-			<span class="n">args</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">userCommand</span><span class="p">)</span> <span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-			<span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;user_command_</span><span class="si">{</span><span class="n">decodeBytes</span><span class="p">(</span><span class="n">userCommand</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)(</span><span class="n">decodeBytes</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+			<span class="n">userCommand</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="n">args</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">removePrefix</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">userCommand</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+			<span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;user_command_</span><span class="si">{</span><span class="n">userCommand</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)(</span><span class="n">args</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">handleMudEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">stripAnsi</span><span class="p">(</span><span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+	<span class="k">def</span> <span class="nf">handleMudEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">text</span> <span class="o">=</span> <span class="n">stripAnsi</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">:</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scouting</span> <span class="ow">or</span> <span class="n">event</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;prompt&quot;</span><span class="p">,</span> <span class="s2">&quot;movement&quot;</span><span class="p">):</span>
 				<span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
@@ -2237,7 +2240,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">unknownMudEvents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;received data with an unknown event type of </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">MUD_EVENT_HANDLER_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;Registers a method to handle mud events of a given type.</span>
 <span class="sd">		Params: event, handler</span>
 <span class="sd">		where event is the name of the event type, typically corresponding to the XML tag of the incoming data,</span>
@@ -2249,7 +2252,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">unknownMudEvents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">MUD_EVENT_HANDLER_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;Deregisters mud event handlers.</span>
 <span class="sd">		params: same as registerMudEventHandler.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -2259,14 +2262,14 @@
 				<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">mudEventHandlers</span><span class="p">[</span><span class="n">event</span><span class="p">]</span>
 
 	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">item</span><span class="p">:</span> <span class="n">EVENT_CALLER_TYPE</span>
 		<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
 			<span class="k">try</span><span class="p">:</span>
 				<span class="n">event</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">item</span>
+				<span class="n">text</span> <span class="o">=</span> <span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 				<span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s2">&quot;userInput&quot;</span><span class="p">:</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">handleUserData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">handleUserInput</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 				<span class="k">else</span><span class="p">:</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 			<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in mapper thread:</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 				<span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in mapper thread&quot;</span><span class="p">)</span>
@@ -2422,7 +2425,7 @@ This represents the Thread ID as reported by the kernel.</p>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">GUIRefresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Trigger the clearing and redrawing of rooms by the GUI&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="o">!=</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_gui_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;on_gui_refresh&quot;</span><span class="p">,))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_gui_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;on_guiRefresh&quot;</span><span class="p">,))</span>
 </code></pre></div>
         </details>
     </div>
@@ -2512,7 +2515,7 @@ params: same as registerMudEventHandler.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">deregisterMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">MUD_EVENT_HANDLER_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Deregisters mud event handlers.</span>
 <span class="sd">	params: same as registerMudEventHandler.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -3510,7 +3513,7 @@ and handler is a method that takes a single argument, text, which is the text re
 
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">registerMudEventHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">MUD_EVENT_HANDLER_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Registers a method to handle mud events of a given type.</span>
 <span class="sd">	Params: event, handler</span>
 <span class="sd">	where event is the name of the event type, typically corresponding to the XML tag of the incoming data,</span>
@@ -3563,14 +3566,14 @@ from the args and kwargs arguments, respectively.</p>
         <details class="quote">
           <summary>Source code in <code>mapper\mapper.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-	<span class="n">item</span><span class="p">:</span> <span class="n">EVENT_CALLER_TYPE</span>
 	<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
 		<span class="k">try</span><span class="p">:</span>
 			<span class="n">event</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">item</span>
+			<span class="n">text</span> <span class="o">=</span> <span class="n">decodeBytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s2">&quot;userInput&quot;</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">handleUserData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">handleUserInput</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 			<span class="k">else</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">handleMudEvent</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 		<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in mapper thread:</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error in mapper thread&quot;</span><span class="p">)</span>
