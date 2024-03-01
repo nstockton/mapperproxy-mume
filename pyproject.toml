@@ -61,7 +61,7 @@
 	pyglet = "^2.0"
 	rapidfuzz = "3.5.2"
 	speechlight = "^1.8"
-	typed-argument-parser = "^1.8"
+	typed-argument-parser = "^1.9"
 	typing-extensions = {version = "^4.1", python = "< 3.10"}
 
 [tool.poetry.dev-dependencies]
@@ -83,13 +83,13 @@
 	click = "8.0.4"  # Required by Tan.
 	flake8 = "5.0.4"
 	flake8-pyproject = "1.2.3"
-	isort = "^5.12.0"
+	isort = "^5.13"
 	jinja2 = "3.0.3"  # Required by Tan.
-	mypy = "^1.7"
+	mypy = "^1.8"
 	tan = "^23.7"
 
 [tool.poetry.group.test.dependencies]
-	coverage = {version = "^7.3", extras = ["toml"]}
+	coverage = {version = "^7.4", extras = ["toml"]}
 
 [tool.poetry.scripts]
 	mapper = "mapper.main:run"
