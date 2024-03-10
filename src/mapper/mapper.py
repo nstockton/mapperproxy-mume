@@ -111,7 +111,7 @@ MOVEMENT_PREVENTED_REGEX: REGEX_PATTERN = re.compile(
 				r"You unsuccessfully try to break through the ice\.",
 				r"Your mount refuses to follow your orders\!",
 				r"You are too exhausted to ride\.",
-				r"You can\'t go into deep water\!",
+				r"You can(?:not ride|\'t go) into deep water\!",
 				r"You don\'t control your mount\!",
 				r"Your mount is too sensible to attempt such a feat\.",
 				r"Oops\! You cannot go there riding\!",
