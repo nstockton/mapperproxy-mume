@@ -240,10 +240,12 @@ class TestUtils(TestCase):
 	def test_removePrefix(self) -> None:
 		self.assertEqual(utils.removePrefix("hello", "he"), "llo")
 		self.assertEqual(utils.removePrefix("hello", "xx"), "hello")
+		self.assertEqual(utils.removePrefix("hello", ""), "hello")
 
 	def test_removeSuffix(self) -> None:
 		self.assertEqual(utils.removeSuffix("hello", "lo"), "hel")
 		self.assertEqual(utils.removeSuffix("hello", "xx"), "hello")
+		self.assertEqual(utils.removeSuffix("hello", ""), "hello")
 
 	def test_ContainerEmptyMixin(self) -> None:
 		test = ContainerEmpty()

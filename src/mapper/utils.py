@@ -544,7 +544,7 @@ def removePrefix(text: BytesOrStr, prefix: BytesOrStr) -> BytesOrStr:
 
 def removeSuffix(text: BytesOrStr, suffix: BytesOrStr) -> BytesOrStr:
 	"""Backport of `removesuffix` from PEP-616 (Python 3.9+)"""
-	if text.endswith(suffix):
+	if suffix and text.endswith(suffix):
 		return text[: -len(suffix)]
 	else:
 		return text
