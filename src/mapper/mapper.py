@@ -1121,7 +1121,7 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer(f"Setting room server ID to '{serverID}'.")
 
 	def mud_event_dynamic(self, text: str) -> None:
-		self.dynamic = text
+		self.dynamic = text.lstrip()
 		self.moved = None
 		addedNewRoomFrom: Union[str, None] = None
 		if not self.isSynced or self.movement is None:

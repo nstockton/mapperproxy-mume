@@ -190,7 +190,7 @@ class World(object):
 			with suppress(KeyError):
 				newRoom.avoid = roomDict["avoid"]
 			newRoom.desc = roomDict["desc"]
-			newRoom.dynamicDesc = roomDict["dynamicDesc"]
+			newRoom.dynamicDesc = roomDict["dynamicDesc"].lstrip()
 			for direction, exitDict in roomDict["exits"].items():
 				newExit: Exit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.door = exitDict["door"]
@@ -225,7 +225,7 @@ class World(object):
 			newRoom.align = roomDict["alignment"]
 			newRoom.avoid = roomDict["avoid"]
 			newRoom.desc = roomDict["description"]
-			newRoom.dynamicDesc = roomDict["contents"]
+			newRoom.dynamicDesc = roomDict["contents"].lstrip()
 			for direction, exitDict in roomDict["exits"].items():
 				newExit: Exit = self.getNewExit(direction, exitDict["to"], vnum)
 				newExit.door = exitDict["door"]
