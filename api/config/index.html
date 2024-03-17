@@ -1051,17 +1051,6 @@
 
       <p>D.clear() -&gt; None.  Remove all items from D.</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s1">&#39;D.clear() -&gt; None.  Remove all items from D.&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">pass</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1085,16 +1074,6 @@
 
       <p>D.get(k[,d]) -&gt; D[k] if k in D, else d.  d defaults to None.</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="s1">&#39;D.get(k[,d]) -&gt; D[k] if k in D, else d.  d defaults to None.&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">default</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1118,13 +1097,6 @@
 
       <p>D.items() -&gt; a set-like object providing a view on D's items</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">&quot;D.items() -&gt; a set-like object providing a view on D&#39;s items&quot;</span>
-    <span class="k">return</span> <span class="n">ItemsView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1148,13 +1120,6 @@
 
       <p>D.keys() -&gt; a set-like object providing a view on D's keys</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">&quot;D.keys() -&gt; a set-like object providing a view on D&#39;s keys&quot;</span>
-    <span class="k">return</span> <span class="n">KeysView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1166,7 +1131,7 @@
 
 
 <h3 id="mapper.config.Config.pop" class="doc doc-heading">
-<code class="codehilite language-python"><span class="n">Method</span> <span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x0000021270848190</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="codehilite language-python"><span class="n">Method</span> <span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=&lt;</span><span class="nb">object</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000002DB8A568200</span><span class="o">&gt;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-inherited"><code>inherited</code></small>
@@ -1179,23 +1144,6 @@
       <p>D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.
 If key is not found, d is returned if given, otherwise KeyError is raised.</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">__marker</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
-<span class="sd">      If key is not found, d is returned if given, otherwise KeyError is raised.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">__marker</span><span class="p">:</span>
-            <span class="k">raise</span>
-        <span class="k">return</span> <span class="n">default</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">value</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1220,21 +1168,6 @@ If key is not found, d is returned if given, otherwise KeyError is raised.</p>
       <p>D.popitem() -&gt; (k, v), remove and return some (key, value) pair
 as a 2-tuple; but raise KeyError if D is empty.</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;D.popitem() -&gt; (k, v), remove and return some (key, value) pair</span>
-<span class="sd">       as a 2-tuple; but raise KeyError if D is empty.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span> <span class="kn">from</span> <span class="kc">None</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1319,17 +1252,6 @@ as a 2-tuple; but raise KeyError if D is empty.</p>
 
       <p>D.setdefault(k[,d]) -&gt; D.get(k,d), also set D[k]=d if k not in D</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="s1">&#39;D.setdefault(k[,d]) -&gt; D.get(k,d), also set D[k]=d if k not in D&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
-    <span class="k">return</span> <span class="n">default</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1356,27 +1278,6 @@ If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
 If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
 In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="p">(),</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39; D.update([E, ]**F) -&gt; None.  Update D from mapping/iterable E and F.</span>
-<span class="sd">        If E present and has a .keys() method, does:     for k in E: D[k] = E[k]</span>
-<span class="sd">        If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v</span>
-<span class="sd">        In either case, this is followed by: for k, v in F.items(): D[k] = v</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
-            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;keys&quot;</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
-            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
@@ -1400,13 +1301,6 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 
       <p>D.values() -&gt; an object providing a view on D's values</p>
 
-        <details class="quote">
-          <summary>Source code in <code>mapper\config.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">&quot;D.values() -&gt; an object providing a view on D&#39;s values&quot;</span>
-    <span class="k">return</span> <span class="n">ValuesView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</code></pre></div>
-        </details>
     </div>
 
   </div>
