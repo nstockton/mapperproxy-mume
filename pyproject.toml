@@ -56,7 +56,7 @@
 	boltons = "^23.1"
 	certifi = "2023.7.22"
 	fastjsonschema = "2.19.0"
-	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.6.3/mud_protocols-0.6.3-py3-none-any.whl"}
+	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.6.4/mud_protocols-0.6.4-py3-none-any.whl"}
 	orjson = "^3.9"
 	pyglet = "^2.0"
 	rapidfuzz = "3.5.2"
