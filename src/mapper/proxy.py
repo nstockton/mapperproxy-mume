@@ -225,7 +225,7 @@ class ProxyHandler(object):
 		if self.playerInputBuffer:
 			data = bytes(self.playerInputBuffer + data)
 			self.playerInputBuffer.clear()
-		for line in data.splitlines(True):
+		for line in data.splitlines(keepends=True):
 			if line[-1] not in CR_LF:
 				# Final line was incomplete.
 				self.playerInputBuffer.extend(line)
