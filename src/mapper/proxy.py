@@ -156,8 +156,8 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 		super().on_optionEnabled(option)  # pragma: no cover
 		if option == NAWS:
 			# NAWS was enabled.
-			self.nawsDimensions = Dimensions(80, UINT16_MAX)  # 80 character width, max line hight.
-		if option == GMCP:
+			self.nawsDimensions = Dimensions(UINT16_MAX, UINT16_MAX)  # Max character width, max line hight.
+		elif option == GMCP:
 			# We just sent GMCP Hello to the game.
 			supportedPackages: dict[str, int] = {
 				"Char": 1,
