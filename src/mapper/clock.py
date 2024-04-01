@@ -219,7 +219,7 @@ def deltaToTime(delta: int) -> tuple[int, int, int, int, int]:
 	return year, month, day, hour, minutes
 
 
-class MumeTime(object):
+class MumeTime:
 	def __init__(self, delta: int) -> None:
 		self._year, self._month, self._day, self._hour, self._minutes = deltaToTime(delta)
 
@@ -473,7 +473,7 @@ class MumeTime(object):
 		return "\n".join(output)
 
 
-class Clock(object):
+class Clock:
 	def __init__(self) -> None:
 		self._epoch: Optional[int] = None
 

@@ -178,7 +178,7 @@ class XMLProtocol(_XMLProtocol):
 		self.eventCaller((name, data))
 
 
-class ProxyHandler(object):
+class ProxyHandler:
 	def __init__(
 		self,
 		playerWriter: PLAYER_WRITER_TYPE,

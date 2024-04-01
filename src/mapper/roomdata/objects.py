@@ -164,7 +164,7 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 
 
 @dataclass(**DATACLASS_KWARGS)
-class Exit(object):
+class Exit:
 	"""
 	An exit.
 	"""
@@ -198,7 +198,7 @@ class Exit(object):
 
 
 @dataclass(**DATACLASS_KWARGS)
-class Room(object):
+class Room:
 	"""
 	A room.
 	"""

@@ -94,7 +94,7 @@ TERRAIN_SYMBOLS: dict[str, str] = {
 }
 
 
-class World(object):
+class World:
 	def __init__(self, interface: str = "text") -> None:
 		self.roomsLock = threading.Lock()
 		self.isSynced: bool = False

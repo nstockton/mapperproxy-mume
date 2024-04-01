@@ -19,7 +19,7 @@ class FakeSocketEmpty(Exception):
 	pass
 
 
-class FakeSocket(object):
+class FakeSocket:
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		self.inboundBuffer: Union[bytes, None] = None
 		self.timeout: Union[float, None] = None
