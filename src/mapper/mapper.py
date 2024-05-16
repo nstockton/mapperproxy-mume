@@ -20,7 +20,7 @@ from typing import Any, Optional, Union, cast
 
 # Third-party Modules:
 from mudproto.mpi import MPIProtocol
-from mudproto.utils import escapeXMLString
+from mudproto.utils import decodeBytes, escapeXMLString
 
 # Local Modules:
 from . import INTERFACES, OUTPUT_FORMATS
@@ -39,15 +39,7 @@ from .typedef import (
 	REGEX_MATCH,
 	REGEX_PATTERN,
 )
-from .utils import (
-	decodeBytes,
-	formatDocString,
-	getXMLAttributes,
-	regexFuzzy,
-	removePrefix,
-	simplified,
-	stripAnsi,
-)
+from .utils import formatDocString, getXMLAttributes, regexFuzzy, removePrefix, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 

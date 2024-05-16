@@ -203,18 +203,6 @@ class TestUtils(TestCase):
 		)
 		self.assertEqual(utils.getDataPath(*subdirectory), output)
 
-	def test_decodeBytes(self) -> None:
-		with self.assertRaises(TypeError):
-			utils.decodeBytes(None)  # type: ignore[arg-type]
-		asciiChars: str = "".join(chr(i) for i in range(128))
-		latinChars: str = "".join(chr(i) for i in range(128, 256))
-		latinReplacements: str = "".join(
-			utils.LATIN_DECODING_REPLACEMENTS.get(ord(char), "?") for char in latinChars
-		)
-		self.assertEqual(utils.decodeBytes(bytes(asciiChars, "us-ascii")), asciiChars)
-		self.assertEqual(utils.decodeBytes(bytes(latinChars, "latin-1")), latinReplacements)
-		self.assertEqual(utils.decodeBytes(bytes(latinChars, "utf-8")), latinReplacements)
-
 	@patch("mapper.utils.pager")
 	@patch("mapper.utils.shutil")
 	def test_page(self, mockShutil: Mock, mockPager: Mock) -> None:
