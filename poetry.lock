@@ -1068,12 +1068,12 @@ files = [
 
 [[package]]
 name = "mud-protocols"
-version = "0.6.6"
+version = "0.7.0"
 description = "MUD protocols implemented in Python."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "mud_protocols-0.6.6-py3-none-any.whl", hash = "sha256:baceccb51cb89958e35cb6142254d6ec17612a304bf4085fd6fee6e9dab26052"},
+    {file = "mud_protocols-0.7.0-py3-none-any.whl", hash = "sha256:0e00cbf3f55d70a03e41028cbc6e5a40ef1763fff5bcbd461943084e752a6d72"},
 ]
 
 [package.dependencies]
@@ -1081,7 +1081,7 @@ typing-extensions = {version = ">=4.1,<5.0", markers = "python_version < \"3.11\
 
 [package.source]
 type = "url"
-url = "https://github.com/nstockton/mud-protocols/releases/download/v0.6.6/mud_protocols-0.6.6-py3-none-any.whl"
+url = "https://github.com/nstockton/mud-protocols/releases/download/v0.7.0/mud_protocols-0.7.0-py3-none-any.whl"
 
 [[package]]
 name = "mypy"
@@ -4932,4 +4932,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "42e76ba3784a3402656ffc0f00123e4e47d20b2ac27d7447af1d5fe5209f2c31"
+content-hash = "9b94f435fe8062205eada695e5deed2a82a076e97575bfab469b2010c8e0b2f6"
