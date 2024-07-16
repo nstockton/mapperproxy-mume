@@ -952,6 +952,16 @@ class Mapper(threading.Thread, World):
 		if self.autoMapping:
 			self.updateRoomFlags()
 
+	def mud_event_gmcp_event_darkness(self, text: str) -> None:
+		value: dict[str, Any] = json.loads(text)
+		if "what" in value and isinstance(value["what"], str):
+			pass  # Do something.
+
+	def mud_event_gmcp_event_sun(self, text: str) -> None:
+		value: dict[str, Any] = json.loads(text)
+		if "what" in value and isinstance(value["what"], str):
+			pass  # Do something.
+
 	def mud_event_prompt(self, text: str) -> None:
 		self.playerTelnetHandler.mpmEventSend({"prompt": text})
 		self.prompt = text

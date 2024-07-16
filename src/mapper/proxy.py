@@ -143,8 +143,8 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 		self.proxy.player.write(b"", prompt=True)
 
 	def on_gmcpMessage(self, package: str, value: bytes) -> None:
-		if package == "char.vitals":
-			self.proxy.eventCaller(("gmcp_char_vitals", value))
+		if package in ("char.vitals", "event.darkness", "event.sun"):
+			self.proxy.eventCaller((f"gmcp_{package.replace('.', '_')}", value))
 		self.player.gmcpSend(package, value, isSerialized=True)
 
 	def on_connectionMade(self) -> None:
