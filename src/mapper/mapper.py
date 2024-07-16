@@ -23,10 +23,9 @@ from mudproto.mpi import MPIProtocol
 from mudproto.utils import decodeBytes, escapeXMLString
 
 # Local Modules:
-from . import INTERFACES, OUTPUT_FORMATS
+from . import INTERFACES, OUTPUT_FORMATS, config
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
-from .config import Config
 from .delays import OneShot
 from .proxy import Player, ProxyHandler
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
@@ -221,13 +220,11 @@ class Mapper(threading.Thread, World):
 			mapperCommands=[func.encode("us-ascii") for func in self.userCommands],
 			eventCaller=self.queue.put,
 		)
-		cfg: Config = Config()
-		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
+		self._autoUpdateRooms: bool = config.get("autoUpdateRooms", False)
 		try:
-			self.mpiHandler.isWordWrapping = cfg.get("wordwrap", False)
+			self.mpiHandler.isWordWrapping = config.get("wordwrap", False)
 		except LookupError:
 			logger.exception("Unable to set initial value of MPI word wrap.")
-		del cfg
 		self.proxy.connect()
 		World.__init__(self, interface=self.interface)
 		self.emulationRoom: Room = self.currentRoom
@@ -260,10 +257,8 @@ class Mapper(threading.Thread, World):
 	@autoUpdateRooms.setter
 	def autoUpdateRooms(self, value: bool) -> None:
 		self._autoUpdateRooms = bool(value)
-		cfg: Config = Config()
-		cfg["autoUpdateRooms"] = self._autoUpdateRooms
-		cfg.save()
-		del cfg
+		config["autoUpdateRooms"] = self._autoUpdateRooms
+		config.save()
 
 	@property
 	def mpiHandler(self) -> MPIProtocol:
@@ -629,10 +624,8 @@ class Mapper(threading.Thread, World):
 		try:
 			value: bool = not self.mpiHandler.isWordWrapping
 			self.mpiHandler.isWordWrapping = value
-			cfg: Config = Config()
-			cfg["wordwrap"] = value
-			cfg.save()
-			del cfg
+			config["wordwrap"] = value
+			config.save()
 			self.sendPlayer(f"Word Wrap {'enabled' if value else 'disabled'}.")
 		except LookupError as e:
 			self.sendPlayer(f"Unable to toggle word wrapping: {', '.join(e.args)}.")

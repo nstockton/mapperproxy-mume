@@ -23,7 +23,7 @@ from speechlight import Speech
 
 # Local Modules:
 from .vec2d import Vec2d
-from ..config import Config
+from .. import config
 from ..roomdata.objects import DIRECTION_COORDINATES, DIRECTIONS, Exit, Room
 from ..typedef import GUI_QUEUE_TYPE
 from ..utils import clamp
@@ -147,13 +147,11 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		self._speech = Speech()
 		self.say = self._speech.say
 		self._cfg: dict[str, Any] = {}
-		cfg = Config()
-		if "gui" in cfg:
-			self._cfg.update(cfg["gui"])
+		if "gui" in config:
+			self._cfg.update(config["gui"])
 		else:
-			cfg["gui"] = {}
-			cfg.save()
-		del cfg
+			config["gui"] = {}
+			config.save()
 		terrainColors: dict[str, tuple[int, ...]] = {}
 		terrainColors.update(DEFAULT_TERRAIN_COLORS)
 		terrainColors.update(self._cfg.get("terrain_colors", {}))
@@ -894,10 +892,8 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		closing the window immediately.
 		"""
 		logger.debug(f"Closing window {self}")
-		cfg = Config()
-		cfg["gui"].update(self._cfg)
-		cfg.save()
-		del cfg
+		config["gui"].update(self._cfg)
+		config.save()
 		super().on_close()
 
 	def on_draw(self) -> None:
