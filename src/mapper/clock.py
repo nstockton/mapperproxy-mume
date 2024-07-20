@@ -12,7 +12,7 @@ import time
 from typing import Optional, Union
 
 # Local Modules:
-from . import config
+from . import cfg
 from .typedef import REGEX_PATTERN
 
 
@@ -485,14 +485,14 @@ class Clock:
 		The Mume epoch is the real life time (in seconds) when Mume time was last reset.
 		"""
 		if self._epoch is None:
-			self._epoch = int(config.get("mume_epoch", 1517486451))
+			self._epoch = int(cfg.get("mume_epoch", 1517486451))
 		return self._epoch
 
 	@epoch.setter
 	def epoch(self, value: int) -> None:  # pragma: no cover
 		self._epoch = value
-		config["mume_epoch"] = int(value)
-		config.save()
+		cfg["mume_epoch"] = int(value)
+		cfg.save()
 
 	def setTime(self, year: int, month: int, day: int, hour: int, minutes: int) -> None:
 		"""

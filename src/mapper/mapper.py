@@ -23,7 +23,7 @@ from mudproto.mpi import MPIProtocol
 from mudproto.utils import decodeBytes, escapeXMLString
 
 # Local Modules:
-from . import INTERFACES, OUTPUT_FORMATS, config
+from . import INTERFACES, OUTPUT_FORMATS, cfg
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .delays import OneShot
@@ -220,9 +220,9 @@ class Mapper(threading.Thread, World):
 			mapperCommands=[func.encode("us-ascii") for func in self.userCommands],
 			eventCaller=self.queue.put,
 		)
-		self._autoUpdateRooms: bool = config.get("autoUpdateRooms", False)
+		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
 		try:
-			self.mpiHandler.isWordWrapping = config.get("wordwrap", False)
+			self.mpiHandler.isWordWrapping = cfg.get("wordwrap", False)
 		except LookupError:
 			logger.exception("Unable to set initial value of MPI word wrap.")
 		self.proxy.connect()
@@ -257,8 +257,8 @@ class Mapper(threading.Thread, World):
 	@autoUpdateRooms.setter
 	def autoUpdateRooms(self, value: bool) -> None:
 		self._autoUpdateRooms = bool(value)
-		config["autoUpdateRooms"] = self._autoUpdateRooms
-		config.save()
+		cfg["autoUpdateRooms"] = self._autoUpdateRooms
+		cfg.save()
 
 	@property
 	def mpiHandler(self) -> MPIProtocol:
@@ -624,8 +624,8 @@ class Mapper(threading.Thread, World):
 		try:
 			value: bool = not self.mpiHandler.isWordWrapping
 			self.mpiHandler.isWordWrapping = value
-			config["wordwrap"] = value
-			config.save()
+			cfg["wordwrap"] = value
+			cfg.save()
 			self.sendPlayer(f"Word Wrap {'enabled' if value else 'disabled'}.")
 		except LookupError as e:
 			self.sendPlayer(f"Unable to toggle word wrapping: {', '.join(e.args)}.")

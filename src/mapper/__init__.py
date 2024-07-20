@@ -23,7 +23,7 @@ LITERAL_OUTPUT_FORMATS = Literal["normal", "raw", "tintin"]
 OUTPUT_FORMATS: tuple[LITERAL_OUTPUT_FORMATS, ...] = get_args(LITERAL_OUTPUT_FORMATS)
 
 
-config: Config = Config()
+cfg: Config = Config()
 
 
 def levelName(level: Union[str, int, None]) -> str:
@@ -40,13 +40,13 @@ def levelName(level: Union[str, int, None]) -> str:
 	return level
 
 
-loggingLevel: str = levelName(config.get("logging_level"))
-if loggingLevel == logging.getLevelName(0) and config.get("logging_level") not in (
+loggingLevel: str = levelName(cfg.get("logging_level"))
+if loggingLevel == logging.getLevelName(0) and cfg.get("logging_level") not in (
 	logging.getLevelName(0),
 	0,
 ):  # Invalid value in the configuration file.
-	config["logging_level"] = loggingLevel
-	config.save()
+	cfg["logging_level"] = loggingLevel
+	cfg.save()
 
 logFile = logging.FileHandler("debug.log", mode="a", encoding="utf-8")
 logFile.setLevel(loggingLevel)
