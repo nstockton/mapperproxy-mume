@@ -19,9 +19,8 @@ from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.naws import UINT16_MAX, Dimensions, NAWSMixIn
-from mudproto.telnet import TelnetProtocol
+from mudproto.telnet import TelnetProtocol, escapeIAC
 from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
-from mudproto.utils import escapeIAC
 from mudproto.xml import XMLProtocol as _XMLProtocol
 
 # Local Modules:

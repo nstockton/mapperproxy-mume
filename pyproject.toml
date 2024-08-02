@@ -57,7 +57,7 @@
 	certifi = "2023.7.22"
 	fastjsonschema = "2.19.0"
 	knickknacks = {url = "https://github.com/nstockton/knickknacks/releases/download/v0.1.1/knickknacks-0.1.1-py3-none-any.whl"}
-	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.7.0/mud_protocols-0.7.0-py3-none-any.whl"}
+	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.7.1/mud_protocols-0.7.1-py3-none-any.whl"}
 	orjson = "^3.9"
 	pyglet = "^2.0"
 	rapidfuzz = "3.5.2"

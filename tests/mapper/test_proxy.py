@@ -14,7 +14,8 @@ from unittest.mock import Mock, patch
 
 # Third-party Modules:
 from mudproto.mpi import MPI_INIT
-from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, IAC_IAC, LF, SB, SE, WILL
+from mudproto.telnet import IAC_IAC
+from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, LF, SB, SE, WILL
 
 # Mapper Modules:
 from mapper.proxy import Game, Player, ProxyHandler, Telnet
