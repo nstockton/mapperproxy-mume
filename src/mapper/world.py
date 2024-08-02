@@ -20,6 +20,7 @@ from timeit import default_timer as defaultTimer
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 # Third-party Modules:
+from knickknacks.strings import regexFuzzy
 from rapidfuzz import fuzz
 
 # Local Modules:
@@ -44,7 +45,6 @@ from .roomdata.objects import (
 	Room,
 )
 from .typedef import COORDINATES_TYPE, GUI_QUEUE_TYPE, REGEX_MATCH, REGEX_PATTERN
-from .utils import regexFuzzy
 
 
 if TYPE_CHECKING:  # pragma: no cover

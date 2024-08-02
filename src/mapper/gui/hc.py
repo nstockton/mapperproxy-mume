@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING, Any, NamedTuple, Optional, Protocol, Union
 
 # Third-party Modules:
 import pyglet
+from knickknacks.numbers import clamp
 from pyglet import shapes
 from pyglet.window import key
 from speechlight import Speech
@@ -26,7 +27,6 @@ from .vec2d import Vec2d
 from .. import cfg
 from ..roomdata.objects import DIRECTION_COORDINATES, DIRECTIONS, Exit, Room
 from ..typedef import GUI_QUEUE_TYPE
-from ..utils import clamp
 
 
 if TYPE_CHECKING:

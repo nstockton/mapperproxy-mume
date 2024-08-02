@@ -16,9 +16,10 @@ from typing import Any, Union
 # Third-party Modules:
 import fastjsonschema
 import orjson
+from knickknacks.strings import removeSuffix
 
 # Local Modules:
-from ..utils import getDataPath, removeSuffix
+from ..utils import getDataPath
 
 
 LABELS_SCHEMA_VERSION: int = 1  # Increment this when the labels schema changes.

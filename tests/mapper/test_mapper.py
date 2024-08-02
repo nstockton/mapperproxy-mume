@@ -14,10 +14,12 @@ from contextlib import ExitStack
 from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
+# Third-party Modules:
+from knickknacks.strings import removePrefix
+
 # Mapper Modules:
 from mapper.mapper import Mapper
 from mapper.typedef import MAPPER_QUEUE_EVENT_TYPE
-from mapper.utils import removePrefix
 
 
 class TestMapper(TestCase):

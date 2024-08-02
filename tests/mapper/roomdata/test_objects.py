@@ -9,9 +9,11 @@ from __future__ import annotations
 # Built-in Modules:
 from unittest import TestCase
 
+# Third-party Modules:
+from knickknacks.testing import ContainerEmptyMixin
+
 # Mapper Modules:
 from mapper.roomdata.objects import DIRECTIONS, Exit, Room
-from mapper.utils import ContainerEmptyMixin
 
 
 class TestExit(TestCase):

@@ -21,13 +21,13 @@ from typing import Any, Union
 # Third-party Modules:
 import PyInstaller.config
 import speechlight
+from knickknacks.iterables import padList
 from PyInstaller.building.api import COLLECT, EXE, PYZ
 from PyInstaller.building.build_main import Analysis
 from PyInstaller.building.datastruct import TOC
 
 # Mapper Modules:
 from mapper import __version__ as APP_VERSION
-from mapper.utils import padList
 
 
 APP_NAME: str = "Mapper Proxy"

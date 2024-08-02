@@ -19,8 +19,10 @@ from timeit import default_timer
 from typing import Any, Optional, Union, cast
 
 # Third-party Modules:
+from knickknacks.databytes import decodeBytes
+from knickknacks.strings import formatDocString, regexFuzzy, removePrefix, simplified, stripAnsi
+from knickknacks.xml import escapeXMLString, getXMLAttributes
 from mudproto.mpi import MPIProtocol
-from mudproto.utils import decodeBytes, escapeXMLString
 
 # Local Modules:
 from . import INTERFACES, OUTPUT_FORMATS, cfg
@@ -38,7 +40,6 @@ from .typedef import (
 	REGEX_MATCH,
 	REGEX_PATTERN,
 )
-from .utils import formatDocString, getXMLAttributes, regexFuzzy, removePrefix, simplified, stripAnsi
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 

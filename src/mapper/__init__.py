@@ -10,6 +10,9 @@ from __future__ import annotations
 import logging
 from typing import Literal, Union, get_args
 
+# Third-party Modules:
+from knickknacks.platforms import getDirectoryPath
+
 # Local Modules:
 from .config import Config
 
@@ -48,7 +51,7 @@ if loggingLevel == logging.getLevelName(0) and cfg.get("logging_level") not in (
 	cfg["logging_level"] = loggingLevel
 	cfg.save()
 
-logFile = logging.FileHandler("debug.log", mode="a", encoding="utf-8")
+logFile = logging.FileHandler(getDirectoryPath("debug.log"), mode="a", encoding="utf-8")
 logFile.setLevel(loggingLevel)
 formatter = logging.Formatter(
 	'{levelname}: from {name} in {threadName}: "{message}" @ {asctime}.{msecs:0f}',

@@ -17,6 +17,7 @@ from contextlib import ExitStack, closing, suppress
 from typing import Union
 
 # Third-party Modules:
+from knickknacks.platforms import getDirectoryPath, touch
 from tap import Tap
 
 # Local Modules:
@@ -24,7 +25,6 @@ from . import INTERFACES, LITERAL_INTERFACES, LITERAL_OUTPUT_FORMATS, OUTPUT_FOR
 from .mapper import Mapper
 from .sockets.bufferedsocket import BufferedSocket
 from .sockets.fakesocket import FakeSocket, FakeSocketEmpty
-from .utils import getDirectoryPath, touch
 
 
 try:
@@ -34,7 +34,7 @@ except ImportError:
 	pyglet = None
 
 
-LISTENING_STATUS_FILE: str = os.path.join(getDirectoryPath("."), "mapper_ready.ignore")
+LISTENING_STATUS_FILE: str = getDirectoryPath("mapper_ready.ignore")
 
 
 logger: logging.Logger = logging.getLogger(__name__)
