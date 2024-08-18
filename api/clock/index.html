@@ -1219,7 +1219,7 @@
 
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Clock</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Clock</span><span class="p">:</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1231,18 +1231,14 @@
 <span class="sd">		The Mume epoch is the real life time (in seconds) when Mume time was last reset.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mume_epoch&quot;</span><span class="p">,</span> <span class="mi">1517486451</span><span class="p">))</span>
-			<span class="k">del</span> <span class="n">cfg</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span>
 
 	<span class="nd">@epoch</span><span class="o">.</span><span class="n">setter</span>
 	<span class="k">def</span> <span class="nf">epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span> <span class="o">=</span> <span class="n">value</span>
-		<span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 		<span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;mume_epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 		<span class="n">cfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-		<span class="k">del</span> <span class="n">cfg</span>
 
 	<span class="k">def</span> <span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1503,7 +1499,7 @@ Otherwise, output the full information.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MumeTime</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MumeTime</span><span class="p">:</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_day</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hour</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minutes</span> <span class="o">=</span> <span class="n">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
 

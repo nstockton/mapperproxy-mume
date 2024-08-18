@@ -1284,13 +1284,11 @@
 			<span class="n">mapperCommands</span><span class="o">=</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;us-ascii&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userCommands</span><span class="p">],</span>
 			<span class="n">eventCaller</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">,</span>
 		<span class="p">)</span>
-		<span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_autoUpdateRooms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;autoUpdateRooms&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 		<span class="k">try</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">mpiHandler</span><span class="o">.</span><span class="n">isWordWrapping</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wordwrap&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 		<span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Unable to set initial value of MPI word wrap.&quot;</span><span class="p">)</span>
-		<span class="k">del</span> <span class="n">cfg</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
 		<span class="n">World</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">emulationRoom</span><span class="p">:</span> <span class="n">Room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentRoom</span>
@@ -1323,10 +1321,8 @@
 	<span class="nd">@autoUpdateRooms</span><span class="o">.</span><span class="n">setter</span>
 	<span class="k">def</span> <span class="nf">autoUpdateRooms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_autoUpdateRooms</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-		<span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 		<span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;autoUpdateRooms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autoUpdateRooms</span>
 		<span class="n">cfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-		<span class="k">del</span> <span class="n">cfg</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">mpiHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MPIProtocol</span><span class="p">:</span>
@@ -1692,10 +1688,8 @@
 		<span class="k">try</span><span class="p">:</span>
 			<span class="n">value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpiHandler</span><span class="o">.</span><span class="n">isWordWrapping</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">mpiHandler</span><span class="o">.</span><span class="n">isWordWrapping</span> <span class="o">=</span> <span class="n">value</span>
-			<span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 			<span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;wordwrap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 			<span class="n">cfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-			<span class="k">del</span> <span class="n">cfg</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Word Wrap </span><span class="si">{</span><span class="s1">&#39;enabled&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;disabled&#39;</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 		<span class="k">except</span> <span class="ne">LookupError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sendPlayer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to toggle word wrapping: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -2021,6 +2015,16 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">gmcpCharVitals</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newValues</span><span class="p">)</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoMapping</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">updateRoomFlags</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">mud_event_gmcp_event_darkness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="k">if</span> <span class="s2">&quot;what&quot;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;what&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+			<span class="k">pass</span>  <span class="c1"># Do something.</span>
+
+	<span class="k">def</span> <span class="nf">mud_event_gmcp_event_sun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="k">if</span> <span class="s2">&quot;what&quot;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;what&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+			<span class="k">pass</span>  <span class="c1"># Do something.</span>
 
 	<span class="k">def</span> <span class="nf">mud_event_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">playerTelnetHandler</span><span class="o">.</span><span class="n">mpmEventSend</span><span class="p">({</span><span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">})</span>
@@ -3410,6 +3414,8 @@ exception.</p>
     </div>
 
   </div>
+
+
 
 
 
