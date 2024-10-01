@@ -21,7 +21,8 @@ MINUTES: int = 1
 DELTA: int = 2767801
 TIME_OUTPUT: str = (
 	"Game time 2:01 am: Dawn: 6 am, Dusk: 8 pm.\n"
-	+ "It is currently NIGHT, on Friday, May 3 (Forelithe / Norui), (Late-Spring), year 2855 of the third age.\n"
+	+ "It is currently NIGHT, on Friday, May 3 (Forelithe / Norui), "
+	+ "(Late-Spring), year 2855 of the third age.\n"
 	+ "Time left until DAY is less than 5 ticks\n"
 	+ "Spring ends in 28 mume days or 11 real-life hours.\n"
 	+ "Next winter starts in 3 real-life days and 11 hours.\n"

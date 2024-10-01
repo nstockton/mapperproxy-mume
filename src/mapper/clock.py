@@ -310,7 +310,9 @@ class MumeTime:
 
 	@property
 	def dawnDuskState(self) -> tuple[str, str, int]:
-		"""A tuple containing the current state name, the next state name, and the game hours until next state."""
+		"""
+		A tuple containing the current state name, the next state name, and the game hours until next state.
+		"""
 		if self.hour < self.dawn:
 			state = "NIGHT"
 			nextState = "DAY"
@@ -399,10 +401,12 @@ class MumeTime:
 		state, nextState, untilNextState = self.dawnDuskState
 		output.append(
 			f"It is currently {state}, on {self.weekday}, {self.monthName} {self.day} "
-			+ f"({self.monthWestron} / {self.monthSindarin}), ({self.season}), year {self.year} of the third age."
+			+ f"({self.monthWestron} / {self.monthSindarin}), ({self.season}), "
+			+ f"year {self.year} of the third age."
 		)
 		output.append(
-			f"Time left until {nextState} is less than {untilNextState} tick{'s' if untilNextState != 1 else '!'}"
+			f"Time left until {nextState} is "
+			+ f"less than {untilNextState} tick{'s' if untilNextState != 1 else '!'}"
 		)
 		output.append(
 			f"{self.season[-6:]} ends in "

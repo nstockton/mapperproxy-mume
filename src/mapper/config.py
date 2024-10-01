@@ -59,9 +59,9 @@ class Config(MutableMapping[str, Any]):
 				with open(filename, "r", encoding="utf-8") as fileObj:
 					return dict(json.load(fileObj))
 			except IOError as e:  # pragma: no cover
-				raise ConfigError(f"{e.strerror}: '{e.filename}'")
+				raise ConfigError(f"{e.strerror}: '{e.filename}'") from None
 			except ValueError:
-				raise ConfigError(f"Corrupted json file: {filename}")
+				raise ConfigError(f"Corrupted json file: {filename}") from None
 
 	def reload(self) -> None:
 		"""Reloads the configuration from disc."""

@@ -31,7 +31,8 @@ class Handler(ABC):
 		elif not hasattr(self, "event"):
 			raise ValueError(
 				"Tried to initialise handler without an event type."
-				+ " Either pass event=MyEventType when initialising, or declare self.event in the class definition."
+				+ " Either pass event=MyEventType when initialising, "
+				+ "or declare self.event in the class definition."
 			)
 		self.mapper.registerMudEventHandler(self.event, self.handle)
 

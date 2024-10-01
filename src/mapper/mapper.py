@@ -1182,10 +1182,12 @@ class Mapper(threading.Thread, World):
 			logger.debug(f"received data with an unknown event type of {event}")
 
 	def registerMudEventHandler(self, event: str, handler: MUD_EVENT_HANDLER_TYPE) -> None:
-		"""Registers a method to handle mud events of a given type.
-		Params: event, handler
-		where event is the name of the event type, typically corresponding to the XML tag of the incoming data,
-		and handler is a method that takes a single argument, text, which is the text received from the mud.
+		"""
+		Registers a method to handle mud events of a given type.
+
+		Args:
+			event: The name of the event type, typically corresponding to the XML tag of the incoming data.
+			handler: A method that takes a single argument, text, which is the text received from the mud.
 		"""
 		if event not in self.mudEventHandlers:
 			self.mudEventHandlers[event] = set()

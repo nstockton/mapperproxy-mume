@@ -526,7 +526,7 @@ class World:
 		results: list[Room] = []
 		if not kwargs:
 			return results
-		for vnum, roomObj in self.rooms.items():
+		for _vnum, roomObj in self.rooms.items():
 			keysMatched = 0
 			for key, value in kwargs.items():
 				if key in observeExactMatch:
@@ -538,7 +538,7 @@ class World:
 				elif key in ("mobFlags", "loadFlags") and getattr(roomObj, key, set()).intersection(value):
 					keysMatched += 1
 				else:
-					for direction, exitObj in roomObj.exits.items():
+					for _direction, exitObj in roomObj.exits.items():
 						if key in ("exitFlags", "doorFlags") and getattr(exitObj, key, set()).intersection(
 							value
 						):
@@ -908,7 +908,8 @@ class World:
 				return f"Exit {direction} does not exist."
 			elif not matchDict["mode"]:
 				return (
-					f"Exit flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
+					f"Exit flags '{direction}' set to "
+					+ f"'{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
 				)
 			elif "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
@@ -941,7 +942,8 @@ class World:
 				return f"Exit {direction} does not exist."
 			elif not matchDict["mode"]:
 				return (
-					f"Door flags '{direction}' set to '{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
+					f"Door flags '{direction}' set to "
+					+ f"'{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
 				)
 			elif "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
@@ -1027,24 +1029,23 @@ class World:
 							reversedDirection, self.currentRoom.vnum
 						)
 						self.GUIRefresh()
+						name = self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
 						return (
-							f"Linking direction {direction} to {matchDict['vnum']} "
-							+ f"with name '{self.rooms[matchDict['vnum']].name if matchDict['vnum'] in self.rooms else ''}'.\n"
+							f"Linking direction {direction} to {matchDict['vnum']} with name '{name}'.\n"
 							+ f"Linked exit {reversedDirection} in second room with this room."
 						)
 					else:
 						self.GUIRefresh()
+						name = self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
 						return (
-							f"Linking direction {direction} to {matchDict['vnum']} "
-							+ f"with name '{self.rooms[matchDict['vnum']].name if matchDict['vnum'] in self.rooms else ''}'.\n"
-							+ f"Unable to link exit {reversedDirection} in second room with this room: exit already defined."
+							f"Linking direction {direction} to {matchDict['vnum']} with name '{name}'.\n"
+							+ f"Unable to link exit {reversedDirection} in second room with this room: "
+							+ "exit already defined."
 						)
 				else:
 					self.GUIRefresh()
-					return (
-						f"Linking direction {direction} one way to {matchDict['vnum']} "
-						+ f"with name '{self.rooms[matchDict['vnum']].name if matchDict['vnum'] in self.rooms else ''}'."
-					)
+					name = self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
+					return f"Linking direction {direction} one way to {matchDict['vnum']} with name '{name}'."
 			elif direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
 			elif not matchDict["mode"]:
@@ -1054,7 +1055,8 @@ class World:
 				else:
 					toName = ""
 				return (
-					f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' with name '{toName}'."
+					f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' "
+					+ f"with name '{toName}'."
 				)
 			elif "remove".startswith(matchDict["mode"]):
 				del self.currentRoom.exits[direction]
@@ -1077,7 +1079,8 @@ class World:
 		if match is None:
 			self.output(
 				"Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. "
-				+ "Leave it blank to use the current room's vnum. Use '_label info all' to get a list of all labels."
+				+ "Leave it blank to use the current room's vnum. "
+				+ "Use '_label info all' to get a list of all labels."
 			)
 			return None
 		matchDict: dict[str, str] = match.groupdict()
@@ -1299,10 +1302,7 @@ class World:
 			):
 				results.append("lead")
 			if "door" in currentRoomObj.exits[direction].exitFlags:
-				results.append(
-					f"open {currentRoomObj.exits[direction].door if currentRoomObj.exits[direction].door else 'exit'} "
-					+ f"{direction}"
-				)
+				results.append(f"open {currentRoomObj.exits[direction].door or 'exit'} {direction}")
 		return results
 
 	def getRoomFromLabel(self, text: str) -> Union[Room, None]:
@@ -1321,7 +1321,9 @@ class World:
 				return self.rooms[vnum]
 			self.output(f"{text} is set to vnum {vnum}, but there is no room with that vnum")
 		else:  # The text is *not* an existing label.
-			similarLabels: list[str] = sorted(self.labels, key=lambda l: fuzz.ratio(l, text), reverse=True)
+			similarLabels: list[str] = sorted(
+				self.labels, key=lambda label: fuzz.ratio(label, text), reverse=True
+			)
 			self.output(f"Unknown label. Did you mean {', '.join(similarLabels[0:4])}?")
 		return None
 

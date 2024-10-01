@@ -43,7 +43,10 @@ class TestDatabase(TestCase):
 			"0": {
 				"align": "undefined",
 				"avoid": False,
-				"desc": "This dim tunnel is unfinished and unadorned, the walls still scarred by the picks of Dwarven",
+				"desc": (
+					"This dim tunnel is unfinished and unadorned, "
+					+ "the walls still scarred by the picks of Dwarven"
+				),
 				"dynamicDesc": "Vig the Dwarven smelter stands here, overseeing his store.\n",
 				"exits": {
 					"east": {

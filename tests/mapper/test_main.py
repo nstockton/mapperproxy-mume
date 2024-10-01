@@ -97,8 +97,9 @@ class TestGameThread(TestCase):
 				data = outputToPlayer.get(timeout=1)
 				self.assertEqual(data, item)
 		except Empty:
-			raise AssertionError("initial telnet negotiations were not passed to the client")
-		# test when the server sends its initial negotiations, the server thread outputs its initial configuration
+			raise AssertionError("initial telnet negotiations were not passed to the client") from None
+		# test when the server sends its initial
+		# negotiations, the server thread outputs its initial configuration
 		try:
 			while initialConfiguration:
 				data = inputToMume.get(timeout=1)
@@ -109,7 +110,7 @@ class TestGameThread(TestCase):
 				"The server thread did not output the expected number of configuration parameters."
 				+ f"The yet-to-be-seen configurations are: {initialConfiguration!r}"
 			)
-			raise AssertionError(errorMessage)
+			raise AssertionError(errorMessage) from None
 		# test nothing extra has been sent yet
 		if not inputToMume.empty():
 			remainingOutput: bytes = inputToMume.get()
@@ -124,7 +125,9 @@ class TestGameThread(TestCase):
 			data = outputToPlayer.get(timeout=1)
 			self.assertEqual(data, WELCOME_MESSAGE)
 		except Empty:
-			raise AssertionError("The welcome message was not passed through to the client within 1 second.")
+			raise AssertionError(
+				"The welcome message was not passed through to the client within 1 second."
+			) from None
 		# test further telnet negotiations are passed to the client with the exception of charset negotiations
 		try:
 			charsetNegotiation: bytes = IAC + DO + CHARSET + IAC + SB + TTYPE + TTYPE_SEND + IAC + SE
@@ -135,7 +138,7 @@ class TestGameThread(TestCase):
 			outputFromMume.put(charsetResponseFromMume)
 			self.assertTrue(outputToPlayer.empty())
 		except Empty:
-			raise AssertionError("Further telnet negotiations were not passed to the client")
+			raise AssertionError("Further telnet negotiations were not passed to the client") from None
 		# when mume outputs further text, test it is passed to the user
 		try:
 			usernamePrompt: bytes = b"By what name do you wish to be known? "
@@ -143,7 +146,7 @@ class TestGameThread(TestCase):
 			data = outputToPlayer.get(timeout=1)
 			self.assertEqual(data, usernamePrompt)
 		except Empty:
-			raise AssertionError("Further text was not passed to the user")
+			raise AssertionError("Further text was not passed to the user") from None
 		# when mume outputs an empty string, test server thread closes within a second
 		outputFromMume.put(b"")
 		gameThread.join(1)
@@ -210,7 +213,7 @@ class TestGameThreadThroughput(TestCase):
 		except Empty:
 			raise AssertionError(
 				f"{inputDescription} data was not received by the player socket within 1 second."
-			)
+			) from None
 		actualData: _CallList = self.mapperThread.queue.put.mock_calls
 		i: int = 0
 		while len(actualData) > i < len(expectedData):
@@ -238,7 +241,8 @@ class TestGameThreadThroughput(TestCase):
 	def testProcessingEnteringRoom(self) -> None:
 		# fmt: off
 		threadInput: bytes = (
-			b'<movement dir=down/><room area="the Grey Havens" terrain="city"><name>Seagull Inn</name>' + CR_LF
+			b'<movement dir=down/><room area="the Grey Havens" terrain="city"><name>Seagull Inn</name>'
+			+ CR_LF
 			+ b"<gratuitous><description>"
 			+ b"This is the most famous meeting-place in Harlond where people of all sorts" + CR_LF
 			+ b"exchange news, rumours, deals and friendships. Sailors from the entire coast of" + CR_LF

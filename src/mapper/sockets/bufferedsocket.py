@@ -91,7 +91,8 @@ class BufferedSocket(socketutils.BufferedSocket):
 		Performs an SSL handshake.
 
 		Note:
-			The [`SSLSocket.do_handshake`][1] method is non-blocking and must be retried until it returns successfully.
+			The [`SSLSocket.do_handshake`][1] method
+			is non-blocking and must be retried until it returns successfully.
 			See [here][2] for further explanation.
 			[1]: <https://docs.python.org/library/ssl.html#ssl.SSLSocket.do_handshake>
 			[2]: <https://docs.python.org/library/ssl.html#ssl-nonblocking>

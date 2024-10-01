@@ -25,7 +25,7 @@ class TestExit(TestCase):
 
 	def testExitDirection(self) -> None:
 		with self.assertRaises(ValueError, msg="direction undefined"):
-			self.exit.direction
+			_ = self.exit.direction
 		with self.assertRaises(ValueError, msg="invalid direction"):
 			self.exit.direction = "junk"
 		self.exit.direction = "north"

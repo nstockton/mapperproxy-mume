@@ -99,31 +99,25 @@ logger.setLevel("DEBUG")
 
 
 class GroupType(Protocol):
-	def __init__(self, order: int = 0, parent: Optional[GroupType] = None) -> None:
-		...
+	def __init__(self, order: int = 0, parent: Optional[GroupType] = None) -> None: ...
 
 
 class BatchType(Protocol):
-	def draw(self) -> None:
-		...
+	def draw(self) -> None: ...
 
 
 class SpriteType(Protocol):
 	@property
-	def x(self) -> int:
-		...
+	def x(self) -> int: ...
 
 	@x.setter
-	def x(self, value: int) -> None:
-		...
+	def x(self, value: int) -> None: ...
 
 	@property
-	def y(self) -> int:
-		...
+	def y(self) -> int: ...
 
 	@y.setter
-	def y(self, value: int) -> None:
-		...
+	def y(self, value: int) -> None: ...
 
 
 class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
@@ -217,13 +211,13 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		self.centerRoom = centerRoom
 		# draw the rooms, beginning by the central one
 		self.draw_room(self.mcol, self.mrow, centerRoom)
-		vnum: str
+		_vnum: str
 		room: Room
 		x: int
 		y: int
 		z: int
 		with self.world.roomsLock:
-			for vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=centerRoom, radius=self.radius):
+			for _vnum, room, x, y, z in self.world.getNeighborsFromRoom(start=centerRoom, radius=self.radius):
 				if z == 0:
 					self.draw_room(self.mcol + x, self.mrow + y, room)
 		self.draw_player()
