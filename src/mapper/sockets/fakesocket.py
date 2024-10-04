@@ -15,7 +15,7 @@ from typing import Any, Union
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class FakeSocketEmpty(Exception):
+class FakeSocketEmptyError(Exception):
 	pass
 
 
@@ -66,4 +66,4 @@ class FakeSocket:
 			inboundBuffer: bytes = self.inboundBuffer
 			self.inboundBuffer = None
 			return inboundBuffer
-		raise FakeSocketEmpty()
+		raise FakeSocketEmptyError

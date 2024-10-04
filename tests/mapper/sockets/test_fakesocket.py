@@ -11,7 +11,7 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 
 # Mapper Modules:
-from mapper.sockets.fakesocket import FakeSocket, FakeSocketEmpty
+from mapper.sockets.fakesocket import FakeSocket, FakeSocketEmptyError
 
 
 class TestFakeSocket(TestCase):
@@ -52,7 +52,7 @@ class TestFakeSocket(TestCase):
 		self.assertEqual(self.fakeSocket.recv(4096), b"hello")
 		mockTime.sleep.assert_called_once_with(0.005)
 		mockTime.reset_mock()
-		with self.assertRaises(FakeSocketEmpty):
+		with self.assertRaises(FakeSocketEmptyError):
 			self.fakeSocket.inboundBuffer = None
 			self.fakeSocket.recv(4096)
 		mockTime.sleep.assert_called_once_with(0.005)

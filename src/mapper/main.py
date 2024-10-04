@@ -24,7 +24,7 @@ from tap import Tap
 from . import INTERFACES, LITERAL_INTERFACES, LITERAL_OUTPUT_FORMATS, OUTPUT_FORMATS, __version__
 from .mapper import Mapper
 from .sockets.bufferedsocket import BufferedSocket
-from .sockets.fakesocket import FakeSocket, FakeSocketEmpty
+from .sockets.fakesocket import FakeSocket, FakeSocketEmptyError
 
 
 try:
@@ -89,7 +89,7 @@ class Game(threading.Thread):
 					self.mapper.proxy.game.parse(data)
 				else:
 					self.close()
-			except FakeSocketEmpty:
+			except FakeSocketEmptyError:
 				continue
 			except EnvironmentError:
 				self.close()
