@@ -124,6 +124,7 @@
 		"E501",  # Line too long.
 		"N818",  # Exception name should be named with an Error suffix.
 		"RET",  # Flake8-return.
+		"RSE",  # Flake8-raise.
 		"W",  # Pycodestyle warnings.
 	]
 	ignore = [
