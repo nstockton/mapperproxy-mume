@@ -523,7 +523,7 @@ class World:
 		results: list[Room] = []
 		if not kwargs:
 			return results
-		for _vnum, roomObj in self.rooms.items():
+		for roomObj in self.rooms.values():
 			keysMatched = 0
 			for key, value in kwargs.items():
 				if key in observeExactMatch:
@@ -538,7 +538,7 @@ class World:
 				):
 					keysMatched += 1
 				else:
-					for _direction, exitObj in roomObj.exits.items():
+					for exitObj in roomObj.exits.values():
 						if (
 							key in ("exitFlags", "doorFlags")
 							and getattr(exitObj, key, set()).intersection(value)
@@ -1324,7 +1324,7 @@ class World:
 		unexplored.add(start)
 		while unexplored:
 			vnum = unexplored.pop()
-			for _, exitObj in self.rooms[vnum].exits.items():
+			for exitObj in self.rooms[vnum].exits.values():
 				if exitObj.to not in explored and exitObj.to not in borders and exitObj.to.isdigit():
 					unexplored.add(exitObj.to)
 			explored.add(vnum)

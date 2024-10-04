@@ -60,9 +60,9 @@ class Player(threading.Thread):
 					self.mapper.proxy.player.parse(data)
 				else:
 					self.close()
-			except socket.timeout:
+			except socket.timeout:  # NOQA: PERF203
 				continue
-			except EnvironmentError:
+			except EnvironmentError:  # NOQA: PERF203
 				self.close()
 				continue
 		if self.mapper.isEmulatingOffline:
@@ -89,9 +89,9 @@ class Game(threading.Thread):
 					self.mapper.proxy.game.parse(data)
 				else:
 					self.close()
-			except FakeSocketEmptyError:
+			except FakeSocketEmptyError:  # NOQA: PERF203
 				continue
-			except EnvironmentError:
+			except EnvironmentError:  # NOQA: PERF203
 				self.close()
 				continue
 		if self.mapper.interface != "text":

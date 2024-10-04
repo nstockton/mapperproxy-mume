@@ -1211,7 +1211,7 @@ class Mapper(threading.Thread, World):
 					self.handleUserInput(text)
 				else:
 					self.handleMudEvent(event, text)
-			except Exception:
+			except Exception:  # NOQA: PERF203
 				self.output(f"Error in mapper thread:\n{traceback.format_exc().strip()}")
 				logger.exception("Error in mapper thread")
 		self.sendPlayer("Exiting mapper thread.")

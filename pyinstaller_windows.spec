@@ -330,7 +330,7 @@ hashes: dict[str, hashlib._Hash] = {
 block_size: int = 2**16
 with open(ZIP_FILE, "rb") as zf:
 	for block in iter(lambda: zf.read(block_size), b""):
-		for _, hash in hashes.items():
+		for hash in hashes.values():
 			hash.update(block)
 for hashtype, hash in hashes.items():
 	with open(f"{ZIP_FILE}.{hashtype}", "w", encoding="utf-8") as f:
