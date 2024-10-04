@@ -17,7 +17,7 @@ from mapper.roomdata.objects import DIRECTIONS, Exit, Room
 from mapper.typedef import REGEX_MATCH
 
 
-class test_exitRegex(TestCase):
+class TestExitRegex(TestCase):
 	def test_exitsCommandRegex_matches_allExitsThatAreNeitherOpenNorBrokenDoors(self) -> None:
 		exits: tuple[str, ...] = (
 			"[North]  - A closed 'stabledoor'",

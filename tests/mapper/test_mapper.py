@@ -111,7 +111,7 @@ class TestMapper(TestCase):
 				self.mapper.handleUserInput(command)
 
 
-class TestMapper_handleMudEvent(TestCase):
+class TestMapperHandleMudEvent(TestCase):
 	@patch.object(Mapper, "loadRooms", Mock())  # Speedup test execution.
 	def setUp(self) -> None:
 		logging.disable(logging.CRITICAL)
