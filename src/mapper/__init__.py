@@ -34,11 +34,10 @@ def levelName(level: Union[str, int, None]) -> str:
 	if isinstance(level, int):
 		if level < 0 or level > 50:
 			return str(logging.getLevelName(0))
-		elif level <= 5:
+		if level <= 5:
 			return str(logging.getLevelName(level * 10))
-		else:
-			return str(logging.getLevelName(level - level % 10))
-	elif level is None or not isinstance(logging.getLevelName(level), int):
+		return str(logging.getLevelName(level - level % 10))
+	if level is None or not isinstance(logging.getLevelName(level), int):
 		return str(logging.getLevelName(0))
 	return level
 

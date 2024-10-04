@@ -87,7 +87,7 @@ def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[st
 	"""
 	if not os.path.exists(databasePath):
 		return f"Error: '{databasePath}' doesn't exist.", None, 0
-	elif os.path.isdir(databasePath):
+	if os.path.isdir(databasePath):
 		return f"Error: '{databasePath}' is a directory, not a file.", None, 0
 	try:
 		with open(databasePath, "rb") as fileObj:
@@ -120,7 +120,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		data: bytes = orjson.dumps(database, option=options)
 	except orjson.JSONEncodeError as e:
 		logger.exception(f"Error: Cannot encode to '{databasePath}'. {e}")
-		return None
+		return
 	try:
 		with open(databasePath, "wb") as fileObj:
 			fileObj.write(data)
@@ -150,8 +150,7 @@ def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int
 			labels.update(result if schemaVersion < 1 else result["labels"])
 	if labels:
 		return None, labels, schemaVersion
-	else:
-		return "\n".join(errorMessages), None, 0
+	return "\n".join(errorMessages), None, 0
 
 
 def dumpLabels(labels: Mapping[str, str]) -> None:

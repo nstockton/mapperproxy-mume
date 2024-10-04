@@ -250,16 +250,16 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			if flag in ("aggressive_mob", "rent", "quest_mob"):
 				self.draw_tile(x, y, 2, flag)
 				break
-			elif re.search("shop", flag) is not None:
+			if re.search("shop", flag) is not None:
 				self.draw_tile(x, y, 2, "shop")
 				break
-			elif re.search("guild", flag) is not None:
+			if re.search("guild", flag) is not None:
 				self.draw_tile(x, y, 2, "guild")
 				break
 
 	def draw_player(self) -> None:
 		if self.playerRoom is None or self.centerRoom is None:
-			return None
+			return
 		logger.debug(f"Drawing player on room vnum {self.playerRoom.vnum}")
 		# transform map coordinates to window ones
 		x: int = self.playerRoom.x - self.centerRoom.x + self.mcol
@@ -290,7 +290,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		try:
 			room: Room = self.visibleRooms[x, y]
 		except KeyError:
-			return None
+			return
 		# Action depends on which button the player clicked
 		if buttons == pyglet.window.mouse.LEFT:
 			# center the map on the selected room

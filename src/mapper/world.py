@@ -180,7 +180,7 @@ class World:
 				# This should never happen, but safe to ignore if it does.
 				# Todo: add a warning to alert the user here.
 				continue
-			elif roomDict["terrain"].startswith("death"):  # handles "death" and "deathtrap".
+			if roomDict["terrain"].startswith("death"):  # handles "death" and "deathtrap".
 				# This should never happen, but safe to ignore if it does.
 				# Todo: add a warning to alert the user here.
 				continue
@@ -261,7 +261,7 @@ class World:
 		if db is None:
 			if errors is not None:
 				self.output(errors)
-			return None
+			return
 		schemaVersionOutput: str = "latest" if schemaVersion == MAP_SCHEMA_VERSION else f"V{schemaVersion}"
 		self.output(f"Creating room objects with {schemaVersionOutput} schema.")
 		with self.roomsLock:
@@ -327,7 +327,7 @@ class World:
 		if labels is None:
 			if errors is not None:
 				self.output(errors)
-			return None
+			return
 		self.labels.update(labels)
 		schemaVersionOutput: str = "latest" if schemaVersion == LABELS_SCHEMA_VERSION else f"V{schemaVersion}"
 		self.output(f"Loaded room labels with {schemaVersionOutput} schema.")
@@ -372,8 +372,7 @@ class World:
 		revdir: str = REVERSE_DIRECTIONS[exitObj.direction]
 		if revdir in dest.exits and dest.exits[revdir].to == exitObj.vnum:
 			return True
-		else:
-			return False
+		return False
 
 	def getNeighborsFromCoordinates(
 		self, start: Sequence[int], radius: Sequence[int]
@@ -433,11 +432,11 @@ class World:
 		match: REGEX_MATCH = re.match(r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text)
 		if match is None:
 			self.output("Syntax: 'revnum [Origin VNum] [Destination VNum]'.")
-			return None
+			return
 		matchDict: dict[str, str] = match.groupdict()
 		if not matchDict["destination"]:
 			self.output("Error: you need to supply a destination VNum.")
-			return None
+			return
 		destination = matchDict["destination"]
 		if not matchDict["origin"]:
 			origin = self.currentRoom.vnum
@@ -702,7 +701,7 @@ class World:
 				return "Error: '-r' requires no extra arguments. Change aborted."
 			self.currentRoom.note = ""
 			return "Note removed."
-		elif text.lower().startswith("-a"):
+		if text.lower().startswith("-a"):
 			if len(text) == 2:
 				return "Error: '-a' requires text to be appended. Change aborted."
 			self.currentRoom.note = f"{self.currentRoom.note.strip()} {text[2:].strip()}"
@@ -728,7 +727,7 @@ class World:
 				f"Room light set to '{self.currentRoom.light}'. "
 				+ f"Use 'rlight [{' | '.join(set(LIGHT_SYMBOLS.values()))}]' to change it."
 			)
-		elif text not in LIGHT_SYMBOLS and text.lower() not in LIGHT_SYMBOLS.values():
+		if text not in LIGHT_SYMBOLS and text.lower() not in LIGHT_SYMBOLS.values():
 			return (
 				f"Invalid value for room light ({text}). "
 				+ f"Valid values are [{' | '.join(set(LIGHT_SYMBOLS.values()))}]."
@@ -796,7 +795,7 @@ class World:
 				f"Room terrain set to '{self.currentRoom.terrain}'. "
 				+ f"Use 'rterrain [{' | '.join(sorted(TERRAIN_SYMBOLS.values()))}]' to change it."
 			)
-		elif text not in TERRAIN_SYMBOLS and text.lower() not in TERRAIN_SYMBOLS.values():
+		if text not in TERRAIN_SYMBOLS and text.lower() not in TERRAIN_SYMBOLS.values():
 			return (
 				f"Invalid value for room terrain ({text}). "
 				+ f"Valid values are [{' | '.join(sorted(TERRAIN_SYMBOLS.values()))}]."
@@ -855,14 +854,12 @@ class World:
 				if matchDict["flag"] in self.currentRoom.mobFlags:
 					self.currentRoom.mobFlags.remove(matchDict["flag"])
 					return f"Mob flag '{matchDict['flag']}' removed."
-				else:
-					return f"Mob flag '{matchDict['flag']}' not set."
-			elif "add".startswith(matchDict["mode"]):
+				return f"Mob flag '{matchDict['flag']}' not set."
+			if "add".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.mobFlags:
 					return f"Mob flag '{matchDict['flag']}' already set."
-				else:
-					self.currentRoom.mobFlags.add(matchDict["flag"])
-					return f"Mob flag '{matchDict['flag']}' added."
+				self.currentRoom.mobFlags.add(matchDict["flag"])
+				return f"Mob flag '{matchDict['flag']}' added."
 		return (
 			f"Mob flags set to '{', '.join(self.currentRoom.mobFlags)}'. "
 			+ f"Use 'rmobflags [add | remove] [{' | '.join(VALID_MOB_FLAGS)}]' to change them."
@@ -881,14 +878,12 @@ class World:
 				if matchDict["flag"] in self.currentRoom.loadFlags:
 					self.currentRoom.loadFlags.remove(matchDict["flag"])
 					return f"Load flag '{matchDict['flag']}' removed."
-				else:
-					return f"Load flag '{matchDict['flag']}' not set."
-			elif "add".startswith(matchDict["mode"]):
+				return f"Load flag '{matchDict['flag']}' not set."
+			if "add".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.loadFlags:
 					return f"Load flag '{matchDict['flag']}' already set."
-				else:
-					self.currentRoom.loadFlags.add(matchDict["flag"])
-					return f"Load flag '{matchDict['flag']}' added."
+				self.currentRoom.loadFlags.add(matchDict["flag"])
+				return f"Load flag '{matchDict['flag']}' added."
 		return (
 			f"Load flags set to '{', '.join(self.currentRoom.loadFlags)}'. "
 			+ f"Use 'rloadflags [add | remove] [{' | '.join(VALID_LOAD_FLAGS)}]' to change them."
@@ -906,23 +901,21 @@ class World:
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
-			elif not matchDict["mode"]:
+			if not matchDict["mode"]:
 				return (
 					f"Exit flags '{direction}' set to "
 					+ f"'{', '.join(self.currentRoom.exits[direction].exitFlags)}'."
 				)
-			elif "remove".startswith(matchDict["mode"]):
+			if "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 					self.currentRoom.exits[direction].exitFlags.remove(matchDict["flag"])
 					return f"Exit flag '{matchDict['flag']}' in direction '{direction}' removed."
-				else:
-					return f"Exit flag '{matchDict['flag']}' in direction '{direction}' not set."
-			elif "add".startswith(matchDict["mode"]):
+				return f"Exit flag '{matchDict['flag']}' in direction '{direction}' not set."
+			if "add".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].exitFlags:
 					return f"Exit flag '{matchDict['flag']}' in direction '{direction}' already set."
-				else:
-					self.currentRoom.exits[direction].exitFlags.add(matchDict["flag"])
-					return f"Exit flag '{matchDict['flag']}' in direction '{direction}' added."
+				self.currentRoom.exits[direction].exitFlags.add(matchDict["flag"])
+				return f"Exit flag '{matchDict['flag']}' in direction '{direction}' added."
 		return (
 			f"Syntax: 'exitflags [add | remove] [{' | '.join(VALID_EXIT_FLAGS)}] "
 			+ f"[{' | '.join(DIRECTIONS)}]'."
@@ -940,23 +933,21 @@ class World:
 			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
-			elif not matchDict["mode"]:
+			if not matchDict["mode"]:
 				return (
 					f"Door flags '{direction}' set to "
 					+ f"'{', '.join(self.currentRoom.exits[direction].doorFlags)}'."
 				)
-			elif "remove".startswith(matchDict["mode"]):
+			if "remove".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 					self.currentRoom.exits[direction].doorFlags.remove(matchDict["flag"])
 					return f"Door flag '{matchDict['flag']}' in direction '{direction}' removed."
-				else:
-					return f"Door flag '{matchDict['flag']}' in direction '{direction}' not set."
-			elif "add".startswith(matchDict["mode"]):
+				return f"Door flag '{matchDict['flag']}' in direction '{direction}' not set."
+			if "add".startswith(matchDict["mode"]):
 				if matchDict["flag"] in self.currentRoom.exits[direction].doorFlags:
 					return f"Door flag '{matchDict['flag']}' in direction '{direction}' already set."
-				else:
-					self.currentRoom.exits[direction].doorFlags.add(matchDict["flag"])
-					return f"Door flag '{matchDict['flag']}' in direction '{direction}' added."
+				self.currentRoom.exits[direction].doorFlags.add(matchDict["flag"])
+				return f"Door flag '{matchDict['flag']}' in direction '{direction}' added."
 		return (
 			f"Syntax: 'doorflags [add | remove] [{' | '.join(VALID_DOOR_FLAGS)}] "
 			+ f"[{' | '.join(DIRECTIONS)}]'."
@@ -975,20 +966,20 @@ class World:
 			if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 				if not matchDict["name"]:
 					return "Error: 'add' expects a name for the secret."
-				elif direction not in self.currentRoom.exits:
+				if direction not in self.currentRoom.exits:
 					self.currentRoom.exits[direction] = self.getNewExit(direction)
 				self.currentRoom.exits[direction].exitFlags.add("door")
 				self.currentRoom.exits[direction].doorFlags.add("hidden")
 				self.currentRoom.exits[direction].door = matchDict["name"]
 				self.GUIRefresh()
 				return f"Adding secret '{matchDict['name']}' to direction '{direction}'."
-			elif direction not in self.currentRoom.exits:
+			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
-			elif not self.currentRoom.exits[direction].door:
+			if not self.currentRoom.exits[direction].door:
 				return f"No secret {direction} of here."
-			elif not matchDict["mode"]:
+			if not matchDict["mode"]:
 				return f"Exit '{direction}' has secret '{self.currentRoom.exits[direction].door}'."
-			elif "remove".startswith(matchDict["mode"]):
+			if "remove".startswith(matchDict["mode"]):
 				if "hidden" in self.currentRoom.exits[direction].doorFlags:
 					self.currentRoom.exits[direction].doorFlags.remove("hidden")
 				self.currentRoom.exits[direction].door = ""
@@ -1012,15 +1003,15 @@ class World:
 				reversedDirection: str = REVERSE_DIRECTIONS[direction]
 				if not matchDict["vnum"]:
 					return "Error: 'add' expects a vnum or 'undefined'."
-				elif matchDict["vnum"] != "undefined" and matchDict["vnum"] not in self.rooms:
+				if matchDict["vnum"] != "undefined" and matchDict["vnum"] not in self.rooms:
 					return f"Error: vnum {matchDict['vnum']} not in database."
-				elif direction not in self.currentRoom.exits:
+				if direction not in self.currentRoom.exits:
 					self.currentRoom.exits[direction] = self.getNewExit(direction)
 				self.currentRoom.exits[direction].to = matchDict["vnum"]
 				if matchDict["vnum"] == "undefined":
 					self.GUIRefresh()
 					return f"Direction {direction} now undefined."
-				elif not matchDict["oneway"]:
+				if not matchDict["oneway"]:
 					if (
 						reversedDirection not in self.rooms[matchDict["vnum"]].exits
 						or self.rooms[matchDict["vnum"]].exits[reversedDirection].to == "undefined"
@@ -1034,21 +1025,19 @@ class World:
 							f"Linking direction {direction} to {matchDict['vnum']} with name '{name}'.\n"
 							+ f"Linked exit {reversedDirection} in second room with this room."
 						)
-					else:
-						self.GUIRefresh()
-						name = self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
-						return (
-							f"Linking direction {direction} to {matchDict['vnum']} with name '{name}'.\n"
-							+ f"Unable to link exit {reversedDirection} in second room with this room: "
-							+ "exit already defined."
-						)
-				else:
 					self.GUIRefresh()
 					name = self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
-					return f"Linking direction {direction} one way to {matchDict['vnum']} with name '{name}'."
-			elif direction not in self.currentRoom.exits:
+					return (
+						f"Linking direction {direction} to {matchDict['vnum']} with name '{name}'.\n"
+						+ f"Unable to link exit {reversedDirection} in second room with this room: "
+						+ "exit already defined."
+					)
+				self.GUIRefresh()
+				name = self.rooms[matchDict["vnum"]].name if matchDict["vnum"] in self.rooms else ""
+				return f"Linking direction {direction} one way to {matchDict['vnum']} with name '{name}'."
+			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
-			elif not matchDict["mode"]:
+			if not matchDict["mode"]:
 				toName: str
 				if self.currentRoom.exits[direction].to in self.rooms:
 					toName = self.rooms[self.currentRoom.exits[direction].to].name
@@ -1058,7 +1047,7 @@ class World:
 					f"Exit '{direction}' links to '{self.currentRoom.exits[direction].to}' "
 					+ f"with name '{toName}'."
 				)
-			elif "remove".startswith(matchDict["mode"]):
+			if "remove".startswith(matchDict["mode"]):
 				del self.currentRoom.exits[direction]
 				self.GUIRefresh()
 				return f"Exit {direction} removed."
@@ -1082,14 +1071,14 @@ class World:
 				+ "Leave it blank to use the current room's vnum. "
 				+ "Use '_label info all' to get a list of all labels."
 			)
-			return None
+			return
 		matchDict: dict[str, str] = match.groupdict()
 		if not matchDict["label"]:
 			self.output("Error: you need to supply a label.")
-			return None
-		elif matchDict["label"] == "schema_version":
+			return
+		if matchDict["label"] == "schema_version":
 			self.output("Error: 'schema_version' not allowed as label.")
-			return None
+			return
 		label: str = matchDict["label"]
 		if label.isdecimal():
 			self.output("labels cannot be decimal values.")
@@ -1106,7 +1095,7 @@ class World:
 		elif matchDict["action"] == "delete":
 			if label not in self.labels:
 				self.output(f"There aren't any labels matching '{label}' in the database.")
-				return None
+				return
 			self.output(f"Deleting label '{label}'.")
 			del self.labels[label]
 			self.saveLabels()
@@ -1177,7 +1166,7 @@ class World:
 		match: REGEX_MATCH = RUN_DESTINATION_REGEX.match(text)
 		if match is None:
 			self.output("Usage: path [label|vnum]")
-			return None
+			return
 		destination: str = match.group("destination")
 		flags: str = match.group("flags")
 		result: list[str] = self.pathFind(destination=destination, flags=flags.split("|") if flags else None)
@@ -1199,7 +1188,7 @@ class World:
 		destinationRoom: Union[Room, None] = self.getRoomFromLabel(str(destination))
 		if destinationRoom is None:
 			return []
-		elif destinationRoom is origin:
+		if destinationRoom is origin:
 			self.output("You are already there!")
 			return []
 		avoidTerrains: frozenset[str]

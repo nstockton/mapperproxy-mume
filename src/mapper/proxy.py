@@ -100,7 +100,7 @@ class Player(GMCPMixIn, Telnet):
 		elif package == "core.supports.remove":
 			# Player's client may not remove packages.
 			# Change this in future to allow player's client to only remove packages it previously added.
-			return None
+			return
 		if package == "core.supports.add":
 			addedPackages: list[str] = []
 			for item in json.loads(value):
@@ -229,7 +229,7 @@ class ProxyHandler:
 				# Final line was incomplete.
 				self.playerInputBuffer.extend(line)
 				break
-			elif self.isEmulatingOffline or b"".join(line.strip().split()[:1]) in self.mapperCommands:
+			if self.isEmulatingOffline or b"".join(line.strip().split()[:1]) in self.mapperCommands:
 				self.eventCaller(("userInput", line))
 			else:
 				self.game.write(line, escape=True)

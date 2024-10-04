@@ -336,11 +336,10 @@ class Room:
 		delta = Vec2d(other.x, other.y) - (self.x, self.y)
 		if self.vnum == other.vnum:
 			return "here"
-		elif delta.get_length_sqrd() == 0:
+		if delta.get_length_sqrd() == 0:
 			return "same X-Y"
-		else:
-			position = int(round((90 - delta.angle_degrees + 360) % 360 / 30)) or 12
-			return f"{position} o'clock"
+		position = int(round((90 - delta.angle_degrees + 360) % 360 / 30)) or 12
+		return f"{position} o'clock"
 
 	def directionTo(self, other: Room) -> str:
 		"""
@@ -358,10 +357,9 @@ class Room:
 		delta = Vec2d(other.x, other.y) - (self.x, self.y)
 		if self.vnum == other.vnum:
 			return "here"
-		elif delta.get_length_sqrd() == 0:
+		if delta.get_length_sqrd() == 0:
 			return "same X-Y"
-		else:
-			return COMPASS_DIRECTIONS[round((90 - delta.angle_degrees + 360) % 360 / 45) % 8]
+		return COMPASS_DIRECTIONS[round((90 - delta.angle_degrees + 360) % 360 / 45) % 8]
 
 	def isOrphan(self) -> bool:
 		"""

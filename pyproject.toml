@@ -123,6 +123,7 @@
 		"C901",  # McCabe complexity.
 		"E501",  # Line too long.
 		"N818",  # Exception name should be named with an Error suffix.
+		"RET",  # Flake8-return.
 		"W",  # Pycodestyle warnings.
 	]
 	ignore = [

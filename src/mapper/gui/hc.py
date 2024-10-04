@@ -202,7 +202,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 	@expandWindow.setter
 	def expandWindow(self, value: bool) -> None:
 		if self.fullscreen:
-			return None
+			return
 		alwaysOnTop = self.alwaysOnTop
 		if alwaysOnTop:
 			# Temporarily switch to default window style to prevent full screen bug.
@@ -561,7 +561,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		"""
 		if self.fullscreen:
 			self.say("Can't change window size while in full screen.", True)
-			return None
+			return
 		value = not self.expandWindow
 		self.expandWindow = value
 		self.say(f"Window {'expanded' if value else 'restored'}.", True)
@@ -858,7 +858,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		currentRoom = self.currentRoom
 		if currentRoom is None:
 			logger.error("Unable to draw rooms: Current room undefined.")
-			return None
+			return
 		logger.debug(f"Drawing rooms near {currentRoom}")
 		roomSize = self.roomSize
 		visibleRooms = {currentRoom.vnum}
@@ -964,10 +964,10 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			square, room, cp = item
 			if self.roomOffsetFromPixels(*cp) == self.roomOffsetFromPixels(x, y):
 				if vnum is None or vnum not in self.world.rooms:
-					return None
-				elif self.highlight == vnum:
+					return
+				if self.highlight == vnum:
 					# Room already highlighted.
-					return None
+					return
 				self.highlight = vnum
 				self.say(f"{room.name}, {vnum}", True)
 				break
@@ -988,15 +988,15 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		logger.debug(f"Mouse press on {x} {y}, buttons: {buttons}, modifiers: {modifiers}")
 		if buttons == pyglet.window.mouse.MIDDLE:
 			self.keyboard_resetZoom(key.ESCAPE, 0)
-			return None
+			return
 		# check if the player clicked on a room
 		for vnum, item in self.visibleRooms.items():
 			square, room, cp = item
 			if self.roomOffsetFromPixels(*cp) == self.roomOffsetFromPixels(x, y):
 				# Action depends on which button the player clicked
 				if vnum is None or vnum not in self.world.rooms:
-					return None
-				elif buttons == pyglet.window.mouse.LEFT:
+					return
+				if buttons == pyglet.window.mouse.LEFT:
 					if modifiers & key.MOD_SHIFT:
 						# print the vnum
 						self.world.output(f"{vnum}, {room.name}")

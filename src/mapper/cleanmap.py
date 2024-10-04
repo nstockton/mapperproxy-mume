@@ -38,7 +38,7 @@ class ExitsCleaner(Handler):
 			text: The received text from the game.
 		"""
 		if not self.mapper.autoUpdateRooms or text.startswith("Exits:"):
-			return None
+			return
 		for line in text.splitlines():
 			match: REGEX_MATCH = EXIT_REGEX.match(line)
 			if match is not None:

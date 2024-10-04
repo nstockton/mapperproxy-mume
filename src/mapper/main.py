@@ -197,7 +197,7 @@ def main(
 			playerSocket.sendall(b"\r\n")
 			playerSocket.shutdown(socket.SHUT_RDWR)
 			os.remove(LISTENING_STATUS_FILE)
-			return None
+			return
 	else:
 		unbufferedGameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 		unbufferedGameSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)

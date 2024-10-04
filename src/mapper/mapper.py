@@ -285,7 +285,7 @@ class Mapper(threading.Thread, World):
 				gmcpMessageOutput: bool = self.playerTelnetHandler.mpmMessageSend({"text": msg})
 				if gmcpMessageOutput:
 					# Player is receiving messages through GMCP.
-					return None
+					return
 			if self.outputFormat == "raw":
 				if showPrompt and self.prompt and not self.gagPrompts:
 					msg = f"{escapeXMLString(msg)}\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
@@ -464,11 +464,10 @@ class Mapper(threading.Thread, World):
 	def user_command_emu(self, inputText: str, *args: str) -> None:
 		if not inputText:
 			self.output("What command do you want to emulate?")
-			return None
-		else:
-			words: tuple[str, ...] = tuple(inputText.strip().split())
-			while words:
-				words = self.emulateCommands(*words)
+			return
+		words: tuple[str, ...] = tuple(inputText.strip().split())
+		while words:
+			words = self.emulateCommands(*words)
 
 	def emulateCommands(self, *words: str) -> tuple[str, ...]:
 		userCommand: str = words[0].lower()
@@ -510,7 +509,7 @@ class Mapper(threading.Thread, World):
 		match: REGEX_MATCH = re.match(matchPattern, args[0].strip().lower())
 		if match is None:
 			self.sendPlayer(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")
-			return None
+			return
 		matchDict: dict[str, str] = match.groupdict()
 		direction: str
 		if matchDict["direction"]:
@@ -663,7 +662,7 @@ class Mapper(threading.Thread, World):
 	def user_command_run(self, *args: str) -> None:
 		if not args or not args[0] or not args[0].strip():
 			self.sendPlayer("Usage: run [label|vnum]")
-			return None
+			return
 		self.stopRun()
 		match: REGEX_MATCH
 		destination: str
@@ -674,27 +673,27 @@ class Mapper(threading.Thread, World):
 				self.sendPlayer(
 					f"Run target set to '{self.lastPathFindQuery}'. Use 'run t [rlabel|vnum]' to change it."
 				)
-				return None
-			elif not argString:
+				return
+			if not argString:
 				self.sendPlayer("Please specify a VNum or room label to target.")
-				return None
+				return
 			self.lastPathFindQuery = argString
 			self.sendPlayer(f"Setting run target to '{self.lastPathFindQuery}'")
-			return None
-		elif argString.lower() == "c":
+			return
+		if argString.lower() == "c":
 			if self.lastPathFindQuery:
 				match = RUN_DESTINATION_REGEX.match(self.lastPathFindQuery)
 				if match is None:
-					return None
+					return
 				destination = match.group("destination")
 				self.sendPlayer(destination)
 			else:
 				self.sendPlayer("Error: no previous path to continue.")
-				return None
+				return
 		else:
 			match = RUN_DESTINATION_REGEX.match(argString)
 			if match is None:
-				return None
+				return
 			destination = match.group("destination")
 		flags: str = match.group("flags")
 		result: Union[list[str], None] = self.pathFind(
@@ -711,7 +710,7 @@ class Mapper(threading.Thread, World):
 	def user_command_step(self, *args: str) -> None:
 		if not args or not args[0] or not args[0].strip():
 			self.sendPlayer("Usage: step [label|vnum]")
-			return None
+			return
 		self.autoWalkDirections.clear()
 		argString: str = args[0].strip()
 		match: REGEX_MATCH = RUN_DESTINATION_REGEX.match(argString)
@@ -724,7 +723,7 @@ class Mapper(threading.Thread, World):
 			if result is not None:
 				self.autoWalkDirections.extend(result)
 				self.walkNextDirection()
-				return None
+				return
 		self.sendPlayer("Please specify a valid destination.")
 
 	def user_command_stop(self, *args: str) -> None:
@@ -776,7 +775,7 @@ class Mapper(threading.Thread, World):
 
 	def walkNextDirection(self) -> None:
 		if not self.autoWalkDirections:
-			return None
+			return
 		while self.autoWalkDirections:
 			command: str = self.autoWalkDirections.pop()
 			if not self.autoWalkDirections:
@@ -786,9 +785,8 @@ class Mapper(threading.Thread, World):
 				# Send the first character of the direction to Mume.
 				self.sendGame(command[0])
 				break
-			else:
-				# command is a non-direction such as 'lead' or 'ride'.
-				self.sendGame(command)
+			# command is a non-direction such as 'lead' or 'ride'.
+			self.sendGame(command)
 
 	def stopRun(self) -> None:
 		self.autoWalk = False
@@ -875,7 +873,7 @@ class Mapper(threading.Thread, World):
 
 	def updateExitFlags(self, exits: str) -> None:
 		if not exits:
-			return None
+			return
 		output: list[str] = []
 		exitsOutput: list[str] = []
 		for door, road, climb, portal, direction in EXIT_TAGS_REGEX.findall(exits):
@@ -990,8 +988,8 @@ class Mapper(threading.Thread, World):
 	def mud_event_line(self, text: str) -> None:
 		if text.startswith("You quietly scout "):
 			self.scouting = True
-			return None
-		elif text == "A huge clock is standing here.":
+			return
+		if text == "A huge clock is standing here.":
 			self.sendGame("look at clock")
 		elif text == (
 			"Wet, cold and filled with mud you drop down into a dark "
@@ -1121,8 +1119,8 @@ class Mapper(threading.Thread, World):
 		self.moved = None
 		addedNewRoomFrom: Union[str, None] = None
 		if not self.isSynced or self.movement is None:
-			return None
-		elif self.validateMovement(self.movement):
+			return
+		if self.validateMovement(self.movement):
 			if self.autoMapping and (
 				self.movement not in self.currentRoom.exits
 				or self.currentRoom.exits[self.movement].to not in self.rooms
@@ -1163,8 +1161,8 @@ class Mapper(threading.Thread, World):
 	def handleUserInput(self, text: str) -> None:
 		text = text.strip()
 		if not text:
-			return None
-		elif self.isEmulatingOffline:
+			return
+		if self.isEmulatingOffline:
 			self.user_command_emu(text)
 		else:
 			userCommand: str = text.split()[0]

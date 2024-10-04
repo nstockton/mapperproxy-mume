@@ -528,6 +528,6 @@ class Clock:
 		mt = MumeTime(int(time.time()) - self.epoch)
 		if action == "pull":
 			return f"pull lever {mt.day}\npull lever {mt.monthWestron}"
-		elif action is not None:
+		if action is not None:
 			return f"{action} {mt.info.splitlines()[0]}"
 		return mt.info

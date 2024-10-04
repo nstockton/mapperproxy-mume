@@ -52,7 +52,7 @@ class Config(MutableMapping[str, Any]):
 		filename = os.path.join(DATA_DIRECTORY, filename)
 		if not os.path.exists(filename):
 			return {}
-		elif os.path.isdir(filename):
+		if os.path.isdir(filename):
 			raise ConfigError(f"'{filename}' is a directory, not a file.")
 		with self._configLock:
 			try:
