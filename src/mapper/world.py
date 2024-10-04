@@ -370,9 +370,7 @@ class World:
 		except KeyError:
 			return False
 		revdir: str = REVERSE_DIRECTIONS[exitObj.direction]
-		if revdir in dest.exits and dest.exits[revdir].to == exitObj.vnum:
-			return True
-		return False
+		return revdir in dest.exits and dest.exits[revdir].to == exitObj.vnum
 
 	def getNeighborsFromCoordinates(
 		self, start: Sequence[int], radius: Sequence[int]
@@ -532,17 +530,21 @@ class World:
 					roomData = getattr(roomObj, key).strip().lower()
 					if not exactMatch and value in roomData or roomData == value:
 						keysMatched += 1
-				elif key in alwaysExactMatch and getattr(roomObj, key).strip().lower() == value:
-					keysMatched += 1
-				elif key in ("mobFlags", "loadFlags") and getattr(roomObj, key, set()).intersection(value):
+				elif (
+					key in alwaysExactMatch
+					and getattr(roomObj, key).strip().lower() == value
+					or key in ("mobFlags", "loadFlags")
+					and getattr(roomObj, key, set()).intersection(value)
+				):
 					keysMatched += 1
 				else:
 					for _direction, exitObj in roomObj.exits.items():
-						if key in ("exitFlags", "doorFlags") and getattr(exitObj, key, set()).intersection(
-							value
+						if (
+							key in ("exitFlags", "doorFlags")
+							and getattr(exitObj, key, set()).intersection(value)
+							or key in ("to", "door")
+							and getattr(exitObj, key, "").strip().lower() == value
 						):
-							keysMatched += 1
-						elif key in ("to", "door") and getattr(exitObj, key, "").strip().lower() == value:
 							keysMatched += 1
 			if len(kwargs) == keysMatched:
 				results.append(roomObj)
@@ -1123,7 +1125,7 @@ class World:
 
 	def rinfo(self, text: str = "") -> str:
 		text = text.strip().lower()
-		vnum: str = self.currentRoom.vnum if not text else text
+		vnum: str = text or self.currentRoom.vnum
 		if vnum in self.labels:
 			vnum = self.labels[vnum]
 		if vnum not in self.rooms:

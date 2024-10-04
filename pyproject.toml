@@ -125,6 +125,7 @@
 		"N818",  # Exception name should be named with an Error suffix.
 		"RET",  # Flake8-return.
 		"RSE",  # Flake8-raise.
+		"SIM",  # Flake8-simplify.
 		"W",  # Pycodestyle warnings.
 	]
 	ignore = [

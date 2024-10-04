@@ -8,6 +8,7 @@ from __future__ import annotations
 
 # Built-in Modules:
 import os.path
+from contextlib import ExitStack
 from unittest import TestCase
 from unittest.mock import Mock, mock_open, patch
 
@@ -27,9 +28,10 @@ class TestConfig(TestCase):
 		with self.assertRaises(ConfigError):
 			cfg.reload()
 		mockOs.path.isdir.return_value = False
-		with patch("mapper.config.open", mock_open(read_data="invalid")):
-			with self.assertRaises(ConfigError):
-				cfg.reload()
+		with ExitStack() as cm:
+			cm.enter_context(patch("mapper.config.open", mock_open(read_data="invalid")))
+			cm.enter_context(self.assertRaises(ConfigError))
+			cfg.reload()
 		with patch("mapper.config.open", mock_open(read_data="{}")):
 			cfg.reload()
 		cfg["test"] = "somevalue"

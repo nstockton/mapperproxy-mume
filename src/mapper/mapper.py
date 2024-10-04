@@ -356,7 +356,7 @@ class Mapper(threading.Thread, World):
 
 	def emulation_command_exits(self, *args: str) -> tuple[str, ...]:
 		"""shows the exits in the room."""
-		exits: list[str] = [key for key in DIRECTIONS if key in self.emulationRoom.exits.keys()]
+		exits: list[str] = [key for key in DIRECTIONS if key in self.emulationRoom.exits]
 		self.output(f"Exits: {', '.join(exits)}.")
 		return args
 

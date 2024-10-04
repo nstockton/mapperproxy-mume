@@ -625,11 +625,9 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		Args:
 			excludes: Room vnums to exclude from deletion.
 		"""
-		stale: set[str]
-		if excludes is None:
-			stale = set(self.visibleRooms)
-		else:
-			stale = set(self.visibleRooms).difference(excludes)
+		stale: set[str] = (
+			set(self.visibleRooms) if excludes is None else set(self.visibleRooms).difference(excludes)
+		)
 		with suppress(AssertionError):
 			for vnum in stale:
 				self.visibleRooms[vnum][0].delete()
@@ -660,11 +658,9 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		Args:
 			excludes: Exit names to exclude from deletion.
 		"""
-		stale: set[str]
-		if excludes is None:
-			stale = set(self.visibleExits)
-		else:
-			stale = set(self.visibleExits).difference(excludes)
+		stale: set[str] = (
+			set(self.visibleExits) if excludes is None else set(self.visibleExits).difference(excludes)
+		)
 		with suppress(AssertionError):
 			for name in stale:
 				for shape in self.visibleExits[name]:
@@ -829,10 +825,11 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			color = self.terrainColors[room.terrain]
 		walls2d = DIRECTIONS_2D.difference(room.exits)
 		for direction, exitObj in room.exits.items():
-			if direction in DIRECTIONS_2D:
-				if exitObj.to == "undefined" or not self.world.isBidirectional(exitObj):
-					# Treat these as walls for the moment.
-					walls2d.add(direction)
+			if direction in DIRECTIONS_2D and (
+				exitObj.to == "undefined" or not self.world.isBidirectional(exitObj)
+			):
+				# Treat these as walls for the moment.
+				walls2d.add(direction)
 		width = height = self.roomSize
 		wallSize = self.wallSize
 		bottomLeft = cp - (width / 2, height / 2)

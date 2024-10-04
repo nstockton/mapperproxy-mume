@@ -204,7 +204,7 @@ def main(
 	gameSocket: BufferedSocket = BufferedSocket(
 		unbufferedGameSocket,
 		timeout=None,
-		encrypt=False if noSsl or isEmulatingOffline else True,
+		encrypt=not noSsl and not isEmulatingOffline,
 		server_hostname=remoteHost,
 	)
 	mapperThread: Mapper = Mapper(
