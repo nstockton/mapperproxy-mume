@@ -806,19 +806,27 @@ class Mapper(threading.Thread, World):
 				self.isSynced = True
 				self.sendPlayer(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
 		else:
+			serverID: Union[str, None] = self.xmlRoomAttributes.get("id")
+			serverIDVnum: str = ""
 			nameVnums: set[str] = set()
 			descVnums: set[str] = set()
 			for vnum, roomObj in self.rooms.items():
+				if serverID is not None and roomObj.serverID == serverID:
+					serverIDVnum = vnum
+					break
 				if name and roomObj.name == name:
 					nameVnums.add(vnum)
 				if desc and roomObj.desc == desc:
 					descVnums.add(vnum)
 			nameDescIntersectionVnums: set[str] = nameVnums.intersection(descVnums)
-			if len(nameDescIntersectionVnums) == 1:
-				self.currentRoom = self.rooms["".join(nameDescIntersectionVnums)]
+			if serverIDVnum or len(nameDescIntersectionVnums) == 1:
+				self.currentRoom = self.rooms[serverIDVnum or "".join(nameDescIntersectionVnums)]
 				self.isSynced = True
 				self.shouldNotifyNotSynced = True
-				self.sendPlayer(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
+				syncMethod: str = "server ID" if serverIDVnum else "name and desc"
+				self.sendPlayer(
+					f"Synced {syncMethod} to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}"
+				)
 			elif len(descVnums) == 1:
 				self.currentRoom = self.rooms["".join(descVnums)]
 				self.isSynced = True
