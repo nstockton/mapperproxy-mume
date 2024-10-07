@@ -230,6 +230,7 @@ class Mapper(threading.Thread, World):
 		World.__init__(self, interface=self.interface)
 		self.emulationRoom: Room = self.currentRoom
 		self.lastEmulatedJump: Union[str, None] = None
+		self.shouldNotifyNotSynced: bool = True
 
 	@property
 	def outputFormat(self) -> str:
@@ -805,27 +806,41 @@ class Mapper(threading.Thread, World):
 				self.isSynced = True
 				self.sendPlayer(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
 		else:
-			nameVnums: list[str] = []
-			descVnums: list[str] = []
+			nameVnums: set[str] = set()
+			descVnums: set[str] = set()
 			for vnum, roomObj in self.rooms.items():
 				if name and roomObj.name == name:
-					nameVnums.append(vnum)
+					nameVnums.add(vnum)
 				if desc and roomObj.desc == desc:
-					descVnums.append(vnum)
-			if not nameVnums:
-				self.sendPlayer("Current room not in the database. Unable to sync.")
-			elif len(descVnums) == 1:
-				self.currentRoom = self.rooms[descVnums[0]]
+					descVnums.add(vnum)
+			nameDescIntersectionVnums: set[str] = nameVnums.intersection(descVnums)
+			if len(nameDescIntersectionVnums) == 1:
+				self.currentRoom = self.rooms["".join(nameDescIntersectionVnums)]
 				self.isSynced = True
+				self.shouldNotifyNotSynced = True
 				self.sendPlayer(f"Synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}")
-			elif len(nameVnums) == 1:
-				self.currentRoom = self.rooms[nameVnums[0]]
+			elif len(descVnums) == 1:
+				self.currentRoom = self.rooms["".join(descVnums)]
 				self.isSynced = True
+				self.shouldNotifyNotSynced = True
+				self.sendPlayer(
+					f"Desc-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}"
+				)
+			elif len(nameVnums) == 1:
+				self.currentRoom = self.rooms["".join(nameVnums)]
+				self.isSynced = True
+				self.shouldNotifyNotSynced = True
 				self.sendPlayer(
 					f"Name-only synced to room {self.currentRoom.name} with vnum {self.currentRoom.vnum}"
 				)
-			else:
-				self.sendPlayer("More than one room in the database matches current room. Unable to sync.")
+			elif self.shouldNotifyNotSynced:
+				self.shouldNotifyNotSynced = False
+				reason: str = (
+					"More than one room in the database matches current room."
+					if nameVnums or descVnums
+					else "Current room not in the database."
+				)
+				self.sendPlayer(f"{reason} Unable to sync.")
 		return self.isSynced
 
 	def roomDetails(self) -> None:
