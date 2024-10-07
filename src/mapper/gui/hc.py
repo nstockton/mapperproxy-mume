@@ -440,8 +440,12 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			radius: The radius of the inner star.
 			innerRadiusRatio:
 				The ratio of the inner star radius, compared to the border star radius.
-			numSpikes: The number of spikes the star should have.
-			rotation: A number in degrees that the stars should be rotated.
+			numSpikes:
+				The number of spikes the stars should have.
+				If not provided, the stars will have 5 spikes.
+			rotation:
+				A number in degrees that the stars should be rotated.
+				If not provided, the stars will be rotated 0 degrees.
 			color:
 				The color of the inner star.
 				If not provided, white will be used.
