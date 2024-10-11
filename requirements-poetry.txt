@@ -3,7 +3,7 @@
 # To update, run:
 #
 #    poetry config warnings.export false
-#    pip-compile-cross-platform --min-python-version 3.8 -o requirements-poetry.txt requirements-poetry.in
+#    pip-compile-cross-platform --generate-hashes --min-python-version 3.8 -o requirements-poetry.txt requirements-poetry.in
 #
 build==1.0.3 ; python_version >= "3.8" and python_version < "4.0" \
     --hash=sha256:538aab1b64f9828977f84bc63ae570b060a8ed1be419e7870b8b4fc5e6ea553b \
