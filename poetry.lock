@@ -13,13 +13,13 @@ files = [
 
 [[package]]
 name = "boltons"
-version = "23.1.1"
+version = "24.0.0"
 description = "When they're not builtins, they're boltons."
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 files = [
-    {file = "boltons-23.1.1-py2.py3-none-any.whl", hash = "sha256:80a8cd930ff21fbf03545b9863e5799d0c3e7e0e3b2546bdaf2efccd7b3708cc"},
-    {file = "boltons-23.1.1.tar.gz", hash = "sha256:d2cb2fa83cf2ebe791be1e284183e8a43a1031355156a968f8e0a333ad2448fc"},
+    {file = "boltons-24.0.0-py3-none-any.whl", hash = "sha256:9618695a6ec4f50412e7072e5d78910a00b4111d0b9b549e4a3d60bc321e7807"},
+    {file = "boltons-24.0.0.tar.gz", hash = "sha256:7153feccaea1ff2e1472f68d4b57fadb796a2ee49d29f638f1c9cd8fb5ebd916"},
 ]
 
 [[package]]
@@ -4597,13 +4597,13 @@ typing-inspect = ">=0.7.1"
 
 [[package]]
 name = "types-boltons"
-version = "23.1.0.0"
+version = "24.0.0.20240423"
 description = "Typing stubs for boltons"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "types-boltons-23.1.0.0.tar.gz", hash = "sha256:ec237e877076ce6c3a8a4766333df8bae0300d5fc0fd3afd1dbb7c790e913a55"},
-    {file = "types_boltons-23.1.0.0-py3-none-any.whl", hash = "sha256:46a8734e88096b61d70b4b5e3d0c9d383e5a2039ca48918e1c5e496022cbfe54"},
+    {file = "types-boltons-24.0.0.20240423.tar.gz", hash = "sha256:a0e418f2e1d6b6a561ef441cc14e8b3bf5477cbb307ec27d7f330caca13dd3aa"},
+    {file = "types_boltons-24.0.0.20240423-py3-none-any.whl", hash = "sha256:5965274b6123ac6c7d90cae54beb699b83e550e66501b0dfb5dcca4fc53955ab"},
 ]
 
 [[package]]
@@ -4824,4 +4824,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "1a779f231464f533fc331cb5de9d29203b15ee371da77df78b48dfc9cae97b14"
+content-hash = "57f135842aa17bd67da6bfaf5194cdd15040117e90cf184967f9628ecf02c633"
