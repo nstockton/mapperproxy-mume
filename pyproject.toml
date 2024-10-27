@@ -26,6 +26,7 @@
 		"Programming Language :: Python :: 3.10",
 		"Programming Language :: Python :: 3.11",
 		"Programming Language :: Python :: 3.12",
+		"Programming Language :: Python :: 3.13",
 		"Programming Language :: Python :: Implementation",
 		"Programming Language :: Python :: Implementation :: CPython",
 		"Operating System :: MacOS",
@@ -53,13 +54,13 @@
 [tool.poetry.dependencies]
 	python = "^3.9"
 	boltons = "^24.0"
-	certifi = "2023.7.22"
-	fastjsonschema = "2.19.0"
+	certifi = "2024.8.30"
+	fastjsonschema = "2.20.0"
 	knickknacks = {url = "https://github.com/nstockton/knickknacks/releases/download/v0.1.1/knickknacks-0.1.1-py3-none-any.whl"}
 	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.7.1/mud_protocols-0.7.1-py3-none-any.whl"}
 	orjson = "^3.9"
 	pyglet = "^2.0"
-	rapidfuzz = "3.5.2"
+	rapidfuzz = "3.10.1"
 	speechlight = "^1.8"
 	typed-argument-parser = "^1.9"
 	typing-extensions = {version = "^4.1", python = "< 3.10"}
@@ -72,6 +73,7 @@
 	types-pyinstaller = "6.2.0.1"
 
 [tool.poetry.group.docs.dependencies]
+	jinja2 = "3.0.3"  # See https://github.com/mkdocs/mkdocs/issues/2799
 	mkdocs = "1.2.3"
 	mkdocs-autorefs = "0.3.1"
 	mkdocs-material = "8.1.3"
