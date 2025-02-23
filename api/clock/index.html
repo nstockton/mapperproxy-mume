@@ -1219,12 +1219,12 @@
 
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Clock</span><span class="p">:</span>
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Clock</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		The Mume epoch.</span>
 
@@ -1235,12 +1235,12 @@
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span>
 
 	<span class="nd">@epoch</span><span class="o">.</span><span class="n">setter</span>
-	<span class="k">def</span> <span class="nf">epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_epoch</span> <span class="o">=</span> <span class="n">value</span>
 		<span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;mume_epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 		<span class="n">cfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-	<span class="k">def</span> <span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Sets the Mume epoch from the current Mume time.</span>
 
@@ -1254,7 +1254,7 @@
 		<span class="n">delta</span> <span class="o">=</span> <span class="n">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="n">delta</span>
 
-	<span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Outputs information about the current Mume time.</span>
 
@@ -1270,7 +1270,7 @@
 		<span class="n">mt</span> <span class="o">=</span> <span class="n">MumeTime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;pull&quot;</span><span class="p">:</span>
 			<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="se">\n</span><span class="s2">pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">monthWestron</span><span class="si">}</span><span class="s2">&quot;</span>
-		<span class="k">elif</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
 		<span class="k">return</span> <span class="n">mt</span><span class="o">.</span><span class="n">info</span>
 </code></pre></div>
@@ -1372,7 +1372,7 @@
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Sets the Mume epoch from the current Mume time.</span>
 
@@ -1446,7 +1446,7 @@ Otherwise, output the full information.</p></td>
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Outputs information about the current Mume time.</span>
 
@@ -1462,7 +1462,7 @@ Otherwise, output the full information.</p></td>
 	<span class="n">mt</span> <span class="o">=</span> <span class="n">MumeTime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;pull&quot;</span><span class="p">:</span>
 		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="se">\n</span><span class="s2">pull lever </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">monthWestron</span><span class="si">}</span><span class="s2">&quot;</span>
-	<span class="k">elif</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">mt</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
 	<span class="k">return</span> <span class="n">mt</span><span class="o">.</span><span class="n">info</span>
 </code></pre></div>
@@ -1499,98 +1499,100 @@ Otherwise, output the full information.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MumeTime</span><span class="p">:</span>
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MumeTime</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_day</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hour</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minutes</span> <span class="o">=</span> <span class="n">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The year.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_year</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">month</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">month</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The month of the year (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_month</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">day</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">day</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The day of the month (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_day</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">hour</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">hour</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hour of the day (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hour</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">minutes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">minutes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The minutes of the hour (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minutes</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">delta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The time as a delta.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">timeToDelta</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minutes</span><span class="p">)</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">amPm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">amPm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The AM - PM value.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="s2">&quot;am&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">12</span> <span class="k">else</span> <span class="s2">&quot;pm&quot;</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">dayOfYear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">dayOfYear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The day of the year (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="n">DAYS_PER_MONTH</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">day</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">hourOfYear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">hourOfYear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hour of the year (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dayOfYear</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">HOURS_PER_DAY</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">overallDay</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">overallDay</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The sum of all the elapsed years in days and the day of year (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="n">FIRST_YEAR</span><span class="p">)</span> <span class="o">*</span> <span class="n">DAYS_PER_YEAR</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dayOfYear</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">weekday</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">weekday</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The name of the weekday.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">WEEKDAYS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">overallDay</span> <span class="o">%</span> <span class="n">DAYS_PER_WEEK</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">dawn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">dawn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hour of dawn.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">MONTHS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">][</span><span class="s2">&quot;dawn&quot;</span><span class="p">])</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">dusk</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">dusk</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hour of dusk.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">MONTHS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">][</span><span class="s2">&quot;dusk&quot;</span><span class="p">])</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">season</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">season</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The name of the season.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">MONTHS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">][</span><span class="s2">&quot;season&quot;</span><span class="p">])</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">monthName</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">monthName</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The name of the month.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">MONTHS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">monthWestron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">monthWestron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The name of the month in Westron.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">MONTHS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">][</span><span class="s2">&quot;westron&quot;</span><span class="p">])</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">monthSindarin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">monthSindarin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The name of the month in Sindarin.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">MONTHS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">][</span><span class="s2">&quot;sindarin&quot;</span><span class="p">])</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">dawnDuskState</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">		</span><span class="sd">&quot;&quot;&quot;A tuple containing the current state name, the next state name, and the game hours until next state.&quot;&quot;&quot;</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">dawnDuskState</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		A tuple containing the current state name, the next state name, and the game hours until next state.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dawn</span><span class="p">:</span>
 			<span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;NIGHT&quot;</span>
 			<span class="n">nextState</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span>
@@ -1610,66 +1612,66 @@ Otherwise, output the full information.</p></td>
 		<span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">nextState</span><span class="p">,</span> <span class="n">untilNextState</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">daysUntilSeason</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">daysUntilSeason</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The days until next season (1 or more).&quot;&quot;&quot;</span>
 		<span class="n">monthsSinceLastSeason</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">MONTHS_PER_SEASON</span>
 		<span class="n">daysSinceLastSeason</span> <span class="o">=</span> <span class="n">monthsSinceLastSeason</span> <span class="o">*</span> <span class="n">DAYS_PER_MONTH</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">day</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">DAYS_PER_SEASON</span> <span class="o">-</span> <span class="n">daysSinceLastSeason</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">rlHoursUntilSeason</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">rlHoursUntilSeason</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The real life hours until next season (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">daysUntilSeason</span> <span class="o">*</span> <span class="n">HOURS_PER_DAY</span> <span class="o">//</span> <span class="n">MINUTES_PER_HOUR</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">daysUntilWinter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">daysUntilWinter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The days until next winter (1 or more).&quot;&quot;&quot;</span>
 		<span class="n">monthsSinceLastWinter</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">MONTHS_PER_YEAR</span>
 		<span class="n">daysSinceLastWinter</span> <span class="o">=</span> <span class="n">monthsSinceLastWinter</span> <span class="o">*</span> <span class="n">DAYS_PER_MONTH</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">day</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">DAYS_PER_YEAR</span> <span class="o">-</span> <span class="n">daysSinceLastWinter</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">rlHoursUntilWinter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">rlHoursUntilWinter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The real life hours until next winter (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">daysUntilWinter</span> <span class="o">*</span> <span class="n">HOURS_PER_DAY</span> <span class="o">//</span> <span class="n">MINUTES_PER_HOUR</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">daysSinceMoonCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">daysSinceMoonCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The days since last moon cycle (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dayOfYear</span> <span class="o">-</span> <span class="n">FIRST_MOON_CYCLE_DAY</span><span class="p">)</span> <span class="o">%</span> <span class="n">DAYS_PER_MOON_CYCLE</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">daysUntilMoonCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">daysUntilMoonCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The days until next moon cycle (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">DAYS_PER_MOON_CYCLE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">daysSinceMoonCycle</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">hourOfMoonRise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">hourOfMoonRise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hour of day when the moon will rise (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="n">FIRST_MOON_CYCLE_HOUR</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">daysSinceMoonCycle</span><span class="p">)</span> <span class="o">%</span> <span class="n">HOURS_PER_DAY</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">daysSinceFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">daysSinceFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The days since last full moon (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dayOfYear</span> <span class="o">-</span> <span class="n">FIRST_FULL_MOON_DAY</span><span class="p">)</span> <span class="o">%</span> <span class="n">DAYS_PER_MOON_CYCLE</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">daysUntilFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">daysUntilFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The days until next full moon (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">DAYS_PER_MOON_CYCLE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">daysSinceFullMoon</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">hoursSinceFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">hoursSinceFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hours since last full moon (0 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daysSinceFullMoon</span> <span class="o">*</span> <span class="n">HOURS_PER_DAY</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">-</span> <span class="n">FULL_MOON_HOUR</span><span class="p">)</span> <span class="o">%</span> <span class="n">HOURS_PER_MOON_CYCLE</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">hoursUntilFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">hoursUntilFullMoon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The hours Until full moon (1 or more).&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">HOURS_PER_MOON_CYCLE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoursSinceFullMoon</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;A summery of information about this moment in Mume time.&quot;&quot;&quot;</span>
 		<span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1679,10 +1681,12 @@ Otherwise, output the full information.</p></td>
 		<span class="n">state</span><span class="p">,</span> <span class="n">nextState</span><span class="p">,</span> <span class="n">untilNextState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dawnDuskState</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
 			<span class="sa">f</span><span class="s2">&quot;It is currently </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">, on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weekday</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monthName</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="s2"> &quot;</span>
-			<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monthWestron</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monthSindarin</span><span class="si">}</span><span class="s2">), (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s2">), year </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s2"> of the third age.&quot;</span>
+			<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monthWestron</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monthSindarin</span><span class="si">}</span><span class="s2">), (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s2">), &quot;</span>
+			<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;year </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s2"> of the third age.&quot;</span>
 		<span class="p">)</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-			<span class="sa">f</span><span class="s2">&quot;Time left until </span><span class="si">{</span><span class="n">nextState</span><span class="si">}</span><span class="s2"> is less than </span><span class="si">{</span><span class="n">untilNextState</span><span class="si">}</span><span class="s2"> tick</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">untilNextState</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;!&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+			<span class="sa">f</span><span class="s2">&quot;Time left until </span><span class="si">{</span><span class="n">nextState</span><span class="si">}</span><span class="s2"> is &quot;</span>
+			<span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;less than </span><span class="si">{</span><span class="n">untilNextState</span><span class="si">}</span><span class="s2"> tick</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">untilNextState</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;!&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
 		<span class="p">)</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
 			<span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">:]</span><span class="si">}</span><span class="s2"> ends in &quot;</span>
@@ -2519,7 +2523,7 @@ Otherwise, output the full information.</p></td>
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">deltaToTime</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculates the Mume time of a given delta.</span>
 
@@ -2624,7 +2628,7 @@ Otherwise, output the full information.</p></td>
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\clock.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timeToDelta</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hour</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculates the delta of a given Mume time.</span>
 

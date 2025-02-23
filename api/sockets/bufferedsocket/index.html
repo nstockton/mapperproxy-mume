@@ -1041,11 +1041,11 @@
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">BufferedSocket</span><span class="p">(</span><span class="n">socketutils</span><span class="o">.</span><span class="n">BufferedSocket</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BufferedSocket</span><span class="p">(</span><span class="n">socketutils</span><span class="o">.</span><span class="n">BufferedSocket</span><span class="p">):</span>
 	<span class="n">_recv_lock</span><span class="p">:</span> <span class="n">AbstractContextManager</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
 	<span class="n">_send_lock</span><span class="p">:</span> <span class="n">AbstractContextManager</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
 
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 		<span class="bp">self</span><span class="p">,</span>
 		<span class="n">sock</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">FakeSocket</span><span class="p">],</span>
 		<span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
@@ -1072,7 +1072,7 @@
 		<span class="k">if</span> <span class="n">encrypt</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Wraps a socket in an SSL context.</span>
 
@@ -1099,12 +1099,13 @@
 				<span class="n">sock</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">originalTimeout</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">sock</span>
 
-	<span class="k">def</span> <span class="nf">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Performs an SSL handshake.</span>
 
 <span class="sd">		Note:</span>
-<span class="sd">			The [`SSLSocket.do_handshake`][1] method is non-blocking and must be retried until it returns successfully.</span>
+<span class="sd">			The [`SSLSocket.do_handshake`][1] method</span>
+<span class="sd">			is non-blocking and must be retried until it returns successfully.</span>
 <span class="sd">			See [here][2] for further explanation.</span>
 <span class="sd">			[1]: &lt;https://docs.python.org/library/ssl.html#ssl.SSLSocket.do_handshake&gt;</span>
 <span class="sd">			[2]: &lt;https://docs.python.org/library/ssl.html#ssl-nonblocking&gt;</span>
@@ -1275,7 +1276,7 @@ Additional key-word only arguments will be passed to the
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 	<span class="bp">self</span><span class="p">,</span>
 	<span class="n">sock</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">FakeSocket</span><span class="p">],</span>
 	<span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
@@ -1328,7 +1329,7 @@ Additional key-word only arguments will be passed to the
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="s2">&quot;Buffer *data* bytes for the next send operation.&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -1365,7 +1366,7 @@ will raise :exc:<code>socket.error</code>.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Closes the wrapped socket, and empties the internal buffers. The</span>
 <span class="sd">    send buffer is not flushed automatically, so if you have been</span>
 <span class="sd">    calling :meth:`~BufferedSocket.buffer`, be sure to call</span>
@@ -1403,7 +1404,8 @@ will raise :exc:<code>socket.error</code>.</p>
       <p>Performs an SSL handshake.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<div class="codehilite"><pre><span></span><code>The [`SSLSocket.do_handshake`][1] method is non-blocking and must be retried until it returns successfully.
+<div class="codehilite"><pre><span></span><code>The [`SSLSocket.do_handshake`][1] method
+is non-blocking and must be retried until it returns successfully.
 See [here][2] for further explanation.
 [1]: &lt;https://docs.python.org/library/ssl.html#ssl.SSLSocket.do_handshake&gt;
 [2]: &lt;https://docs.python.org/library/ssl.html#ssl-nonblocking&gt;
@@ -1432,12 +1434,13 @@ See [here][2] for further explanation.
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">doSSLHandshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Performs an SSL handshake.</span>
 
 <span class="sd">	Note:</span>
-<span class="sd">		The [`SSLSocket.do_handshake`][1] method is non-blocking and must be retried until it returns successfully.</span>
+<span class="sd">		The [`SSLSocket.do_handshake`][1] method</span>
+<span class="sd">		is non-blocking and must be retried until it returns successfully.</span>
 <span class="sd">		See [here][2] for further explanation.</span>
 <span class="sd">		[1]: &lt;https://docs.python.org/library/ssl.html#ssl.SSLSocket.do_handshake&gt;</span>
 <span class="sd">		[2]: &lt;https://docs.python.org/library/ssl.html#ssl-nonblocking&gt;</span>
@@ -1486,7 +1489,7 @@ discipline with calling <code>recv*</code> functions.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the file descriptor of the wrapped socket. -1 if it has</span>
 <span class="sd">    been closed on this end.</span>
 
@@ -1524,7 +1527,7 @@ discipline with calling <code>recv*</code> functions.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">&quot;Send the contents of the internal send buffer.&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -1558,7 +1561,7 @@ for more details.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">getpeername</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function to return the remote address to which the</span>
 <span class="sd">    wrapped socket is connected.  See :meth:`socket.getpeername`</span>
 <span class="sd">    for more details.</span>
@@ -1591,7 +1594,7 @@ for more details.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">getrecvbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">&quot;Returns the receive buffer bytestring (rbuf).&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recv_lock</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span>
@@ -1622,7 +1625,7 @@ for more details.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">getsendbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="s2">&quot;Returns a copy of the send buffer list.&quot;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_lock</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sbuf</span><span class="p">)</span>
@@ -1654,7 +1657,7 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">getsockname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function to return the wrapped socket&#39;s own address.</span>
 <span class="sd">    See :meth:`socket.getsockname` for more details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1687,7 +1690,7 @@ See :meth:<code>socket.getsockname</code> for more details.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">getsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">buflen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function passing through to the wrapped socket&#39;s</span>
 <span class="sd">    :meth:`socket.getsockopt`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1756,7 +1759,7 @@ buffer and socket before <em>timeout</em> expires, then a
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">peek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns *size* bytes from the socket and/or internal buffer. Bytes</span>
 <span class="sd">    are retained in BufferedSocket&#39;s internal recv buffer. To only</span>
 <span class="sd">    see bytes in the recv buffer, use :meth:`getrecvbuffer`.</span>
@@ -1846,7 +1849,7 @@ calls to recv will raise :exc:<code>socket.error</code>.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns **up to** *size* bytes, using the internal buffer before</span>
 <span class="sd">    performing a single :meth:`socket.recv` operation.</span>
 
@@ -1913,7 +1916,7 @@ more than <em>maxsize</em> bytes are received, raises :exc:<code>MessageTooLong<
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">recv_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Receive until the connection is closed, up to *maxsize* bytes. If</span>
 <span class="sd">    more than *maxsize* bytes are received, raises :exc:`MessageTooLong`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1995,7 +1998,7 @@ buffer and socket before <em>timeout</em> expires, then a
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">recv_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read off of the internal buffer, then off the socket, until</span>
 <span class="sd">    *size* bytes have been read.</span>
 
@@ -2036,7 +2039,7 @@ buffer and socket before <em>timeout</em> expires, then a
                 <span class="k">raise</span> <span class="n">ConnectionClosed</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># check recv buffer</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rbuf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;read </span><span class="si">%s</span><span class="s1"> of </span><span class="si">%s</span><span class="s1"> bytes&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;read </span><span class="si">{</span><span class="n">total_bytes</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s1"> bytes&#39;</span>
             <span class="k">raise</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>  <span class="c1"># check recv buffer</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="c1"># received data is still buffered in the case of errors</span>
@@ -2132,7 +2135,7 @@ forwarding the messages.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">recv_until</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span> <span class="n">maxsize</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">,</span>
                <span class="n">with_delimiter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Receive until *delimiter* is found, *maxsize* bytes have been read,</span>
 <span class="sd">    or *timeout* is exceeded.</span>
@@ -2281,7 +2284,7 @@ unsent.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Send the contents of the internal send buffer, as well as *data*,</span>
 <span class="sd">    to the receiving end of the connection. Returns the total</span>
 <span class="sd">    number of bytes sent. If no exception is raised, all of *data* was</span>
@@ -2352,7 +2355,7 @@ parallelism to the :class:<code>socket.socket</code> API.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sendall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_UNSET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A passthrough to :meth:`~BufferedSocket.send`, retained for</span>
 <span class="sd">    parallelism to the :class:`socket.socket` API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2386,7 +2389,7 @@ operations, in bytes. Does not truncate the current buffer.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setmaxsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the default maximum buffer size *maxsize* for future</span>
 <span class="sd">    operations, in bytes. Does not truncate the current buffer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2419,7 +2422,7 @@ operations, in bytes. Does not truncate the current buffer.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setsockopt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">optname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function passing through to the wrapped socket&#39;s</span>
 <span class="sd">    :meth:`socket.setsockopt`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2451,7 +2454,7 @@ operations, in bytes. Does not truncate the current buffer.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
     <span class="s2">&quot;Set the default *timeout* for future operations, in seconds.&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
 </code></pre></div>
@@ -2488,7 +2491,7 @@ support, please open <code>an issue</code>_.</p>
 
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience method which passes through to the wrapped socket&#39;s</span>
 <span class="sd">    :meth:`~socket.shutdown`. Semantics vary by platform, so no</span>
 <span class="sd">    special internal handling is done with the buffers. This</span>
@@ -2568,7 +2571,7 @@ support, please open <code>an issue</code>_.</p>
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\sockets\bufferedsocket.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wrapSSL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Wraps a socket in an SSL context.</span>
 

@@ -857,7 +857,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="o">**</span><span class="n">DATACLASS_KWARGS</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">Exit</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Exit</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	An exit.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -869,22 +869,22 @@
 	<span class="n">door</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 	<span class="n">doorFlags</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;Called after __init__.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">exitFlags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;exit&quot;</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The direction of movement.&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Direction undefined.&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span>
 
 	<span class="nd">@direction</span><span class="o">.</span><span class="n">setter</span>
-	<span class="k">def</span> <span class="nf">direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">DIRECTIONS</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Direction must be one of </span><span class="si">{</span><span class="n">DIRECTIONS</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_direction</span> <span class="o">=</span> <span class="n">value</span>
@@ -963,7 +963,7 @@
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="o">**</span><span class="n">DATACLASS_KWARGS</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">Room</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Room</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A room.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -991,10 +991,10 @@
 	<span class="n">z</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 	<span class="n">exits</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Exit</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnum</span>
 
-	<span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 		<span class="c1"># Unlike in Python 2 where most objects are sortable by default, our</span>
 		<span class="c1"># Room class isn&#39;t automatically sortable in Python 3.</span>
 		<span class="c1"># If we don&#39;t override this method, the path finder will throw an</span>
@@ -1007,18 +1007,18 @@
 		<span class="k">return</span> <span class="kc">False</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">COORDINATES_TYPE</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">COORDINATES_TYPE</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The room coordinates.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
 
 	<span class="nd">@coordinates</span><span class="o">.</span><span class="n">setter</span>
-	<span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected sequence of length 3.&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">value</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">sortedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Exit</span><span class="p">]]:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">sortedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Exit</span><span class="p">]]:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;The room exits, sorted by direction.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
@@ -1026,7 +1026,7 @@
 		<span class="p">)</span>
 
 	<span class="nd">@property</span>
-	<span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;A summery of the room info.&quot;&quot;&quot;</span>
 		<span class="n">output</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vnum: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vnum</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
@@ -1062,7 +1062,7 @@
 			<span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Door Flags: &#39;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">doorFlags</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">calculateCost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">calculateCost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;Calculates the movement cost for the room.&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="n">TERRAIN_COSTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="p">]</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoid</span> <span class="ow">or</span> <span class="n">AVOID_DYNAMIC_DESC_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamicDesc</span><span class="p">):</span>
@@ -1070,7 +1070,7 @@
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ridable</span> <span class="o">==</span> <span class="s2">&quot;not_ridable&quot;</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="mf">5.0</span>
 
-	<span class="k">def</span> <span class="nf">manhattanDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">manhattanDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns the Manhattan distance between this room and another.</span>
 
@@ -1085,7 +1085,7 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">clockPositionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">clockPositionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns the clock position of another room from this one.</span>
 
@@ -1101,13 +1101,12 @@
 		<span class="n">delta</span> <span class="o">=</span> <span class="n">Vec2d</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnum</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span>
 			<span class="k">return</span> <span class="s2">&quot;here&quot;</span>
-		<span class="k">elif</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">return</span> <span class="s2">&quot;same X-Y&quot;</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">position</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">30</span><span class="p">))</span> <span class="ow">or</span> <span class="mi">12</span>
-			<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2"> o&#39;clock&quot;</span>
+		<span class="n">position</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">30</span><span class="p">))</span> <span class="ow">or</span> <span class="mi">12</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2"> o&#39;clock&quot;</span>
 
-	<span class="k">def</span> <span class="nf">directionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">directionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns the compass direction of another room from this one.</span>
 
@@ -1123,12 +1122,11 @@
 		<span class="n">delta</span> <span class="o">=</span> <span class="n">Vec2d</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnum</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span>
 			<span class="k">return</span> <span class="s2">&quot;here&quot;</span>
-		<span class="k">elif</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">return</span> <span class="s2">&quot;same X-Y&quot;</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">COMPASS_DIRECTIONS</span><span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">45</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">COMPASS_DIRECTIONS</span><span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">45</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span>
 
-	<span class="k">def</span> <span class="nf">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Determines if room is an orphan, based on the existence of undefined exits.</span>
 
@@ -1137,7 +1135,7 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">exitObj</span><span class="o">.</span><span class="n">to</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span> <span class="k">for</span> <span class="n">exitObj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exits</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
-	<span class="k">def</span> <span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Determines if room contains one or more undefined exits.</span>
 
@@ -1267,7 +1265,7 @@
 
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">calculateCost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculateCost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Calculates the movement cost for the room.&quot;&quot;&quot;</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="n">TERRAIN_COSTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="p">]</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoid</span> <span class="ow">or</span> <span class="n">AVOID_DYNAMIC_DESC_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamicDesc</span><span class="p">):</span>
@@ -1338,7 +1336,7 @@
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">clockPositionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clockPositionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns the clock position of another room from this one.</span>
 
@@ -1354,11 +1352,10 @@
 	<span class="n">delta</span> <span class="o">=</span> <span class="n">Vec2d</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnum</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span>
 		<span class="k">return</span> <span class="s2">&quot;here&quot;</span>
-	<span class="k">elif</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 		<span class="k">return</span> <span class="s2">&quot;same X-Y&quot;</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">position</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">30</span><span class="p">))</span> <span class="ow">or</span> <span class="mi">12</span>
-		<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2"> o&#39;clock&quot;</span>
+	<span class="n">position</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">30</span><span class="p">))</span> <span class="ow">or</span> <span class="mi">12</span>
+	<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2"> o&#39;clock&quot;</span>
 </code></pre></div>
         </details>
     </div>
@@ -1423,7 +1420,7 @@
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">directionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">directionTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns the compass direction of another room from this one.</span>
 
@@ -1439,10 +1436,9 @@
 	<span class="n">delta</span> <span class="o">=</span> <span class="n">Vec2d</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnum</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">vnum</span><span class="p">:</span>
 		<span class="k">return</span> <span class="s2">&quot;here&quot;</span>
-	<span class="k">elif</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_length_sqrd</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 		<span class="k">return</span> <span class="s2">&quot;same X-Y&quot;</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">COMPASS_DIRECTIONS</span><span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">45</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span>
+	<span class="k">return</span> <span class="n">COMPASS_DIRECTIONS</span><span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="mi">90</span> <span class="o">-</span> <span class="n">delta</span><span class="o">.</span><span class="n">angle_degrees</span> <span class="o">+</span> <span class="mi">360</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">45</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span>
 </code></pre></div>
         </details>
     </div>
@@ -1482,7 +1478,7 @@
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hasUndefinedExits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determines if room contains one or more undefined exits.</span>
 
@@ -1529,7 +1525,7 @@
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">isOrphan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determines if room is an orphan, based on the existence of undefined exits.</span>
 
@@ -1601,7 +1597,7 @@
 </table>
         <details class="quote">
           <summary>Source code in <code>mapper\roomdata\objects.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">manhattanDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">manhattanDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Room</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns the Manhattan distance between this room and another.</span>
 
