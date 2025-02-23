@@ -1,7 +1,7 @@
+# Copyright (c) 2025 Nick Stockton and contributors
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 
 # Future Modules:
 from __future__ import annotations
@@ -12,7 +12,7 @@ import os.path
 import re
 from contextlib import suppress
 from queue import Empty as QueueEmpty
-from typing import TYPE_CHECKING, Any, Optional, Protocol, Union
+from typing import TYPE_CHECKING, Any, Union
 
 # Third-party Modules:
 import pyglet
@@ -98,29 +98,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 
-class GroupType(Protocol):
-	def __init__(self, order: int = 0, parent: Optional[GroupType] = None) -> None: ...
-
-
-class BatchType(Protocol):
-	def draw(self) -> None: ...
-
-
-class SpriteType(Protocol):
-	@property
-	def x(self) -> int: ...
-
-	@x.setter
-	def x(self, value: int) -> None: ...
-
-	@property
-	def y(self) -> int: ...
-
-	@y.setter
-	def y(self, value: int) -> None: ...
-
-
-class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
+class Window(pyglet.window.Window):
 	def __init__(self, world: World) -> None:
 		# Mapperproxy world
 		self.world: World = world
@@ -148,11 +126,11 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		self._gui_queue: GUI_QUEUE_TYPE = world._gui_queue
 		# Sprites
 		# The list of sprites
-		self.sprites: list[SpriteType] = []
+		self.sprites: list[pyglet.sprite.Sprite] = []
 		# Pyglet batch of sprites
-		self.batch: BatchType = pyglet.graphics.Batch()
+		self.batch = pyglet.graphics.Batch()
 		# The list of visible layers (level 0 is covered by level 1)
-		self.layer: list[GroupType]
+		self.layer: list[pyglet.graphics.Group]
 		self.layer = [pyglet.graphics.Group(order=i) for i in range(4)]
 		# Define FPS
 		pyglet.clock.schedule_interval_soft(self.queue_observer, 1.0 / FPS)
@@ -273,7 +251,6 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 	def draw_tile(self, x: int, y: int, z: int, tile: str) -> None:
 		logger.debug(f"Drawing tile: {x} {y} {tile}")
 		# pyglet stuff to add a sprite to the batch
-		sprite: SpriteType
 		sprite = pyglet.sprite.Sprite(TILES[tile], batch=self.batch, group=self.layer[z])
 		# adapt sprite coordinates
 		sprite.x = x * self.square

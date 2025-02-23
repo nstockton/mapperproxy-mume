@@ -1,3 +1,4 @@
+# Copyright (c) 2025 Nick Stockton and contributors
 # ----------------------------------------------------------------------------
 # pymunk
 # Copyright (c) 2007-2023 Victor Blomqvist
@@ -20,7 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 # ----------------------------------------------------------------------------
-
 
 # Future Modules:
 from __future__ import annotations

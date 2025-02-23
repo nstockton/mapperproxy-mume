@@ -1,7 +1,7 @@
+# Copyright (c) 2025 Nick Stockton and contributors
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 
 # Future Modules:
 from __future__ import annotations
@@ -103,15 +103,15 @@ class World:
 		self._interface: str = interface
 		if interface != "text":
 			self._gui_queue: GUI_QUEUE_TYPE = SimpleQueue()
-			self.window: pyglet.window.Window  # type: ignore[no-any-unimported]
+			self.window: pyglet.window.Window
 			if interface == "hc":
 				from .gui import hc
 
-				self.window = hc.Window(self)
+				self.window = hc.Window(self)  # type: ignore[abstract]
 			elif interface == "sighted":
 				from .gui import sighted
 
-				self.window = sighted.Window(self)
+				self.window = sighted.Window(self)  # type: ignore[abstract]
 		self._currentRoom: Room = Room()
 		self.loadRooms()
 		self.loadLabels()

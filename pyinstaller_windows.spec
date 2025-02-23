@@ -1,9 +1,8 @@
 # -*- mode: python -*-
-
+# Copyright (c) 2025 Nick Stockton and contributors
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 
 # Future Modules:
 from __future__ import annotations
@@ -13,6 +12,7 @@ import glob
 import hashlib
 import os
 import pathlib
+import re
 import shutil
 import tempfile
 from datetime import datetime
@@ -27,23 +27,26 @@ from PyInstaller.building.build_main import Analysis
 from PyInstaller.building.datastruct import TOC
 
 # Mapper Modules:
-from mapper import __version__ as APP_VERSION
+from mapper import __version__ as MAPPER_VERSION
 
 
 APP_NAME: str = "Mapper Proxy"
 APP_AUTHOR: str = "Nick Stockton"
+APP_VERSION_MATCH: Union[re.Match[str], None] = re.search(
+	r"^[vV]?(?P<version>\d+\.\d+\.\d+)(?P<version_type>.*)$", MAPPER_VERSION.strip(), flags=re.UNICODE
+)
+APP_VERSION: str
 APP_VERSION_TYPE: str
+if APP_VERSION_MATCH is not None:
+	APP_VERSION, APP_VERSION_TYPE = APP_VERSION_MATCH.groups()
+else:
+	APP_VERSION = "0.0.0"
+	APP_VERSION_TYPE = ""
 ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
 RUN_FILE: str = "run_mapper_proxy.py"
-isTag: bool = False
+isTag: bool = not APP_VERSION_TYPE
 
 
-if "+" in APP_VERSION:
-	APP_VERSION, APP_VERSION_TYPE = APP_VERSION.split("+", 1)
-	APP_VERSION_TYPE = "+" + APP_VERSION_TYPE
-else:
-	APP_VERSION_TYPE = ""
-	isTag = True
 print(f"Using version {APP_VERSION}{APP_VERSION_TYPE}.")
 
 

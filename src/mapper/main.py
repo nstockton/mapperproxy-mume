@@ -1,7 +1,7 @@
+# Copyright (c) 2025 Nick Stockton and contributors
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 
 # Future Modules:
 from __future__ import annotations
@@ -17,6 +17,7 @@ from contextlib import ExitStack, closing, suppress
 from typing import Union
 
 # Third-party Modules:
+import pyglet
 from knickknacks.platforms import getDirectoryPath, touch
 from tap import Tap
 
@@ -25,13 +26,6 @@ from . import INTERFACES, LITERAL_INTERFACES, LITERAL_OUTPUT_FORMATS, OUTPUT_FOR
 from .mapper import Mapper
 from .sockets.bufferedsocket import BufferedSocket
 from .sockets.fakesocket import FakeSocket, FakeSocketEmptyError
-
-
-try:
-	import pyglet
-except ImportError:
-	print("Unable to import Pyglet. GUI will be disabled.")
-	pyglet = None
 
 
 LISTENING_STATUS_FILE: str = getDirectoryPath("mapper_ready.ignore")
@@ -222,7 +216,7 @@ def main(
 	gameThread.start()
 	playerThread.start()
 	mapperThread.start()
-	if interface != "text" and pyglet is not None:
+	if interface != "text":
 		pyglet.app.run()
 	gameThread.join()
 	with suppress(EnvironmentError):
@@ -249,7 +243,7 @@ def run() -> None:
 		logging.info("Initializing")
 		main(
 			outputFormat=args.format,
-			interface=args.interface if pyglet is not None else "text",
+			interface=args.interface,
 			isEmulatingOffline=args.emulation,
 			promptTerminator=b"\r\n" if args.prompt_terminator_lf else None,
 			gagPrompts=args.gag_prompts,

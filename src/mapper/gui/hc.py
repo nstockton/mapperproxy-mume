@@ -1,7 +1,7 @@
+# Copyright (c) 2025 Nick Stockton and contributors
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 
 # Future Modules:
 from __future__ import annotations
@@ -9,11 +9,11 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import math
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable
 from contextlib import suppress
 from enum import Enum, auto
 from queue import Empty as QueueEmpty
-from typing import TYPE_CHECKING, Any, NamedTuple, Optional, Protocol, Union
+from typing import TYPE_CHECKING, Any, NamedTuple, Optional, Union
 
 # Third-party Modules:
 import pyglet
@@ -83,24 +83,6 @@ pyglet.options["debug_gl"] = False
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class BatchType(Protocol):
-	def draw(self) -> None: ...
-
-
-class ShapeType(Protocol):
-	@property
-	def position(self) -> tuple[float, float]: ...
-
-	@position.setter
-	def position(self, values: Sequence[float]) -> None: ...
-
-	def delete(self) -> None: ...
-
-
-class GroupType(Protocol):
-	def __init__(self, order: int = 0, parent: Optional[GroupType] = None) -> None: ...
-
-
 class Groups(Enum):
 	"""
 	The various group/layer levels.
@@ -110,11 +92,10 @@ class Groups(Enum):
 
 	@staticmethod
 	def _generate_next_value_(
-		name: str, start: Union[int, None], count: int, last_values: list[GroupType]
-	) -> GroupType:
+		name: str, start: Union[int, None], count: int, last_values: list[pyglet.graphics.Group]
+	) -> pyglet.graphics.Group:
 		# Overriding this method so that auto() will return a Group instance.
-		group: GroupType = pyglet.graphics.Group(order=count)
-		return group
+		return pyglet.graphics.Group(order=count)
 
 	DEFAULT = auto()
 	PRIORITY_ROOM = auto()
@@ -132,7 +113,7 @@ class Color(NamedTuple):
 	a: int = 255
 
 
-class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
+class Window(pyglet.window.Window):
 	width: int
 	height: int
 
@@ -155,11 +136,11 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		miscColors.update(DEFAULT_MISC_COLORS)
 		miscColors.update(self._cfg.get("misc_colors", {}))
 		self.miscColors: dict[str, Color] = {k: Color(*v) for k, v in miscColors.items()}
-		self.batch: BatchType = pyglet.graphics.Batch()
-		self.visibleRooms: dict[str, tuple[ShapeType, Room, Vec2d]] = {}
-		self.visibleRoomFlags: dict[str, tuple[ShapeType, ...]] = {}
-		self.visibleExits: dict[str, tuple[ShapeType, ...]] = {}
-		self.centerMark: list[ShapeType] = []
+		self.batch = pyglet.graphics.Batch()
+		self.visibleRooms: dict[str, tuple[pyglet.shapes.ShapeBase, Room, Vec2d]] = {}
+		self.visibleRoomFlags: dict[str, tuple[pyglet.shapes.ShapeBase, ...]] = {}
+		self.visibleExits: dict[str, tuple[pyglet.shapes.ShapeBase, ...]] = {}
+		self.centerMark: list[pyglet.shapes.ShapeBase] = []
 		self.highlight: Union[str, None] = None
 		self.currentRoom: Union[Room, None] = None
 		super().__init__(caption="MPM", resizable=True, vsync=False)
@@ -371,9 +352,9 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		*,
 		color: Optional[Color] = None,
 		borderColor: Optional[Color] = None,
-		batch: Optional[BatchType] = None,
-		group: Optional[GroupType] = None,
-	) -> tuple[ShapeType, ShapeType]:
+		batch: Optional[pyglet.graphics.Batch] = None,
+		group: Optional[pyglet.graphics.Group] = None,
+	) -> tuple[pyglet.shapes.ShapeBase, pyglet.shapes.ShapeBase]:
 		"""
 		Draws a triangle with a border around it.
 
@@ -423,13 +404,13 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		radius: float,
 		innerRadiusRatio: float,
 		*,
-		numSpikes: Optional[float] = None,
+		numSpikes: Optional[int] = None,
 		rotation: Optional[float] = None,
 		color: Optional[Color] = None,
 		borderColor: Optional[Color] = None,
-		batch: Optional[BatchType] = None,
-		group: Optional[GroupType] = None,
-	) -> tuple[ShapeType, ShapeType]:
+		batch: Optional[pyglet.graphics.Batch] = None,
+		group: Optional[pyglet.graphics.Group] = None,
+	) -> tuple[pyglet.shapes.ShapeBase, pyglet.shapes.ShapeBase]:
 		"""
 		Draws a star with a border around it.
 
@@ -504,9 +485,9 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		*,
 		color: Optional[Color] = None,
 		borderColor: Optional[Color] = None,
-		batch: Optional[BatchType] = None,
-		group: Optional[GroupType] = None,
-	) -> tuple[ShapeType, ShapeType]:
+		batch: Optional[pyglet.graphics.Batch] = None,
+		group: Optional[pyglet.graphics.Group] = None,
+	) -> tuple[pyglet.shapes.ShapeBase, pyglet.shapes.ShapeBase]:
 		"""
 		Draws a circle with a border around it.
 
@@ -747,7 +728,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 		bottomLeft = cp - (width / 2, height / 2)
 		bottomLeft += DIRECTION_COORDINATES_2D[direction] * roomSize
 		if name not in self.visibleExits:
-			square = shapes.Rectangle(
+			square: pyglet.shapes.ShapeBase = shapes.Rectangle(
 				*bottomLeft,
 				width,
 				height,
@@ -806,7 +787,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			for shape in self.visibleRoomFlags[room.vnum]:
 				shape.position = cp
 
-	def drawRoom(self, room: Room, cp: Vec2d, group: Optional[GroupType] = None) -> None:
+	def drawRoom(self, room: Room, cp: Vec2d, group: Optional[pyglet.graphics.Group] = None) -> None:
 		"""
 		Draws a room.
 
@@ -845,6 +826,7 @@ class Window(pyglet.window.Window):  # type: ignore[misc, no-any-unimported]
 			bottomLeft += (0, wallSize)  # Trim size from bottom.
 		if "west" in walls2d:
 			bottomLeft += (wallSize, 0)  # Trim size from left.
+		square: pyglet.shapes.ShapeBase
 		if room.vnum not in self.visibleRooms:
 			square = shapes.Rectangle(*bottomLeft, width, height, color=color, batch=self.batch, group=group)
 			self.visibleRooms[room.vnum] = (square, room, cp)

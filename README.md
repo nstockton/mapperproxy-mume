@@ -38,8 +38,8 @@ After Python is installed, execute the following commands from the top level dir
 ```
 python -m venv .venv
 source .venv/bin/activate
-pip install --upgrade --require-hashes --requirement requirements-poetry.txt
-poetry install --no-ansi
+pip install --upgrade --require-hashes --requirement requirements-uv.txt
+uv sync --frozen
 pre-commit install -t pre-commit
 pre-commit install -t pre-push
 ```

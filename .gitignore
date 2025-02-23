@@ -129,8 +129,10 @@ dmypy.json
 .pyre/
 
 # Misc
+.pdm-build/
+_version.py
 !pyinstaller_windows.spec
 *.ignore
-mpm_version.py
+run_mapper_proxy.py
 Mapper_Proxy_V*/
 Mapper_Proxy_V*.zip*

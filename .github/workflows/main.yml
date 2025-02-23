@@ -53,15 +53,15 @@ jobs:
         id: cache_virtualenv
         uses: actions/cache@v4
         with:
-          key: venv-${{ env.ImageOS }}${{ runner.arch }}-${{ env.ImageVersion }}-py${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/requirements-poetry.txt', '**/poetry.lock') }}
+          key: venv-${{ env.ImageOS }}${{ runner.arch }}-${{ env.ImageVersion }}-py${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/requirements-uv.txt', '**/uv.lock') }}
           path: .venv
       - name: Install dependencies
         if: steps.cache_virtualenv.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           source ${{ matrix.activate_path }}
-          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-poetry.txt
-          poetry install --no-interaction
+          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-uv.txt
+          uv sync --frozen
       - name: Lint And Test
         run: |
           source ${{ matrix.activate_path }}
@@ -69,7 +69,7 @@ jobs:
           python -m pre_commit install -t pre-push
           python -m pre_commit run --all-files --show-diff-on-failure --hook-stage commit
           python -m pre_commit run --all-files --show-diff-on-failure --hook-stage push
-          poetry build --no-interaction
+          uv build
       - name: Test Documentation
         if: contains(fromJson('["3.10", "3.11", "3.12", "3.13"]'), matrix.python-version)
         run: |
@@ -108,23 +108,17 @@ jobs:
         run: |
           python -m venv .venv
           source ./.venv/Scripts/activate
-          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-poetry.txt
-          poetry install --no-interaction --no-root
+          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-uv.txt
+          uv sync --frozen
       - name: Build Wheel And Source Archive
         id: build_dist
         run: |
           source ./.venv/Scripts/activate
-          poetry build --no-interaction
-          whlfiles=(dist/*.whl)
-          pip install --upgrade "${whlfiles[@]}"
-          pip uninstall --yes poetry poetry-core
           export PYTHONHASHSEED=1
           export SOURCE_DATE_EPOCH=$(git for-each-ref --count=1 --sort="-refname" --format="%(creatordate:unix)" refs/tags)
           python -O -m PyInstaller pyinstaller_windows.spec --clean
           unset PYTHONHASHSEED
           unset SOURCE_DATE_EPOCH
-          python -m pip install --progress-bar off --upgrade --require-hashes --requirement requirements-poetry.txt
-          poetry install --no-interaction
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2

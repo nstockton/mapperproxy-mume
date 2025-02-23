@@ -1,14 +1,15 @@
+# Copyright (c) 2025 Nick Stockton and contributors
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 
 # Future Modules:
 from __future__ import annotations
 
 # Built-in Modules:
 import logging
-from typing import Literal, Union, get_args
+from contextlib import suppress
+from typing import TYPE_CHECKING, Literal, Union, get_args
 
 # Third-party Modules:
 from knickknacks.platforms import getDirectoryPath
@@ -17,13 +18,16 @@ from knickknacks.platforms import getDirectoryPath
 from .config import Config
 
 
-__version__: str = "0.0.0"
-
-
 LITERAL_INTERFACES = Literal["text", "hc", "sighted"]
 INTERFACES: tuple[LITERAL_INTERFACES, ...] = get_args(LITERAL_INTERFACES)
 LITERAL_OUTPUT_FORMATS = Literal["normal", "raw", "tintin"]
 OUTPUT_FORMATS: tuple[LITERAL_OUTPUT_FORMATS, ...] = get_args(LITERAL_OUTPUT_FORMATS)
+
+
+__version__: str = "0.0.0"
+if not TYPE_CHECKING:
+	with suppress(ImportError):
+		from ._version import __version__
 
 
 cfg: Config = Config()
@@ -66,3 +70,9 @@ formatter = logging.Formatter('{levelname}: from {name} in {threadName}: "{messa
 console.setFormatter(formatter)
 
 logging.basicConfig(level=logging.getLevelName(0), handlers=[logFile, console])
+
+
+__all__: list[str] = [
+	"__version__",
+	"cfg",
+]

@@ -1,21 +1,36 @@
 [build-system]
-	requires = [
-		"poetry-core>=1.0.0",
-		"poetry-dynamic-versioning==1.4.0",
-	]
-	build-backend = "poetry_dynamic_versioning.backend"
+	requires = ["pdm-backend"]
+	build-backend = "pdm.backend"
 
-[tool.poetry]
+[project]
 	name = "mapperproxy"
-	version = "0.0.0"
+	authors = [
+		{name = "Nick Stockton", email = "nstockton@users.noreply.github.com"},
+	]
 	description = "A mapper proxy for playing MUME, targeted towards the needs of blind players."
-	authors = ["Nick Stockton <nstockton@users.noreply.github.com>"]
-	license = "MPL-2.0"
+	license = {text = "MPL-2.0"}
 	readme = "README.md"
-	homepage = "https://github.com/nstockton/mapperproxy-mume"
-	repository = "https://github.com/nstockton/mapperproxy-mume"
-	documentation = "https://nstockton.github.io/mapperproxy-mume"
-	keywords = ["blind", "mapper", "mud", "mume"]
+	requires-python = ">=3.9,<4.0"
+	dependencies = [
+		"boltons>=24.0,<25.0",
+		"certifi>=2025.1.31",
+		"fastjsonschema>=2.21.1,<3.0",
+		"knickknacks @ https://github.com/nstockton/knickknacks/releases/download/v0.1.1/knickknacks-0.1.1-py3-none-any.whl",
+		"mud-protocols @ https://github.com/nstockton/mud-protocols/releases/download/v0.7.1/mud_protocols-0.7.1-py3-none-any.whl",
+		"orjson>=3.9,<4.0",
+		"pyglet>=2.0,<3.0",
+		"rapidfuzz>=3.12.1,<4.0",
+		"speechlight>=1.8,<2.0",
+		"typed-argument-parser>=1.9,<2.0",
+		"typing-extensions>=4.1,<5.0; python_version < \"3.10\"",
+	]
+	dynamic = ["version"]
+	keywords = [
+		"blind",
+		"mapper",
+		"mud",
+		"mume",
+	]
 	classifiers = [
 		"Intended Audience :: End Users/Desktop",
 		"License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
@@ -39,71 +54,69 @@
 		"Operating System :: POSIX :: Linux",
 		"Operating System :: Unix",
 	]
-	packages = [
-		{include = "mapper", from = "src"},
-		{include = "mapper_data", from = "src"},
-	]
-	include = [
-		{path = "tests/*", format = "sdist"},
-		{path = "poetry.lock", format = "sdist"},
-	]
-	exclude = [
-		{path = "src/mapper_data/.gitignore"},
-	]
 
-[tool.poetry.dependencies]
-	python = "^3.9"
-	boltons = "^24.0"
-	certifi = "2024.8.30"
-	fastjsonschema = "2.20.0"
-	knickknacks = {url = "https://github.com/nstockton/knickknacks/releases/download/v0.1.1/knickknacks-0.1.1-py3-none-any.whl"}
-	mud-protocols = {url = "https://github.com/nstockton/mud-protocols/releases/download/v0.7.1/mud_protocols-0.7.1-py3-none-any.whl"}
-	orjson = "^3.9"
-	pyglet = "^2.0"
-	rapidfuzz = "3.10.1"
-	speechlight = "^1.8"
-	typed-argument-parser = "^1.9"
-	typing-extensions = {version = "^4.1", python = "< 3.10"}
+[project.urls]
+	homepage = "https://github.com/nstockton/mapperproxy-mume"
+	repository = "https://github.com/nstockton/mapperproxy-mume"
+	documentation = "https://nstockton.github.io/mapperproxy-mume"
 
-[tool.poetry.dev-dependencies]
-	poetry-dynamic-versioning = {version = "1.4.0", extras = ["plugin"]}
-	pre-commit = "^3.5"
-	pyinstaller = {version = "6.5.0", python = ">=3.9, <3.13", platform = "win32"}
-	types-boltons = "^24.0"
-	types-pyinstaller = "6.2.0.1"
-
-[tool.poetry.group.docs.dependencies]
-	jinja2 = "3.0.3"  # See https://github.com/mkdocs/mkdocs/issues/2799
-	mkdocs = "1.2.3"
-	mkdocs-autorefs = "0.3.1"
-	mkdocs-material = "8.1.3"
-	mkdocs-material-extensions = "1.0.3"
-	mkdocstrings = "0.17.0"
-	pytkdocs = {git = "https://github.com/nstockton/pytkdocs.git", rev = "9991d493b408c403ac5691074e2af2e509f22926"}
-
-[tool.poetry.group.lint.dependencies]
-	isort = "^5.13"
-	mypy = "^1.8"
-	ruff = "^0.6"
-
-[tool.poetry.group.test.dependencies]
-	coverage = {version = "^7.4", extras = ["toml"]}
-
-[tool.poetry.scripts]
+[project.scripts]
 	mapper = "mapper.main:run"
 
-[tool.poetry-dynamic-versioning]
-	enable = true
-	vcs = "git"
-	format-jinja = "{% if distance == 0 %}{{ base }}{% else %}{{ base }}+{{ distance }}.g{{ commit|truncate(7,true,'') }}{% endif %}"
+[dependency-groups]
+	dev = [
+		"pre-commit>=3.5,<4.0",
+		"pyinstaller==6.12.0",
+		"types-boltons>=24.0,<25.0",
+		"types-pyinstaller==6.12.0.20250223",
+	]
+	docs = [
+		"jinja2==3.0.3",
+		"mkdocs==1.2.3",
+		"mkdocs-autorefs==0.3.1",
+		"mkdocs-material==8.1.3",
+		"mkdocs-material-extensions==1.0.3",
+		"mkdocstrings==0.17.0",
+		"pytkdocs @ git+https://github.com/nstockton/pytkdocs.git@9991d493b408c403ac5691074e2af2e509f22926",
+	]
+	lint = [
+		"isort>=5.13,<6.0",
+		"mypy>=1.14,<2.0",
+		"ruff>=0.9,<1.0",
+	]
+	test = [
+		"coverage[toml]>=7.6,<8.0",
+	]
 
-[tool.poetry-dynamic-versioning.substitution]
-	files = [
-		"src/*.py", "src/*/__init__.py", "src/*/__version__.py", "src/*/_version.py",
+[tool.pdm.build]
+	package-dir = "src"
+	includes = [
+		"src/mapper",
+		"src/mapper_data/tiles",
+		"src/mapper_data/*.py",
+		"src/mapper_data/*.sample",
+		"src/mapper_data/*.schema",
 	]
-	patterns = [
-		"(^__version__(?:\\s*[:]\\s*str)?\\s*=\\s*['\"])[^'\"]*(['\"])",
+	excludes = [
+		"**/*.ignore",
+		"**/*.log",
 	]
+	source-includes = [
+		"tests",
+		"uv.lock",
+	]
+
+[tool.pdm.version]
+	fallback_version = "0.0.0"
+	source = "scm"
+	tag_filter = "[vV][0-9]*"
+	tag_regex = '^(?:[vV])(?P<version>\d+\.\d+\.\d+)(?:.*)$'
+	write_to = "mapper/_version.py"
+	write_template = "__version__: str = \"{}\"\r\n"
+
+[tool.uv]
+	default-groups = ["dev", "docs", "lint", "test"]
+	upgrade-package = ["mapperproxy"]
 
 [tool.ruff]
 	extend-include = [
@@ -141,8 +154,33 @@
 		"B",  # Flake8-bugbear.
 	]
 
+[tool.ruff.lint.flake8-builtins]
+	# To stop Ruff complaining when a built-in name is used as a variable name, add the name to the list.
+	builtins-ignorelist = []
+
+[tool.ruff.lint.flake8-copyright]
+	author = "Nick Stockton and contributors"
+	min-file-size = 1  # Minimum file size (in bytes) in which to enforce copyright.
+
+[tool.ruff.lint.flake8-implicit-str-concat]
+	allow-multiline = false
+
 [tool.ruff.lint.mccabe]
 	max-complexity = 15
+
+[tool.ruff.lint.per-file-ignores]
+	"**/__init__.py" = ["D1"]
+	"**/_version.py" = ["CPY001"]
+	"./tests/**" = ["D1"]
+	"**/typedef.py" = ["F401"]
+
+[tool.ruff.lint.pydocstyle]
+	convention = "google"
+	ignore-decorators = ["typing.overload"]
+
+[tool.ruff.lint.ruff]
+	# Make it a violation to use a tuple in a subscript without parentheses.
+	parenthesize-tuple-in-subscript = true
 
 [tool.coverage.report]
 	precision = 0
@@ -235,8 +273,6 @@
 
 [[tool.mypy.overrides]]
 	module = [
-		"fastjsonschema.*",
-		"pyglet.*",
 		"PyInstaller.config",
 	]
 	ignore_missing_imports = true
