@@ -273,6 +273,7 @@
 
 [[tool.mypy.overrides]]
 	module = [
+		"fastjsonschema.*",
 		"PyInstaller.config",
 	]
 	ignore_missing_imports = true
