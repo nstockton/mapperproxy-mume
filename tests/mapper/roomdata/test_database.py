@@ -15,6 +15,9 @@ from unittest.mock import Mock, _CallList, call, patch
 import orjson
 
 # Mapper Modules:
+from mapper.roomdata.database import _dump  # NOQA: PLC2701
+from mapper.roomdata.database import _load  # NOQA: PLC2701
+from mapper.roomdata.database import _validate  # NOQA: PLC2701
 from mapper.roomdata.database import (
 	LABELS_FILE_PATH,
 	LABELS_SCHEMA_VERSION,
@@ -22,9 +25,6 @@ from mapper.roomdata.database import (
 	MAP_SCHEMA_VERSION,
 	SAMPLE_LABELS_FILE_PATH,
 	SAMPLE_MAP_FILE_PATH,
-	_dump,
-	_load,
-	_validate,
 	dumpLabels,
 	dumpRooms,
 	getSchemaPath,
@@ -107,7 +107,7 @@ class TestDatabase(TestCase):
 			_validate({"invalid": "invalid"}, schemaPath)
 			loggerOutput = "".join(mockLogger.output)
 		self.assertIn(
-			"Data failed validation: data must not contain {'invalid'} properties",
+			"Data failed validation.",
 			loggerOutput,
 			msg="Expected message not found in logger output.",
 		)
@@ -135,10 +135,10 @@ class TestDatabase(TestCase):
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
 		mockOSPath.isdir.return_value = False
-		# Test IOError:
-		mockFileObj.read.side_effect = lambda *args: (_ for _ in ()).throw(IOError("some error"))
+		# Test OSError:
+		mockFileObj.read.side_effect = lambda *args: (_ for _ in ()).throw(OSError("some error"))
 		errors, database, schemaVersion = _load(fileName)
-		self.assertEqual("IOError: some error", errors)
+		self.assertEqual("OSError: some error", errors)
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
 		# Test corrupted data:
@@ -183,14 +183,14 @@ class TestDatabase(TestCase):
 		mockFileObj.write.assert_called_once()
 		mockValidate.reset_mock()
 		mockFileObj.reset_mock()
-		# Test IOError:
-		mockOpen.side_effect = IOError("some error")
+		# Test OSError:
+		mockOpen.side_effect = OSError("some error")
 		with self.assertLogs("mapper.roomdata.database", level="ERROR") as mockLogger:
 			_dump(self.rooms, fileName, MAP_SCHEMA_FILE_PATH)
 			loggerOutput = "".join(mockLogger.output)
 		mockValidate.assert_called_once_with(self.rooms, MAP_SCHEMA_FILE_PATH)
 		self.assertIn(
-			"IOError: some error",
+			"OSError: some error",
 			loggerOutput,
 			msg="Expected message not found in logger output.",
 		)
@@ -219,7 +219,7 @@ class TestDatabase(TestCase):
 		self.assertEqual(schemaVersion, 0)
 
 	@patch("mapper.roomdata.database._dump")
-	def testDumpLabels(self, mockDump: Mock) -> None:
+	def testDumpLabels(self, mockDump: Mock) -> None:  # NOQA: PLR6301
 		database: dict[str, str] = {"label1": "1", "label2": "2"}
 		dumpLabels(database)
 		output: dict[str, Any] = {

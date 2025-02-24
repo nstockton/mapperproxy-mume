@@ -87,7 +87,7 @@ class TestMumeTime(TestCase):
 
 class TestClock(TestCase):
 	@mock.patch("mapper.clock.time")
-	def test_setTime(self, mockTime: mock.Mock) -> None:
+	def test_setTime(self, mockTime: mock.Mock) -> None:  # NOQA: PLR6301
 		mockTime.time.return_value = DELTA + 1
 		mockEpoch: mock.Mock
 		with mock.patch.object(Clock, "epoch", mock.PropertyMock()) as mockEpoch:

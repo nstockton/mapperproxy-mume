@@ -45,7 +45,7 @@ class TestConfig(TestCase):
 		cfg["test"] = "somevalue"
 		mockOpen: Mock = mock_open()
 		lines: list[str] = []
-		mockOpen.return_value.write.side_effect = lambda line: lines.append(line)
+		mockOpen.return_value.write.side_effect = lines.append
 		with patch("mapper.config.open", mockOpen):
 			cfg.save()
 		fileName: str = os.path.join(DATA_DIRECTORY, f"{cfg.name}.json")

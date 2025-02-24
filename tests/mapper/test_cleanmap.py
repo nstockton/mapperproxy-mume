@@ -14,7 +14,7 @@ from unittest.mock import Mock
 from mapper.cleanmap import EXIT_REGEX, ExitsCleaner
 from mapper.mapper import Mapper
 from mapper.roomdata.objects import DIRECTIONS, Exit, Room
-from mapper.typedef import REGEX_MATCH
+from mapper.typedef import ReMatchType
 
 
 class TestExitRegex(TestCase):
@@ -35,7 +35,7 @@ class TestExitRegex(TestCase):
 			" ~[Down]~   - A closed 'azZeuZjoec'",
 		)
 		for item in exits:
-			match: REGEX_MATCH = EXIT_REGEX.match(item)
+			match: ReMatchType = EXIT_REGEX.match(item)
 			self.assertIsNotNone(match, f"{item} does not match EXIT_REGEX.")
 			if match is not None:
 				direction: str = match.group("dir").lower()
@@ -50,7 +50,7 @@ class TestExitRegex(TestCase):
 			"Exits: north, east, south, west.Exits: none.",
 		)
 		for item in exits:
-			match: REGEX_MATCH = EXIT_REGEX.match(item)
+			match: ReMatchType = EXIT_REGEX.match(item)
 			self.assertIsNone(match, f"{item} should not match EXIT_REGEX, but it does.")
 
 
@@ -88,21 +88,21 @@ class TestExitsCleaner(TestCase):
 			(self.createRoom(("up", False)), "  Up   - Private Stair\r\n"),
 			(self.createRoom(("down", True)), "Exits: *=Down=*   - Public Courtyard\r\n"),
 		)
-		for room, exit in validExits:
+		for room, exitString in validExits:
 			self.mapper.currentRoom = room
-			self.exitsCleaner.handle(exit)
+			self.exitsCleaner.handle(exitString)
 			self.mapper.user_command_secret.assert_not_called()
 			self.mapper.user_command_secret.reset_mock()
 		junkExits: tuple[tuple[Room, str], ...] = (
 			(self.createRoom(("south", True)), "  \\South/   - Southern Slope\r\n"),
 			(self.createRoom(("down", True)), "  *=Down=*   - Public Courtyard\r\n"),
 		)
-		for room, exitStr in junkExits:
+		for room, exitString in junkExits:
 			self.mapper.currentRoom = room
-			match: REGEX_MATCH = EXIT_REGEX.match(exitStr)
+			match: ReMatchType = EXIT_REGEX.match(exitString)
 			self.assertIsNotNone(match, "Regex does not match exit string.")
 			if match is not None:
 				direction = match.group("dir").lower()
-				self.exitsCleaner.handle(exitStr)
+				self.exitsCleaner.handle(exitString)
 				self.mapper.user_command_secret.assert_called_once_with(f"remove {direction}")
 			self.mapper.user_command_secret.reset_mock()

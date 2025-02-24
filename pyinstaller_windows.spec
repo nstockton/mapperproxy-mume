@@ -21,7 +21,7 @@ from typing import Any, Union
 # Third-party Modules:
 import PyInstaller.config
 import speechlight
-from knickknacks.iterables import padList
+from knickknacks.iterables import pad_list
 from PyInstaller.building.api import COLLECT, EXE, PYZ
 from PyInstaller.building.build_main import Analysis
 from PyInstaller.building.datastruct import TOC
@@ -52,7 +52,7 @@ print(f"Using version {APP_VERSION}{APP_VERSION_TYPE}.")
 
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
-APP_VERSION_CSV: str = ", ".join(padList(APP_VERSION.split("."), padding="0", count=4, fixed=True))
+APP_VERSION_CSV: str = ", ".join(pad_list(APP_VERSION.split("."), padding="0", count=4, fixed=True))
 APP_DEST: str = os.path.normpath(
 	os.path.join(
 		ORIG_DEST,
@@ -304,8 +304,10 @@ for files, destination in include_files:
 		if os.path.exists(src) and not os.path.isdir(src):
 			shutil.copy(src, dest_dir)
 
+# In order to insure reproducible zip files, the items inside the zip should have a fixed time.
+# Inside zip files, dates and times are stored in local time in 16 bits, not UTC.
 # Oldest allowed date for zip is 1980-01-01 0:00.
-zip_epoch: int = int(datetime(1980, 1, 1, 0, 0, 0).timestamp())
+zip_epoch: int = int(datetime(1980, 1, 1, 0, 0, 0, tzinfo=None).timestamp())  # NOQA: DTZ001
 source_epoch: int = int(os.getenv("SOURCE_DATE_EPOCH", zip_epoch))
 pdest = pathlib.Path(APP_DEST)
 os.utime(pdest.resolve(), times=(source_epoch, source_epoch))
@@ -333,10 +335,10 @@ hashes: dict[str, hashlib._Hash] = {
 block_size: int = 2**16
 with open(ZIP_FILE, "rb") as zf:
 	for block in iter(lambda: zf.read(block_size), b""):
-		for hash in hashes.values():
-			hash.update(block)
-for hashtype, hash in hashes.items():
+		for func in hashes.values():
+			func.update(block)
+for hashtype, func in hashes.items():
 	with open(f"{ZIP_FILE}.{hashtype}", "w", encoding="utf-8") as f:
-		f.write(f"{hash.hexdigest().lower()} *{os.path.basename(ZIP_FILE)}\n")
+		f.write(f"{func.hexdigest().lower()} *{os.path.basename(ZIP_FILE)}\n")
 
 print("Done.")

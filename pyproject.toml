@@ -15,8 +15,8 @@
 		"boltons>=24.0,<25.0",
 		"certifi>=2025.1.31",
 		"fastjsonschema>=2.21.1,<3.0",
-		"knickknacks @ https://github.com/nstockton/knickknacks/releases/download/v0.1.1/knickknacks-0.1.1-py3-none-any.whl",
-		"mud-protocols @ https://github.com/nstockton/mud-protocols/releases/download/v0.7.1/mud_protocols-0.7.1-py3-none-any.whl",
+		"knickknacks>=0.5.0,<0.6.0",
+		"mud-protocols @ https://github.com/nstockton/mud-protocols/releases/download/v0.9.0/mud_protocols-0.9.0-py3-none-any.whl",
 		"orjson>=3.9,<4.0",
 		"pyglet>=2.0,<3.0",
 		"rapidfuzz>=3.12.1,<4.0",
@@ -132,27 +132,48 @@
 	line-ending = "cr-lf"
 
 [tool.ruff.lint]
+	preview = true
+	# select = ["E4", "E7", "E9", "F"]  # The default.
+	select = ["ALL"]  # Enable all rules.
 	extend-select = [
-		"B",  # Flake8-bugbear.
-		"C901",  # McCabe complexity.
-		"E501",  # Line too long.
-		"N801",  # Class name should use CapWords convention.
-		"N804",  # First argument of a class method should be named cls.
-		"N805",  # First argument of a method should be named self.
-		"N818",  # Exception name should be named with an Error suffix.
-		"PERF",  # Perflint.
-		"RET",  # Flake8-return.
-		"RSE",  # Flake8-raise.
-		"SIM",  # Flake8-simplify.
-		"W",  # Pycodestyle warnings.
+		"D213",  # Multi-line docstring summary should start at the second line.
 	]
 	ignore = [
-		"I",  # ISort will handle imports instead of Ruff.
+		"ANN",  # Flake8-annotations. (We use MyPy for this)
+		"ARG",  # Flake8-unused-arguments.
+		"B019",  # Use of functools.lru_cache or functools.cache on methods can lead to memory leaks.
+		"COM812",  # Trailing comma missing. (Conflicts with formatter)
+		"D",  # Pydocstyle. Fix this.
+		"D105",  # Missing docstring in magic method.
+		"D206",  # Docstring should be indented with spaces, not tabs.
+		"D212",  # Multi-line docstring summary should start at the first line.
+		"EM",  # Flake8-errmsg.
+		"ERA001",  # Found commented-out code.
+		"FBT",  # Flake8-boolean-trap. Fix this.
+		"FIX002",  # Line contains TODO, consider resolving the issue.
+		"FURB103",  # Open and write should be replaced by Path. Fix this.
+		"G",  # Flake8-logging-format.
+		"I",  # ISort. (We use ISort package for this)
+		"N",  # pep8-naming. Fix this.
+		"PLR09",  # Too many public methods, etc. Fix This.
+		"PLR2004",  # Magic value used in comparison. Fix This.
+		"PT",  # Flake8-pytest-style.
+		"PTH",  # Flake8-use-pathlib. Fix this.
+		"SLF001",  # Private member accessed. Fix this.
+		"T20",  # Flake8-print.
+		"TCH",  # Flake8-type-checking.
+		"TD",  # Flake8-todos.
+		"TRY003",  # Avoid specifying long messages outside the exception class.
+		"UP007",  # Use X | Y for union type annotations. (I hate this syntax)
+		"UP045",  # Use X | Y for optional type annotations. (I hate this syntax)
 		"W191",  # Indentation contains tabs.
 	]
-	unfixable = [
-		"B",  # Flake8-bugbear.
+	typing-modules = [
+		"mapper.typedef",
+		"mudproto.typedef",
+		"knickknacks.typedef",
 	]
+	unfixable = []
 
 [tool.ruff.lint.flake8-builtins]
 	# To stop Ruff complaining when a built-in name is used as a variable name, add the name to the list.
@@ -173,6 +194,8 @@
 	"**/_version.py" = ["CPY001"]
 	"./tests/**" = ["D1"]
 	"**/typedef.py" = ["F401"]
+	"./src/mapper/gui/vec2d.py" = ["A002", "DOC", "S101", "UP031"]
+	"./src/mapper/mapper.py" = ["DOC201"]
 
 [tool.ruff.lint.pydocstyle]
 	convention = "google"

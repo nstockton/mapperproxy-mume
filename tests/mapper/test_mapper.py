@@ -14,9 +14,6 @@ from contextlib import ExitStack
 from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
 
-# Third-party Modules:
-from knickknacks.strings import removePrefix
-
 # Mapper Modules:
 from mapper.mapper import Mapper
 from mapper.typedef import MAPPER_QUEUE_EVENT_TYPE
@@ -38,7 +35,7 @@ class TestMapper(TestCase):
 		)
 		self.mapper.daemon = True  # Allow unittest to quit if mapper thread does not close properly.
 
-	def tearDown(self) -> None:
+	def tearDown(self) -> None:  # NOQA: PLR6301
 		logging.disable(logging.NOTSET)
 
 	def testMapper_run(self) -> None:
@@ -134,12 +131,12 @@ class TestMapperHandleMudEvent(TestCase):
 		for handlerName in self.legacyHandlerNames:
 			setattr(self.mapper, handlerName, Mock())
 
-	def tearDown(self) -> None:
+	def tearDown(self) -> None:  # NOQA: PLR6301
 		logging.disable(logging.NOTSET)
 
 	def test_legacyMudEventHandlers(self) -> None:
 		events: Generator[str, None, None] = (
-			removePrefix(handlerName, "mud_event_") for handlerName in self.legacyHandlerNames
+			handlerName.removeprefix("mud_event_") for handlerName in self.legacyHandlerNames
 		)
 		handlers: Generator[Mock, None, None] = (
 			getattr(self.mapper, handlerName) for handlerName in self.legacyHandlerNames

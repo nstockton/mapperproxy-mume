@@ -43,10 +43,10 @@ WELCOME_MESSAGE: bytes = CR_LF + b"                              ***  MUME VIII 
 
 
 class TestGameThread(TestCase):
-	def setUp(self) -> None:
+	def setUp(self) -> None:  # NOQA: PLR6301
 		logging.disable(logging.CRITICAL)
 
-	def tearDown(self) -> None:
+	def tearDown(self) -> None:  # NOQA: PLR6301
 		logging.disable(logging.NOTSET)
 
 	def testGameThread(self) -> None:
@@ -65,9 +65,9 @@ class TestGameThread(TestCase):
 		inputToMume: Queue[bytes] = Queue()
 		mumeSocket: Mock = Mock(spec=socket.socket)
 		mumeSocket.recv.side_effect = lambda arg: outputFromMume.get()
-		mumeSocket.sendall.side_effect = lambda data: inputToMume.put(data)
+		mumeSocket.sendall.side_effect = inputToMume.put
 		clientSocket: Mock = Mock(spec=socket.socket)
-		clientSocket.sendall.side_effect = lambda data: outputToPlayer.put(data)
+		clientSocket.sendall.side_effect = outputToPlayer.put
 		mapperThread: Mock = Mock()
 		mapperThread.interface = "text"
 		proxy: ProxyHandler = ProxyHandler(
@@ -162,10 +162,10 @@ class TestGameThreadThroughput(TestCase):
 		self.outputFromMume: Queue[bytes] = Queue()
 		playerSocket: Mock = Mock(spec=socket.socket)
 		playerSocket.recv.side_effect = lambda arg: self.inputFromPlayer.get()
-		playerSocket.sendall.side_effect = lambda data: self.outputToPlayer.put(data)
+		playerSocket.sendall.side_effect = self.outputToPlayer.put
 		mumeSocket: Mock = Mock(spec=socket.socket)
 		mumeSocket.recv.side_effect = lambda arg: self.outputFromMume.get()
-		mumeSocket.sendall.side_effect = lambda data: self.inputToMume.put(data)
+		mumeSocket.sendall.side_effect = self.inputToMume.put
 		self.mapperThread: Mock = Mock()
 		self.mapperThread.interface = "text"
 		proxy: ProxyHandler = ProxyHandler(
@@ -250,7 +250,7 @@ class TestGameThreadThroughput(TestCase):
 			+ b"For the sleepy, there is a reception and chambers upstairs. A note is stuck to" + CR_LF
 			+ b"the wall." + CR_LF
 			+ b"</description></gratuitous>"
-			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + CR_LF
+			+ b'A large bulletin board, entitled "Board of the Free Peoples", is mounted here.' + CR_LF
 			+ b"A white-painted bench is here." + CR_LF
 			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + CR_LF
 			+ b"An elven lamplighter is resting here." + CR_LF
@@ -258,7 +258,7 @@ class TestGameThreadThroughput(TestCase):
 		)
 		expectedOutput: bytes = (
 			b"Seagull Inn" + CR_LF
-			+ b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + CR_LF
+			+ b'A large bulletin board, entitled "Board of the Free Peoples", is mounted here.' + CR_LF
 			+ b"A white-painted bench is here." + CR_LF
 			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + CR_LF
 			+ b"An elven lamplighter is resting here." + CR_LF
@@ -271,7 +271,7 @@ class TestGameThreadThroughput(TestCase):
 			+ b"the wall." + LF
 		)
 		expectedDynamicDesc: bytes = (
-			b"A large bulletin board, entitled \"Board of the Free Peoples\", is mounted here." + LF
+			b'A large bulletin board, entitled "Board of the Free Peoples", is mounted here.' + LF
 			+ b"A white-painted bench is here." + LF
 			+ b"Eldinor the owner and bartender of the Seagull Inn is serving drinks here." + LF
 			+ b"An elven lamplighter is resting here." + LF

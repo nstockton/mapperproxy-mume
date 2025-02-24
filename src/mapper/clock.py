@@ -13,24 +13,24 @@ from typing import Optional, Union
 
 # Local Modules:
 from . import cfg
-from .typedef import REGEX_PATTERN
+from .typedef import RePatternType
 
 
-CLOCK_REGEX: REGEX_PATTERN = re.compile(
+CLOCK_REGEX: RePatternType = re.compile(
 	r"^The current time is (?P<hour>[1-9]|1[0-2])\:(?P<minutes>[0-5]\d) (?P<am_pm>[ap]m)\.$"
 )
-TIME_REGEX: REGEX_PATTERN = re.compile(
+TIME_REGEX: RePatternType = re.compile(
 	r"^(?:(?:It is )?(?P<hour>[1-9]|1[0-2]) (?P<am_pm>[ap]m)(?: on ))?\w+\, the (?P<day>\d+)(?:st|[nr]d|th) "
 	+ r"of (?P<month>\w+)\, [yY]ear (?P<year>\d{4}) of the Third Age\.$"
 )
-DAWN_REGEX: REGEX_PATTERN = re.compile(
+DAWN_REGEX: RePatternType = re.compile(
 	r"^Light gradually filters in\, proclaiming a new sunrise(?: outside)?\.$"
 )
-DAY_REGEX: REGEX_PATTERN = re.compile(
+DAY_REGEX: RePatternType = re.compile(
 	r"^(?:It seems as if )?[Tt]he day has begun\.(?: You feel so weak under the cruel light\!)?$"
 )
-DUSK_REGEX: REGEX_PATTERN = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
-NIGHT_REGEX: REGEX_PATTERN = re.compile(
+DUSK_REGEX: RePatternType = re.compile(r"^The deepening gloom announces another sunset(?: outside)?\.$")
+NIGHT_REGEX: RePatternType = re.compile(
 	r"^The last ray of light fades\, and all is swallowed up in darkness\.$|"
 	+ r"^(?:It seems as if )?[Tt]he night has begun\.(?: You feel stronger in the dark\!)?$"
 )
@@ -393,32 +393,34 @@ class MumeTime:
 	@property
 	def info(self) -> str:  # pragma: no cover
 		"""A summery of information about this moment in Mume time."""
-		output = []
-		output.append(
-			f"Game time {self.hour % 12 or 12}:{self.minutes:02d} {self.amPm}: "
-			+ f"Dawn: {self.dawn} am, Dusk: {self.dusk - 12} pm."
-		)
 		state, nextState, untilNextState = self.dawnDuskState
-		output.append(
-			f"It is currently {state}, on {self.weekday}, {self.monthName} {self.day} "
-			+ f"({self.monthWestron} / {self.monthSindarin}), ({self.season}), "
-			+ f"year {self.year} of the third age."
-		)
-		output.append(
-			f"Time left until {nextState} is "
-			+ f"less than {untilNextState} tick{'s' if untilNextState != 1 else '!'}"
-		)
-		output.append(
-			f"{self.season[-6:]} ends in "
-			+ f"{self.daysUntilSeason} mume day{'s' if self.daysUntilSeason != 1 else ''} or "
-			+ f"{self.rlHoursUntilSeason} real-life hour{'s' if self.rlHoursUntilSeason != 1 else ''}."
-		)
 		rlDaysUntilWinter = self.rlHoursUntilWinter // HOURS_PER_DAY
 		rlHoursUntilWinter = self.rlHoursUntilWinter % HOURS_PER_DAY
-		output.append(
-			f"Next winter starts in {rlDaysUntilWinter} real-life day{'s' if rlDaysUntilWinter != 1 else ''} "
-			+ f"and {rlHoursUntilWinter} hour{'s' if rlHoursUntilWinter != 1 else ''}."
-		)
+		output = [
+			(
+				f"Game time {self.hour % 12 or 12}:{self.minutes:02d} {self.amPm}: "
+				+ f"Dawn: {self.dawn} am, Dusk: {self.dusk - 12} pm."
+			),
+			(
+				f"It is currently {state}, on {self.weekday}, {self.monthName} {self.day} "
+				+ f"({self.monthWestron} / {self.monthSindarin}), ({self.season}), "
+				+ f"year {self.year} of the third age."
+			),
+			(
+				f"Time left until {nextState} is "
+				+ f"less than {untilNextState} tick{'s' if untilNextState != 1 else '!'}"
+			),
+			(
+				f"{self.season[-6:]} ends in "
+				+ f"{self.daysUntilSeason} mume day{'s' if self.daysUntilSeason != 1 else ''} or "
+				+ f"{self.rlHoursUntilSeason} real-life hour{'s' if self.rlHoursUntilSeason != 1 else ''}."
+			),
+			(
+				"Next winter starts in "
+				+ f"{rlDaysUntilWinter} real-life day{'s' if rlDaysUntilWinter != 1 else ''} "
+				+ f"and {rlHoursUntilWinter} hour{'s' if rlHoursUntilWinter != 1 else ''}."
+			),
+		]
 		hourOfMoonRise = self.hourOfMoonRise
 		if self.hour == hourOfMoonRise:
 			output.append("Moon is up now!")

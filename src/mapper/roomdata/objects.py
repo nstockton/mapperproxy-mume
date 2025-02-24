@@ -13,9 +13,9 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Union
 
-# Local Modules:
-from ..gui.vec2d import Vec2d
-from ..typedef import COORDINATES_TYPE, REGEX_PATTERN
+# Mapper Modules:
+from mapper.gui.vec2d import Vec2d
+from mapper.typedef import COORDINATES_TYPE, RePatternType
 
 
 DIRECTIONS: tuple[str, ...] = (
@@ -52,15 +52,15 @@ COMPASS_DIRECTIONS: tuple[str, ...] = (
 	"west",
 	"northwest",
 )
-AVOID_DYNAMIC_DESC_REGEX: REGEX_PATTERN = re.compile(
+AVOID_DYNAMIC_DESC_REGEX: RePatternType = re.compile(
 	r"Some roots lie here waiting to ensnare weary travellers\.|"
-	r"The remains of a clump of roots lie here in a heap of rotting compost\.|"
-	r"A clump of roots is here, fighting|"
-	r"Some withered twisted roots writhe towards you\.|"
-	r"Black roots shift uneasily all around you\.|"
-	r"black tangle of roots|"
-	r"Massive roots shift uneasily all around you\.|"
-	r"rattlesnake"
+	+ r"The remains of a clump of roots lie here in a heap of rotting compost\.|"
+	+ r"A clump of roots is here, fighting|"
+	+ r"Some withered twisted roots writhe towards you\.|"
+	+ r"Black roots shift uneasily all around you\.|"
+	+ r"black tangle of roots|"
+	+ r"Massive roots shift uneasily all around you\.|"
+	+ r"rattlesnake"
 )
 TERRAIN_COSTS: dict[str, float] = {
 	"cavern": 0.75,
@@ -185,7 +185,12 @@ class Exit:
 
 	@property
 	def direction(self) -> str:
-		"""The direction of movement."""
+		"""
+		The direction of movement.
+
+		Raises:
+			ValueError: Direction undefined.
+		"""
 		if not self._direction:
 			raise ValueError("Direction undefined.")
 		return self._direction
@@ -263,38 +268,42 @@ class Room:
 	@property
 	def info(self) -> str:
 		"""A summery of the room info."""
-		output: list[str] = []
-		output.append(f"vnum: '{self.vnum}'")
-		output.append(f"Name: '{self.name}'")
-		output.append(f"Server ID: '{self.serverID}'")
-		output.append("Description:")
-		output.append("-" * 5)
-		output.extend(self.desc.splitlines())
-		output.append("-" * 5)
-		output.append("Dynamic Desc:")
-		output.append("-" * 5)
-		output.extend(self.dynamicDesc.splitlines())
-		output.append("-" * 5)
-		output.append(f"Note: '{self.note}'")
-		output.append(f"Area: '{self.area}'")
-		output.append(f"Terrain: '{self.terrain}'")
-		output.append(f"Cost: '{self.cost}'")
-		output.append(f"Light: '{self.light}'")
-		output.append(f"Align: '{self.align}'")
-		output.append(f"Portable: '{self.portable}'")
-		output.append(f"Ridable: '{self.ridable}'")
-		output.append(f"Sundeath: '{self.sundeath}'")
-		output.append(f"Mob Flags: '{', '.join(self.mobFlags)}'")
-		output.append(f"Load Flags: '{', '.join(self.loadFlags)}'")
-		output.append(f"Coordinates (X, Y, Z): '{self.coordinates}'")
-		output.append("Exits:")
+		output: list[str] = [
+			f"vnum: '{self.vnum}'",
+			f"Name: '{self.name}'",
+			f"Server ID: '{self.serverID}'",
+			"Description:",
+			"-" * 5,
+			*self.desc.splitlines(),
+			"-" * 5,
+			"Dynamic Desc:",
+			"-" * 5,
+			*self.dynamicDesc.splitlines(),
+			"-" * 5,
+			f"Note: '{self.note}'",
+			f"Area: '{self.area}'",
+			f"Terrain: '{self.terrain}'",
+			f"Cost: '{self.cost}'",
+			f"Light: '{self.light}'",
+			f"Align: '{self.align}'",
+			f"Portable: '{self.portable}'",
+			f"Ridable: '{self.ridable}'",
+			f"Sundeath: '{self.sundeath}'",
+			f"Mob Flags: '{', '.join(self.mobFlags)}'",
+			f"Load Flags: '{', '.join(self.loadFlags)}'",
+			f"Coordinates (X, Y, Z): '{self.coordinates}'",
+			"Exits:",
+		]
 		for direction, exitObj in self.sortedExits:
-			output.append("-" * 5)
-			output.append(f"Direction: '{direction}'")
-			output.append(f"To: '{exitObj.to}'")
-			output.append(f"Exit Flags: '{', '.join(exitObj.exitFlags)}'")
-			output.append(f"Door Name: '{exitObj.door}'")
-			output.append(f"Door Flags: '{', '.join(exitObj.doorFlags)}'")
+			exits: list[str] = [
+				"-" * 5,
+				f"Direction: '{direction}'",
+				f"To: '{exitObj.to}'",
+				f"Exit Flags: '{', '.join(exitObj.exitFlags)}'",
+				f"Door Name: '{exitObj.door}'",
+				f"Door Flags: '{', '.join(exitObj.doorFlags)}'",
+			]
+			output.extend(exits)
 		return "\n".join(output)
 
 	def calculateCost(self) -> None:
@@ -338,7 +347,7 @@ class Room:
 			return "here"
 		if delta.get_length_sqrd() == 0:
 			return "same X-Y"
-		position = int(round((90 - delta.angle_degrees + 360) % 360 / 30)) or 12
+		position = round((90 - delta.angle_degrees + 360) % 360 / 30) or 12
 		return f"{position} o'clock"
 
 	def directionTo(self, other: Room) -> str:

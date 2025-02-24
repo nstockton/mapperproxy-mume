@@ -42,7 +42,7 @@ class FakeSocket:
 	def setsockopt(self, *args: Any) -> None:  # pragma: no cover
 		pass
 
-	def getpeercert(self, *args: Any) -> dict[str, list[list[str]]]:
+	def getpeercert(self, *args: Any) -> dict[str, list[list[str]]]:  # NOQA: PLR6301
 		return {"subject": [["commonName", "mume.org"]]}
 
 	def shutdown(self, *args: Any) -> None:  # pragma: no cover

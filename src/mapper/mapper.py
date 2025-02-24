@@ -14,14 +14,15 @@ import textwrap
 import threading
 import traceback
 from contextlib import suppress
+from itertools import starmap
 from queue import SimpleQueue
 from timeit import default_timer
 from typing import Any, Optional, Union, cast
 
 # Third-party Modules:
-from knickknacks.databytes import decodeBytes
-from knickknacks.strings import formatDocString, regexFuzzy, removePrefix, simplified, stripAnsi
-from knickknacks.xml import escapeXMLString, getXMLAttributes
+from knickknacks.databytes import decode_bytes
+from knickknacks.strings import format_docstring, regex_fuzzy, simplified, strip_ansi
+from knickknacks.xml import escape_xml_string, get_xml_attributes
 from mudproto.mpi import MPIProtocol
 
 # Local Modules:
@@ -37,17 +38,17 @@ from .typedef import (
 	MAPPER_QUEUE_TYPE,
 	MUD_EVENT_HANDLER_TYPE,
 	PLAYER_WRITER_TYPE,
-	REGEX_MATCH,
-	REGEX_PATTERN,
+	ReMatchType,
+	RePatternType,
 )
 from .world import LIGHT_SYMBOLS, RUN_DESTINATION_REGEX, World
 
 
-EXIT_TAGS_REGEX: REGEX_PATTERN = re.compile(
+EXIT_TAGS_REGEX: RePatternType = re.compile(
 	r"(?P<door>[\(\[\#]?)(?P<road>[=-]?)(?P<climb>[/\\]?)(?P<portal>[\{]?)"
 	+ rf"(?P<direction>{'|'.join(DIRECTIONS)})"
 )
-MOVEMENT_FORCED_REGEX: REGEX_PATTERN = re.compile(
+MOVEMENT_FORCED_REGEX: RePatternType = re.compile(
 	"|".join(
 		[
 			r"You feel confused and move along randomly\.\.\.",
@@ -81,7 +82,7 @@ MOVEMENT_FORCED_REGEX: REGEX_PATTERN = re.compile(
 		]
 	)
 )
-MOVEMENT_PREVENTED_REGEX: REGEX_PATTERN = re.compile(
+MOVEMENT_PREVENTED_REGEX: RePatternType = re.compile(
 	"^(?:{lines})$".format(
 		lines="|".join(
 			[
@@ -161,7 +162,7 @@ class Mapper(threading.Thread, World):
 		self.autoWalkDirections: list[str] = []
 		userCommandPrefix: str = "user_command_"
 		self.userCommands: list[str] = [
-			removePrefix(func, userCommandPrefix)
+			func.removeprefix(userCommandPrefix)
 			for func in dir(self)
 			if func.startswith(userCommandPrefix) and callable(getattr(self, func))
 		]
@@ -169,7 +170,7 @@ class Mapper(threading.Thread, World):
 		self.unknownMudEvents: list[str] = []
 		mudEventPrefix: str = "mud_event_"
 		legacyHandlers: list[str] = [
-			removePrefix(func, mudEventPrefix)
+			func.removeprefix(mudEventPrefix)
 			for func in dir(self)
 			if func.startswith(mudEventPrefix) and callable(getattr(self, func))
 		]
@@ -178,7 +179,7 @@ class Mapper(threading.Thread, World):
 		ExitsCleaner(self, "exits")
 		emulationCommandPrefix: str = "emulation_command_"
 		self.emulationCommands: list[str] = [
-			removePrefix(func, emulationCommandPrefix)
+			func.removeprefix(emulationCommandPrefix)
 			for func in dir(self)
 			if func.startswith(emulationCommandPrefix) and callable(getattr(self, func))
 		]
@@ -213,8 +214,8 @@ class Mapper(threading.Thread, World):
 		self.parsedMinutes: int = 0
 		self.timeSynchronized: bool = False
 		self.proxy: ProxyHandler = ProxyHandler(
-			cast(PLAYER_WRITER_TYPE, playerSocket.send),  # todo: Fix this later.
-			cast(GAME_WRITER_TYPE, gameSocket.send),  # todo: Fix this later.
+			cast(PLAYER_WRITER_TYPE, playerSocket.send),  # TODO: Fix this later.
+			cast(GAME_WRITER_TYPE, gameSocket.send),  # TODO: Fix this later.
 			outputFormat=outputFormat,
 			promptTerminator=promptTerminator,
 			isEmulatingOffline=isEmulatingOffline,
@@ -223,7 +224,7 @@ class Mapper(threading.Thread, World):
 		)
 		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
 		try:
-			self.mpiHandler.isWordWrapping = cfg.get("wordwrap", False)
+			self.mpiHandler.is_word_wrapping = cfg.get("wordwrap", False)
 		except LookupError:
 			logger.exception("Unable to set initial value of MPI word wrap.")
 		self.proxy.connect()
@@ -289,10 +290,10 @@ class Mapper(threading.Thread, World):
 					return
 			if self.outputFormat == "raw":
 				if showPrompt and self.prompt and not self.gagPrompts:
-					msg = f"{escapeXMLString(msg)}\n<prompt>{escapeXMLString(self.prompt)}</prompt>"
+					msg = f"{escape_xml_string(msg)}\n<prompt>{escape_xml_string(self.prompt)}</prompt>"
 					self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
 				else:
-					msg = f"\n{escapeXMLString(msg)}\n"
+					msg = f"\n{escape_xml_string(msg)}\n"
 					self.proxy.player.write(msg.encode("utf-8"), escape=True)
 			elif self.outputFormat == "tintin":
 				if showPrompt and self.prompt and not self.gagPrompts:
@@ -301,13 +302,12 @@ class Mapper(threading.Thread, World):
 				else:
 					msg = f"\n{msg}\n"
 					self.proxy.player.write(msg.encode("utf-8"), escape=True)
+			elif showPrompt and self.prompt and not self.gagPrompts:
+				msg = f"{msg}\n{self.prompt}"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
 			else:
-				if showPrompt and self.prompt and not self.gagPrompts:
-					msg = f"{msg}\n{self.prompt}"
-					self.proxy.player.write(msg.encode("utf-8"), escape=True, prompt=True)
-				else:
-					msg = f"\n{msg}\n"
-					self.proxy.player.write(msg.encode("utf-8"), escape=True)
+				msg = f"\n{msg}\n"
+				self.proxy.player.write(msg.encode("utf-8"), escape=True)
 
 	def sendGame(self, msg: str) -> None:
 		with suppress(ConnectionError):
@@ -319,7 +319,7 @@ class Mapper(threading.Thread, World):
 		return args
 
 	def emulation_command_at(self, *args: str) -> tuple[str, ...]:
-		"""mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)"""
+		"""Mimic the /at command that the ainur use. Syntax: at (room label|room number) (command)"""
 		label: str = "".join(args[:1]).strip()
 		command: str = " ".join(args[1:]).strip()
 		if not label:
@@ -339,30 +339,30 @@ class Mapper(threading.Thread, World):
 		return ()
 
 	def emulation_command_brief(self, *args: str) -> tuple[str, ...]:
-		"""toggles brief mode."""
+		"""Toggles brief mode."""
 		self.isEmulatingBriefMode = not self.isEmulatingBriefMode
 		self.output(f"Brief mode {'on' if self.isEmulatingBriefMode else 'off'}")
 		return args
 
 	def emulation_command_dynamic(self, *args: str) -> tuple[str, ...]:
-		"""toggles automatic speaking of dynamic descs."""
+		"""Toggles automatic speaking of dynamic descs."""
 		self.isEmulatingDynamicDescs = not self.isEmulatingDynamicDescs
 		self.sendPlayer(f"dynamic descs {'on' if self.isEmulatingDynamicDescs else 'off'}")
 		return args
 
 	def emulation_command_examine(self, *args: str) -> tuple[str, ...]:
-		"""shows the room's description."""
+		"""Shows the room's description."""
 		self.output(self.emulationRoom.desc)
 		return args
 
 	def emulation_command_exits(self, *args: str) -> tuple[str, ...]:
-		"""shows the exits in the room."""
+		"""Shows the exits in the room."""
 		exits: list[str] = [key for key in DIRECTIONS if key in self.emulationRoom.exits]
 		self.output(f"Exits: {', '.join(exits)}.")
 		return args
 
 	def emulation_command_go(self, *args: str, isJump: bool = True) -> tuple[str, ...]:
-		"""mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)"""
+		"""Mimic the /go command that the ainur use. Syntax: go (room label|room number) (command)"""
 		label: str = "".join(args[:1]).strip()
 		args = args[1:]
 		room: Union[Room, None] = self.getRoomFromLabel(label)
@@ -383,33 +383,31 @@ class Mapper(threading.Thread, World):
 			for funcName in self.emulationCommands
 		]
 		documentedFuncs: list[tuple[str, str]] = [
-			(name, formatDocString(docString, prefix=" " * 8).strip())
+			(name, format_docstring(docString, prefix=" " * 8).strip())
 			for name, docString in helpTexts
 			if docString.strip()
 		]
 		undocumentedFuncs: list[tuple[str, str]] = [text for text in helpTexts if not text[1].strip()]
 		result: list[str] = [
 			"The following commands allow you to emulate exploring the map without needing to move in game:",
-			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs),
+			"\n".join(starmap("    {}: {}".format, documentedFuncs)),
 		]
 		if undocumentedFuncs:
-			result.append("The following commands have no documentation yet.")
-			result.append(
-				textwrap.indent(
-					textwrap.fill(
-						", ".join(helpText[0] for helpText in undocumentedFuncs),
-						width=79,
-						break_long_words=False,
-						break_on_hyphens=False,
-					),
-					prefix="    ",
-				)
+			undocumentedText: str = textwrap.indent(
+				textwrap.fill(
+					", ".join(helpText[0] for helpText in undocumentedFuncs),
+					width=79,
+					break_long_words=False,
+					break_on_hyphens=False,
+				),
+				prefix="    ",
 			)
+			result.append(f"The following commands have no documentation yet.\n{undocumentedText}")
 		self.output("\n".join(result))
 		return args
 
 	def emulation_command_look(self, *args: str) -> tuple[str, ...]:
-		"""looks at the room."""
+		"""Looks at the room."""
 		self.output(self.emulationRoom.name)
 		if not self.isEmulatingBriefMode:
 			self.output(self.emulationRoom.desc)
@@ -420,7 +418,7 @@ class Mapper(threading.Thread, World):
 		return args
 
 	def emulation_command_return(self, *args: str) -> tuple[str, ...]:
-		"""returns to the last room jumped to with the go command."""
+		"""Returns to the last room jumped to with the go command."""
 		if self.lastEmulatedJump is not None:
 			self.emulation_command_go(self.lastEmulatedJump)
 		else:
@@ -428,7 +426,7 @@ class Mapper(threading.Thread, World):
 		return args
 
 	def emulation_command_rename(self, *args: str) -> tuple[str, ...]:
-		"""changes the room name. (useful for exploring places with many similar names)"""
+		"""Changes the room name. (useful for exploring places with many similar names)"""
 		name: str = " ".join(args).strip()
 		if name:
 			self.emulationRoom.name = name
@@ -449,7 +447,7 @@ class Mapper(threading.Thread, World):
 		return args
 
 	def emulate_leave(self, direction: str, *args: str) -> tuple[str, ...]:
-		"""emulates leaving the room into a neighbouring room"""
+		"""Emulates leaving the room into a neighbouring room"""
 		if direction not in self.emulationRoom.exits:
 			self.output("Alas, you cannot go that way...")
 			return args
@@ -506,8 +504,8 @@ class Mapper(threading.Thread, World):
 			self.sendGame(self.clock.time(args[0].strip().lower()))
 
 	def user_command_secretaction(self, *args: str) -> None:
-		matchPattern: str = rf"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regexFuzzy(DIRECTIONS)}))?$"
-		match: REGEX_MATCH = re.match(matchPattern, args[0].strip().lower())
+		matchPattern: str = rf"^\s*(?P<action>.+?)(?:\s+(?P<direction>{regex_fuzzy(DIRECTIONS)}))?$"
+		match: ReMatchType = re.match(matchPattern, args[0].strip().lower())
 		if match is None:
 			self.sendPlayer(f"Syntax: 'secretaction [action] [{' | '.join(DIRECTIONS)}]'.")
 			return
@@ -623,8 +621,8 @@ class Mapper(threading.Thread, World):
 
 	def user_command_wordwrap(self, *args: str) -> None:
 		try:
-			value: bool = not self.mpiHandler.isWordWrapping
-			self.mpiHandler.isWordWrapping = value
+			value: bool = not self.mpiHandler.is_word_wrapping
+			self.mpiHandler.is_word_wrapping = value
 			cfg["wordwrap"] = value
 			cfg.save()
 			self.sendPlayer(f"Word Wrap {'enabled' if value else 'disabled'}.")
@@ -641,11 +639,11 @@ class Mapper(threading.Thread, World):
 		self.sendPlayer(self.rinfo(*args))
 
 	def user_command_vnum(self, *args: str) -> None:
-		"""states the vnum of the current room"""
+		"""States the vnum of the current room"""
 		self.sendPlayer(f"Vnum: {self.currentRoom.vnum}.")
 
 	def user_command_tvnum(self, *args: str) -> None:
-		"""tells a given char the vnum of your room"""
+		"""Tells a given char the vnum of your room"""
 		if not args or not args[0] or not args[0].strip():
 			self.sendPlayer("Tell VNum to who?")
 		else:
@@ -665,7 +663,7 @@ class Mapper(threading.Thread, World):
 			self.sendPlayer("Usage: run [label|vnum]")
 			return
 		self.stopRun()
-		match: REGEX_MATCH
+		match: ReMatchType
 		destination: str
 		argString: str = args[0].strip()
 		if argString.lower() == "t" or argString.lower().startswith("t "):
@@ -714,7 +712,7 @@ class Mapper(threading.Thread, World):
 			return
 		self.autoWalkDirections.clear()
 		argString: str = args[0].strip()
-		match: REGEX_MATCH = RUN_DESTINATION_REGEX.match(argString)
+		match: ReMatchType = RUN_DESTINATION_REGEX.match(argString)
 		if match is not None:
 			destination: str = match.group("destination")
 			flags: str = match.group("flags")
@@ -749,7 +747,7 @@ class Mapper(threading.Thread, World):
 			for funcName in self.userCommands
 		]
 		documentedFuncs: list[tuple[str, str]] = [
-			(name, formatDocString(docString, prefix=" " * 8).strip())
+			(name, format_docstring(docString, prefix=" " * 8).strip())
 			for name, docString in helpTexts
 			if docString.strip()
 		]
@@ -757,21 +755,19 @@ class Mapper(threading.Thread, World):
 		result: list[str] = [
 			"Mapper Commands",
 			"The following commands are used for viewing and editing map data:",
-			"\n".join("    {}: {}".format(*helpText) for helpText in documentedFuncs),
+			"\n".join(starmap("    {}: {}".format, documentedFuncs)),
 		]
 		if undocumentedFuncs:
-			result.append("Undocumented Commands:")
-			result.append(
-				textwrap.indent(
-					textwrap.fill(
-						", ".join(helpText[0] for helpText in undocumentedFuncs),
-						width=79,
-						break_long_words=False,
-						break_on_hyphens=False,
-					),
-					prefix="    ",
-				)
+			undocumentedText: str = textwrap.indent(
+				textwrap.fill(
+					", ".join(helpText[0] for helpText in undocumentedFuncs),
+					width=79,
+					break_long_words=False,
+					break_on_hyphens=False,
+				),
+				prefix="    ",
 			)
+			result.append(f"Undocumented Commands:\n{undocumentedText}")
 		self.output("\n".join(result))
 
 	def walkNextDirection(self) -> None:
@@ -810,14 +806,14 @@ class Mapper(threading.Thread, World):
 			serverIDVnum: str = ""
 			nameVnums: set[str] = set()
 			descVnums: set[str] = set()
-			for vnum, roomObj in self.rooms.items():
+			for roomVnum, roomObj in self.rooms.items():
 				if serverID is not None and roomObj.serverID == serverID:
-					serverIDVnum = vnum
+					serverIDVnum = roomVnum
 					break
 				if name and roomObj.name == name:
-					nameVnums.add(vnum)
+					nameVnums.add(roomVnum)
 				if desc and roomObj.desc == desc:
-					descVnums.add(vnum)
+					descVnums.add(roomVnum)
 			nameDescIntersectionVnums: set[str] = nameVnums.intersection(descVnums)
 			if serverIDVnum or len(nameDescIntersectionVnums) == 1:
 				self.currentRoom = self.rooms[serverIDVnum or "".join(nameDescIntersectionVnums)]
@@ -885,7 +881,7 @@ class Mapper(threading.Thread, World):
 		if lightSymbol is not None and lightSymbol in LIGHT_SYMBOLS:
 			light: str = LIGHT_SYMBOLS[lightSymbol]
 			if light == "lit" and self.currentRoom.light != light:
-				# Todo: Orc can define sundeath, troll can define no_sundeath and lit/dark.
+				# TODO: Orc can define sundeath, troll can define no_sundeath and lit/dark.
 				# output.append(self.rlight("lit"))
 				pass
 		ridable: bool = bool(self.gmcpCharVitals.get("ride") or self.gmcpCharVitals.get("ridden"))
@@ -974,12 +970,12 @@ class Mapper(threading.Thread, World):
 		if self.autoMapping:
 			self.updateRoomFlags()
 
-	def mud_event_gmcp_event_darkness(self, text: str) -> None:
+	def mud_event_gmcp_event_darkness(self, text: str) -> None:  # NOQA: PLR6301
 		value: dict[str, Any] = json.loads(text)
 		if "what" in value and isinstance(value["what"], str):
 			pass  # Do something.
 
-	def mud_event_gmcp_event_sun(self, text: str) -> None:
+	def mud_event_gmcp_event_sun(self, text: str) -> None:  # NOQA: PLR6301
 		value: dict[str, Any] = json.loads(text)
 		if "what" in value and isinstance(value["what"], str):
 			pass  # Do something.
@@ -1036,8 +1032,8 @@ class Mapper(threading.Thread, World):
 				self.sendPlayer(self.rridable("ridable"))
 
 	def syncTime(self, text: str) -> None:
-		clockMatch: REGEX_MATCH = CLOCK_REGEX.match(text)
-		timeMatch: REGEX_MATCH = TIME_REGEX.match(text)
+		clockMatch: ReMatchType = CLOCK_REGEX.match(text)
+		timeMatch: ReMatchType = TIME_REGEX.match(text)
 		if self.timeEvent is None:
 			if clockMatch is not None:
 				hour: int = int(clockMatch.group("hour"))
@@ -1072,10 +1068,10 @@ class Mapper(threading.Thread, World):
 			year: int = int(timeMatch.group("year"))
 			month: int = 0
 			for i, m in enumerate(MONTHS):
-				if timeMatch.group("month") in (m["westron"], m["sindarin"]):
+				if timeMatch.group("month") in {m["westron"], m["sindarin"]}:
 					month = i
 					break
-			if self.timeEvent in ("dawn", "dusk"):
+			if self.timeEvent in {"dawn", "dusk"}:
 				self.parsedHour = int(MONTHS[month][self.timeEvent]) + self.timeEventOffset
 				self.parsedMinutes = 0
 			self.clock.setTime(year, month, day, self.parsedHour, self.parsedMinutes)
@@ -1086,10 +1082,10 @@ class Mapper(threading.Thread, World):
 
 	def mud_event_room(self, text: str) -> None:
 		self.xmlRoomAttributes.clear()
-		self.xmlRoomAttributes.update(getXMLAttributes(text))
+		self.xmlRoomAttributes.update(get_xml_attributes(text))
 
 	def mud_event_name(self, text: str) -> None:
-		if text not in ("You just see a dense fog around you...", "It is pitch black..."):
+		if text not in {"You just see a dense fog around you...", "It is pitch black..."}:
 			self.roomName = simplified(text)
 		else:
 			self.roomName = ""
@@ -1189,13 +1185,13 @@ class Mapper(threading.Thread, World):
 			self.user_command_emu(text)
 		else:
 			userCommand: str = text.split()[0]
-			args: str = removePrefix(text, userCommand).strip()
+			args: str = text.removeprefix(userCommand).strip()
 			getattr(self, f"user_command_{userCommand}")(args)
 
 	def handleMudEvent(self, event: str, text: str) -> None:
-		text = stripAnsi(text)
+		text = strip_ansi(text)
 		if event in self.mudEventHandlers:
-			if not self.scouting or event in ("prompt", "movement"):
+			if not self.scouting or event in {"prompt", "movement"}:
 				for handler in self.mudEventHandlers[event]:
 					handler(text)
 		elif event not in self.unknownMudEvents:
@@ -1217,7 +1213,8 @@ class Mapper(threading.Thread, World):
 		self.mudEventHandlers[event].add(handler)
 
 	def deregisterMudEventHandler(self, event: str, handler: MUD_EVENT_HANDLER_TYPE) -> None:
-		"""Deregisters mud event handlers.
+		"""
+		Deregisters mud event handlers.
 		params: same as registerMudEventHandler.
 		"""
 		if event in self.mudEventHandlers and handler in self.mudEventHandlers[event]:
@@ -1229,7 +1226,7 @@ class Mapper(threading.Thread, World):
 		for item in iter(self.queue.get, None):
 			try:
 				event, data = item
-				text = decodeBytes(data)
+				text = decode_bytes(data)
 				if event == "userInput":
 					self.handleUserInput(text)
 				else:

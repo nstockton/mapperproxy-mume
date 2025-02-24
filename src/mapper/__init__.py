@@ -12,15 +12,16 @@ from contextlib import suppress
 from typing import TYPE_CHECKING, Literal, Union, get_args
 
 # Third-party Modules:
-from knickknacks.platforms import getDirectoryPath
+from knickknacks.platforms import get_directory_path
 
 # Local Modules:
 from .config import Config
+from .typedef import TypeAlias
 
 
-LITERAL_INTERFACES = Literal["text", "hc", "sighted"]
+LITERAL_INTERFACES: TypeAlias = Literal["text", "hc", "sighted"]
 INTERFACES: tuple[LITERAL_INTERFACES, ...] = get_args(LITERAL_INTERFACES)
-LITERAL_OUTPUT_FORMATS = Literal["normal", "raw", "tintin"]
+LITERAL_OUTPUT_FORMATS: TypeAlias = Literal["normal", "raw", "tintin"]
 OUTPUT_FORMATS: tuple[LITERAL_OUTPUT_FORMATS, ...] = get_args(LITERAL_OUTPUT_FORMATS)
 
 
@@ -47,14 +48,14 @@ def levelName(level: Union[str, int, None]) -> str:
 
 
 loggingLevel: str = levelName(cfg.get("logging_level"))
-if loggingLevel == logging.getLevelName(0) and cfg.get("logging_level") not in (
+if loggingLevel == logging.getLevelName(0) and cfg.get("logging_level") not in {
 	logging.getLevelName(0),
 	0,
-):  # Invalid value in the configuration file.
+}:  # Invalid value in the configuration file.
 	cfg["logging_level"] = loggingLevel
 	cfg.save()
 
-logFile = logging.FileHandler(getDirectoryPath("debug.log"), mode="a", encoding="utf-8")
+logFile = logging.FileHandler(get_directory_path("debug.log"), mode="a", encoding="utf-8")
 logFile.setLevel(loggingLevel)
 formatter = logging.Formatter(
 	'{levelname}: from {name} in {threadName}: "{message}" @ {asctime}.{msecs:0f}',

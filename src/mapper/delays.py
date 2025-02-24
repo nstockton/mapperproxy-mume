@@ -34,6 +34,9 @@ class BaseDelay(threading.Thread):
 			function: The function to be called at each iteration.
 			*args: Positional arguments to be passed to the called function.
 			**kwargs: Key-word only arguments to be passed to the called function.
+
+		Raises:
+			ValueError: count is a negative number.
 		"""
 		if count is not None and count < 0:
 			raise ValueError("count must be a positive number or None.")

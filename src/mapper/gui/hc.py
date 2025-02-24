@@ -22,16 +22,18 @@ from pyglet import shapes
 from pyglet.window import key
 from speechlight import Speech
 
+# Mapper Modules:
+from mapper import cfg
+from mapper.roomdata.objects import DIRECTION_COORDINATES, DIRECTIONS, Exit, Room
+from mapper.typedef import GUI_QUEUE_TYPE
+
 # Local Modules:
 from .vec2d import Vec2d
-from .. import cfg
-from ..roomdata.objects import DIRECTION_COORDINATES, DIRECTIONS, Exit, Room
-from ..typedef import GUI_QUEUE_TYPE
 
 
 if TYPE_CHECKING:
 	# Prevent cyclic import.
-	from ..world import World
+	from mapper.world import World
 
 
 FPS: int = 30
@@ -249,8 +251,8 @@ class Window(pyglet.window.Window):
 		"""The radius in room coordinates, used when searching for neighboring rooms."""
 		roomSize: int = self.roomSize
 		return (
-			int(math.ceil(self.width / roomSize / 2)),
-			int(math.ceil(self.height / roomSize / 2)),
+			math.ceil(self.width / roomSize / 2),
+			math.ceil(self.height / roomSize / 2),
 			1,
 		)
 
@@ -291,7 +293,7 @@ class Window(pyglet.window.Window):
 			A vector containing the top right coordinates.
 		"""
 		width = height = self.roomSize
-		return cp + (width / 2.0, height / 2.0)
+		return cp + (width / 2.0, height / 2.0)  # NOQA: RUF005
 
 	def roomBottomRight(self, cp: Vec2d) -> Vec2d:
 		"""
@@ -304,7 +306,7 @@ class Window(pyglet.window.Window):
 			A vector containing the bottom right coordinates.
 		"""
 		width = height = self.roomSize
-		return cp + (width / 2.0, -height / 2.0)
+		return cp + (width / 2.0, -height / 2.0)  # NOQA: RUF005
 
 	def roomOffsetFromPixels(self, x: float, y: float, z: Optional[float] = None) -> tuple[int, int]:
 		"""
@@ -325,7 +327,8 @@ class Window(pyglet.window.Window):
 			int((y - cp.y + roomSize / 2) // roomSize),
 		)
 
-	def equilateralTriangle(self, cp: Vec2d, radius: float, angle: float) -> tuple[Vec2d, Vec2d, Vec2d]:
+	@staticmethod
+	def equilateralTriangle(cp: Vec2d, radius: float, angle: float) -> tuple[Vec2d, Vec2d, Vec2d]:
 		"""
 		Calculates the coordinates for the corners of an equilateral triangle.
 
@@ -545,11 +548,11 @@ class Window(pyglet.window.Window):
 			modifiers: Bitwise combination of the key modifiers active.
 		"""
 		if self.fullscreen:
-			self.say("Can't change window size while in full screen.", True)
+			self.say("Can't change window size while in full screen.", interrupt=True)
 			return
 		value = not self.expandWindow
 		self.expandWindow = value
-		self.say(f"Window {'expanded' if value else 'restored'}.", True)
+		self.say(f"Window {'expanded' if value else 'restored'}.", interrupt=True)
 
 	def keyboard_toggleAlwaysOnTop(self, symbol: int, modifiers: int) -> None:
 		"""
@@ -561,7 +564,7 @@ class Window(pyglet.window.Window):
 		"""
 		value = not self.alwaysOnTop
 		self.alwaysOnTop = value
-		self.say(f"Always on top {'enabled' if value else 'disabled'}.", True)
+		self.say(f"Always on top {'enabled' if value else 'disabled'}.", interrupt=True)
 
 	def keyboard_toggleFullscreen(self, symbol: int, modifiers: int) -> None:
 		"""
@@ -574,7 +577,7 @@ class Window(pyglet.window.Window):
 		value = not self.fullscreen
 		self.set_fullscreen(value)
 		self._cfg["fullscreen"] = value
-		self.say(f"fullscreen {'enabled' if value else 'disabled'}.", True)
+		self.say(f"fullscreen {'enabled' if value else 'disabled'}.", interrupt=True)
 
 	def keyboard_adjustSize(self, symbol: int, modifiers: int) -> None:
 		"""
@@ -588,7 +591,7 @@ class Window(pyglet.window.Window):
 			self.roomSize -= 10
 		elif symbol == key.RIGHT:
 			self.roomSize += 10
-		self.say(f"{self.roomSize}%", True)
+		self.say(f"{self.roomSize}%", interrupt=True)
 		self.on_guiRefresh()
 
 	def keyboard_resetZoom(self, symbol: int, modifiers: int) -> None:
@@ -601,7 +604,7 @@ class Window(pyglet.window.Window):
 		"""
 		self.roomSize = DEFAULT_ROOM_SIZE
 		self.on_guiRefresh()
-		self.say("Reset zoom", True)
+		self.say("Reset zoom", interrupt=True)
 
 	def deleteStaleRooms(self, excludes: Optional[Iterable[str]] = None) -> None:
 		"""
@@ -680,7 +683,7 @@ class Window(pyglet.window.Window):
 		triangleSize = self.walledRoomSize / 3
 		if direction == "up":
 			# Triangle pointing up on top half of room square.
-			triangleCP = cp + (0, triangleSize)
+			triangleCP = cp + (0, triangleSize)  # NOQA: RUF005
 			angle = 90
 		else:
 			# Triangle pointing down on bottom half of room square.
@@ -710,8 +713,8 @@ class Window(pyglet.window.Window):
 			self.visibleExits[name] = (borderTriangle, innerTriangle)
 		else:
 			borderTriangle, innerTriangle = self.visibleExits[name]
-			border1, border2, border3 = self.equilateralTriangle(triangleCP, radius, angle)
-			inner1, inner2, inner3 = self.equilateralTriangle(triangleCP, radius * innerRadiusRatio, angle)
+			border1, border2, border3 = self.equilateralTriangle(triangleCP, radius, angle)  # NOQA: F841
+			inner1, inner2, inner3 = self.equilateralTriangle(triangleCP, radius * innerRadiusRatio, angle)  # NOQA: F841
 			borderTriangle.position = border1
 			innerTriangle.position = inner1
 
@@ -752,7 +755,7 @@ class Window(pyglet.window.Window):
 		logger.debug("Drawing special exits")
 		visibleExits = set()
 		for vnum, item in self.visibleRooms.items():
-			square, room, cp = item
+			square, room, cp = item  # NOQA: F841
 			for direction, exitObj in room.exits.items():
 				name = vnum + direction
 				if direction in DIRECTIONS_UD:
@@ -944,7 +947,7 @@ class Window(pyglet.window.Window):
 			dy: Relative Y position from the previous mouse position.
 		"""
 		for vnum, item in self.visibleRooms.items():
-			square, room, cp = item
+			square, room, cp = item  # NOQA: F841
 			if self.roomOffsetFromPixels(*cp) == self.roomOffsetFromPixels(x, y):
 				if vnum is None or vnum not in self.world.rooms:
 					return
@@ -952,7 +955,7 @@ class Window(pyglet.window.Window):
 					# Room already highlighted.
 					return
 				self.highlight = vnum
-				self.say(f"{room.name}, {vnum}", True)
+				self.say(f"{room.name}, {vnum}", interrupt=True)
 				break
 		else:
 			self.highlight = None
@@ -974,7 +977,7 @@ class Window(pyglet.window.Window):
 			return
 		# check if the player clicked on a room
 		for vnum, item in self.visibleRooms.items():
-			square, room, cp = item
+			square, room, cp = item  # NOQA: F841
 			if self.roomOffsetFromPixels(*cp) == self.roomOffsetFromPixels(x, y):
 				# Action depends on which button the player clicked
 				if vnum is None or vnum not in self.world.rooms:

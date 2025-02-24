@@ -10,7 +10,7 @@ from __future__ import annotations
 import os.path
 
 # Third-party Modules:
-from knickknacks.platforms import getDirectoryPath, isFrozen
+from knickknacks.platforms import get_directory_path, is_frozen
 
 
 DATA_DIRECTORY: str = "mapper_data"
@@ -26,5 +26,5 @@ def getDataPath(*args: str) -> str:
 	Returns:
 		The path.
 	"""
-	path: str = getDirectoryPath(os.path.curdir if isFrozen() else os.path.pardir, DATA_DIRECTORY)
+	path: str = get_directory_path(os.path.curdir if is_frozen() else os.path.pardir, DATA_DIRECTORY)
 	return os.path.realpath(os.path.join(path, *args))

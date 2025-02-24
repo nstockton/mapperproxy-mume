@@ -18,7 +18,7 @@ from typing import Union
 
 # Third-party Modules:
 import pyglet
-from knickknacks.platforms import getDirectoryPath, touch
+from knickknacks.platforms import get_directory_path, touch
 from tap import Tap
 
 # Local Modules:
@@ -28,7 +28,7 @@ from .sockets.bufferedsocket import BufferedSocket
 from .sockets.fakesocket import FakeSocket, FakeSocketEmptyError
 
 
-LISTENING_STATUS_FILE: str = getDirectoryPath("mapper_ready.ignore")
+LISTENING_STATUS_FILE: str = get_directory_path("mapper_ready.ignore")
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class Player(threading.Thread):
 					self.close()
 			except socket.timeout:  # NOQA: PERF203
 				continue
-			except EnvironmentError:  # NOQA: PERF203
+			except OSError:
 				self.close()
 				continue
 		if self.mapper.isEmulatingOffline:
@@ -85,7 +85,7 @@ class Game(threading.Thread):
 					self.close()
 			except FakeSocketEmptyError:  # NOQA: PERF203
 				continue
-			except EnvironmentError:  # NOQA: PERF203
+			except OSError:
 				self.close()
 				continue
 		if self.mapper.interface != "text":
@@ -170,7 +170,7 @@ def main(
 	touch(LISTENING_STATUS_FILE)
 	unbufferedPlayerSocket: socket.socket
 	playerAddress: tuple[str, int]
-	unbufferedPlayerSocket, playerAddress = proxySocket.accept()
+	unbufferedPlayerSocket, playerAddress = proxySocket.accept()  # NOQA: F841
 	playerSocket: BufferedSocket = BufferedSocket(
 		unbufferedPlayerSocket,
 		timeout=1.0,
@@ -240,7 +240,7 @@ def run() -> None:
 	)
 	args: ArgumentParser = parser.parse_args()
 	try:
-		logging.info("Initializing")
+		logging.info("Initializing")  # NOQA: LOG015
 		main(
 			outputFormat=args.format,
 			interface=args.interface,
@@ -256,7 +256,7 @@ def run() -> None:
 		)
 	except Exception:
 		traceback.print_exc()
-		logging.exception("OOPS!")
+		logging.exception("OOPS!")  # NOQA: LOG015
 	finally:
-		logging.info("Shutting down.")
+		logging.info("Shutting down.")  # NOQA: LOG015
 		logging.shutdown()

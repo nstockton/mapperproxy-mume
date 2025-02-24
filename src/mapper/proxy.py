@@ -19,7 +19,7 @@ from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
 from mudproto.mpi import MPI_INIT, MPIProtocol
 from mudproto.naws import UINT16_MAX, Dimensions, NAWSMixIn
-from mudproto.telnet import TelnetProtocol, escapeIAC
+from mudproto.telnet import TelnetProtocol, escape_iac
 from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
 from mudproto.xml import XMLProtocol as _XMLProtocol
 
@@ -41,19 +41,19 @@ class Telnet(TelnetProtocol):
 	def __init__(self, *args: Any, name: str, proxy: ProxyHandler, **kwargs: Any) -> None:
 		super().__init__(*args, **kwargs)
 		self.name: str = name
-		if self.name not in ("player", "game"):
+		if self.name not in {"player", "game"}:
 			raise ValueError("Name must be 'player' or 'game'")
 		self.proxy: ProxyHandler = proxy
 
 	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
-		if command in NEGOTIATION_BYTES and option not in self.subnegotiationMap:
+		if command in NEGOTIATION_BYTES and option not in self.subnegotiation_map:
 			# Treat any unhandled negotiation options the same as unhandled commands, so
 			# they are forwarded to the other end of the proxy.
-			self.on_unhandledCommand(command, option)
+			self.on_unhandled_command(command, option)
 		else:
 			super().on_command(command, option)
 
-	def on_unhandledCommand(self, command: bytes, option: Union[bytes, None]) -> None:
+	def on_unhandled_command(self, command: bytes, option: Union[bytes, None]) -> None:
 		# Forward unhandled commands to the other side of the proxy.
 		writer = self.proxy.game.write if self.name == "player" else self.proxy.player.write
 		if option is None:
@@ -61,10 +61,10 @@ class Telnet(TelnetProtocol):
 		else:
 			writer(IAC + command + option)
 
-	def on_unhandledSubnegotiation(self, option: bytes, data: bytes) -> None:
+	def on_unhandled_subnegotiation(self, option: bytes, data: bytes) -> None:
 		# Forward unhandled subnegotiations to the other side of the proxy.
 		writer = self.proxy.game.write if self.name == "player" else self.proxy.player.write
-		writer(IAC + SB + option + escapeIAC(data) + IAC + SE)
+		writer(IAC + SB + option + escape_iac(data) + IAC + SE)
 
 
 class Player(GMCPMixIn, Telnet):
@@ -76,24 +76,24 @@ class Player(GMCPMixIn, Telnet):
 	def game(self) -> Game:
 		return cast(Game, self.proxy.game._handlers[0])
 
-	def gmcpSend(self, *args: Any, **kwargs: Any) -> None:
-		if self.isGMCPInitialized:
+	def gmcp_send(self, *args: Any, **kwargs: Any) -> None:
+		if self.is_gmcp_initialized:
 			# Only send GMCP messages from game if player's client has enabled GMCP.
-			super().gmcpSend(*args, **kwargs)
+			super().gmcp_send(*args, **kwargs)
 
 	def mpmMessageSend(self, value: Any) -> bool:
 		if self._mpmGMCP:
-			self.gmcpSend("mpm.message", value, isSerialized=False)
+			self.gmcp_send("mpm.message", value, is_serialized=False)
 			return True
 		return False
 
 	def mpmEventSend(self, value: Any) -> bool:
 		if self._mpmGMCP:
-			self.gmcpSend("mpm.event", value, isSerialized=False)
+			self.gmcp_send("mpm.event", value, is_serialized=False)
 			return True
 		return False
 
-	def on_gmcpMessage(self, package: str, value: bytes) -> None:
+	def on_gmcp_message(self, package: str, value: bytes) -> None:
 		if package == "core.supports.set":
 			# Player's client may append, but not replace packages.
 			package = "core.supports.add"
@@ -116,22 +116,22 @@ class Player(GMCPMixIn, Telnet):
 			value = bytes(
 				json.dumps(addedPackages, ensure_ascii=False, indent=None, separators=(", ", ": ")), "utf-8"
 			)
-		if self.game.isGMCPInitialized:
-			self.game.gmcpSend(package, value, isSerialized=True)
+		if self.game.is_gmcp_initialized:
+			self.game.gmcp_send(package, value, is_serialized=True)
 		else:
 			self.game._gmcpBuffer.append((package, value, True))
 
-	def on_enableLocal(self, option: bytes) -> bool:
-		if option != GMCP and option in self.game.subnegotiationMap:
+	def on_enable_local(self, option: bytes) -> bool:
+		if option != GMCP and option in self.game.subnegotiation_map:
 			return False
-		return super().on_enableLocal(option)
+		return super().on_enable_local(option)
 
 
 class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		super().__init__(*args, name="game", gmcpClientInfo=("MPM", __version__), **kwargs)
 		self._gmcpBuffer: list[tuple[str, bytes, bool]] = []
-		self.commandMap[GA] = self.on_ga
+		self.command_map[GA] = self.on_ga
 
 	@property
 	def player(self) -> Player:
@@ -141,18 +141,18 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 		"""Called when a Go Ahead command is received."""
 		self.proxy.player.write(b"", prompt=True)
 
-	def on_gmcpMessage(self, package: str, value: bytes) -> None:
-		if package in ("char.vitals", "event.darkness", "event.sun"):
+	def on_gmcp_message(self, package: str, value: bytes) -> None:
+		if package in {"char.vitals", "event.darkness", "event.sun"}:
 			self.proxy.eventCaller((f"gmcp_{package.replace('.', '_')}", value))
-		self.player.gmcpSend(package, value, isSerialized=True)
+		self.player.gmcp_send(package, value, is_serialized=True)
 
-	def on_connectionMade(self) -> None:
-		super().on_connectionMade()
+	def on_connection_made(self) -> None:
+		super().on_connection_made()
 		# Tell the Mume server to put IAC-GA at end of prompts.
 		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
 
-	def on_optionEnabled(self, option: bytes) -> None:
-		super().on_optionEnabled(option)  # pragma: no cover
+	def on_option_enabled(self, option: bytes) -> None:
+		super().on_option_enabled(option)  # pragma: no cover
 		if option == NAWS:
 			# NAWS was enabled.
 			self.nawsDimensions = Dimensions(UINT16_MAX, UINT16_MAX)  # Max character width, max line hight.
@@ -162,10 +162,10 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 				"Char": 1,
 				"Event": 1,
 			}
-			self.gmcpSetPackages(supportedPackages)
+			self.gmcp_set_packages(supportedPackages)
 			while self._gmcpBuffer:
-				package, value, isSerialized = self._gmcpBuffer.pop(0)
-				self.gmcpSend(package, value, isSerialized=isSerialized)
+				package, value, is_serialized = self._gmcpBuffer.pop(0)
+				self.gmcp_send(package, value, is_serialized=is_serialized)
 
 
 class XMLProtocol(_XMLProtocol):
@@ -173,7 +173,7 @@ class XMLProtocol(_XMLProtocol):
 		self.eventCaller: MUD_EVENT_CALLER_TYPE = eventCaller
 		super().__init__(*args, **kwargs)
 
-	def on_xmlEvent(self, name: str, data: bytes) -> None:
+	def on_xml_event(self, name: str, data: bytes) -> None:
 		self.eventCaller((name, data))
 
 
@@ -195,17 +195,17 @@ class ProxyHandler:
 		self.playerInputBuffer: bytearray = bytearray()
 		self.eventCaller: MUD_EVENT_CALLER_TYPE = eventCaller
 		self.player: Manager = Manager(
-			playerWriter, self.on_playerReceived, isClient=False, promptTerminator=promptTerminator
+			playerWriter, self.on_playerReceived, is_client=False, prompt_terminator=promptTerminator
 		)
 		self.player.register(Player, proxy=self)
 		self.game: Manager = Manager(
-			gameWriter, self.on_gameReceived, isClient=True, promptTerminator=promptTerminator
+			gameWriter, self.on_gameReceived, is_client=True, prompt_terminator=promptTerminator
 		)
 		self.game.register(Game, proxy=self)
-		self.game.register(MPIProtocol, outputFormat=self.outputFormat)
+		self.game.register(MPIProtocol, output_format=self.outputFormat)
 		self.game.register(
 			XMLProtocol,
-			outputFormat=self.outputFormat,
+			output_format=self.outputFormat,
 			eventCaller=self.eventCaller,
 		)
 

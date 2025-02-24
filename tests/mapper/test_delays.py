@@ -33,7 +33,7 @@ class TestDelays(TestCase):
 			self.assertTrue(delay._finished.is_set())
 
 	@mock.patch("mapper.delays.Delay.start")
-	def testDelay(self, mockStart: mock.Mock) -> None:
+	def testDelay(self, mockStart: mock.Mock) -> None:  # NOQA: PLR6301
 		Delay(60, 10, lambda *args: None)
 		mockStart.assert_called_once()
 

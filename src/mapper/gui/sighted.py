@@ -9,7 +9,6 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 import os.path
-import re
 from contextlib import suppress
 from queue import Empty as QueueEmpty
 from typing import TYPE_CHECKING, Any, Union
@@ -17,15 +16,15 @@ from typing import TYPE_CHECKING, Any, Union
 # Third-party Modules:
 import pyglet
 
-# Local Modules:
-from ..roomdata.objects import Room
-from ..typedef import GUI_QUEUE_TYPE
-from ..utils import getDataPath
+# Mapper Modules:
+from mapper.roomdata.objects import Room
+from mapper.typedef import GUI_QUEUE_TYPE
+from mapper.utils import getDataPath
 
 
 if TYPE_CHECKING:  # pragma: no cover
 	# Prevent cyclic import.
-	from ..world import World
+	from mapper.world import World
 
 
 FPS: int = 40
@@ -173,8 +172,10 @@ class Window(pyglet.window.Window):
 		self.draw_map(currentRoom)
 
 	def on_guiRefresh(self) -> None:
-		"""This event is fired when the mapper needs to signal the GUI to clear
-		the visible rooms cache and redraw the map view."""
+		"""
+		This event is fired when the mapper needs to signal the GUI to clear
+		the visible rooms cache and redraw the map view.
+		"""
 		if self.centerRoom is not None:
 			self.draw_map(self.centerRoom)
 			logger.debug("GUI refreshed.")
@@ -202,7 +203,7 @@ class Window(pyglet.window.Window):
 
 	def draw_room(self, x: int, y: int, room: Room) -> None:
 		logger.debug(f"Drawing room: {x} {y} {room}")
-		self.visibleRooms[x, y] = room
+		self.visibleRooms[(x, y)] = room
 		# draw the terrain on layer 0
 		if room.light == "dark":
 			self.draw_tile(x, y, 0, room.terrain + "-dark")
@@ -220,18 +221,18 @@ class Window(pyglet.window.Window):
 		# draw a single load flag on layer 2
 		flag: str
 		for flag in room.loadFlags:
-			if flag in ("attention", "treasure", "key", "armour", "weapon", "herb"):
+			if flag in {"attention", "treasure", "key", "armour", "weapon", "herb"}:
 				self.draw_tile(x, y, 2, flag)
 				break
 		# draw a single mob flag on layer 2
 		for flag in room.mobFlags:
-			if flag in ("aggressive_mob", "rent", "quest_mob"):
+			if flag in {"aggressive_mob", "rent", "quest_mob"}:
 				self.draw_tile(x, y, 2, flag)
 				break
-			if re.search("shop", flag) is not None:
+			if "shop" in flag:
 				self.draw_tile(x, y, 2, "shop")
 				break
-			if re.search("guild", flag) is not None:
+			if "guild" in flag:
 				self.draw_tile(x, y, 2, "guild")
 				break
 
@@ -265,7 +266,7 @@ class Window(pyglet.window.Window):
 		# check if the player clicked on a room
 		# searching for the tuple of coordinates (x, y)
 		try:
-			room: Room = self.visibleRooms[x, y]
+			room: Room = self.visibleRooms[(x, y)]
 		except KeyError:
 			return
 		# Action depends on which button the player clicked

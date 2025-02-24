@@ -10,16 +10,15 @@ from __future__ import annotations
 import logging
 import os.path
 from collections.abc import Callable, Mapping
-from functools import lru_cache
+from functools import cache
 from typing import Any, Union
 
 # Third-party Modules:
 import fastjsonschema
 import orjson
-from knickknacks.strings import removeSuffix
 
-# Local Modules:
-from ..utils import getDataPath
+# Mapper Modules:
+from mapper.utils import getDataPath
 
 
 LABELS_SCHEMA_VERSION: int = 1  # Increment this when the labels schema changes.
@@ -49,13 +48,13 @@ def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
 	Returns:
 		The schema file path.
 	"""
-	databasePath = removeSuffix(databasePath, ".sample")
+	databasePath = databasePath.removesuffix(".sample")
 	return "{}_v{ver}{}.schema".format(*os.path.splitext(databasePath), ver=schemaVersion)
 
 
-@lru_cache(maxsize=None)
+@cache
 def getValidator(schemaPath: str) -> Callable[..., None]:  # type: ignore[misc]
-	with open(schemaPath, "rb") as fileObj:
+	with open(schemaPath, "rb") as fileObj:  # NOQA: FURB101
 		validator: Callable[..., None] = fastjsonschema.compile(orjson.loads(fileObj.read()))
 	return validator
 
@@ -71,8 +70,8 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 	validator = getValidator(schemaPath)
 	try:
 		validator(database)
-	except fastjsonschema.JsonSchemaException as e:
-		logger.exception(f"Data failed validation: {e}")
+	except fastjsonschema.JsonSchemaException:
+		logger.exception("Data failed validation.")
 
 
 def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[str, Any], int]]:
@@ -90,17 +89,18 @@ def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[st
 	if os.path.isdir(databasePath):
 		return f"Error: '{databasePath}' is a directory, not a file.", None, 0
 	try:
-		with open(databasePath, "rb") as fileObj:
+		with open(databasePath, "rb") as fileObj:  # NOQA: FURB101
 			database: dict[str, Any] = orjson.loads(fileObj.read())
 		schemaVersion: int = database.get("schema_version", 0)
 		schemaPath = getSchemaPath(databasePath, schemaVersion)
 		_validate(database, schemaPath)
-		database.pop("schema_version", None)
-		return None, database, schemaVersion
-	except IOError as e:
-		return f"IOError: {e}", None, 0
+	except OSError as e:
+		return f"OSError: {e}", None, 0
 	except orjson.JSONDecodeError as e:
 		return f"Error: '{databasePath}' is corrupted. {e}", None, 0
+	else:
+		database.pop("schema_version", None)
+		return None, database, schemaVersion
 
 
 def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> None:
@@ -118,14 +118,14 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 	)
 	try:
 		data: bytes = orjson.dumps(database, option=options)
-	except orjson.JSONEncodeError as e:
-		logger.exception(f"Error: Cannot encode to '{databasePath}'. {e}")
+	except orjson.JSONEncodeError:
+		logger.exception(f"Error: Cannot encode to '{databasePath}'.")
 		return
 	try:
 		with open(databasePath, "wb") as fileObj:
 			fileObj.write(data)
-	except IOError as e:
-		logger.exception(f"IOError: {e}")
+	except OSError:
+		logger.exception("Error writing to disk:")
 
 
 def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int]]:

@@ -28,7 +28,11 @@ class TestTelnet(TestCase):
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
 		self.telnet: Telnet = Telnet(
-			self.playerReceives.extend, self.gameReceives.extend, name="game", proxy=self.proxy, isClient=True
+			self.playerReceives.extend,
+			self.gameReceives.extend,
+			name="game",
+			proxy=self.proxy,
+			is_client=True,
 		)
 
 	def tearDown(self) -> None:
@@ -39,39 +43,39 @@ class TestTelnet(TestCase):
 
 	def testTelnet__init__(self) -> None:
 		with self.assertRaises(ValueError):
-			Telnet(Mock(), Mock(), name="**junk**", proxy=Mock(), isClient=True)
+			Telnet(Mock(), Mock(), name="**junk**", proxy=Mock(), is_client=True)
 
-	@patch("mapper.proxy.Telnet.on_unhandledCommand")
+	@patch("mapper.proxy.Telnet.on_unhandled_command")
 	@patch("mapper.proxy.TelnetProtocol.on_command")
-	def testTelnetOn_command(self, mockOn_command: Mock, mockOn_unhandledCommand: Mock) -> None:
-		self.assertNotIn(ECHO, self.telnet.subnegotiationMap)
+	def testTelnetOn_command(self, mockOn_command: Mock, mockOn_unhandled_command: Mock) -> None:
+		self.assertNotIn(ECHO, self.telnet.subnegotiation_map)
 		self.telnet.on_command(WILL, ECHO)
-		mockOn_unhandledCommand.assert_called_once_with(WILL, ECHO)
-		self.telnet.subnegotiationMap[ECHO] = Mock()
+		mockOn_unhandled_command.assert_called_once_with(WILL, ECHO)
+		self.telnet.subnegotiation_map[ECHO] = Mock()
 		self.telnet.on_command(WILL, ECHO)
 		mockOn_command.assert_called_once_with(WILL, ECHO)
-		del self.telnet.subnegotiationMap[ECHO]
+		del self.telnet.subnegotiation_map[ECHO]
 
-	def testTelnetOn_unhandledCommand(self) -> None:
+	def testTelnetOn_unhandled_command(self) -> None:
 		self.telnet.name = "game"
-		self.telnet.on_unhandledCommand(ECHO, None)
+		self.telnet.on_unhandled_command(ECHO, None)
 		self.proxy.player.write.assert_called_once_with(IAC + ECHO)
 		self.proxy.player.write.reset_mock()
-		self.telnet.on_unhandledCommand(WILL, ECHO)
+		self.telnet.on_unhandled_command(WILL, ECHO)
 		self.proxy.player.write.assert_called_once_with(IAC + WILL + ECHO)
 		self.telnet.name = "player"
-		self.telnet.on_unhandledCommand(ECHO, None)
+		self.telnet.on_unhandled_command(ECHO, None)
 		self.proxy.game.write.assert_called_once_with(IAC + ECHO)
 		self.proxy.game.write.reset_mock()
-		self.telnet.on_unhandledCommand(WILL, ECHO)
+		self.telnet.on_unhandled_command(WILL, ECHO)
 		self.proxy.game.write.assert_called_once_with(IAC + WILL + ECHO)
 
-	def testTelnetOn_unhandledSubnegotiation(self) -> None:
+	def testTelnetOn_unhandled_subnegotiation(self) -> None:
 		self.telnet.name = "game"
-		self.telnet.on_unhandledSubnegotiation(ECHO, b"hello" + IAC)
+		self.telnet.on_unhandled_subnegotiation(ECHO, b"hello" + IAC)
 		self.proxy.player.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC_IAC + IAC + SE)
 		self.telnet.name = "player"
-		self.telnet.on_unhandledSubnegotiation(ECHO, b"hello" + IAC)
+		self.telnet.on_unhandled_subnegotiation(ECHO, b"hello" + IAC)
 		self.proxy.game.write.assert_called_once_with(IAC + SB + ECHO + b"hello" + IAC_IAC + IAC + SE)
 
 
@@ -81,7 +85,7 @@ class TestPlayer(TestCase):
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
 		self.player: Player = Player(
-			self.playerReceives.extend, self.gameReceives.extend, proxy=self.proxy, isClient=False
+			self.playerReceives.extend, self.gameReceives.extend, proxy=self.proxy, is_client=False
 		)
 
 	def tearDown(self) -> None:
@@ -90,14 +94,14 @@ class TestPlayer(TestCase):
 		self.gameReceives.clear()
 		self.playerReceives.clear()
 
-	@patch("mapper.proxy.Telnet.on_enableLocal")
-	def testPlayerOn_enableLocal(self, mockOn_enableLocal: Mock) -> None:
+	@patch("mapper.proxy.Telnet.on_enable_local")
+	def testPlayerOn_enable_local(self, mockOn_enable_local: Mock) -> None:
 		self.proxy.game._handlers = [Mock()]
-		self.proxy.game._handlers[0].subnegotiationMap = {ECHO: None}
-		self.assertFalse(self.player.on_enableLocal(ECHO))
-		self.proxy.game._handlers[0].subnegotiationMap.clear()
-		self.player.on_enableLocal(ECHO)
-		mockOn_enableLocal.assert_called_once_with(ECHO)
+		self.proxy.game._handlers[0].subnegotiation_map = {ECHO: None}
+		self.assertFalse(self.player.on_enable_local(ECHO))
+		self.proxy.game._handlers[0].subnegotiation_map.clear()
+		self.player.on_enable_local(ECHO)
+		mockOn_enable_local.assert_called_once_with(ECHO)
 
 
 class TestGame(TestCase):
@@ -107,7 +111,7 @@ class TestGame(TestCase):
 		self.playerReceives: bytearray = bytearray()
 		self.proxy: Mock = Mock()
 		self.game: Game = Game(
-			self.gameReceives.extend, self.playerReceives.extend, proxy=self.proxy, isClient=True
+			self.gameReceives.extend, self.playerReceives.extend, proxy=self.proxy, is_client=True
 		)
 
 	def tearDown(self) -> None:
@@ -121,10 +125,10 @@ class TestGame(TestCase):
 		self.game.on_ga(None)
 		self.proxy.player.write.assert_called_once_with(b"", prompt=True)
 
-	@patch("mapper.proxy.Telnet.on_connectionMade")
-	def testGameOn_connectionMade(self, mockOn_connectionMade: Mock) -> None:
-		self.game.on_connectionMade()
-		mockOn_connectionMade.assert_called_once()
+	@patch("mapper.proxy.Telnet.on_connection_made")
+	def testGameOn_connection_made(self, mockOn_connection_made: Mock) -> None:
+		self.game.on_connection_made()
+		mockOn_connection_made.assert_called_once()
 		self.assertEqual(self.gameReceives, MPI_INIT + b"P2" + LF + b"G" + LF)
 
 
@@ -135,9 +139,9 @@ class TestProxyHandler(TestCase):
 		self.playerReceives: bytearray = bytearray()
 		self.mapperEvents: list[MUD_EVENT_TYPE] = []
 		playerSocket: Mock = Mock(spec=socket.socket)
-		playerSocket.sendall.side_effect = lambda data: self.playerReceives.extend(data)
+		playerSocket.sendall.side_effect = self.playerReceives.extend
 		gameSocket: Mock = Mock(spec=socket.socket)
-		gameSocket.sendall.side_effect = lambda data: self.gameReceives.extend(data)
+		gameSocket.sendall.side_effect = self.gameReceives.extend
 		self.proxy: ProxyHandler = ProxyHandler(
 			playerSocket.sendall,
 			gameSocket.sendall,
@@ -145,7 +149,7 @@ class TestProxyHandler(TestCase):
 			promptTerminator=IAC + GA,
 			isEmulatingOffline=False,
 			mapperCommands=[b"testCommand"],
-			eventCaller=lambda *args: self.mapperEvents.append(*args),
+			eventCaller=self.mapperEvents.append,
 		)
 		self.proxy.connect()
 		self.playerReceives.clear()

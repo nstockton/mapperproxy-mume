@@ -20,7 +20,7 @@ from timeit import default_timer as defaultTimer
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 # Third-party Modules:
-from knickknacks.strings import regexFuzzy
+from knickknacks.strings import regex_fuzzy
 from rapidfuzz import fuzz
 
 # Local Modules:
@@ -44,7 +44,7 @@ from .roomdata.objects import (
 	Exit,
 	Room,
 )
-from .typedef import COORDINATES_TYPE, GUI_QUEUE_TYPE, REGEX_MATCH, REGEX_PATTERN
+from .typedef import COORDINATES_TYPE, GUI_QUEUE_TYPE, ReMatchType, RePatternType
 
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -74,7 +74,7 @@ LIGHT_SYMBOLS: dict[str, str] = {
 	")": "lit",  # Moonlight, either direct or indirect.
 	"o": "dark",  # Darkness.
 }
-RUN_DESTINATION_REGEX: REGEX_PATTERN = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
+RUN_DESTINATION_REGEX: RePatternType = re.compile(r"^(?P<destination>.+?)(?:\s+(?P<flags>\S+))?$")
 TERRAIN_SYMBOLS: dict[str, str] = {
 	":": "brush",
 	"[": "building",
@@ -105,11 +105,11 @@ class World:
 			self._gui_queue: GUI_QUEUE_TYPE = SimpleQueue()
 			self.window: pyglet.window.Window
 			if interface == "hc":
-				from .gui import hc
+				from .gui import hc  # NOQA: PLC0415
 
 				self.window = hc.Window(self)  # type: ignore[abstract]
 			elif interface == "sighted":
-				from .gui import sighted
+				from .gui import sighted  # NOQA: PLC0415
 
 				self.window = sighted.Window(self)  # type: ignore[abstract]
 		self._currentRoom: Room = Room()
@@ -135,7 +135,7 @@ class World:
 		if self._interface != "text":
 			self._gui_queue.put(("on_guiRefresh",))
 
-	def output(self, text: str) -> None:
+	def output(self, text: str) -> None:  # NOQA: PLR6301
 		print(text)
 
 	def loadRoomsV0(self, db: dict[str, dict[str, Any]]) -> None:
@@ -178,11 +178,11 @@ class World:
 		for vnum, roomDict in db.items():
 			if not vnum.isdigit():
 				# This should never happen, but safe to ignore if it does.
-				# Todo: add a warning to alert the user here.
+				# TODO: add a warning to alert the user here.
 				continue
 			if roomDict["terrain"].startswith("death"):  # handles "death" and "deathtrap".
 				# This should never happen, but safe to ignore if it does.
-				# Todo: add a warning to alert the user here.
+				# TODO: add a warning to alert the user here.
 				continue
 			newRoom: Room = Room()
 			newRoom.vnum = vnum
@@ -361,9 +361,10 @@ class World:
 
 	def isBidirectional(self, exitObj: Exit) -> bool:
 		"""
-		Returns True if an exit is bidirectional, False if unidirectional.
-		I.E. True if moving in a given direction then moving back in the direction
-		you just came from would put you back where you started, False otherwise.
+		Determines if an exit is bidirectional or unidirectional.
+
+		Returns:
+			True if the exit is bidirectional, False otherwise.
 		"""
 		try:
 			dest: Room = self.rooms[exitObj.to]
@@ -375,8 +376,12 @@ class World:
 	def getNeighborsFromCoordinates(
 		self, start: Sequence[int], radius: Sequence[int]
 	) -> Generator[tuple[str, Room, int, int, int], None, None]:
-		"""A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.
-		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
+		"""
+		A generator which yields all rooms in the vicinity of the given X-Y-Z coordinates.
+
+		Yields:
+			The vnum, room object reference, and difference in X-Y-Z coordinates.
+		"""
 		x, y, z = start
 		radiusX, radiusY, radiusZ = radius
 		for vnum, obj in self.rooms.items():
@@ -389,8 +394,12 @@ class World:
 	def getNeighborsFromRoom(
 		self, start: Room, radius: Sequence[int]
 	) -> Generator[tuple[str, Room, int, int, int], None, None]:
-		"""A generator which yields all rooms in the vicinity of a room object.
-		Each yielded result contains the vnum, room object reference, and difference in X-Y-Z coordinates."""
+		"""
+		A generator which yields all rooms in the vicinity of a room object.
+
+		Yields:
+			The vnum, room object reference, and difference in X-Y-Z coordinates.
+		"""
 		x, y, z = start.x, start.y, start.z
 		radiusX, radiusY, radiusZ = radius
 		for vnum, obj in self.rooms.items():
@@ -411,10 +420,12 @@ class World:
 				break
 		return result
 
-	def coordinatesSubtract(self, first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
+	@staticmethod
+	def coordinatesSubtract(first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
 		return tuple(a - b for a, b in zip(first, second))
 
-	def coordinatesAdd(self, first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
+	@staticmethod
+	def coordinatesAdd(first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
 		return tuple(a + b for a, b in zip(first, second))
 
 	def coordinatesAddDirection(self, coordinates: Sequence[int], direction: str) -> tuple[int, ...]:
@@ -427,7 +438,7 @@ class World:
 
 	def revnum(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: REGEX_MATCH = re.match(r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text)
+		match: ReMatchType = re.match(r"^(?:(?P<origin>\d+)\s+)?(?:\s*(?P<destination>\d+)\s*)$", text)
 		if match is None:
 			self.output("Syntax: 'revnum [Origin VNum] [Destination VNum]'.")
 			return
@@ -528,23 +539,18 @@ class World:
 			for key, value in kwargs.items():
 				if key in observeExactMatch:
 					roomData = getattr(roomObj, key).strip().lower()
-					if not exactMatch and value in roomData or roomData == value:
+					if (not exactMatch and value in roomData) or roomData == value:
 						keysMatched += 1
-				elif (
-					key in alwaysExactMatch
-					and getattr(roomObj, key).strip().lower() == value
-					or key in ("mobFlags", "loadFlags")
-					and getattr(roomObj, key, set()).intersection(value)
+				elif (key in alwaysExactMatch and getattr(roomObj, key).strip().lower() == value) or (
+					key in {"mobFlags", "loadFlags"} and getattr(roomObj, key, set()).intersection(value)
 				):
 					keysMatched += 1
 				else:
 					for exitObj in roomObj.exits.values():
 						if (
-							key in ("exitFlags", "doorFlags")
+							key in {"exitFlags", "doorFlags"}
 							and getattr(exitObj, key, set()).intersection(value)
-							or key in ("to", "door")
-							and getattr(exitObj, key, "").strip().lower() == value
-						):
+						) or (key in {"to", "door"} and getattr(exitObj, key, "").strip().lower() == value):
 							keysMatched += 1
 			if len(kwargs) == keysMatched:
 				results.append(roomObj)
@@ -599,7 +605,7 @@ class World:
 		results: set[Room] = {
 			self.rooms[vnum]
 			for label, vnum in self.labels.items()
-			if text and text in label.strip().lower() or not text
+			if (text and text in label.strip().lower()) or not text
 		}
 		if not results:
 			return "Nothing found."
@@ -816,10 +822,11 @@ class World:
 			return f"Room coordinate X set to '{self.currentRoom.x}'. Use 'rx [digit]' to change it."
 		try:
 			self.currentRoom.x = int(text)
-			self.GUIRefresh()
-			return f"Setting room X coordinate to '{self.currentRoom.x}'."
 		except ValueError:
 			return "Error: room coordinates must be comprised of digits only."
+		else:
+			self.GUIRefresh()
+			return f"Setting room X coordinate to '{self.currentRoom.x}'."
 
 	def ry(self, text: str = "") -> str:
 		text = text.strip().lower()
@@ -827,10 +834,11 @@ class World:
 			return f"Room coordinate Y set to '{self.currentRoom.y}'. Use 'ry [digit]' to change it."
 		try:
 			self.currentRoom.y = int(text)
-			self.GUIRefresh()
-			return f"Setting room Y coordinate to '{self.currentRoom.y}'."
 		except ValueError:
 			return "Error: room coordinates must be comprised of digits only."
+		else:
+			self.GUIRefresh()
+			return f"Setting room Y coordinate to '{self.currentRoom.y}'."
 
 	def rz(self, text: str = "") -> str:
 		text = text.strip().lower()
@@ -838,18 +846,19 @@ class World:
 			return f"Room coordinate Z set to '{self.currentRoom.z}'. Use 'rz [digit]' to change it."
 		try:
 			self.currentRoom.z = int(text)
-			self.GUIRefresh()
-			return f"Setting room Z coordinate to '{self.currentRoom.z}'."
 		except ValueError:
 			return "Error: room coordinates must be comprised of digits only."
+		else:
+			self.GUIRefresh()
+			return f"Setting room Z coordinate to '{self.currentRoom.z}'."
 
 	def rmobflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			rf"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
+			rf"^(?P<mode>{regex_fuzzy('add')}|{regex_fuzzy('remove')})"
 			+ rf"\s+(?P<flag>{'|'.join(VALID_MOB_FLAGS)})"
 		)
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
@@ -870,10 +879,10 @@ class World:
 	def rloadflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			rf"^(?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})"
+			rf"^(?P<mode>{regex_fuzzy('add')}|{regex_fuzzy('remove')})"
 			+ rf"\s+(?P<flag>{'|'.join(VALID_LOAD_FLAGS)})"
 		)
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
 			if "remove".startswith(matchDict["mode"]):
@@ -894,13 +903,13 @@ class World:
 	def exitflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ rf"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			rf"^((?P<mode>{regex_fuzzy('add')}|{regex_fuzzy('remove')})\s+)?"
+			+ rf"((?P<flag>{'|'.join(VALID_EXIT_FLAGS)})\s+)?(?P<direction>{regex_fuzzy(DIRECTIONS)})"
 		)
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
-			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
+			direction: str = "".join(d for d in DIRECTIONS if d.startswith(matchDict["direction"]))
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
 			if not matchDict["mode"]:
@@ -926,13 +935,13 @@ class World:
 	def doorflags(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ rf"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			rf"^((?P<mode>{regex_fuzzy('add')}|{regex_fuzzy('remove')})\s+)?"
+			+ rf"((?P<flag>{'|'.join(VALID_DOOR_FLAGS)})\s+)?(?P<direction>{regex_fuzzy(DIRECTIONS)})"
 		)
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
-			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
+			direction: str = "".join(d for d in DIRECTIONS if d.startswith(matchDict["direction"]))
 			if direction not in self.currentRoom.exits:
 				return f"Exit {direction} does not exist."
 			if not matchDict["mode"]:
@@ -958,13 +967,13 @@ class World:
 	def secret(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ rf"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			rf"^((?P<mode>{regex_fuzzy('add')}|{regex_fuzzy('remove')})\s+)?"
+			+ rf"((?P<name>[A-Za-z]+)\s+)?(?P<direction>{regex_fuzzy(DIRECTIONS)})"
 		)
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
-			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
+			direction: str = "".join(d for d in DIRECTIONS if d.startswith(matchDict["direction"]))
 			if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 				if not matchDict["name"]:
 					return "Error: 'add' expects a name for the secret."
@@ -992,15 +1001,15 @@ class World:
 	def rlink(self, text: str = "") -> str:
 		text = text.strip().lower()
 		matchPattern: str = (
-			rf"^((?P<mode>{regexFuzzy('add')}|{regexFuzzy('remove')})\s+)?"
-			+ rf"((?P<oneway>{regexFuzzy('oneway')})\s+)?"
+			rf"^((?P<mode>{regex_fuzzy('add')}|{regex_fuzzy('remove')})\s+)?"
+			+ rf"((?P<oneway>{regex_fuzzy('oneway')})\s+)?"
 			+ r"((?P<vnum>\d+|undefined)\s+)?"
-			+ rf"(?P<direction>{regexFuzzy(DIRECTIONS)})"
+			+ rf"(?P<direction>{regex_fuzzy(DIRECTIONS)})"
 		)
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is not None:
 			matchDict: dict[str, str] = match.groupdict()
-			direction: str = "".join(dir for dir in DIRECTIONS if dir.startswith(matchDict["direction"]))
+			direction: str = "".join(d for d in DIRECTIONS if d.startswith(matchDict["direction"]))
 			if matchDict["mode"] and "add".startswith(matchDict["mode"]):
 				reversedDirection: str = REVERSE_DIRECTIONS[direction]
 				if not matchDict["vnum"]:
@@ -1066,7 +1075,7 @@ class World:
 	def rlabel(self, text: str = "") -> None:
 		text = text.strip().lower()
 		matchPattern: str = r"^(?P<action>add|delete|info|search)(?:\s+(?P<label>\S+))?(?:\s+(?P<vnum>\d+))?$"
-		match: REGEX_MATCH = re.match(matchPattern, text)
+		match: ReMatchType = re.match(matchPattern, text)
 		if match is None:
 			self.output(
 				"Syntax: 'rlabel [add|info|delete] [label] [vnum]'. Vnum is only used when adding a room. "
@@ -1132,8 +1141,17 @@ class World:
 			return f"Error: No such vnum or label, '{vnum}'"
 		return self.rooms[vnum].info
 
-	def createSpeedWalk(self, directionsList: MutableSequence[str]) -> str:
-		"""Given a list of directions, return a string of the directions in standard speed walk format"""
+	@staticmethod
+	def createSpeedWalk(directionsList: MutableSequence[str]) -> str:
+		"""
+		Converts a list of directions to speed walk format.
+
+		Args:
+			directionsList: The list of directions.
+
+		Returns:
+			The directions in speed walk format.
+		"""
 
 		def compressDirections(directionsBuffer: Sequence[str]) -> list[str]:
 			speedWalkDirs: list[str] = []
@@ -1165,7 +1183,7 @@ class World:
 
 	def path(self, text: str = "") -> None:
 		text = text.strip().lower()
-		match: REGEX_MATCH = RUN_DESTINATION_REGEX.match(text)
+		match: ReMatchType = RUN_DESTINATION_REGEX.match(text)
 		if match is None:
 			self.output("Usage: path [label|vnum]")
 			return
@@ -1181,7 +1199,6 @@ class World:
 		destination: Optional[str] = None,
 		flags: Optional[Sequence[str]] = None,
 	) -> list[str]:
-		"""Find the path"""
 		if origin is None:
 			if self.currentRoom.vnum == "-1":
 				self.output("Error! The mapper has no location. Please use the sync command then try again.")

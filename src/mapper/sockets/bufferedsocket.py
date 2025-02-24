@@ -86,7 +86,8 @@ class BufferedSocket(socketutils.BufferedSocket):
 				sock.settimeout(originalTimeout)
 		return sock
 
-	def doSSLHandshake(self, sock: ssl.SSLSocket) -> None:
+	@staticmethod
+	def doSSLHandshake(sock: ssl.SSLSocket) -> None:
 		"""
 		Performs an SSL handshake.
 

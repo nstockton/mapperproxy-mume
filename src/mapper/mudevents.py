@@ -24,6 +24,9 @@ class Handler(ABC):
 		Args:
 			mapper: An instance of mapper.mapper.Mapper that dispatches events.
 			event: The event name. May be omitted if the subclass defines an event attribute.
+
+		Raises:
+			ValueError: Tried to initialise handler without an event type.
 		"""
 		self.mapper = mapper
 		if event:

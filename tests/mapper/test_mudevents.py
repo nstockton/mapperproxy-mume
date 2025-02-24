@@ -46,7 +46,7 @@ class TestHandler(TestCase):
 		)
 		self.mapper.daemon = True  # Allow unittest to quit if mapper thread does not close properly.
 
-	def tearDown(self) -> None:
+	def tearDown(self) -> None:  # NOQA: PLR6301
 		logging.disable(logging.NOTSET)
 
 	def testMapper_handle(self) -> None:
@@ -57,7 +57,7 @@ class TestHandler(TestCase):
 		self.mapper.handleMudEvent(dummy.event, "I am here.")
 		dummy.handleText.assert_called_once_with("I received I am here.")
 		dummy.handleText.reset_mock()
-		dummy.__del__()
+		dummy.__del__()  # NOQA: PLC2801
 		self.mapper.handleMudEvent(dummy.event, "Goodbye world")
 		dummy.handleText.assert_not_called()
 

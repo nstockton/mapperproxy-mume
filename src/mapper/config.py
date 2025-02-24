@@ -10,8 +10,8 @@ from __future__ import annotations
 import json
 import os.path
 import threading
-from collections.abc import Iterator
-from typing import Any, MutableMapping
+from collections.abc import Iterator, MutableMapping
+from typing import Any
 
 # Local Modules:
 from .utils import getDataPath
@@ -56,9 +56,9 @@ class Config(MutableMapping[str, Any]):
 			raise ConfigError(f"'{filename}' is a directory, not a file.")
 		with self._configLock:
 			try:
-				with open(filename, "r", encoding="utf-8") as fileObj:
+				with open(filename, encoding="utf-8") as fileObj:
 					return dict(json.load(fileObj))
-			except IOError as e:  # pragma: no cover
+			except OSError as e:  # pragma: no cover
 				raise ConfigError(f"{e.strerror}: '{e.filename}'") from None
 			except ValueError:
 				raise ConfigError(f"Corrupted json file: {filename}") from None
