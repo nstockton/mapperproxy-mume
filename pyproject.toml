@@ -20,7 +20,7 @@
 		"orjson>=3.9,<4.0",
 		"pyglet>=2.0,<3.0",
 		"rapidfuzz>=3.12.1,<4.0",
-		"speechlight>=1.8,<2.0",
+		"speechlight>=2.0,<3.0",
 		"typed-argument-parser>=1.9,<2.0",
 		"typing-extensions>=4.1,<5.0; python_version < \"3.10\"",
 	]

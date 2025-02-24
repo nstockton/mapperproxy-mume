@@ -310,7 +310,7 @@ requires-dist = [
     { name = "orjson", specifier = ">=3.9,<4.0" },
     { name = "pyglet", specifier = ">=2.0,<3.0" },
     { name = "rapidfuzz", specifier = ">=3.12.1,<4.0" },
-    { name = "speechlight", specifier = ">=1.8,<2.0" },
+    { name = "speechlight", specifier = ">=2.0,<3.0" },
     { name = "typed-argument-parser", specifier = ">=1.9,<2.0" },
     { name = "typing-extensions", marker = "python_full_version < '3.10'", specifier = ">=4.1,<5.0" },
 ]
@@ -3663,15 +3663,16 @@ wheels = [
 
 [[package]]
 name = "speechlight"
-version = "1.8.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "knickknacks" },
     { name = "pyobjc", marker = "sys_platform == 'darwin'" },
     { name = "pywin32", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0a/41/581742c3cabb3c66135900354ef5bf4155f787b8b6e8cd7cc6564226419e/speechlight-1.8.0.tar.gz", hash = "sha256:0554dd15c3068d0f0937fd26f3841ce36df155bf46952d0f7d6439c1c9cd8b85", size = 324095 }
+sdist = { url = "https://files.pythonhosted.org/packages/7b/5a/5162a1c2d1755ddb5cb27eab8a48283b0ffcb7dd3ba350ea6ec727925ae9/speechlight-2.0.1.tar.gz", hash = "sha256:0a7fc4e89548d6c261b2e7b92cdea20455e9bd2b4e785e56328ed381d95b787a", size = 446902 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/cb/89eab66f53c6b3697dba347f9de7245c9f692730e9692c639283ef019705/speechlight-1.8.0-py3-none-any.whl", hash = "sha256:52194bb7f250c9ef0037c3510c53172a408d296f19f8672da6c7af928cac73a7", size = 243156 },
+    { url = "https://files.pythonhosted.org/packages/f7/e9/881de2989931b251eeb2c349c49e374c36365e6dd4317b6032509d628ec6/speechlight-2.0.1-py3-none-any.whl", hash = "sha256:3e383fa50051c5b7fae105b73ba11c598be5a0f570a27f8ca6f316412a8eef57", size = 335934 },
 ]
 
 [[package]]
