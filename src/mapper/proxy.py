@@ -142,7 +142,16 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 		self.proxy.player.write(b"", prompt=True)
 
 	def on_gmcp_message(self, package: str, value: bytes) -> None:
-		if package in {"char.vitals", "event.darkness", "event.sun"}:
+		supported: set[str] = {
+			"char.vitals",
+			"event.darkness",
+			"event.sun",
+			"group.add",
+			"group.remove",
+			"group.set",
+			"group.update",
+		}
+		if package in supported:
 			self.proxy.eventCaller((f"gmcp_{package.replace('.', '_')}", value))
 		self.player.gmcp_send(package, value, is_serialized=True)
 
@@ -161,6 +170,7 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 			supportedPackages: dict[str, int] = {
 				"Char": 1,
 				"Event": 1,
+				"Group": 1,
 			}
 			self.gmcp_set_packages(supportedPackages)
 			while self._gmcpBuffer:

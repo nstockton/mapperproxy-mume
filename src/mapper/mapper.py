@@ -980,6 +980,18 @@ class Mapper(threading.Thread, World):
 		if "what" in value and isinstance(value["what"], str):
 			pass  # Do something.
 
+	def mud_event_gmcp_group_add(self, text: str) -> None:
+		pass
+
+	def mud_event_gmcp_group_remove(self, text: str) -> None:
+		pass
+
+	def mud_event_gmcp_group_set(self, text: str) -> None:
+		pass
+
+	def mud_event_gmcp_group_update(self, text: str) -> None:
+		pass
+
 	def mud_event_prompt(self, text: str) -> None:
 		self.playerTelnetHandler.mpmEventSend({"prompt": text})
 		self.prompt = text
