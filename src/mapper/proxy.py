@@ -17,10 +17,10 @@ from mudproto.charset import CharsetMixIn
 from mudproto.gmcp import GMCPMixIn
 from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
-from mudproto.mpi import MPI_INIT, MPIProtocol
+from mudproto.mpi import MPIProtocol
 from mudproto.naws import UINT16_MAX, Dimensions, NAWSMixIn
 from mudproto.telnet import TelnetProtocol, escape_iac
-from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, LF, NAWS, NEGOTIATION_BYTES, SB, SE
+from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, NAWS, NEGOTIATION_BYTES, SB, SE
 from mudproto.xml import XMLProtocol as _XMLProtocol
 
 # Local Modules:
@@ -154,11 +154,6 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 		if package in supported:
 			self.proxy.eventCaller((f"gmcp_{package.replace('.', '_')}", value))
 		self.player.gmcp_send(package, value, is_serialized=True)
-
-	def on_connection_made(self) -> None:
-		super().on_connection_made()
-		# Tell the Mume server to put IAC-GA at end of prompts.
-		self.write(MPI_INIT + b"P2" + LF + b"G" + LF)
 
 	def on_option_enabled(self, option: bytes) -> None:
 		super().on_option_enabled(option)  # pragma: no cover

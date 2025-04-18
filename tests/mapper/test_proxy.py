@@ -13,7 +13,6 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 
 # Third-party Modules:
-from mudproto.mpi import MPI_INIT
 from mudproto.telnet import IAC_IAC
 from mudproto.telnet_constants import CR_LF, CR_NULL, ECHO, GA, IAC, LF, SB, SE, WILL
 
@@ -124,12 +123,6 @@ class TestGame(TestCase):
 	def testGameOn_ga(self) -> None:
 		self.game.on_ga(None)
 		self.proxy.player.write.assert_called_once_with(b"", prompt=True)
-
-	@patch("mapper.proxy.Telnet.on_connection_made")
-	def testGameOn_connection_made(self, mockOn_connection_made: Mock) -> None:
-		self.game.on_connection_made()
-		mockOn_connection_made.assert_called_once()
-		self.assertEqual(self.gameReceives, MPI_INIT + b"P2" + LF + b"G" + LF)
 
 
 class TestProxyHandler(TestCase):

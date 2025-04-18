@@ -52,10 +52,8 @@ class TestGameThread(TestCase):
 	def testGameThread(self) -> None:
 		# fmt: off
 		initialConfiguration: bytes = (  # What the server thread sends MUME on connection success.
-			# Tell the Mume server to put IAC-GA at end of prompts.
-			MPI_INIT + b"P2" + LF + b"G" + LF
 			# Identify for Mume Remote Editing.
-			+ MPI_INIT + b"I" + LF
+			MPI_INIT + b"I" + LF
 			# Turn on XML mode.
 			+ MPI_INIT + b"X2" + LF + b"3G" + LF
 		)
