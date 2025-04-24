@@ -207,7 +207,6 @@ class Mapper(threading.Thread, World):
 		self.dynamic: Union[str, None] = None
 		self.exits: Union[str, None] = None
 		self.xmlRoomAttributes: dict[str, Union[str, None]] = {}
-		self.gmcpCharVitals: dict[str, Any] = {}
 		self.timeEvent: Union[str, None] = None
 		self.timeEventOffset: int = 0
 		self.parsedHour: int = 0
@@ -232,6 +231,8 @@ class Mapper(threading.Thread, World):
 		self.emulationRoom: Room = self.currentRoom
 		self.lastEmulatedJump: Union[str, None] = None
 		self.shouldNotifyNotSynced: bool = True
+		self.gmcpCharacter: dict[str, Any] = {}
+		self.gmcpGroup: dict[int, dict[str, Any]] = {}
 
 	@property
 	def outputFormat(self) -> str:
@@ -877,14 +878,14 @@ class Mapper(threading.Thread, World):
 
 	def updateRoomFlags(self) -> None:
 		output: list[str] = []
-		lightSymbol: Union[str, None] = self.gmcpCharVitals.get("light")
+		lightSymbol: Union[str, None] = self.gmcpCharacter.get("light")
 		if lightSymbol is not None and lightSymbol in LIGHT_SYMBOLS:
 			light: str = LIGHT_SYMBOLS[lightSymbol]
 			if light == "lit" and self.currentRoom.light != light:
 				# TODO: Orc can define sundeath, troll can define no_sundeath and lit/dark.
 				# output.append(self.rlight("lit"))
 				pass
-		ridable: bool = bool(self.gmcpCharVitals.get("ride") or self.gmcpCharVitals.get("ridden"))
+		ridable: bool = bool(self.gmcpCharacter.get("ride") or self.gmcpCharacter.get("ridden"))
 		if ridable and self.currentRoom.ridable != "ridable":
 			output.append(self.rridable("ridable"))
 		if output:
@@ -964,9 +965,17 @@ class Mapper(threading.Thread, World):
 			self.currentRoom.exits[movement].to = vnum
 		self.sendPlayer(f"Adding room '{newRoom.name}' with vnum '{vnum}'")
 
+	def mud_event_gmcp_char_name(self, text: str) -> None:
+		value: dict[str, Any] = json.loads(text)
+		self.gmcpCharacter.update(value)
+
+	def mud_event_gmcp_char_statusvars(self, text: str) -> None:
+		value: dict[str, Any] = json.loads(text)
+		self.gmcpCharacter.update(value)
+
 	def mud_event_gmcp_char_vitals(self, text: str) -> None:
-		newValues: dict[str, Any] = json.loads(text)
-		self.gmcpCharVitals.update(newValues)
+		value: dict[str, Any] = json.loads(text)
+		self.gmcpCharacter.update(value)
 		if self.autoMapping:
 			self.updateRoomFlags()
 
@@ -981,16 +990,27 @@ class Mapper(threading.Thread, World):
 			pass  # Do something.
 
 	def mud_event_gmcp_group_add(self, text: str) -> None:
-		pass
+		self.gmcpGroupUpdate(json.loads(text))
 
 	def mud_event_gmcp_group_remove(self, text: str) -> None:
-		pass
+		char_id: int = json.loads(text)
+		self.gmcpGroup.pop(char_id, None)
 
 	def mud_event_gmcp_group_set(self, text: str) -> None:
-		pass
+		self.gmcpGroup.clear()
+		for value in json.loads(text):
+			self.gmcpGroupUpdate(value)
 
 	def mud_event_gmcp_group_update(self, text: str) -> None:
-		pass
+		self.gmcpGroupUpdate(json.loads(text))
+
+	def gmcpGroupUpdate(self, value: dict[str, Any]) -> None:
+		if "id" not in value:
+			logger.warning("No 'id' key in value.")
+			return
+		if value.get("type") == "you":
+			self.gmcpCharacter.update(value)
+		self.gmcpGroup.setdefault(value["id"], {}).update(value)
 
 	def mud_event_prompt(self, text: str) -> None:
 		self.playerTelnetHandler.mpmEventSend({"prompt": text})

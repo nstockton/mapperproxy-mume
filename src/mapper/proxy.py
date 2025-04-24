@@ -143,6 +143,8 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 
 	def on_gmcp_message(self, package: str, value: bytes) -> None:
 		supported: set[str] = {
+			"char.name",
+			"char.statusvars",
 			"char.vitals",
 			"event.darkness",
 			"event.sun",
