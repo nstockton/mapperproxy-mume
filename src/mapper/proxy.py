@@ -17,7 +17,6 @@ from mudproto.charset import CharsetMixIn
 from mudproto.gmcp import GMCPMixIn
 from mudproto.manager import Manager
 from mudproto.mccp import MCCPMixIn
-from mudproto.mpi import MPIProtocol
 from mudproto.naws import UINT16_MAX, Dimensions, NAWSMixIn
 from mudproto.telnet import TelnetProtocol, escape_iac
 from mudproto.telnet_constants import CR_LF, GA, GMCP, IAC, NAWS, NEGOTIATION_BYTES, SB, SE
@@ -152,10 +151,16 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 			"group.remove",
 			"group.set",
 			"group.update",
+			"mume.client.canceledit",
+			"mume.client.edit",
+			"mume.client.error",
+			"mume.client.view",
+			"mume.client.write",
 		}
 		if package in supported:
 			self.proxy.eventCaller((f"gmcp_{package.replace('.', '_')}", value))
-		self.player.gmcp_send(package, value, is_serialized=True)
+		if not package.startswith("mume.client"):
+			self.player.gmcp_send(package, value, is_serialized=True)
 
 	def on_option_enabled(self, option: bytes) -> None:
 		super().on_option_enabled(option)  # pragma: no cover
@@ -168,6 +173,7 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 				"Char": 1,
 				"Event": 1,
 				"Group": 1,
+				"MUME.Client": 1,
 			}
 			self.gmcp_set_packages(supportedPackages)
 			while self._gmcpBuffer:
@@ -209,7 +215,6 @@ class ProxyHandler:
 			gameWriter, self.on_gameReceived, is_client=True, prompt_terminator=promptTerminator
 		)
 		self.game.register(Game, proxy=self)
-		self.game.register(MPIProtocol, output_format=self.outputFormat)
 		self.game.register(
 			XMLProtocol,
 			output_format=self.outputFormat,

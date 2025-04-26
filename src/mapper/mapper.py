@@ -23,14 +23,14 @@ from typing import Any, Optional, Union, cast
 from knickknacks.databytes import decode_bytes
 from knickknacks.strings import format_docstring, regex_fuzzy, simplified, strip_ansi
 from knickknacks.xml import escape_xml_string, get_xml_attributes
-from mudproto.mpi import MPIProtocol
 
 # Local Modules:
 from . import INTERFACES, OUTPUT_FORMATS, cfg
 from .cleanmap import ExitsCleaner
 from .clock import CLOCK_REGEX, DAWN_REGEX, DAY_REGEX, DUSK_REGEX, MONTHS, NIGHT_REGEX, TIME_REGEX, Clock
 from .delays import OneShot
-from .proxy import Player, ProxyHandler
+from .proxy import Game, Player, ProxyHandler
+from .remoteediting import GMCPRemoteEditing, RemoteEditingCommand
 from .roomdata.objects import DIRECTIONS, REVERSE_DIRECTIONS, Exit, Room
 from .sockets.bufferedsocket import BufferedSocket
 from .typedef import (
@@ -222,15 +222,18 @@ class Mapper(threading.Thread, World):
 			eventCaller=self.queue.put,
 		)
 		self._autoUpdateRooms: bool = cfg.get("autoUpdateRooms", False)
-		try:
-			self.mpiHandler.is_word_wrapping = cfg.get("wordwrap", False)
-		except LookupError:
-			logger.exception("Unable to set initial value of MPI word wrap.")
 		self.proxy.connect()
 		World.__init__(self, interface=self.interface)
 		self.emulationRoom: Room = self.currentRoom
 		self.lastEmulatedJump: Union[str, None] = None
 		self.shouldNotifyNotSynced: bool = True
+		self.gmcpRemoteEditing = GMCPRemoteEditing(
+			outputFormat=outputFormat, gmcpSend=self.gameTelnetHandler.gmcp_send
+		)
+		try:
+			self.gmcpRemoteEditing.isWordWrapping = cfg.get("wordwrap", False)
+		except LookupError:
+			logger.exception("Unable to set initial value of GMCP remote editing word wrap.")
 		self.gmcpCharacter: dict[str, Any] = {}
 		self.gmcpGroup: dict[int, dict[str, Any]] = {}
 
@@ -265,11 +268,11 @@ class Mapper(threading.Thread, World):
 		cfg.save()
 
 	@property
-	def mpiHandler(self) -> MPIProtocol:
+	def gameTelnetHandler(self) -> Game:
 		for handler in self.proxy.game._handlers:
-			if isinstance(handler, MPIProtocol):
+			if isinstance(handler, Game):
 				return handler
-		raise LookupError("MPI Handler not found")
+		raise LookupError("Game Telnet Handler not found")
 
 	@property
 	def playerTelnetHandler(self) -> Player:
@@ -622,8 +625,8 @@ class Mapper(threading.Thread, World):
 
 	def user_command_wordwrap(self, *args: str) -> None:
 		try:
-			value: bool = not self.mpiHandler.is_word_wrapping
-			self.mpiHandler.is_word_wrapping = value
+			value: bool = not self.gmcpRemoteEditing.isWordWrapping
+			self.gmcpRemoteEditing.isWordWrapping = value
 			cfg["wordwrap"] = value
 			cfg.save()
 			self.sendPlayer(f"Word Wrap {'enabled' if value else 'disabled'}.")
@@ -1011,6 +1014,32 @@ class Mapper(threading.Thread, World):
 		if value.get("type") == "you":
 			self.gmcpCharacter.update(value)
 		self.gmcpGroup.setdefault(value["id"], {}).update(value)
+
+	def mud_event_gmcp_mume_client_canceledit(self, text: str) -> None:
+		value = json.loads(text)
+		# Result is either True or an error message.
+		result = value["result"]
+		if isinstance(result, str):
+			self.output(result.strip())
+
+	def mud_event_gmcp_mume_client_edit(self, text: str) -> None:
+		value = json.loads(text)
+		self.gmcpRemoteEditing.start(RemoteEditingCommand.EDIT, **value)
+
+	def mud_event_gmcp_mume_client_error(self, text: str) -> None:
+		value = json.loads(text)
+		self.output(value["message"].strip())
+
+	def mud_event_gmcp_mume_client_view(self, text: str) -> None:
+		value = json.loads(text)
+		self.gmcpRemoteEditing.start(RemoteEditingCommand.VIEW, **value)
+
+	def mud_event_gmcp_mume_client_write(self, text: str) -> None:
+		value = json.loads(text)
+		# Result is either True or an error message.
+		result = value["result"]
+		if isinstance(result, str):
+			self.output(result.strip())
 
 	def mud_event_prompt(self, text: str) -> None:
 		self.playerTelnetHandler.mpmEventSend({"prompt": text})

@@ -52,10 +52,8 @@ class TestGameThread(TestCase):
 	def testGameThread(self) -> None:
 		# fmt: off
 		initialConfiguration: bytes = (  # What the server thread sends MUME on connection success.
-			# Identify for Mume Remote Editing.
-			MPI_INIT + b"I" + LF
 			# Turn on XML mode.
-			+ MPI_INIT + b"X2" + LF + b"3G" + LF
+			MPI_INIT + b"X2" + LF + b"3G" + LF
 		)
 		# fmt: on
 		outputToPlayer: Queue[bytes] = Queue()

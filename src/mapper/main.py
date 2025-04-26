@@ -229,6 +229,7 @@ def main(
 		playerSocket.shutdown(socket.SHUT_RDWR)
 	playerThread.join()
 	mapperThread.proxy.close()
+	mapperThread.gmcpRemoteEditing.close()
 	gameSocket.close()
 	playerSocket.close()
 	os.remove(LISTENING_STATUS_FILE)
