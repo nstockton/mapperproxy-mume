@@ -235,15 +235,15 @@ wheels = [
 
 [[package]]
 name = "knickknacks"
-version = "0.5.0"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "backports-strenum", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/84/e7/f7649fb647f1347794fdfeaac221cf1d9213431944471cf855bb94f59ba1/knickknacks-0.5.0.tar.gz", hash = "sha256:f99c671d9d21907e79fce15287707b8859f0c0ba7909a35881563b2ac9af2a20", size = 369360 }
+sdist = { url = "https://files.pythonhosted.org/packages/f3/8e/a313788475d241e1faa5b4cdc5fb99b261e03d18a1f02828fbce85e8b584/knickknacks-0.6.0.tar.gz", hash = "sha256:6c0e3e41cefb85dac2ade30cb42fe1993bf6941cdc362c4601095c1877388e46", size = 54530 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d6/df/8e9348d312b15ca66029e5a609ccae7fb7af56c58fdec018a22aa5d75e61/knickknacks-0.5.0-py3-none-any.whl", hash = "sha256:ff69b4ccd8fad7d87ae8f0e72bdd017ef1880a2572282c7ee52577ef92c11326", size = 20597 },
+    { url = "https://files.pythonhosted.org/packages/4e/3a/b88e63acf99ce02d82ab6ad2aefd0416a2767b1ac3c52257e565c4998987/knickknacks-0.6.0-py3-none-any.whl", hash = "sha256:09e8a55439cb55df7a6c69a2c05cb8da2afc4c391e5611e9c28b04423c559f17", size = 24105 },
 ]
 
 [[package]]
@@ -305,8 +305,8 @@ requires-dist = [
     { name = "boltons", specifier = ">=24.0,<25.0" },
     { name = "certifi", specifier = ">=2025.1.31" },
     { name = "fastjsonschema", specifier = ">=2.21.1,<3.0" },
-    { name = "knickknacks", specifier = ">=0.5.0,<0.6.0" },
-    { name = "mud-protocols", url = "https://github.com/nstockton/mud-protocols/releases/download/v0.9.0/mud_protocols-0.9.0-py3-none-any.whl" },
+    { name = "knickknacks", specifier = ">=0.6.0,<1.0.0" },
+    { name = "mud-protocols", url = "https://github.com/nstockton/mud-protocols/releases/download/v0.9.1/mud_protocols-0.9.1-py3-none-any.whl" },
     { name = "orjson", specifier = ">=3.9,<4.0" },
     { name = "pyglet", specifier = ">=2.0,<3.0" },
     { name = "rapidfuzz", specifier = ">=3.12.1,<4.0" },
@@ -507,17 +507,17 @@ wheels = [
 
 [[package]]
 name = "mud-protocols"
-version = "0.9.0"
-source = { url = "https://github.com/nstockton/mud-protocols/releases/download/v0.9.0/mud_protocols-0.9.0-py3-none-any.whl" }
+version = "0.9.1"
+source = { url = "https://github.com/nstockton/mud-protocols/releases/download/v0.9.1/mud_protocols-0.9.1-py3-none-any.whl" }
 dependencies = [
     { name = "knickknacks" },
 ]
 wheels = [
-    { url = "https://github.com/nstockton/mud-protocols/releases/download/v0.9.0/mud_protocols-0.9.0-py3-none-any.whl", hash = "sha256:d71cfb20fa98e5abd69eaff59918963a3979d09c4838d7086d9ce6644cfcfbf4" },
+    { url = "https://github.com/nstockton/mud-protocols/releases/download/v0.9.1/mud_protocols-0.9.1-py3-none-any.whl", hash = "sha256:9ccb41fd3bbf388a46a7b74734c3d90fe1e35ec73c871d7657163c528dc23270" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "knickknacks", specifier = ">=0.5.0,<0.6.0" }]
+requires-dist = [{ name = "knickknacks", specifier = ">=0.6.0,<1.0.0" }]
 
 [[package]]
 name = "mypy"
@@ -3663,16 +3663,16 @@ wheels = [
 
 [[package]]
 name = "speechlight"
-version = "2.0.1"
+version = "2.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "knickknacks" },
     { name = "pyobjc", marker = "sys_platform == 'darwin'" },
     { name = "pywin32", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7b/5a/5162a1c2d1755ddb5cb27eab8a48283b0ffcb7dd3ba350ea6ec727925ae9/speechlight-2.0.1.tar.gz", hash = "sha256:0a7fc4e89548d6c261b2e7b92cdea20455e9bd2b4e785e56328ed381d95b787a", size = 446902 }
+sdist = { url = "https://files.pythonhosted.org/packages/a4/7f/c5bded6bde4a290d423a768dd22e89e42cffe336bbef0133df0ee6f32960/speechlight-2.0.2.tar.gz", hash = "sha256:7c6a625bffc4c33f856bd4d2267b33577ce427c44a14000bc0f9e5c5fe4591be", size = 446894 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f7/e9/881de2989931b251eeb2c349c49e374c36365e6dd4317b6032509d628ec6/speechlight-2.0.1-py3-none-any.whl", hash = "sha256:3e383fa50051c5b7fae105b73ba11c598be5a0f570a27f8ca6f316412a8eef57", size = 335934 },
+    { url = "https://files.pythonhosted.org/packages/1f/c3/6ed4b2e1cbfa1b869a6812ad6ff562ea414cb9b597cc5817fec7c0ddb6e0/speechlight-2.0.2-py3-none-any.whl", hash = "sha256:a523ee7862df05a876eb18f522ef54445093f48c79c7e72a5e33f2d13c5ba1a4", size = 335940 },
 ]
 
 [[package]]
