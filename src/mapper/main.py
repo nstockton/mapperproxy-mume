@@ -14,7 +14,6 @@ import sys
 import threading
 import traceback
 from contextlib import ExitStack, closing, suppress
-from typing import Union
 
 # Third-party Modules:
 import pyglet
@@ -54,7 +53,7 @@ class Player(threading.Thread):
 					self.mapper.proxy.player.parse(data)
 				else:
 					self.close()
-			except socket.timeout:  # NOQA: PERF203
+			except TimeoutError:  # NOQA: PERF203
 				continue
 			except OSError:
 				self.close()
@@ -151,7 +150,7 @@ def main(
 	outputFormat: str,
 	interface: str,
 	isEmulatingOffline: bool,
-	promptTerminator: Union[bytes, None],
+	promptTerminator: bytes | None,
 	gagPrompts: bool,
 	findFormat: str,
 	localHost: str,
@@ -176,7 +175,7 @@ def main(
 		timeout=1.0,
 	)
 	# initialise server connection
-	unbufferedGameSocket: Union[socket.socket, FakeSocket]
+	unbufferedGameSocket: socket.socket | FakeSocket
 	try:
 		if isEmulatingOffline:
 			unbufferedGameSocket = FakeSocket()

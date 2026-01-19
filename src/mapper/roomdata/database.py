@@ -11,7 +11,7 @@ import logging
 import os.path
 from collections.abc import Callable, Mapping
 from functools import cache
-from typing import Any, Union
+from typing import Any
 
 # Third-party Modules:
 import fastjsonschema
@@ -74,7 +74,7 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 		logger.exception("Data failed validation.")
 
 
-def _load(databasePath: str) -> Union[tuple[str, None, int], tuple[None, dict[str, Any], int]]:
+def _load(databasePath: str) -> tuple[str, None, int] | tuple[None, dict[str, Any], int]:
 	"""
 	Loads a database into memory.
 
@@ -128,7 +128,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		logger.exception("Error writing to disk:")
 
 
-def loadLabels() -> Union[tuple[str, None, int], tuple[None, dict[str, str], int]]:
+def loadLabels() -> tuple[str, None, int] | tuple[None, dict[str, str], int]:
 	"""
 	Loads the labels database into memory.
 
@@ -167,7 +167,7 @@ def dumpLabels(labels: Mapping[str, str]) -> None:
 	_dump(output, LABELS_FILE_PATH, getSchemaPath(LABELS_FILE_PATH, LABELS_SCHEMA_VERSION))
 
 
-def loadRooms() -> Union[tuple[str, None, int], tuple[None, dict[str, dict[str, Any]], int]]:
+def loadRooms() -> tuple[str, None, int] | tuple[None, dict[str, dict[str, Any]], int]:
 	"""
 	Loads the rooms database into memory.
 

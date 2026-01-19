@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import threading
 from collections.abc import Callable
-from typing import Any, Union
+from typing import Any
 
 
 class BaseDelay(threading.Thread):
@@ -20,7 +20,7 @@ class BaseDelay(threading.Thread):
 	def __init__(
 		self,
 		duration: float,
-		count: Union[int, None],
+		count: int | None,
 		function: Callable[..., Any],
 		*args: Any,
 		**kwargs: Any,
@@ -43,7 +43,7 @@ class BaseDelay(threading.Thread):
 		super().__init__()
 		self.daemon: bool = True
 		self._duration: float = duration
-		self._count: Union[int, None] = count
+		self._count: int | None = count
 		self._function: Callable[..., Any] = function
 		self._args: tuple[Any, ...] = args
 		self._kwargs: dict[str, Any] = kwargs

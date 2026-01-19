@@ -9,7 +9,7 @@ from __future__ import annotations
 # Built-in Modules:
 import logging
 from contextlib import suppress
-from typing import TYPE_CHECKING, Literal, Union, get_args
+from typing import TYPE_CHECKING, Literal, get_args
 
 # Third-party Modules:
 from knickknacks.platforms import get_directory_path
@@ -34,7 +34,7 @@ if not TYPE_CHECKING:
 cfg: Config = Config()
 
 
-def levelName(level: Union[str, int, None]) -> str:
+def levelName(level: str | int | None) -> str:
 	level = level.strip().upper() if isinstance(level, str) else level
 	if isinstance(level, int):
 		if level < 0 or level > 50:

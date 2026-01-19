@@ -20,7 +20,7 @@ import textwrap
 import threading
 from collections.abc import Callable
 from enum import Enum, auto
-from typing import Any, Union
+from typing import Any
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -58,8 +58,8 @@ class GMCPRemoteEditing:
 		}
 		defaultEditor: str = editors.get(sys.platform, "nano")
 		defaultPager: str = pagers.get(sys.platform, "less")
-		editor: Union[str, None] = shutil.which(os.getenv("VISUAL", "") or os.getenv("EDITOR", defaultEditor))
-		pager: Union[str, None] = shutil.which(os.getenv("PAGER", defaultPager))
+		editor: str | None = shutil.which(os.getenv("VISUAL", "") or os.getenv("EDITOR", defaultEditor))
+		pager: str | None = shutil.which(os.getenv("PAGER", defaultPager))
 		self._isWordWrapping: bool = False
 		if editor is None:  # pragma: no cover
 			raise ValueError("Remote editing editor executable not found.")

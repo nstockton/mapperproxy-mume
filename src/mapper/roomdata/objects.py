@@ -8,10 +8,8 @@ from __future__ import annotations
 
 # Built-in Modules:
 import re
-import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Union
 
 # Mapper Modules:
 from mapper.gui.vec2d import Vec2d
@@ -155,12 +153,10 @@ VALID_DOOR_FLAGS: tuple[str, ...] = (
 	"action",  # Action controlled
 	"no_bash",
 )
-DATACLASS_KWARGS: dict[str, bool] = {"eq": False}  # Use the default __hash__ method for speed.
-
-
-if sys.version_info >= (3, 10):  # pragma: no cover
-	# Python 3.10 and up adds a "slots" argument to automatically generate a __slots__ attribute.
-	DATACLASS_KWARGS["slots"] = True
+DATACLASS_KWARGS: dict[str, bool] = {
+	"slots": True,
+	"eq": False,  # Use the default __hash__ method for speed.
+}
 
 
 @dataclass(**DATACLASS_KWARGS)
@@ -170,7 +166,7 @@ class Exit:
 	"""
 
 	_direction: str = ""
-	vnum: Union[str, None] = None
+	vnum: str | None = None
 	to: str = "undefined"
 	exitFlags: set[str] = field(default_factory=set)
 	door: str = ""

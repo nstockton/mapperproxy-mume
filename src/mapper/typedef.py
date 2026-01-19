@@ -28,9 +28,9 @@ PLAYER_WRITER_TYPE: TypeAlias = Callable[[bytes], None]
 MUD_EVENT_HANDLER_TYPE: TypeAlias = Callable[[str], None]
 MUD_EVENT_TYPE: TypeAlias = tuple[str, bytes]
 MUD_EVENT_CALLER_TYPE: TypeAlias = Callable[[MUD_EVENT_TYPE], None]
-MAPPER_QUEUE_EVENT_TYPE: TypeAlias = Union[MUD_EVENT_TYPE, None]
+MAPPER_QUEUE_EVENT_TYPE: TypeAlias = MUD_EVENT_TYPE | None
 MAPPER_QUEUE_TYPE: TypeAlias = SimpleQueue[MAPPER_QUEUE_EVENT_TYPE]
-GUI_QUEUE_EVENT_TYPE: TypeAlias = "Union[tuple[str], tuple[str, Room], None]"
+GUI_QUEUE_EVENT_TYPE: TypeAlias = "tuple[str] | tuple[str, Room] | None"
 GUI_QUEUE_TYPE: TypeAlias = SimpleQueue[GUI_QUEUE_EVENT_TYPE]
 
 

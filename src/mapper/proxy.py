@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import logging
 from collections.abc import Iterable
-from typing import Any, Union, cast
+from typing import Any, cast
 
 # Third-party Modules:
 from mudproto.charset import CharsetMixIn
@@ -44,7 +44,7 @@ class Telnet(TelnetProtocol):
 			raise ValueError("Name must be 'player' or 'game'")
 		self.proxy: ProxyHandler = proxy
 
-	def on_command(self, command: bytes, option: Union[bytes, None]) -> None:
+	def on_command(self, command: bytes, option: bytes | None) -> None:
 		if command in NEGOTIATION_BYTES and option not in self.subnegotiation_map:
 			# Treat any unhandled negotiation options the same as unhandled commands, so
 			# they are forwarded to the other end of the proxy.
@@ -52,7 +52,7 @@ class Telnet(TelnetProtocol):
 		else:
 			super().on_command(command, option)
 
-	def on_unhandled_command(self, command: bytes, option: Union[bytes, None]) -> None:
+	def on_unhandled_command(self, command: bytes, option: bytes | None) -> None:
 		# Forward unhandled commands to the other side of the proxy.
 		writer = self.proxy.game.write if self.name == "player" else self.proxy.player.write
 		if option is None:
@@ -136,7 +136,7 @@ class Game(MCCPMixIn, GMCPMixIn, CharsetMixIn, NAWSMixIn, Telnet):
 	def player(self) -> Player:
 		return cast(Player, self.proxy.player._handlers[0])
 
-	def on_ga(self, *args: Union[bytes, None]) -> None:
+	def on_ga(self, *args: bytes | None) -> None:
 		"""Called when a Go Ahead command is received."""
 		self.proxy.player.write(b"", prompt=True)
 
@@ -197,7 +197,7 @@ class ProxyHandler:
 		gameWriter: GAME_WRITER_TYPE,
 		*,
 		outputFormat: str,
-		promptTerminator: Union[bytes, None],
+		promptTerminator: bytes | None,
 		isEmulatingOffline: bool,
 		mapperCommands: Iterable[bytes],
 		eventCaller: MUD_EVENT_CALLER_TYPE,

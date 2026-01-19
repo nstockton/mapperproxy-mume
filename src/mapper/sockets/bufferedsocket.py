@@ -12,7 +12,7 @@ import select
 import socket
 import ssl
 from contextlib import AbstractContextManager
-from typing import Any, Union, cast
+from typing import Any, cast
 
 # Third-party Modules:
 import certifi
@@ -34,7 +34,7 @@ class BufferedSocket(socketutils.BufferedSocket):
 
 	def __init__(
 		self,
-		sock: Union[socket.socket, FakeSocket],
+		sock: socket.socket | FakeSocket,
 		*args: Any,
 		encrypt: bool = False,
 		**kwargs: Any,
@@ -75,7 +75,7 @@ class BufferedSocket(socketutils.BufferedSocket):
 		"""
 		kwargs["do_handshake_on_connect"] = False  # Avoid race condition.
 		with self._recv_lock, self._send_lock:
-			originalTimeout: Union[float, None] = sock.gettimeout()
+			originalTimeout: float | None = sock.gettimeout()
 			sock.settimeout(None)
 			try:
 				context: ssl.SSLContext = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)

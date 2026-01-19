@@ -141,7 +141,7 @@ class TestMapperHandleMudEvent(TestCase):
 		handlers: Generator[Mock, None, None] = (
 			getattr(self.mapper, handlerName) for handlerName in self.legacyHandlerNames
 		)
-		for event, handler in zip(events, handlers):
+		for event, handler in zip(events, handlers, strict=False):
 			sampleInput1: str = "Helol oje"
 			sampleInput2: str = "no sir, away. a papaya war is on"
 			sampleInput3: str = "delting no sir, away. a papaya war is on"

@@ -17,7 +17,7 @@ from collections.abc import Callable, Generator, Iterable, MutableSequence, Sequ
 from contextlib import suppress
 from queue import SimpleQueue
 from timeit import default_timer as defaultTimer
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 # Third-party Modules:
 from knickknacks.strings import regex_fuzzy
@@ -255,8 +255,8 @@ class World:
 		if gc.isenabled():
 			gc.disable()
 		self.output("Loading the database file.")
-		errors: Union[str, None]
-		db: Union[dict[str, dict[str, Any]], None]
+		errors: str | None
+		db: dict[str, dict[str, Any]] | None
 		errors, db, schemaVersion = loadRooms()
 		if db is None:
 			if errors is not None:
@@ -320,8 +320,8 @@ class World:
 		self.output(f"Map Database saved in {elapsedTime:.1f} seconds.")
 
 	def loadLabels(self) -> None:
-		errors: Union[str, None]
-		labels: Union[dict[str, str], None]
+		errors: str | None
+		labels: dict[str, str] | None
 		schemaVersion: int
 		errors, labels, schemaVersion = loadLabels()
 		if labels is None:
@@ -341,7 +341,7 @@ class World:
 	def saveLabels(self) -> None:
 		dumpLabels(self.labels)
 
-	def getNewExit(self, direction: str, to: str = "undefined", vnum: Optional[str] = None) -> Exit:
+	def getNewExit(self, direction: str, to: str = "undefined", vnum: str | None = None) -> Exit:
 		"""
 		Creates a new exit object for a given direction.
 
@@ -412,8 +412,8 @@ class World:
 			):
 				yield (vnum, obj, differenceX, differenceY, differenceZ)
 
-	def getVnum(self, roomObj: Room) -> Union[str, None]:
-		result: Union[str, None] = None
+	def getVnum(self, roomObj: Room) -> str | None:
+		result: str | None = None
 		for vnum, obj in self.rooms.items():
 			if obj is roomObj:
 				result = vnum
@@ -422,11 +422,11 @@ class World:
 
 	@staticmethod
 	def coordinatesSubtract(first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
-		return tuple(a - b for a, b in zip(first, second))
+		return tuple(a - b for a, b in zip(first, second, strict=False))
 
 	@staticmethod
 	def coordinatesAdd(first: Sequence[int], second: Sequence[int]) -> tuple[int, ...]:
-		return tuple(a + b for a, b in zip(first, second))
+		return tuple(a + b for a, b in zip(first, second, strict=False))
 
 	def coordinatesAddDirection(self, coordinates: Sequence[int], direction: str) -> tuple[int, ...]:
 		if direction not in DIRECTIONS:
@@ -1195,16 +1195,16 @@ class World:
 
 	def pathFind(
 		self,
-		origin: Optional[Room] = None,
-		destination: Optional[str] = None,
-		flags: Optional[Sequence[str]] = None,
+		origin: Room | None = None,
+		destination: str | None = None,
+		flags: Sequence[str] | None = None,
 	) -> list[str]:
 		if origin is None:
 			if self.currentRoom.vnum == "-1":
 				self.output("Error! The mapper has no location. Please use the sync command then try again.")
 				return []
 			origin = self.currentRoom
-		destinationRoom: Union[Room, None] = self.getRoomFromLabel(str(destination))
+		destinationRoom: Room | None = self.getRoomFromLabel(str(destination))
 		if destinationRoom is None:
 			return []
 		if destinationRoom is origin:
@@ -1231,10 +1231,10 @@ class World:
 	def _pathFind(
 		self,
 		origin: Room,
-		isDestinationFunc: Optional[Callable[[Room], bool]] = None,
-		exitIgnoreFunc: Optional[Callable[[Exit], bool]] = None,
-		exitCostFunc: Optional[Callable[[Exit, Room], int]] = None,
-		exitDestinationFunc: Optional[Callable[[Exit, Room], bool]] = None,
+		isDestinationFunc: Callable[[Room], bool] | None = None,
+		exitIgnoreFunc: Callable[[Exit], bool] | None = None,
+		exitCostFunc: Callable[[Exit, Room], int] | None = None,
+		exitDestinationFunc: Callable[[Exit, Room], bool] | None = None,
 	) -> list[str]:
 		# Each key-value pare that gets added to this dict will be a parent room and child room respectively.
 		parents: dict[Room, tuple[Room, str]] = {origin: (origin, "")}
@@ -1313,7 +1313,7 @@ class World:
 				results.append(f"open {currentRoomObj.exits[direction].door or 'exit'} {direction}")
 		return results
 
-	def getRoomFromLabel(self, text: str) -> Union[Room, None]:
+	def getRoomFromLabel(self, text: str) -> Room | None:
 		text = text.strip().lower()
 		vnum: str
 		if not text:

@@ -16,7 +16,7 @@ import re
 import shutil
 import tempfile
 from datetime import datetime
-from typing import Any, Union
+from typing import Any
 
 # Third-party Modules:
 import PyInstaller.config
@@ -32,7 +32,7 @@ from mapper import __version__ as MAPPER_VERSION
 
 APP_NAME: str = "Mapper Proxy"
 APP_AUTHOR: str = "Nick Stockton"
-APP_VERSION_MATCH: Union[re.Match[str], None] = re.search(
+APP_VERSION_MATCH: re.Match[str] | None = re.search(
 	r"^[vV]?(?P<version>\d+\.\d+\.\d+)(?P<version_type>.*)$", MAPPER_VERSION.strip(), flags=re.UNICODE
 )
 APP_VERSION: str
@@ -146,7 +146,7 @@ dll_excludes: TOC = TOC(
 	]
 )
 
-block_cipher: Union[Any, None] = None
+block_cipher: Any | None = None
 
 version_data: str = f"""
 # UTF-8

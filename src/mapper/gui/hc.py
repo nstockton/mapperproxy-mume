@@ -13,7 +13,7 @@ from collections.abc import Iterable
 from contextlib import suppress
 from enum import Enum, auto
 from queue import Empty as QueueEmpty
-from typing import TYPE_CHECKING, Any, NamedTuple, Optional, Union
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 # Third-party Modules:
 import pyglet
@@ -94,7 +94,7 @@ class Groups(Enum):
 
 	@staticmethod
 	def _generate_next_value_(
-		name: str, start: Union[int, None], count: int, last_values: list[pyglet.graphics.Group]
+		name: str, start: int | None, count: int, last_values: list[pyglet.graphics.Group]
 	) -> pyglet.graphics.Group:
 		# Overriding this method so that auto() will return a Group instance.
 		return pyglet.graphics.Group(order=count)
@@ -143,8 +143,8 @@ class Window(pyglet.window.Window):
 		self.visibleRoomFlags: dict[str, tuple[pyglet.shapes.ShapeBase, ...]] = {}
 		self.visibleExits: dict[str, tuple[pyglet.shapes.ShapeBase, ...]] = {}
 		self.centerMark: list[pyglet.shapes.ShapeBase] = []
-		self.highlight: Union[str, None] = None
-		self.currentRoom: Union[Room, None] = None
+		self.highlight: str | None = None
+		self.currentRoom: Room | None = None
 		super().__init__(caption="MPM", resizable=True, vsync=False)
 		self._originalLocation: tuple[int, int] = self.get_location()
 		self._originalSize: tuple[int, int] = self.get_size()
@@ -308,7 +308,7 @@ class Window(pyglet.window.Window):
 		width = height = self.roomSize
 		return cp + (width / 2.0, -height / 2.0)  # NOQA: RUF005
 
-	def roomOffsetFromPixels(self, x: float, y: float, z: Optional[float] = None) -> tuple[int, int]:
+	def roomOffsetFromPixels(self, x: float, y: float, z: float | None = None) -> tuple[int, int]:
 		"""
 		Given coordinates in pixels, return the offset in room coordinates from the center room.
 
@@ -353,10 +353,10 @@ class Window(pyglet.window.Window):
 		innerRadiusRatio: float,
 		angle: float,
 		*,
-		color: Optional[Color] = None,
-		borderColor: Optional[Color] = None,
-		batch: Optional[pyglet.graphics.Batch] = None,
-		group: Optional[pyglet.graphics.Group] = None,
+		color: Color | None = None,
+		borderColor: Color | None = None,
+		batch: pyglet.graphics.Batch | None = None,
+		group: pyglet.graphics.Group | None = None,
 	) -> tuple[pyglet.shapes.ShapeBase, pyglet.shapes.ShapeBase]:
 		"""
 		Draws a triangle with a border around it.
@@ -407,12 +407,12 @@ class Window(pyglet.window.Window):
 		radius: float,
 		innerRadiusRatio: float,
 		*,
-		numSpikes: Optional[int] = None,
-		rotation: Optional[float] = None,
-		color: Optional[Color] = None,
-		borderColor: Optional[Color] = None,
-		batch: Optional[pyglet.graphics.Batch] = None,
-		group: Optional[pyglet.graphics.Group] = None,
+		numSpikes: int | None = None,
+		rotation: float | None = None,
+		color: Color | None = None,
+		borderColor: Color | None = None,
+		batch: pyglet.graphics.Batch | None = None,
+		group: pyglet.graphics.Group | None = None,
 	) -> tuple[pyglet.shapes.ShapeBase, pyglet.shapes.ShapeBase]:
 		"""
 		Draws a star with a border around it.
@@ -486,10 +486,10 @@ class Window(pyglet.window.Window):
 		radius: float,
 		innerRadiusRatio: float,
 		*,
-		color: Optional[Color] = None,
-		borderColor: Optional[Color] = None,
-		batch: Optional[pyglet.graphics.Batch] = None,
-		group: Optional[pyglet.graphics.Group] = None,
+		color: Color | None = None,
+		borderColor: Color | None = None,
+		batch: pyglet.graphics.Batch | None = None,
+		group: pyglet.graphics.Group | None = None,
 	) -> tuple[pyglet.shapes.ShapeBase, pyglet.shapes.ShapeBase]:
 		"""
 		Draws a circle with a border around it.
@@ -606,7 +606,7 @@ class Window(pyglet.window.Window):
 		self.on_guiRefresh()
 		self.say("Reset zoom", interrupt=True)
 
-	def deleteStaleRooms(self, excludes: Optional[Iterable[str]] = None) -> None:
+	def deleteStaleRooms(self, excludes: Iterable[str] | None = None) -> None:
 		"""
 		Deletes stale room shapes which are no longer visible.
 
@@ -621,7 +621,7 @@ class Window(pyglet.window.Window):
 				self.visibleRooms[vnum][0].delete()
 				del self.visibleRooms[vnum]
 
-	def deleteStaleRoomFlags(self, excludes: Optional[Iterable[str]] = None) -> None:
+	def deleteStaleRoomFlags(self, excludes: Iterable[str] | None = None) -> None:
 		"""
 		Deletes stale room flag shapes which are no longer visible.
 
@@ -639,7 +639,7 @@ class Window(pyglet.window.Window):
 					shape.delete()
 				del self.visibleRoomFlags[vnum]
 
-	def deleteStaleExits(self, excludes: Optional[Iterable[str]] = None) -> None:
+	def deleteStaleExits(self, excludes: Iterable[str] | None = None) -> None:
 		"""
 		Deletes stale exit shapes which are no longer visible.
 
@@ -790,7 +790,7 @@ class Window(pyglet.window.Window):
 			for shape in self.visibleRoomFlags[room.vnum]:
 				shape.position = cp
 
-	def drawRoom(self, room: Room, cp: Vec2d, group: Optional[pyglet.graphics.Group] = None) -> None:
+	def drawRoom(self, room: Room, cp: Vec2d, group: pyglet.graphics.Group | None = None) -> None:
 		"""
 		Draws a room.
 
