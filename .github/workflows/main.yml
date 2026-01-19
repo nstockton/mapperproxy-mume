@@ -20,7 +20,7 @@ jobs:
       max-parallel: 4
       matrix:
         os: [ubuntu-24.04, macos-13, windows-2022]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         include:
           - os: ubuntu-24.04
             activate_path: ./.venv/bin/activate
@@ -101,7 +101,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12.7"
+          python-version: "3.12.10"
           # Optional - x64 or x86 architecture, defaults to x64.
           architecture: x64
       - name: Install Dependencies
