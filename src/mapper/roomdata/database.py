@@ -8,9 +8,9 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-import os.path
 from collections.abc import Callable, Mapping
 from functools import cache
+from pathlib import Path
 from typing import Any
 
 # Third-party Modules:
@@ -23,21 +23,21 @@ from mapper.utils import getDataPath
 
 LABELS_SCHEMA_VERSION: int = 1  # Increment this when the labels schema changes.
 MAP_SCHEMA_VERSION: int = 2  # Increment this when the map schema changes.
-DATA_DIRECTORY: str = getDataPath()
+DATA_DIRECTORY_PATH: Path = getDataPath()
 LABELS_FILE: str = "room_labels.json"
-LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, LABELS_FILE)
+LABELS_FILE_PATH: Path = DATA_DIRECTORY_PATH / LABELS_FILE
 SAMPLE_LABELS_FILE: str = LABELS_FILE + ".sample"
-SAMPLE_LABELS_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_LABELS_FILE)
+SAMPLE_LABELS_FILE_PATH: Path = DATA_DIRECTORY_PATH / SAMPLE_LABELS_FILE
 MAP_FILE: str = "map.json"
-MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, MAP_FILE)
+MAP_FILE_PATH: Path = DATA_DIRECTORY_PATH / MAP_FILE
 SAMPLE_MAP_FILE: str = MAP_FILE + ".sample"
-SAMPLE_MAP_FILE_PATH: str = os.path.join(DATA_DIRECTORY, SAMPLE_MAP_FILE)
+SAMPLE_MAP_FILE_PATH: Path = DATA_DIRECTORY_PATH / SAMPLE_MAP_FILE
 
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
+def getSchemaPath(databasePath: Path | str, schemaVersion: int) -> Path:
 	"""
 	Determines the schema file path from a schema version.
 
@@ -48,18 +48,20 @@ def getSchemaPath(databasePath: str, schemaVersion: int) -> str:
 	Returns:
 		The schema file path.
 	"""
-	databasePath = databasePath.removesuffix(".sample")
-	return "{}_v{ver}{}.schema".format(*os.path.splitext(databasePath), ver=schemaVersion)
+	path: Path = Path(databasePath)
+	if path.suffix.lower() == ".sample":
+		path = path.with_suffix("")  # Clear the suffix.
+	return path.with_name(f"{path.stem}_v{schemaVersion}{path.suffix}.schema")
 
 
 @cache
-def getValidator(schemaPath: str) -> Callable[..., None]:  # type: ignore[misc]
-	with open(schemaPath, "rb") as fileObj:  # NOQA: FURB101
-		validator: Callable[..., None] = fastjsonschema.compile(orjson.loads(fileObj.read()))
+def getValidator(schemaPath: Path | str) -> Callable[..., None]:  # type: ignore[misc]
+	path: Path = Path(schemaPath)
+	validator: Callable[..., None] = fastjsonschema.compile(orjson.loads(path.read_bytes()))
 	return validator
 
 
-def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
+def _validate(database: Mapping[str, Any], schemaPath: Path | str) -> None:
 	"""
 	Validates a database against a schema.
 
@@ -67,14 +69,14 @@ def _validate(database: Mapping[str, Any], schemaPath: str) -> None:
 		database: The database to be validated.
 		schemaPath: The location of the schema.
 	"""
-	validator = getValidator(schemaPath)
+	validator = getValidator(Path(schemaPath))
 	try:
 		validator(database)
 	except fastjsonschema.JsonSchemaException:
 		logger.exception("Data failed validation.")
 
 
-def _load(databasePath: str) -> tuple[str, None, int] | tuple[None, dict[str, Any], int]:
+def _load(databasePath: Path | str) -> tuple[str, None, int] | tuple[None, dict[str, Any], int]:
 	"""
 	Loads a database into memory.
 
@@ -84,15 +86,13 @@ def _load(databasePath: str) -> tuple[str, None, int] | tuple[None, dict[str, An
 	Returns:
 		An error message or None, the loaded database or None, and the schema version.
 	"""
-	if not os.path.exists(databasePath):
-		return f"Error: '{databasePath}' doesn't exist.", None, 0
-	if os.path.isdir(databasePath):
-		return f"Error: '{databasePath}' is a directory, not a file.", None, 0
+	path: Path = Path(databasePath)
+	if not path.is_file():
+		return f"Error: '{databasePath}' file not found.", None, 0
 	try:
-		with open(databasePath, "rb") as fileObj:  # NOQA: FURB101
-			database: dict[str, Any] = orjson.loads(fileObj.read())
+		database: dict[str, Any] = orjson.loads(path.read_bytes())
 		schemaVersion: int = database.get("schema_version", 0)
-		schemaPath = getSchemaPath(databasePath, schemaVersion)
+		schemaPath = getSchemaPath(path, schemaVersion)
 		_validate(database, schemaPath)
 	except OSError as e:
 		return f"OSError: {e}", None, 0
@@ -103,7 +103,7 @@ def _load(databasePath: str) -> tuple[str, None, int] | tuple[None, dict[str, An
 		return None, database, schemaVersion
 
 
-def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> None:
+def _dump(database: Mapping[str, Any], databasePath: Path | str, schemaPath: Path | str) -> None:
 	"""
 	Saves a database to disk.
 
@@ -112,7 +112,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		databasePath: The location where the database should be saved.
 		schemaPath: The location of the schema.
 	"""
-	_validate(database, schemaPath)
+	_validate(database, Path(schemaPath))
 	options: int = (
 		orjson.OPT_APPEND_NEWLINE | orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS | orjson.OPT_STRICT_INTEGER
 	)
@@ -122,8 +122,7 @@ def _dump(database: Mapping[str, Any], databasePath: str, schemaPath: str) -> No
 		logger.exception(f"Error: Cannot encode to '{databasePath}'.")
 		return
 	try:
-		with open(databasePath, "wb") as fileObj:
-			fileObj.write(data)
+		Path(databasePath).write_bytes(data)
 	except OSError:
 		logger.exception("Error writing to disk:")
 
@@ -140,11 +139,11 @@ def loadLabels() -> tuple[str, None, int] | tuple[None, dict[str, str], int]:
 	errorMessages: list[str] = []
 	labels: dict[str, str] = {}
 	for path in (SAMPLE_LABELS_FILE_PATH, LABELS_FILE_PATH):
-		if not os.path.exists(path) or os.path.isdir(path):
+		if not path.is_file():
 			continue
 		errors, result, schemaVersion = _load(path)
 		if result is None:
-			dataType: str = "sample" if path.endswith("sample") else "user"
+			dataType: str = "sample" if path.suffix.lower() == ".sample" else "user"
 			errorMessages.append(f"While loading {dataType} labels: {errors}")
 		else:
 			labels.update(result if schemaVersion < 1 else result["labels"])
@@ -180,7 +179,7 @@ def loadRooms() -> tuple[str, None, int] | tuple[None, dict[str, dict[str, Any]]
 	for path in (MAP_FILE_PATH, SAMPLE_MAP_FILE_PATH):
 		errors, result, schemaVersion = _load(path)
 		if result is None:
-			dataType: str = "sample" if path.endswith("sample") else "user"
+			dataType: str = "sample" if path.suffix.lower() == ".sample" else "user"
 			errorMessages.append(f"While loading {dataType} map: {errors}")
 		else:
 			return None, result, schemaVersion

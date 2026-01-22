@@ -8,16 +8,16 @@ from __future__ import annotations
 
 # Built-in Modules:
 import json
-import os.path
 import threading
 from collections.abc import Iterator, MutableMapping
+from pathlib import Path
 from typing import Any
 
 # Local Modules:
 from .utils import getDataPath
 
 
-DATA_DIRECTORY: str = getDataPath()
+DATA_DIRECTORY: Path = getDataPath()
 
 
 class ConfigError(Exception):
@@ -49,19 +49,19 @@ class Config(MutableMapping[str, Any]):
 		return self._name
 
 	def _parse(self, filename: str) -> dict[str, Any]:
-		filename = os.path.join(DATA_DIRECTORY, filename)
-		if not os.path.exists(filename):
+		path: Path = DATA_DIRECTORY / filename
+		if not path.exists():
 			return {}
-		if os.path.isdir(filename):
-			raise ConfigError(f"'{filename}' is a directory, not a file.")
+		if path.is_dir():
+			raise ConfigError(f"'{path}' is a directory, not a file.")
 		with self._configLock:
 			try:
-				with open(filename, encoding="utf-8") as fileObj:
+				with path.open(encoding="utf-8") as fileObj:
 					return dict(json.load(fileObj))
 			except OSError as e:  # pragma: no cover
 				raise ConfigError(f"{e.strerror}: '{e.filename}'") from None
 			except ValueError:
-				raise ConfigError(f"Corrupted json file: {filename}") from None
+				raise ConfigError(f"Corrupted json file: {path}") from None
 
 	def reload(self) -> None:
 		"""Reloads the configuration from disc."""
@@ -71,10 +71,10 @@ class Config(MutableMapping[str, Any]):
 
 	def save(self) -> None:
 		"""Saves the configuration to disc."""
-		filename: str = os.path.join(DATA_DIRECTORY, f"{self.name}.json")
+		path: Path = DATA_DIRECTORY / f"{self.name}.json"
 		with self._configLock:
 			newline: str = "\n"
-			with open(filename, "w", encoding="utf-8", newline=newline) as fileObj:
+			with path.open("w", encoding="utf-8", newline=newline) as fileObj:
 				json.dump(self._config, fileObj, sort_keys=True, indent=2)
 				fileObj.write(newline)
 

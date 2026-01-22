@@ -107,6 +107,13 @@ SAMPLE_TEXTS: tuple[str, ...] = (
 )
 
 
+class MockStat:
+	@property
+	def st_mtime(self) -> int:
+		"""Returns a different number representing modified time."""
+		return uuid4().int
+
+
 class TestRemoteEditing(TestCase):
 	def setUp(self) -> None:
 		self.oldLoggerValue = logging.getLogger().getEffectiveLevel()
@@ -117,7 +124,7 @@ class TestRemoteEditing(TestCase):
 		del self.gmcpRemoteEditing
 		logging.disable(self.oldLoggerValue)
 
-	@patch("mapper.remoteediting.os.remove")
+	@patch("mapper.remoteediting.Path.unlink")
 	@patch("mapper.remoteediting.subprocess.run")
 	@patch("mapper.remoteediting.tempfile.NamedTemporaryFile")
 	@patch("mapper.remoteediting.print")
@@ -126,7 +133,7 @@ class TestRemoteEditing(TestCase):
 		mockPrint: Mock,
 		MockNamedTemporaryFile: Mock,
 		mockSubprocess: Mock,
-		mockRemove: Mock,
+		mockUnlink: Mock,
 	) -> None:
 		tempFileName: str = "temp_file_name"
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
@@ -143,26 +150,26 @@ class TestRemoteEditing(TestCase):
 		self.gmcpRemoteEditing._view(TITLE, TEXT)
 		MockNamedTemporaryFile.assert_called_once()
 		mockSubprocess.assert_called_once_with((*self.gmcpRemoteEditing.pager.split(), tempFileName))
-		mockRemove.assert_called_once_with(tempFileName)
+		mockUnlink.assert_called_once_with(missing_ok=True)
 
-	@patch("mapper.remoteediting.open", mock_open(read_data=TEXT))
+	@patch("mapper.remoteediting.Path.open", mock_open(read_data=TEXT))
 	@patch("mapper.remoteediting.GMCPRemoteEditing._write")
 	@patch("mapper.remoteediting.GMCPRemoteEditing._cancel")
 	@patch("mapper.remoteediting.GMCPRemoteEditing.postprocess")
-	@patch("mapper.remoteediting.os.remove")
+	@patch("mapper.remoteediting.Path.unlink")
 	@patch("mapper.remoteediting.subprocess.run")
 	@patch("mapper.remoteediting.tempfile.NamedTemporaryFile")
-	@patch("mapper.remoteediting.os.path")
+	@patch("mapper.remoteediting.Path.stat")
 	@patch("mapper.remoteediting.input", return_value="")
 	@patch("mapper.remoteediting.print")
 	def testRemoteEditingEdit(
 		self,
 		mockPrint: Mock,
 		mockInput: Mock,
-		mockOsPath: Mock,
+		mockStat: Mock,
 		MockNamedTemporaryFile: Mock,
 		mockSubprocess: Mock,
-		mockRemove: Mock,
+		mockUnlink: Mock,
 		mockPostprocessor: Mock,
 		mock_cancel: Mock,
 		mock_write: Mock,
@@ -171,7 +178,7 @@ class TestRemoteEditing(TestCase):
 		MockNamedTemporaryFile.return_value.__enter__.return_value.name = tempFileName
 		# Test a canceled session.
 		# Same modified time means the file was *not* modified.
-		mockOsPath.getmtime.return_value = 1.0
+		mockStat.return_value.st_mtime = 1.0
 		# Test outputFormat is 'tintin'.
 		self.gmcpRemoteEditing.outputFormat = "tintin"
 		self.gmcpRemoteEditing._edit(SESSION_ID, TITLE, TEXT)
@@ -181,27 +188,27 @@ class TestRemoteEditing(TestCase):
 		)
 		mockInput.assert_called_once_with("Continue:")
 		mock_cancel.assert_called_once_with(SESSION_ID)
-		mockRemove.assert_called_once_with(tempFileName)
+		mockUnlink.assert_called_once_with(missing_ok=True)
 		MockNamedTemporaryFile.reset_mock()
 		mockPrint.reset_mock()
 		mockInput.reset_mock()
 		mock_cancel.reset_mock()
-		mockRemove.reset_mock()
+		mockUnlink.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.gmcpRemoteEditing.outputFormat = "normal"
 		self.gmcpRemoteEditing._edit(SESSION_ID, TITLE, TEXT)
 		MockNamedTemporaryFile.assert_called_once()
 		mockSubprocess.assert_called_once_with((*self.gmcpRemoteEditing.editor.split(), tempFileName))
 		mock_cancel.assert_called_once_with(SESSION_ID)
-		mockRemove.assert_called_once_with(tempFileName)
+		mockUnlink.assert_called_once_with(missing_ok=True)
 		MockNamedTemporaryFile.reset_mock()
 		mockSubprocess.reset_mock()
 		mock_cancel.reset_mock()
-		mockRemove.reset_mock()
-		mockOsPath.reset_mock(return_value=True)
+		mockUnlink.reset_mock()
+		mockStat.reset_mock(return_value=True)
 		# Test remote editing.
 		# Different modified time means the file was modified.
-		mockOsPath.getmtime.side_effect = lambda *args: uuid4()
+		mockStat.return_value = MockStat()
 		# Test outputFormat is 'tintin'.
 		self.gmcpRemoteEditing.outputFormat = "tintin"
 		self.gmcpRemoteEditing._edit(SESSION_ID, TITLE, TEXT)
@@ -211,19 +218,19 @@ class TestRemoteEditing(TestCase):
 		)
 		mockInput.assert_called_once_with("Continue:")
 		mock_write.assert_called_once_with(SESSION_ID, TEXT)
-		mockRemove.assert_called_once_with(tempFileName)
+		mockUnlink.assert_called_once_with(missing_ok=True)
 		MockNamedTemporaryFile.reset_mock()
 		mockPrint.reset_mock()
 		mockInput.reset_mock()
 		mock_write.reset_mock()
-		mockRemove.reset_mock()
+		mockUnlink.reset_mock()
 		# Test outputFormat is *not* 'tintin'.
 		self.gmcpRemoteEditing.outputFormat = "normal"
 		self.gmcpRemoteEditing._edit(SESSION_ID, TITLE, TEXT)
 		MockNamedTemporaryFile.assert_called_once()
 		mockSubprocess.assert_called_once_with((*self.gmcpRemoteEditing.editor.split(), tempFileName))
 		mock_write.assert_called_once_with(SESSION_ID, TEXT)
-		mockRemove.assert_called_once_with(tempFileName)
+		mockUnlink.assert_called_once_with(missing_ok=True)
 		# confirm pre and post processors were not called since wordwrapping was not defined
 		mockPostprocessor.assert_not_called()
 		# test given wordwrapping is enabled, processor methods are called

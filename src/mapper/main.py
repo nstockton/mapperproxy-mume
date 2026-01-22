@@ -8,16 +8,16 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-import os
 import socket
 import sys
 import threading
 import traceback
 from contextlib import ExitStack, closing, suppress
+from pathlib import Path
 
 # Third-party Modules:
 import pyglet
-from knickknacks.platforms import get_directory_path, touch
+from knickknacks.platforms import get_directory_path
 from tap import Tap
 
 # Local Modules:
@@ -27,7 +27,7 @@ from .sockets.bufferedsocket import BufferedSocket
 from .sockets.fakesocket import FakeSocket, FakeSocketEmptyError
 
 
-LISTENING_STATUS_FILE: str = get_directory_path("mapper_ready.ignore")
+LISTENING_STATUS_FILE: Path = Path(get_directory_path("mapper_ready.ignore"))
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -166,7 +166,7 @@ def main(
 	proxySocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 	proxySocket.bind((localHost, localPort))
 	proxySocket.listen(1)
-	touch(LISTENING_STATUS_FILE)
+	LISTENING_STATUS_FILE.touch()
 	unbufferedPlayerSocket: socket.socket
 	playerAddress: tuple[str, int]
 	unbufferedPlayerSocket, playerAddress = proxySocket.accept()  # NOQA: F841
@@ -189,7 +189,7 @@ def main(
 			playerSocket.sendall(b"\r\nError: server connection timed out!\r\n")
 			playerSocket.sendall(b"\r\n")
 			playerSocket.shutdown(socket.SHUT_RDWR)
-			os.remove(LISTENING_STATUS_FILE)
+			LISTENING_STATUS_FILE.unlink(missing_ok=True)
 			return
 	else:
 		unbufferedGameSocket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
@@ -231,7 +231,7 @@ def main(
 	mapperThread.gmcpRemoteEditing.close()
 	gameSocket.close()
 	playerSocket.close()
-	os.remove(LISTENING_STATUS_FILE)
+	LISTENING_STATUS_FILE.unlink(missing_ok=True)
 
 
 def run() -> None:

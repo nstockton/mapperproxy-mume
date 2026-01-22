@@ -7,32 +7,32 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import os.path
 from contextlib import ExitStack
 from unittest import TestCase
 from unittest.mock import Mock, mock_open, patch
 
 # Mapper Modules:
-from mapper.config import DATA_DIRECTORY, Config, ConfigError
+from mapper.config import Config, ConfigError
 
 
 class TestConfig(TestCase):
-	@patch("mapper.config.os")
-	def test_load(self, mockOs: Mock) -> None:
-		mockOs.path.exists.return_value = False
+	@patch("mapper.config.Path.is_dir")
+	@patch("mapper.config.Path.exists")
+	def test_load(self, mockExists: Mock, mockIsDir: Mock) -> None:
+		mockExists.return_value = False
 		cfg: Config = Config("testconfig")
 		self.assertEqual(cfg.name, "testconfig")
 		self.assertEqual(cfg._config, {})
-		mockOs.path.exists.return_value = True
-		mockOs.path.isdir.return_value = True
+		mockExists.return_value = True
+		mockIsDir.return_value = True
 		with self.assertRaises(ConfigError):
 			cfg.reload()
-		mockOs.path.isdir.return_value = False
+		mockIsDir.return_value = False
 		with ExitStack() as cm:
-			cm.enter_context(patch("mapper.config.open", mock_open(read_data="invalid")))
+			cm.enter_context(patch("mapper.config.Path.open", mock_open(read_data="invalid")))
 			cm.enter_context(self.assertRaises(ConfigError))
 			cfg.reload()
-		with patch("mapper.config.open", mock_open(read_data="{}")):
+		with patch("mapper.config.Path.open", mock_open(read_data="{}")):
 			cfg.reload()
 		cfg["test"] = "somevalue"
 		self.assertEqual(cfg["test"], "somevalue")
@@ -46,8 +46,7 @@ class TestConfig(TestCase):
 		mockOpen: Mock = mock_open()
 		lines: list[str] = []
 		mockOpen.return_value.write.side_effect = lines.append
-		with patch("mapper.config.open", mockOpen):
+		with patch("mapper.config.Path.open", mockOpen):
 			cfg.save()
-		fileName: str = os.path.join(DATA_DIRECTORY, f"{cfg.name}.json")
-		mockOpen.assert_called_once_with(fileName, "w", encoding="utf-8", newline="\n")
+		mockOpen.assert_called_once_with("w", encoding="utf-8", newline="\n")
 		self.assertEqual("".join(lines), '{\n  "test": "somevalue"\n}\n')

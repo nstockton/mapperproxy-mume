@@ -8,8 +8,8 @@ from __future__ import annotations
 
 # Built-in Modules:
 import logging
-import os.path
 from contextlib import suppress
+from pathlib import Path
 from queue import Empty as QueueEmpty
 from typing import TYPE_CHECKING, Any
 
@@ -28,67 +28,67 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 FPS: int = 40
-TILESDIR: str = getDataPath("tiles")
+TILES_PATH: Path = Path(getDataPath("tiles"))
 
 TILES: dict[str, Any] = {
 	# terrain
-	"field": pyglet.image.load(os.path.join(TILESDIR, "field.png")),
-	"brush": pyglet.image.load(os.path.join(TILESDIR, "brush.png")),
-	"forest": pyglet.image.load(os.path.join(TILESDIR, "forest.png")),
-	"hills": pyglet.image.load(os.path.join(TILESDIR, "hill.png")),
-	"mountains": pyglet.image.load(os.path.join(TILESDIR, "mountain.png")),
-	"shallows": pyglet.image.load(os.path.join(TILESDIR, "swamp.png")),
-	"water": pyglet.image.load(os.path.join(TILESDIR, "water.png")),
-	"rapids": pyglet.image.load(os.path.join(TILESDIR, "rapid.png")),
-	"underwater": pyglet.image.load(os.path.join(TILESDIR, "underwater.png")),
-	"cavern": pyglet.image.load(os.path.join(TILESDIR, "cavern.png")),
-	"tunnel": pyglet.image.load(os.path.join(TILESDIR, "tunnel.png")),
-	"road": pyglet.image.load(os.path.join(TILESDIR, "road.png")),
-	"city": pyglet.image.load(os.path.join(TILESDIR, "city.png")),
-	"building": pyglet.image.load(os.path.join(TILESDIR, "indoor.png")),
-	"random": pyglet.image.load(os.path.join(TILESDIR, "random.png")),
-	"undefined": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
-	"deathtrap": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
+	"field": pyglet.image.load(str(TILES_PATH / "field.png")),
+	"brush": pyglet.image.load(str(TILES_PATH / "brush.png")),
+	"forest": pyglet.image.load(str(TILES_PATH / "forest.png")),
+	"hills": pyglet.image.load(str(TILES_PATH / "hill.png")),
+	"mountains": pyglet.image.load(str(TILES_PATH / "mountain.png")),
+	"shallows": pyglet.image.load(str(TILES_PATH / "swamp.png")),
+	"water": pyglet.image.load(str(TILES_PATH / "water.png")),
+	"rapids": pyglet.image.load(str(TILES_PATH / "rapid.png")),
+	"underwater": pyglet.image.load(str(TILES_PATH / "underwater.png")),
+	"cavern": pyglet.image.load(str(TILES_PATH / "cavern.png")),
+	"tunnel": pyglet.image.load(str(TILES_PATH / "tunnel.png")),
+	"road": pyglet.image.load(str(TILES_PATH / "road.png")),
+	"city": pyglet.image.load(str(TILES_PATH / "city.png")),
+	"building": pyglet.image.load(str(TILES_PATH / "indoor.png")),
+	"random": pyglet.image.load(str(TILES_PATH / "random.png")),
+	"undefined": pyglet.image.load(str(TILES_PATH / "undefined.png")),
+	"deathtrap": pyglet.image.load(str(TILES_PATH / "undefined.png")),
 	# dark terrain
-	"field-dark": pyglet.image.load(os.path.join(TILESDIR, "field-dark.png")),
-	"brush-dark": pyglet.image.load(os.path.join(TILESDIR, "brush-dark.png")),
-	"forest-dark": pyglet.image.load(os.path.join(TILESDIR, "forest-dark.png")),
-	"hills-dark": pyglet.image.load(os.path.join(TILESDIR, "hill-dark.png")),
-	"mountains-dark": pyglet.image.load(os.path.join(TILESDIR, "mountain-dark.png")),
-	"shallows-dark": pyglet.image.load(os.path.join(TILESDIR, "swamp-dark.png")),
-	"water-dark": pyglet.image.load(os.path.join(TILESDIR, "water-dark.png")),
-	"rapids-dark": pyglet.image.load(os.path.join(TILESDIR, "rapid-dark.png")),
-	"underwater-dark": pyglet.image.load(os.path.join(TILESDIR, "underwater-dark.png")),
-	"cavern-dark": pyglet.image.load(os.path.join(TILESDIR, "cavern-dark.png")),
-	"tunnel-dark": pyglet.image.load(os.path.join(TILESDIR, "tunnel-dark.png")),
-	"road-dark": pyglet.image.load(os.path.join(TILESDIR, "road-dark.png")),
-	"city-dark": pyglet.image.load(os.path.join(TILESDIR, "city-dark.png")),
-	"building-dark": pyglet.image.load(os.path.join(TILESDIR, "indoor-dark.png")),
-	"random-dark": pyglet.image.load(os.path.join(TILESDIR, "random-dark.png")),
-	"undefined-dark": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
-	"deathtrap-dark": pyglet.image.load(os.path.join(TILESDIR, "undefined.png")),
+	"field-dark": pyglet.image.load(str(TILES_PATH / "field-dark.png")),
+	"brush-dark": pyglet.image.load(str(TILES_PATH / "brush-dark.png")),
+	"forest-dark": pyglet.image.load(str(TILES_PATH / "forest-dark.png")),
+	"hills-dark": pyglet.image.load(str(TILES_PATH / "hill-dark.png")),
+	"mountains-dark": pyglet.image.load(str(TILES_PATH / "mountain-dark.png")),
+	"shallows-dark": pyglet.image.load(str(TILES_PATH / "swamp-dark.png")),
+	"water-dark": pyglet.image.load(str(TILES_PATH / "water-dark.png")),
+	"rapids-dark": pyglet.image.load(str(TILES_PATH / "rapid-dark.png")),
+	"underwater-dark": pyglet.image.load(str(TILES_PATH / "underwater-dark.png")),
+	"cavern-dark": pyglet.image.load(str(TILES_PATH / "cavern-dark.png")),
+	"tunnel-dark": pyglet.image.load(str(TILES_PATH / "tunnel-dark.png")),
+	"road-dark": pyglet.image.load(str(TILES_PATH / "road-dark.png")),
+	"city-dark": pyglet.image.load(str(TILES_PATH / "city-dark.png")),
+	"building-dark": pyglet.image.load(str(TILES_PATH / "indoor-dark.png")),
+	"random-dark": pyglet.image.load(str(TILES_PATH / "random-dark.png")),
+	"undefined-dark": pyglet.image.load(str(TILES_PATH / "undefined.png")),
+	"deathtrap-dark": pyglet.image.load(str(TILES_PATH / "undefined.png")),
 	# exits
-	"wallnorth": pyglet.image.load(os.path.join(TILESDIR, "wallnorth.png")),
-	"walleast": pyglet.image.load(os.path.join(TILESDIR, "walleast.png")),
-	"wallsouth": pyglet.image.load(os.path.join(TILESDIR, "wallsouth.png")),
-	"wallwest": pyglet.image.load(os.path.join(TILESDIR, "wallwest.png")),
-	"exitup": pyglet.image.load(os.path.join(TILESDIR, "exitup.png")),
-	"exitdown": pyglet.image.load(os.path.join(TILESDIR, "exitdown.png")),
+	"wallnorth": pyglet.image.load(str(TILES_PATH / "wallnorth.png")),
+	"walleast": pyglet.image.load(str(TILES_PATH / "walleast.png")),
+	"wallsouth": pyglet.image.load(str(TILES_PATH / "wallsouth.png")),
+	"wallwest": pyglet.image.load(str(TILES_PATH / "wallwest.png")),
+	"exitup": pyglet.image.load(str(TILES_PATH / "exitup.png")),
+	"exitdown": pyglet.image.load(str(TILES_PATH / "exitdown.png")),
 	# load flags
-	"attention": pyglet.image.load(os.path.join(TILESDIR, "attention.png")),
-	"armour": pyglet.image.load(os.path.join(TILESDIR, "armour.png")),
-	"herb": pyglet.image.load(os.path.join(TILESDIR, "herb.png")),
-	"key": pyglet.image.load(os.path.join(TILESDIR, "key.png")),
-	"treasure": pyglet.image.load(os.path.join(TILESDIR, "treasure.png")),
-	"weapon": pyglet.image.load(os.path.join(TILESDIR, "weapon.png")),
+	"attention": pyglet.image.load(str(TILES_PATH / "attention.png")),
+	"armour": pyglet.image.load(str(TILES_PATH / "armour.png")),
+	"herb": pyglet.image.load(str(TILES_PATH / "herb.png")),
+	"key": pyglet.image.load(str(TILES_PATH / "key.png")),
+	"treasure": pyglet.image.load(str(TILES_PATH / "treasure.png")),
+	"weapon": pyglet.image.load(str(TILES_PATH / "weapon.png")),
 	# mob flags
-	"guild": pyglet.image.load(os.path.join(TILESDIR, "guild.png")),
-	"quest_mob": pyglet.image.load(os.path.join(TILESDIR, "quest.png")),
-	"rent": pyglet.image.load(os.path.join(TILESDIR, "rent.png")),
-	"shop": pyglet.image.load(os.path.join(TILESDIR, "shop.png")),
-	"aggressive_mob": pyglet.image.load(os.path.join(TILESDIR, "smob.png")),
+	"guild": pyglet.image.load(str(TILES_PATH / "guild.png")),
+	"quest_mob": pyglet.image.load(str(TILES_PATH / "quest.png")),
+	"rent": pyglet.image.load(str(TILES_PATH / "rent.png")),
+	"shop": pyglet.image.load(str(TILES_PATH / "shop.png")),
+	"aggressive_mob": pyglet.image.load(str(TILES_PATH / "smob.png")),
 	# player
-	"player": pyglet.image.load(os.path.join(TILESDIR, "player.png")),
+	"player": pyglet.image.load(str(TILES_PATH / "player.png")),
 }
 
 

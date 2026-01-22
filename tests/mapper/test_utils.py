@@ -7,17 +7,24 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import os.path
-from unittest import TestCase
+from pathlib import Path
+from unittest import TestCase, mock
 
 # Mapper Modules:
 from mapper import utils
 
 
 class TestUtils(TestCase):
-	def test_getDataPath(self) -> None:
+	@mock.patch("mapper.utils.is_frozen")
+	def test_get_data_path(self, mockIs_frozen: mock.Mock) -> None:
 		subdirectory: tuple[str, ...] = ("level1", "level2")
-		output: str = os.path.join(
-			os.path.dirname(utils.__file__), os.path.pardir, utils.DATA_DIRECTORY, *subdirectory
+		frozenOutput = (
+			Path(utils.__file__).parent.joinpath(utils.DATA_DIRECTORY_PATH, *subdirectory).resolve()
 		)
-		self.assertEqual(utils.getDataPath(*subdirectory), os.path.realpath(output))
+		notFrozenOutput = (
+			Path(utils.__file__).parent.parent.joinpath(utils.DATA_DIRECTORY_PATH, *subdirectory).resolve()
+		)
+		mockIs_frozen.return_value = True
+		self.assertEqual(utils.getDataPath(*subdirectory), frozenOutput)
+		mockIs_frozen.return_value = False
+		self.assertEqual(utils.getDataPath(*subdirectory), notFrozenOutput)

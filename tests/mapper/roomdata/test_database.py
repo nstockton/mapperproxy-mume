@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 # Built-in Modules:
+from pathlib import Path
 from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, _CallList, call, patch
@@ -33,8 +34,8 @@ from mapper.roomdata.database import (
 )
 
 
-LABELS_SCHEMA_FILE_PATH: str = getSchemaPath(LABELS_FILE_PATH, 0)
-MAP_SCHEMA_FILE_PATH: str = getSchemaPath(MAP_FILE_PATH, 0)
+LABELS_SCHEMA_FILE_PATH: Path = getSchemaPath(LABELS_FILE_PATH, 0)
+MAP_SCHEMA_FILE_PATH: Path = getSchemaPath(MAP_FILE_PATH, 0)
 
 
 class TestDatabase(TestCase):
@@ -100,7 +101,7 @@ class TestDatabase(TestCase):
 		del self.rooms
 
 	def testValidate(self) -> None:
-		schemaPath: str = MAP_SCHEMA_FILE_PATH
+		schemaPath: Path = MAP_SCHEMA_FILE_PATH
 		_validate(self.rooms, schemaPath)
 		loggerOutput: str
 		with self.assertLogs("mapper.roomdata.database", level="ERROR") as mockLogger:
@@ -113,44 +114,35 @@ class TestDatabase(TestCase):
 		)
 
 	@patch("mapper.roomdata.database._validate")
-	@patch("mapper.roomdata.database.open")
-	@patch("mapper.roomdata.database.os.path")
-	def testLoad(self, mockOSPath: Mock, mockOpen: Mock, mockValidate: Mock) -> None:
-		fileName: str = "__junk__.json"
-		schemaPath: str = MAP_SCHEMA_FILE_PATH
-		mockFileObj: Mock = Mock()
-		mockOpen.return_value.__enter__.return_value = mockFileObj
-		mockOSPath.isdir.return_value = False
+	@patch("mapper.roomdata.database.Path.read_bytes")
+	@patch("mapper.roomdata.database.Path.is_file")
+	def testLoad(self, mockIsFile: Mock, mockReadBytes: Mock, mockValidate: Mock) -> None:
+		databasePath: Path = Path("__junk__.json")
+		schemaPath: Path = MAP_SCHEMA_FILE_PATH
 		# Test path does not exist:
-		mockOSPath.exists.return_value = False
-		errors, database, schemaVersion = _load(fileName)
-		self.assertEqual(f"Error: '{fileName}' doesn't exist.", errors)
+		mockIsFile.return_value = False
+		errors, database, schemaVersion = _load(databasePath)
+		self.assertEqual(f"Error: '{databasePath}' file not found.", errors)
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
-		mockOSPath.exists.return_value = True
-		# Test path is directory:
-		mockOSPath.isdir.return_value = True
-		errors, database, schemaVersion = _load(fileName)
-		self.assertEqual(f"Error: '{fileName}' is a directory, not a file.", errors)
-		self.assertIsNone(database)
-		self.assertEqual(schemaVersion, 0)
-		mockOSPath.isdir.return_value = False
+		mockIsFile.return_value = True
 		# Test OSError:
-		mockFileObj.read.side_effect = lambda *args: (_ for _ in ()).throw(OSError("some error"))
-		errors, database, schemaVersion = _load(fileName)
+		mockReadBytes.side_effect = lambda: (_ for _ in ()).throw(OSError("some error"))
+		errors, database, schemaVersion = _load(databasePath)
 		self.assertEqual("OSError: some error", errors)
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
+		mockReadBytes.reset_mock(side_effect=True)
 		# Test corrupted data:
-		mockFileObj.read.side_effect = lambda *args: "corrupted data"
-		errors, database, schemaVersion = _load(fileName)
-		self.assertTrue(str(errors).startswith(f"Error: '{fileName}' is corrupted."))
+		mockReadBytes.return_value = "corrupted data"
+		errors, database, schemaVersion = _load(databasePath)
+		self.assertTrue(str(errors).startswith(f"Error: '{databasePath}' is corrupted."))
 		self.assertIsNone(database)
 		self.assertEqual(schemaVersion, 0)
 		# Test valid data:
-		mockFileObj.read.side_effect = lambda *args: orjson.dumps(self.rooms)
+		mockReadBytes.return_value = orjson.dumps(self.rooms)
 		with patch("mapper.roomdata.database.getSchemaPath", return_value=schemaPath):
-			errors, database, schemaVersion = _load(fileName)
+			errors, database, schemaVersion = _load(databasePath)
 		self.assertIsNone(errors)
 		self.assertIsNotNone(database)
 		self.assertEqual(schemaVersion, 0)
@@ -158,10 +150,8 @@ class TestDatabase(TestCase):
 		self.assertEqual(database, self.rooms)
 
 	@patch("mapper.roomdata.database._validate")
-	@patch("mapper.roomdata.database.open")
-	def testDump(self, mockOpen: Mock, mockValidate: Mock) -> None:
-		mockFileObj = Mock()
-		mockOpen.return_value.__enter__.return_value = mockFileObj
+	@patch("mapper.roomdata.database.Path.write_bytes")
+	def testDump(self, mockWriteBytes: Mock, mockValidate: Mock) -> None:
 		fileName: str = "__junk__.json"
 		loggerOutput: str
 		# Test invalid database:
@@ -175,16 +165,16 @@ class TestDatabase(TestCase):
 			loggerOutput,
 			msg="Expected message not found in logger output.",
 		)
-		mockFileObj.write.assert_not_called()
+		mockWriteBytes.assert_not_called()
 		mockValidate.reset_mock()
 		# Test valid database:
 		_dump(self.rooms, fileName, MAP_SCHEMA_FILE_PATH)
 		mockValidate.assert_called_once_with(self.rooms, MAP_SCHEMA_FILE_PATH)
-		mockFileObj.write.assert_called_once()
+		mockWriteBytes.assert_called_once()
 		mockValidate.reset_mock()
-		mockFileObj.reset_mock()
+		mockWriteBytes.reset_mock()
 		# Test OSError:
-		mockOpen.side_effect = OSError("some error")
+		mockWriteBytes.side_effect = OSError("some error")
 		with self.assertLogs("mapper.roomdata.database", level="ERROR") as mockLogger:
 			_dump(self.rooms, fileName, MAP_SCHEMA_FILE_PATH)
 			loggerOutput = "".join(mockLogger.output)
@@ -194,7 +184,6 @@ class TestDatabase(TestCase):
 			loggerOutput,
 			msg="Expected message not found in logger output.",
 		)
-		mockFileObj.write.assert_not_called()
 
 	@patch("mapper.roomdata.database._load")
 	def testLoadLabels(self, mockLoad: Mock) -> None:

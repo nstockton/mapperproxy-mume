@@ -20,6 +20,7 @@ import textwrap
 import threading
 from collections.abc import Callable
 from enum import Enum, auto
+from pathlib import Path
 from typing import Any
 
 
@@ -94,24 +95,24 @@ class GMCPRemoteEditing:
 		with tempfile.NamedTemporaryFile(
 			"w", encoding="utf-8", newline=newline, prefix="mume_editing_", suffix=".txt", delete=False
 		) as tempFileObj:
-			filename = tempFileObj.name
+			filePath = Path(tempFileObj.name)
 			tempFileObj.write(text)
-		lastModified = os.path.getmtime(filename)
+		lastModified = filePath.stat().st_mtime
 		if self.outputFormat == "tintin":
-			print(f"MPICOMMAND:{self.editor} {filename}:MPICOMMAND")
+			print(f"MPICOMMAND:{self.editor} {filePath}:MPICOMMAND")
 			input("Continue:")
 		else:
-			subprocess.run((*self.editor.split(), filename))  # NOQA: PLW1510, S603
-		if os.path.getmtime(filename) == lastModified:
+			subprocess.run((*self.editor.split(), str(filePath)))  # NOQA: PLW1510, S603
+		if filePath.stat().st_mtime == lastModified:
 			# The user closed the text editor without saving. Cancel the editing session.
 			self._cancel(sessionID)
 		else:
-			with open(filename, encoding="utf-8", newline=newline) as fileObj:
+			with filePath.open(encoding="utf-8", newline=newline) as fileObj:
 				output: str = fileObj.read()
 			if self.isWordWrapping:
 				output = self.postprocess(output)
 			self._write(sessionID, output.replace("\r", "").strip())
-		os.remove(filename)
+		filePath.unlink(missing_ok=True)
 
 	def _view(self, title: str, text: str) -> None:
 		"""
@@ -127,13 +128,13 @@ class GMCPRemoteEditing:
 		with tempfile.NamedTemporaryFile(
 			"w", encoding="utf-8", newline=newline, prefix="mume_viewing_", suffix=".txt", delete=False
 		) as fileObj:
-			filename = fileObj.name
+			filePath = Path(fileObj.name)
 			fileObj.write(text)
 		if self.outputFormat == "tintin":
-			print(f"MPICOMMAND:{self.pager} {filename}:MPICOMMAND")
+			print(f"MPICOMMAND:{self.pager} {filePath}:MPICOMMAND")
 		else:
-			subprocess.run((*self.pager.split(), filename))  # NOQA: PLW1510, S603
-			os.remove(filename)
+			subprocess.run((*self.pager.split(), str(filePath)))  # NOQA: PLW1510, S603
+			filePath.unlink(missing_ok=True)
 
 	def _cancel(self, sessionID: int) -> None:
 		"""

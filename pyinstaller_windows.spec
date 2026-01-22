@@ -8,14 +8,13 @@
 from __future__ import annotations
 
 # Built-in Modules:
-import glob
 import hashlib
 import os
-import pathlib
 import re
 import shutil
 import tempfile
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 # Third-party Modules:
@@ -42,8 +41,8 @@ if APP_VERSION_MATCH is not None:
 else:
 	APP_VERSION = "0.0.0"
 	APP_VERSION_TYPE = ""
-ORIG_DEST: str = os.path.realpath(os.path.expanduser(DISTPATH))  # type: ignore[name-defined] # NOQA: F821
-RUN_FILE: str = "run_mapper_proxy.py"
+ORIG_DEST_PATH: Path = Path(DISTPATH).expanduser().resolve()  # type: ignore[name-defined] # NOQA: F821
+RUN_FILE_PATH: Path = Path("run_mapper_proxy.py")
 isTag: bool = not APP_VERSION_TYPE
 
 
@@ -53,24 +52,15 @@ print(f"Using version {APP_VERSION}{APP_VERSION_TYPE}.")
 # APP_VERSION_CSV should be a string containing a comma separated list of numbers in the version.
 # For example, "17, 4, 5, 0" if the version is 17.4.5.
 APP_VERSION_CSV: str = ", ".join(pad_list(APP_VERSION.split("."), padding="0", count=4, fixed=True))
-APP_DEST: str = os.path.normpath(
-	os.path.join(
-		ORIG_DEST,
-		os.pardir,
-		(APP_NAME if not isTag else f"{APP_NAME}_V{APP_VERSION}{APP_VERSION_TYPE}")
-		.replace("-", "_")
-		.replace(" ", "_"),
-	)
-)
-ZIP_FILE: str
+APP_DEST_NAME: str = f"{APP_NAME}_V{APP_VERSION}{APP_VERSION_TYPE}" if isTag else APP_NAME
+APP_DEST_PATH: Path = ORIG_DEST_PATH.parent / APP_DEST_NAME.replace("-", "_").replace(" ", "_")
+ZIP_FILE_PATH: Path
 if isTag:
-	ZIP_FILE = APP_DEST + ".zip"
+	ZIP_FILE_PATH = APP_DEST_PATH.with_name(f"{APP_DEST_PATH.name}.zip")
 else:
-	ZIP_FILE = os.path.normpath(os.path.join(ORIG_DEST, os.pardir, "MapperProxy.zip"))
-VERSION_FILE: str = os.path.normpath(
-	os.path.join(os.path.realpath(os.path.expanduser(tempfile.gettempdir())), "mpm_version.ignore")
-)
-PyInstaller.config.CONF["distpath"] = APP_DEST
+	ZIP_FILE_PATH = ORIG_DEST_PATH.parent / "MapperProxy.zip"
+VERSION_FILE_PATH: Path = Path(tempfile.gettempdir()).expanduser().resolve() / "mpm_version.ignore"
+PyInstaller.config.CONF["distpath"] = str(APP_DEST_PATH)
 
 excludes: list[str] = [
 	"_gtkagg",
@@ -194,31 +184,27 @@ VSVersionInfo(
 """
 
 # Remove old build files.
-shutil.rmtree(ORIG_DEST, ignore_errors=True)
-shutil.rmtree(APP_DEST, ignore_errors=True)
-if os.path.exists(RUN_FILE) and not os.path.isdir(RUN_FILE):
-	os.remove(RUN_FILE)
-if os.path.exists(ZIP_FILE) and not os.path.isdir(ZIP_FILE):
-	os.remove(ZIP_FILE)
-shutil.rmtree(VERSION_FILE, ignore_errors=True)
+shutil.rmtree(ORIG_DEST_PATH, ignore_errors=True)
+shutil.rmtree(APP_DEST_PATH, ignore_errors=True)
+if RUN_FILE_PATH.is_file():
+	RUN_FILE_PATH.unlink(missing_ok=True)
+if ZIP_FILE_PATH.is_file():
+	ZIP_FILE_PATH.unlink(missing_ok=True)
+shutil.rmtree(VERSION_FILE_PATH, ignore_errors=True)
 
-with open(VERSION_FILE, "w", encoding="utf-8") as f:
-	f.write(version_data)
+VERSION_FILE_PATH.write_text(version_data, encoding="utf-8")
 
 run_data: str = """
-from __future__ import annotations
-
 from mapper.main import run
 
 if __name__ == "__main__":
 	run()
 """.lstrip()
-with open(RUN_FILE, "w", encoding="utf-8") as f:
-	f.write(run_data)
+RUN_FILE_PATH.write_text(run_data, encoding="utf-8")
 
 a: Analysis = Analysis(
-	[RUN_FILE],
-	pathex=[os.path.normpath(os.path.join(APP_DEST, os.pardir))],
+	[str(RUN_FILE_PATH)],
+	pathex=[str(APP_DEST_PATH.parent)],
 	binaries=[],
 	datas=[],
 	hiddenimports=["certifi", "decimal", "uuid"],
@@ -245,7 +231,7 @@ exe: EXE = EXE(
 	upx=False,  # Not using UPX for the moment, as it can raise false positives in some antivirus software.
 	runtime_tmpdir=None,
 	console=True,
-	version=VERSION_FILE,
+	version=str(VERSION_FILE_PATH),
 )
 
 coll: COLLECT = COLLECT(
@@ -259,49 +245,47 @@ coll: COLLECT = COLLECT(
 )
 
 # Remove junk.
-shutil.rmtree(ORIG_DEST, ignore_errors=True)
-shutil.rmtree(os.path.normpath(os.path.join(APP_DEST, os.pardir, "__pycache__")), ignore_errors=True)
-wp: str = os.path.realpath(os.path.expanduser(workpath))  # type: ignore[name-defined] # NOQA: F821
+shutil.rmtree(ORIG_DEST_PATH, ignore_errors=True)
+shutil.rmtree(APP_DEST_PATH.parent / "__pycache__", ignore_errors=True)
+wp: Path = Path(workpath).expanduser().resolve()  # type: ignore[name-defined] # NOQA: F821
 shutil.rmtree(wp, ignore_errors=True)
 # The directory above workpath should now be empty.
-# Using os.rmdir to remove it instead of shutil.rmtree for safety.
-os.rmdir(os.path.normpath(os.path.join(wp, os.pardir)))
-shutil.rmtree(os.path.join(APP_DEST, "Include"), ignore_errors=True)
-shutil.rmtree(os.path.join(APP_DEST, "lib2to3", "tests"), ignore_errors=True)
+# Using Path.rmdir to remove it instead of shutil.rmtree for safety.
+wp.parent.rmdir()
+shutil.rmtree(APP_DEST_PATH / "Include", ignore_errors=True)
+shutil.rmtree(APP_DEST_PATH / "lib2to3" / "tests", ignore_errors=True)
 
-include_files: list[tuple[list[str], str]] = [
+include_files: list[tuple[list[Path], Path]] = [
 	(
 		[
-			os.path.normpath(os.path.join(APP_DEST, os.pardir, "LICENSE.txt")),
-			os.path.normpath(os.path.join(APP_DEST, os.pardir, "README.md")),
+			APP_DEST_PATH.parent / "LICENSE.txt",
+			APP_DEST_PATH.parent / "README.md",
 		],
-		".",
+		Path(),
 	),
 	(
-		glob.glob(os.path.join(os.path.realpath(os.path.expanduser(speechlight.LIB_DIRECTORY)), "*.dll")),
-		"speech_libs",
+		list(Path(speechlight.LIB_DIRECTORY).expanduser().resolve().glob("*.dll")),
+		Path("speech_libs"),
 	),
 	(
-		glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "src", "mapper_data", "*.sample"))),
-		"mapper_data",
+		[
+			*(APP_DEST_PATH.parent / "src" / "mapper_data").glob("*.sample"),
+			*(APP_DEST_PATH.parent / "src" / "mapper_data").glob("*.schema"),
+		],
+		Path("mapper_data"),
 	),
 	(
-		glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "src", "mapper_data", "*.schema"))),
-		"mapper_data",
-	),
-	(
-		glob.glob(os.path.normpath(os.path.join(APP_DEST, os.pardir, "src", "mapper_data", "tiles", "*"))),
-		"mapper_data/tiles",
+		list((APP_DEST_PATH.parent / "src" / "mapper_data" / "tiles").glob("*")),
+		Path("mapper_data/tiles"),
 	),
 ]
 
-dest_dir: str
 for files, destination in include_files:
-	dest_dir = os.path.join(APP_DEST, destination)
-	if not os.path.exists(dest_dir):
-		os.makedirs(dest_dir)
+	dest_dir: Path = APP_DEST_PATH / destination
+	if not dest_dir.exists():
+		dest_dir.mkdir()
 	for src in files:
-		if os.path.exists(src) and not os.path.isdir(src):
+		if src.is_file():
 			shutil.copy(src, dest_dir)
 
 # In order to insure reproducible zip files, the items inside the zip should have a fixed time.
@@ -309,36 +293,35 @@ for files, destination in include_files:
 # Oldest allowed date for zip is 1980-01-01 0:00.
 zip_epoch: int = int(datetime(1980, 1, 1, 0, 0, 0, tzinfo=None).timestamp())  # NOQA: DTZ001
 source_epoch: int = int(os.getenv("SOURCE_DATE_EPOCH", zip_epoch))
-pdest = pathlib.Path(APP_DEST)
-os.utime(pdest.resolve(), times=(source_epoch, source_epoch))
-for child in pdest.rglob("*"):
+os.utime(APP_DEST_PATH.resolve(), times=(source_epoch, source_epoch))
+for child in APP_DEST_PATH.rglob("*"):
 	os.utime(child.resolve(), times=(source_epoch, source_epoch))
 
-print(f"Compressing the distribution to {ZIP_FILE}.")
+print(f"Compressing the distribution to {ZIP_FILE_PATH}.")
 shutil.make_archive(
-	base_name=os.path.splitext(ZIP_FILE)[0],
+	base_name=str(ZIP_FILE_PATH.with_suffix("")),
 	format="zip",
-	root_dir=os.path.normpath(os.path.join(APP_DEST, os.pardir)),
-	base_dir=os.path.basename(APP_DEST),
+	root_dir=APP_DEST_PATH.parent,
+	base_dir=APP_DEST_PATH.name,
 	owner=None,
 	group=None,
 )
 
-if os.path.exists(RUN_FILE) and not os.path.isdir(RUN_FILE):
-	os.remove(RUN_FILE)
-shutil.rmtree(APP_DEST, ignore_errors=True)
+if RUN_FILE_PATH.is_file():
+	RUN_FILE_PATH.unlink(missing_ok=True)
+shutil.rmtree(APP_DEST_PATH, ignore_errors=True)
 
 print("Generating checksums.")
 hashes: dict[str, hashlib._Hash] = {
 	"sha256": hashlib.sha256(),
 }
 block_size: int = 2**16
-with open(ZIP_FILE, "rb") as zf:
+with ZIP_FILE_PATH.open("rb") as zf:
 	for block in iter(lambda: zf.read(block_size), b""):
 		for func in hashes.values():
 			func.update(block)
 for hashtype, func in hashes.items():
-	with open(f"{ZIP_FILE}.{hashtype}", "w", encoding="utf-8") as f:
-		f.write(f"{func.hexdigest().lower()} *{os.path.basename(ZIP_FILE)}\n")
+	checksum_file_path = ZIP_FILE_PATH.with_suffix(f"{ZIP_FILE_PATH.suffix}.{hashtype}")
+	checksum_file_path.write_text(f"{func.hexdigest().lower()} *{ZIP_FILE_PATH.name}\n", encoding="utf-8")
 
 print("Done.")

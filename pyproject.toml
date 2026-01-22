@@ -150,14 +150,12 @@
 		"ERA001",  # Found commented-out code.
 		"FBT",  # Flake8-boolean-trap. Fix this.
 		"FIX002",  # Line contains TODO, consider resolving the issue.
-		"FURB103",  # Open and write should be replaced by Path. Fix this.
 		"G",  # Flake8-logging-format.
 		"I",  # ISort. (We use ISort package for this)
 		"N",  # pep8-naming. Fix this.
 		"PLR09",  # Too many public methods, etc. Fix This.
 		"PLR2004",  # Magic value used in comparison. Fix This.
 		"PT",  # Flake8-pytest-style.
-		"PTH",  # Flake8-use-pathlib. Fix this.
 		"SLF001",  # Private member accessed. Fix this.
 		"T20",  # Flake8-print.
 		"TCH",  # Flake8-type-checking.
